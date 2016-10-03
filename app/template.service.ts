@@ -13,7 +13,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class TemplateService {
     constructor(private http: Http) { }
-
+    
     private _templatesUrl = 'http://localhost:8080/template';  // URL to web api
 
     getTemplates(): Observable<Template[]> {

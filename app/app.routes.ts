@@ -9,7 +9,7 @@ import { TemplateInstanceCreateComponent} from './create-template-instance.compo
 
 
 export const routes: RouterConfig = [
-    { path: 'templates/new', component: TemplateCreateComponent },
+    { path: 'templates/new', component: TemplateEditComponent },
     { path: 'templates', component: TemplateIndexComponent },
     { path: 'templates/:id/edit', component: TemplateEditComponent },
     { path: 'templates/:id/instance', component: TemplateInstanceCreateComponent }, 

@@ -15,16 +15,22 @@ import { TextContent } from './text-content'
         </div>
         <div *ngIf="element.type === 'image_element'" class ="element" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <display-content *ngIf="element.content" [content] = "element.content"></display-content>
-            <button *ngIf="!element.content.id" (click)="onAddButtonClick()" >Add image</button>
-            <button *ngIf="element.content.id" >Delete image</button>
+            <button *ngIf="!element.content.image" (click)="onAddButtonClick()" >Add image</button>
+            <button *ngIf="element.content.image" (click)="onDeleteButtonClick()" class="button">Delete image</button>
         </div>
     `,
     styles:[`
         .element {
             position: absolute;
-            font-size: 12pt;
+            font-size: 12.15pt;
             background-color: rgba(0, 0, 0, 0.25);
             overflow: hidden;
+        }
+        .button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1000;
         }
     `],
     directives: [DisplayContentComponent]
@@ -50,6 +56,10 @@ export class DisplayElementComponent implements OnInit{
     
     onAddButtonClick(){
         this.imageSelector.openSelectorWindow(this);
+    }
+    
+    onDeleteButtonClick(){
+        (<ImageContent>this.element.content).image = null;
     }
     
     refreshImage(image: Image){

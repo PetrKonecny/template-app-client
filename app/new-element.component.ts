@@ -1,12 +1,13 @@
 import { Component, ElementRef, Input} from '@angular/core';
-import { NgGrid, NgGridItem } from 'angular2-grid';
+//import { NgGrid, NgGridItem } from 'angular2-grid';
 import { Element} from './element';
+import { ElementSelector } from './element-selector'
 import { Draggable} from './draggable.directive'
 
 @Component({
     selector: 'create-new-element',
     template: `
-        <div draggable class= "inner" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <div draggable (click)="onElementClicked()" class= "inner" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
                 <span [ngSwitch]=element.type>
                     <span *ngSwitchCase="'text_element'">
                         <h4>New Text Element</h4>\n\
@@ -28,10 +29,10 @@ import { Draggable} from './draggable.directive'
     styles:[`
         .inner {
             position: absolute;           
-            border: 2px solid red;
+            background-color: rgba(0, 0, 0, 0.25);
         }
     `],
-    directives: [NgGridItem, Draggable]
+    directives: [Draggable]
 })
 
 export class NewElementComponent  {
@@ -39,13 +40,17 @@ export class NewElementComponent  {
     @Input()
     element : Element
     
-    constructor(private elementRef: ElementRef){}
+    constructor(public elementRef: ElementRef, private elementSelector: ElementSelector ){}
     
     fillFromDOM(){
         this.element.height = this.elementRef.nativeElement.children[0].offsetHeight;
         this.element.width = this.elementRef.nativeElement.children[0].offsetWidth;
         this.element.positionX = this.elementRef.nativeElement.children[0].offsetLeft;
         this.element.positionY = this.elementRef.nativeElement.children[0].offsetTop;
+    }
+    
+    onElementClicked(){
+        this.elementSelector.changeElement(this.element, this);
     }
     
     getCol(){

@@ -36,6 +36,7 @@ export class TemplateInstanceStore {
     }
     
     saveTemplateInstance(){
+        console.log(this._templateInstance.value);
         if(this._templateInstance.value.id > 0){
             this.templateInstanceService.updateTemplateInstance(this._templateInstance.value).subscribe();
         }else{

@@ -67,7 +67,6 @@ export class Draggable implements OnInit {
             next: pos => {
                 this.checkOutOfBounds();
                 if (this.borderClick == null) {
-                    console.log(this.startElement.top, pos.top);
                     this.element.nativeElement.style.top = this.startElement.top + pos.top + 'px';
                     this.element.nativeElement.style.left = this.startElement.left + pos.left + 'px';
                 } else if (this.borderClick == Border.right) {
@@ -121,7 +120,6 @@ export class Draggable implements OnInit {
         var right = this.getLeft() + this.getWidth();
         var width = this.getWidth();
         var height = this.getHeight();
-        console.log(top,left,width,height);
         if (top < 0 || left < 0 || bottom > 1122 || right > 793) {
             if (this.startElement.width == width && this.startElement.height == height){
                 if (top < 0) { top = 0 };
