@@ -9,7 +9,8 @@ import { NewTemplateComponent } from './new-template.component';
     <h1>{{title}}</h1>
         <a routerLink="/templates" routerLinkActive="active">Templates</a>
         <a routerLink="/template-instances" routerLinkActive="active">Template Instances</a>\n\
-        <a routerLink="/images" routerLinkActive="active">Images</a>
+        <a routerLink="/images" routerLinkActive="active">Images</a>\n\
+        <a routerLink="/fonts" routerLinkActive="active">Fonts</a>
         <router-outlet></router-outlet>
     `,
     directives: [ROUTER_DIRECTIVES],

@@ -6,6 +6,7 @@ import { TemplateInstanceIndexComponent} from './template-instance-index.compone
 import { TemplateInstanceEditComponent} from './edit-template-instance.component';
 import { ImageIndexComponent} from './image-index.component';
 import { TemplateInstanceCreateComponent} from './create-template-instance.component';
+import { FontIndexComponent} from './font-index.component';
 
 
 export const routes: RouterConfig = [
@@ -16,6 +17,7 @@ export const routes: RouterConfig = [
     { path: 'template-instances', component: TemplateInstanceIndexComponent },
     { path: 'template-instances/:id', component: TemplateInstanceEditComponent },
     { path: 'images', component: ImageIndexComponent },
+    { path: 'fonts', component: FontIndexComponent },
 ];
 
 export const APP_ROUTER_PROVIDERS = [
