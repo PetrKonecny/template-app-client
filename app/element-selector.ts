@@ -3,7 +3,8 @@ import {BehaviorSubject, Subject} from 'rxjs/Rx';
 import {Observable} from 'rxjs/Observable';
 import {Element} from './element'
 import {NewElementComponent} from './new-element.component'
-
+import {Font} from './font'
+import {TextElement} from './text-element'
 
 @Injectable()
 export class ElementSelector {
@@ -18,4 +19,8 @@ export class ElementSelector {
         this._selectedElement.next(element);
     }
     
+    public changeFont(font: Font) {
+        (<TextElement> this._selectedElement.value).font = font;
+    }
+
 }

@@ -22,6 +22,10 @@ export class DisplayFontComponent implements OnInit{
     constructor(private sanitizer: DomSanitizationService, public elementRef: ElementRef){
     }
     
+    
+    /*
+     * bypass of Angular framework should be done better
+     */
     ngOnInit(){
         var newStyle = document.createElement('style');
         newStyle.appendChild(document.createTextNode("\
@@ -33,7 +37,6 @@ export class DisplayFontComponent implements OnInit{
 
         document.head.appendChild(newStyle);
         this.elementRef.nativeElement.children[0].style.fontFamily = "font"+this.font.id;
-        console.log(this.elementRef);
     }
    
 }

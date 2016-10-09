@@ -8,8 +8,8 @@ import { DisplayFontComponent } from './display-font.component'
     selector: 'font-list',
     template: `
             <div>
-                <div *ngFor="let font of fonts" (click)="onSelect(font)">
-                    <font-display [font] = "font"></font-display>
+                <div *ngFor="let font of fonts">
+                    <font-display [font] = "font" (click)="onSelect(font)"></font-display>
                 </div>
             </div> `,
     styles: [`        
