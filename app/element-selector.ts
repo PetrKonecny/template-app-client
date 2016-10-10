@@ -22,5 +22,5 @@ export class ElementSelector {
     public changeFont(font: Font) {
         (<TextElement> this._selectedElement.value).font = font;
     }
-
+    
 }

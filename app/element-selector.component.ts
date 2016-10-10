@@ -21,6 +21,7 @@ import {FontService} from './font.service';
                 <span *ngIf="element.font"> Font: {{element.font.name}}</span>
                 <font-selector *ngIf="fontsOpened" ></font-selector>
                 <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
+                <br>Font size: <input [(ngModel)]="elementSelector.selectedComponent.elementRef.nativeElement.children[0].style.fontSize" (keyup)="0">
                 </div>
                 </span>
              `,
@@ -43,7 +44,7 @@ export class ElementSelectorComponent implements OnInit {
     }
     
     openFonts(){
-        this.fontSelector.openSelectorWindow();
+        this.fontSelector.openSelectorWindow()
     }
     
     onKey(){
