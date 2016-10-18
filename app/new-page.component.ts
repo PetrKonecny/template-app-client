@@ -4,7 +4,9 @@ import { TextElement } from './text-element';
 import { ImageElement } from './image-element';
 import { Page} from './page';
 import { NewElementComponent } from './new-element.component';
-import { NgGrid, NgGridItem } from 'angular2-grid';
+//import { NgGrid, NgGridItem } from 'angular2-grid';
+import { TextContent } from './text-content'
+import { ImageContent } from './image-content'
 
 @Component({
     selector: 'create-new-page',
@@ -29,7 +31,7 @@ import { NgGrid, NgGridItem } from 'angular2-grid';
             height: 297mm;
         }
     `],
-    directives: [NewElementComponent, NgGrid, NgGridItem]
+    directives: [NewElementComponent]
 })
 
 export class NewPageComponent  {
@@ -44,14 +46,27 @@ export class NewPageComponent  {
         if (this.page.elements == null) {
             this.page.elements = new Array<Element>();
         }
-        this.page.elements.push(new TextElement());
+        var element = new TextElement();
+        element.width = 100;
+        element.height = 100;
+        element.positionX = 0;
+        element.positionY = 0;
+        element.font_size = 20;
+        element.content = new TextContent();
+        this.page.elements.push(element);
     }
     
     createNewImageElement(){
         if (this.page.elements == null) {
             this.page.elements = new Array<Element>();
         }
-        this.page.elements.push(new ImageElement());
+        var element = new ImageElement();
+        element.width = 100;
+        element.height = 100;
+        element.positionX = 0;
+        element.positionY = 0;
+        element.content = new ImageContent();
+        this.page.elements.push(element);
     }
     
     fillFromDOM(){

@@ -1,9 +1,14 @@
-import { Component, ElementRef, Input} from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, AfterViewInit, OnChanges} from '@angular/core';
 //import { NgGrid, NgGridItem } from 'angular2-grid';
 import { Element} from './element';
-import { ElementSelector } from './element-selector'
+import { ElementSelector, FontRefreshable } from './element-selector'
 import { Draggable} from './draggable.directive'
 import { TextElement} from './text-element'
+import { DisplayContentComponent } from './display-content.component';
+import { ImageSelector, ImageRefreshable} from './image-selector';
+import { ImageContent } from './image-content';
+import {Image} from './image'
+import {Font} from './font'
 
 @Component({
     selector: 'create-new-element',
@@ -11,37 +16,42 @@ import { TextElement} from './text-element'
         <div draggable (click)="onElementClicked()" class= "inner" [style.font-size.px]="element.font_size" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
                 <span [ngSwitch]=element.type>
                     <span *ngSwitchCase="'text_element'">
-                        <h4>New Text Element</h4>\n\
-                        Position X: {{element.positionX}}<br>
-                        Position Y: {{element.positionY}}<br>
-                        Width: {{element.width}}<br>
-                        Height: {{element.height}}<br>
+                        <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
                     </span>
                     <span *ngSwitchCase="'image_element'">
-                        <h4>New Image Element</h4>
-                        Position X: {{element.positionX}}<br>
-                        Position Y: {{element.positionY}}<br>
-                        Width: {{element.width}}<br>
-                        Height: {{element.height}}<br>
+                        <display-content *ngIf="element.content" [content] = "element.content"></display-content>
+                        <button *ngIf="element.content && !element.content.image" (click)="onAddButtonClick()" >Add image</button>
+                        <button *ngIf="element.content && element.content.image" (click)="onDeleteButtonClick()" class="button">Delete image</button>
                     </span>
                 </span>
         </div>
     `,
     styles:[`
         .inner {
-            position: absolute;           
+            position: absolute;  \n\
+            overflow: hidden;         
             background-color: rgba(0, 0, 0, 0.25);
         }
     `],
-    directives: [Draggable]
+    directives: [Draggable, DisplayContentComponent]
 })
 
-export class NewElementComponent  {
+export class NewElementComponent implements AfterViewInit, ImageRefreshable, FontRefreshable, OnChanges {
     
     @Input()
     element : Element
     
-    constructor(public elementRef: ElementRef, private elementSelector: ElementSelector ){}
+    @ViewChild('textContainer')
+    textContainer : ElementRef
+    
+    @ViewChild(DisplayContentComponent)
+    displayContent :  DisplayContentComponent
+    
+    constructor(
+        public elementRef: ElementRef, 
+        private elementSelector: ElementSelector,
+        private imageSelector: ImageSelector
+ ){}
     
     fillFromDOM(){
         this.element.height = this.elementRef.nativeElement.children[0].offsetHeight;
@@ -49,16 +59,51 @@ export class NewElementComponent  {
         this.element.positionX = this.elementRef.nativeElement.children[0].offsetLeft;
         this.element.positionY = this.elementRef.nativeElement.children[0].offsetTop;
         if (this.element.type == 'text_element'){
-            (<TextElement>this.element).fontSize = this.styleToNum(this.elementRef.nativeElement.children[0].style.fontSize);
+            (<TextElement>this.element).font_size = this.styleToNum(this.elementRef.nativeElement.children[0].style.fontSize);
         }
+        this.displayContent.saveContent();
     }
     
     styleToNum(style){
         return Number(style.substring(0, style.length - 2));
     }
     
-    onElementClicked(){
+    ngOnChanges(){
         console.log(this.element);
+    }
+    
+    ngAfterViewInit(){
+        console.log(this.element);
+        if(this.element.type == 'text_element' &&(<TextElement>this.element).font && (<TextElement>this.element).font.id){
+            var newStyle = document.createElement('style');
+            newStyle.appendChild(document.createTextNode("\
+            @font-face {\
+                font-family: '" +"font" + (<TextElement>this.element).font.id + "';\
+                src: url('"+"http://localhost:8080/font/"+(<TextElement>this.element).font.id +"/file" +"');\
+            }\
+            "));
+            document.head.appendChild(newStyle);
+            this.textContainer.nativeElement.style.fontFamily = "font"+(<TextElement>this.element).font.id;
+        }
+    }
+    
+    onElementClicked(){
         this.elementSelector.changeElement(this.element, this);
+    }
+    
+    onAddButtonClick(){
+        this.imageSelector.openSelectorWindow(this);
+    }
+    
+    onDeleteButtonClick(){
+        (<ImageContent>this.element.content).image = null;
+    }
+    
+    refreshImage(image: Image){
+        (<ImageContent>this.element.content).image = image;
     }  
+    
+    refreshFont(font: Font){
+        this.textContainer.nativeElement.style.fontFamily = "font"+(<TextElement>this.element).font.id;
+    }
 }

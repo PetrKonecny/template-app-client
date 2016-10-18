@@ -11,11 +11,15 @@ import {Content} from './content'
 import {ImageContent} from './image-content'
 import {DisplayElementComponent} from './display-element.component'
 
+export interface ImageRefreshable {
+    refreshImage(image:Image);
+} 
+
 
 @Injectable()
 export class ImageSelector {
     
-    private selectedComponent: DisplayElementComponent
+    private selectedComponent: ImageRefreshable
     
     /*
     private _imageContent: BehaviorSubject<ImageContent> = new BehaviorSubject(new ImageContent);
@@ -31,7 +35,7 @@ export class ImageSelector {
         this._imageContent.next(imageContent);
     }*/
     
-    openSelectorWindow(component: DisplayElementComponent){
+    openSelectorWindow(component: ImageRefreshable){
         this.selectedComponent = component;
         this._selectorWindowOpened.next(true);
     }

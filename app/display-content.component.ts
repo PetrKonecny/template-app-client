@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, QueryList} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, QueryList, OnChanges} from '@angular/core';
 import { Content} from './content';
 import { TextContent } from './text-content'
 import { NewElementComponent } from './new-element.component';
@@ -7,8 +7,7 @@ import { TemplateInstanceStore} from './template-instance.store'
 @Component({
     selector: 'display-content',
     template:
-    `
-        <div *ngIf="content.type === 'text_content'" #textBox class="content" contenteditable="true">
+    `   <div *ngIf="content.type === 'text_content'" #textBox class="content" contenteditable="true">
             <span>{{content.text}}</span>
         </div>
         <div *ngIf="content.type === 'image_content'" #textBox class="content">
@@ -19,26 +18,30 @@ import { TemplateInstanceStore} from './template-instance.store'
         .element {
             background-color: white;
         }
+        .content {
+            min-height: 20px;
+        }
     `],
-    directives: [NewElementComponent]
+    directives: []
 })
 
-export class DisplayContentComponent {
+export class DisplayContentComponent implements OnChanges {
 
     @Input()
     content: Content;
     
     @ViewChild('textBox')
-    child: any;
+    child: any;   
+    
+    ngOnChanges(){
+        console.log(this.content);
+    }
     
     saveContent(){
-        console.log(this.child);
         if(this.content.type == 'text_content'){
-            console.log(this.content);
             (<TextContent> this.content).text = this.child.nativeElement.textContent;
             this.child.nativeElement.textContent = (<TextContent>this.content).text;
         }
-        console.log(this.content);
     }
    
 }

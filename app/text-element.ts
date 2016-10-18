@@ -2,8 +2,8 @@ import {Font} from './font';
 import {Element} from './element'
 
 export class TextElement extends Element {
-    fontSize: number;
-    maxTextLength: number;
+    font_size: number;
+    max_text_length: number;
     type: string = 'text_element';
     font: Font;
 }

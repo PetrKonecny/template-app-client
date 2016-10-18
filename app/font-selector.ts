@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/Rx';
 import {Observable} from 'rxjs/Observable';
+import {Font} from './font'
 
 @Injectable()
 export class FontSelector {

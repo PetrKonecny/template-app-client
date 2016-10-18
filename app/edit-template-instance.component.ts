@@ -36,10 +36,16 @@ export class TemplateInstanceEditComponent implements OnInit  {
     
     ngOnInit(){
         this.sub = this.route.params.subscribe(params => {
-        let id = +params['id']; // (+) converts string 'id' to a number
-        this.templateInstanceStore.getTemplateInstance(id);        
-        this.templateInstanceStore.templateInstance.subscribe(templateInstance => this.templateInstance = templateInstance);
-        this.templateInstanceStore.template.subscribe(template => this.template = template);
+            let id = +params['id']; // (+) converts string 'id' to a number
+            this.templateInstanceStore.getTemplateInstance(id);        
+            this.templateInstanceStore.templateInstance.subscribe(templateInstance => {
+                this.templateInstance = templateInstance
+            });
+            this.templateInstanceStore.template.subscribe(template => {
+                this.template = template                
+                this.templateInstanceStore.copyContentsFromTemplate();
+                this.templateInstanceStore.getContentsFromTemplateInstance();
+            });
         });
     }
 }

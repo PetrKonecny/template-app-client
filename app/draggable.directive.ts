@@ -30,7 +30,7 @@ export class Draggable implements OnInit {
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
         this.mousedown.emit(event);
-        return false; // Call preventDefault() on the event
+        //return false; // Call preventDefault() on the event
     }
 
     @HostListener('mousemove', ['$event'])
@@ -137,12 +137,13 @@ export class Draggable implements OnInit {
     }
 
     getHeight() {
-        //Number(this.element.nativeElement.style.height.replace(/\D/g,''))
-        return this.element.nativeElement.scrollHeight;
+        return this.styleToNum(this.element.nativeElement.style.height)
+        //eturn this.element.nativeElement.scrollHeight;
     }
 
     getWidth() {
-        return this.element.nativeElement.scrollWidth;
+        return this.styleToNum(this.element.nativeElement.style.width)
+        //return this.element.nativeElement.scrollWidth;
     }
     
     getLeft() {

@@ -3,7 +3,7 @@ import { Element} from './element';
 import { Image } from './image';
 import { DisplayContentComponent } from './display-content.component';
 import { TemplateInstanceStore} from './template-instance.store';
-import { ImageSelector} from './image-selector';
+import { ImageSelector, ImageRefreshable} from './image-selector';
 import { ImageContent } from './image-content';
 import { TextContent } from './text-content' 
 import { TextElement} from './text-element'
@@ -16,8 +16,8 @@ import { TextElement} from './text-element'
         </div>
         <div *ngIf="element.type === 'image_element'" class ="element" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <display-content *ngIf="element.content" [content] = "element.content"></display-content>
-            <button *ngIf="!element.content.image" (click)="onAddButtonClick()" >Add image</button>
-            <button *ngIf="element.content.image" (click)="onDeleteButtonClick()" class="button">Delete image</button>
+            <button *ngIf="element.content && !element.content.image" (click)="onAddButtonClick()" >Add image</button>
+            <button *ngIf="element.content && element.content.image" (click)="onDeleteButtonClick()" class="button">Delete image</button>
         </div>
     `,
     styles:[`
@@ -37,7 +37,7 @@ import { TextElement} from './text-element'
     directives: [DisplayContentComponent]
 })
 
-export class DisplayElementComponent implements OnInit, AfterViewInit{
+export class DisplayElementComponent implements OnInit, AfterViewInit, ImageRefreshable{
 
     @Input()
     element: Element;
@@ -54,8 +54,8 @@ export class DisplayElementComponent implements OnInit, AfterViewInit{
     
 
     ngOnInit(){
-        this.element.content = this.templateInstanceStore.getContentForElement(this.element);
-        this.element.content.element_id = this.element.id;
+        //this.element.content = this.templateInstanceStore.getContentForElement(this.element);
+        //this.element.content.element_id = this.element.id;
     }
     
     ngAfterViewInit(){
