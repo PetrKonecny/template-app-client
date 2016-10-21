@@ -10,7 +10,7 @@ import { TemplateInstanceStore} from './template-instance.store'
     `   <div *ngIf="content.type === 'text_content'" #textBox class="content" contenteditable="true">
             <span>{{content.text}}</span>
         </div>
-        <div *ngIf="content.type === 'image_content'" #textBox class="content">
+        <div *ngIf="content.type === 'image_content'" class="content">
             <img *ngIf="content.image" class="image" src="http://localhost:8080/img/{{content.image.image_key}}.{{content.image.extension}}">
         </div>
     `,

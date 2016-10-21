@@ -11,4 +11,5 @@ export class Element {
     type: string;
     page: Page;
     content: Content;
+    draggable: boolean = true;
 }

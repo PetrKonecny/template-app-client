@@ -9,31 +9,52 @@ import { ImageSelector, ImageRefreshable} from './image-selector';
 import { ImageContent } from './image-content';
 import {Image} from './image'
 import {Font} from './font'
+import { DisplayContentImgDragComponent } from './display-content-img-drag.component';
 
 @Component({
     selector: 'create-new-element',
     template: `
-        <div draggable (click)="onElementClicked()" class= "inner" [style.font-size.px]="element.font_size" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <div *ngIf="draggable" draggable #frame (click)="onElementClicked()" class= "inner" [style.font-size.px]="element.font_size" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
                 <span [ngSwitch]=element.type>
-                    <span *ngSwitchCase="'text_element'">
+                    <span *ngSwitchCase="'text_element'" #elementToDrag>
                         <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
                     </span>
-                    <span *ngSwitchCase="'image_element'">
+                    <span *ngSwitchCase="'image_element'" #elementToDrag>
                         <display-content *ngIf="element.content" [content] = "element.content"></display-content>
                         <button *ngIf="element.content && !element.content.image" (click)="onAddButtonClick()" >Add image</button>
                         <button *ngIf="element.content && element.content.image" (click)="onDeleteButtonClick()" class="button">Delete image</button>
                     </span>
                 </span>
         </div>
+
+        <div *ngIf="!draggable" (click)="onElementClicked()" class= "inner" [style.font-size.px]="element.font_size" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+                <span [ngSwitch]=element.type>
+                    <span *ngSwitchCase="'text_element'">
+                        <span #textContainer><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
+                    </span>
+                    <span *ngSwitchCase="'image_element'">
+                        <display-content-img-drag *ngIf="element.content" [content] = "element.content"></display-content-img-drag>
+                        <button *ngIf="element.content && !element.content.image" style="top: 20px" class="button"  (click)="onAddButtonClick()" >Add image</button>
+                        <button *ngIf="element.content && element.content.image" style="top: 20px" class="button"  (click)="onDeleteButtonClick()">Delete image</button>
+                        <button *ngIf="element.content.image" style="top: 40px" class="button"  (click)="onPlusButtonClick()" >Zoom in</button>
+                        <button *ngIf="element.content.image" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>
+                    </span>
+                </span>
+        </div>
     `,
     styles:[`
         .inner {
-            position: absolute;  \n\
+            position: absolute;  
             overflow: hidden;         
             background-color: rgba(0, 0, 0, 0.25);
         }
+        .button{
+            z-index: 1000;\n\
+            position: absolute;\n\
+            margin-right: 10px;
+        }
     `],
-    directives: [Draggable, DisplayContentComponent]
+    directives: [Draggable, DisplayContentComponent, DisplayContentImgDragComponent]
 })
 
 export class NewElementComponent implements AfterViewInit, ImageRefreshable, FontRefreshable, OnChanges {
@@ -46,6 +67,11 @@ export class NewElementComponent implements AfterViewInit, ImageRefreshable, Fon
     
     @ViewChild(DisplayContentComponent)
     displayContent :  DisplayContentComponent
+    
+    @ViewChild(DisplayContentImgDragComponent)
+    displayContentImgDrag :  DisplayContentImgDragComponent
+    
+    draggable: boolean = false;
     
     constructor(
         public elementRef: ElementRef, 
@@ -97,6 +123,14 @@ export class NewElementComponent implements AfterViewInit, ImageRefreshable, Fon
     
     onDeleteButtonClick(){
         (<ImageContent>this.element.content).image = null;
+    }
+    
+    onPlusButtonClick(){
+        this.displayContentImgDrag.zoomIn()    
+    }
+    
+    onMinusButtonClick(){
+        this.displayContentImgDrag.zoomOut()    
     }
     
     refreshImage(image: Image){
