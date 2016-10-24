@@ -38,8 +38,12 @@ export class TemplateInstanceCreateComponent implements OnInit  {
         this.sub = this.route.params.subscribe(params => {
         let id = +params['id']; // (+) converts string 'id' to a number
         this.templateInstanceStore.getTemplate(id);        
-        this.templateInstanceStore.template.subscribe(template => this.template = template);
         this.templateInstanceStore.templateInstance.subscribe(templateInstance => this.templateInstance = templateInstance);
+        this.templateInstanceStore.template.subscribe(template => {
+                this.template = template                
+                this.templateInstanceStore.copyContentsFromTemplate();
+                this.templateInstanceStore.getContentsFromTemplateInstance();
+            });
         });
     }
 }

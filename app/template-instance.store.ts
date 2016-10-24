@@ -63,6 +63,9 @@ export class TemplateInstanceStore {
         if(!this._template.value.pages) {
             return
         }
+        if(this._templateInstance.value.contents == null){
+            this._templateInstance.value.contents = new Array<Content>();
+        }
         
         for (var page of this._template.value.pages){
             for (var element of page.elements){

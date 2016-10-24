@@ -30,7 +30,7 @@ export class Draggable implements OnInit {
 
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
-        console.log(this.element);
+        console.log(event);
         this.mousedown.emit(event);
         //return false; // Call preventDefault() on the event
     }
@@ -38,7 +38,7 @@ export class Draggable implements OnInit {
     @HostListener('mousemove', ['$event'])
     onMouseover(event: MouseEvent) {
         this.mouseover.emit(event);
-        return false;
+        //return false;
     }
 
     @HostListener('document:mousemove', ['$event'])
@@ -67,15 +67,15 @@ export class Draggable implements OnInit {
     ngOnInit() {
         this.mousedrag.subscribe({
             next: pos => {
-                //this.checkOutOfBounds();
-                //if (this.borderClick == null) {
+                this.checkOutOfBounds();
+                if (this.borderClick == null) {
                     this.element.nativeElement.style.top = this.startElement.top + pos.top + 'px';
                     this.element.nativeElement.style.left = this.startElement.left + pos.left + 'px';
-                /*} else if (this.borderClick == Border.right) {
+                } else if (this.borderClick == Border.right) {
                     this.element.nativeElement.style.width = this.startElement.width + pos.left + 'px';
                 } else if (this.borderClick == Border.bottom) {
                     this.element.nativeElement.style.height = this.startElement.height + pos.top  + 'px';
-                }*/
+                }
             }
         });
         

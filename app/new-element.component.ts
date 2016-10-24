@@ -16,13 +16,14 @@ import { DisplayContentImgDragComponent } from './display-content-img-drag.compo
     template: `
         <div *ngIf="draggable" draggable #frame (click)="onElementClicked()" class= "inner" [style.font-size.px]="element.font_size" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
                 <span [ngSwitch]=element.type>
-                    <span *ngSwitchCase="'text_element'" #elementToDrag>
+                    <span *ngSwitchCase="'text_element'">
                         <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
                     </span>
-                    <span *ngSwitchCase="'image_element'" #elementToDrag>
+                    <span *ngSwitchCase="'image_element'">
                         <display-content *ngIf="element.content" [content] = "element.content"></display-content>
-                        <button *ngIf="element.content && !element.content.image" (click)="onAddButtonClick()" >Add image</button>
-                        <button *ngIf="element.content && element.content.image" (click)="onDeleteButtonClick()" class="button">Delete image</button>
+                        <button *ngIf="element.content && !element.content.image" style="top: 20px" class="button" (click)="onAddButtonClick()" >Add image</button>
+                        <button *ngIf="element.content && element.content.image" style="top: 40px" class="button" (click)="onDeleteButtonClick()" class="button">Delete image</button>\n\
+                        <button *ngIf="element.content && element.content.image && draggable" style="top: 60px" class="button" (click)="onAdjustButtonClick()" class="button">Adjust image</button>
                     </span>
                 </span>
         </div>
@@ -34,23 +35,22 @@ import { DisplayContentImgDragComponent } from './display-content-img-drag.compo
                     </span>
                     <span *ngSwitchCase="'image_element'">
                         <display-content-img-drag *ngIf="element.content" [content] = "element.content"></display-content-img-drag>
-                        <button *ngIf="element.content && !element.content.image" style="top: 20px" class="button"  (click)="onAddButtonClick()" >Add image</button>
-                        <button *ngIf="element.content && element.content.image" style="top: 20px" class="button"  (click)="onDeleteButtonClick()">Delete image</button>
                         <button *ngIf="element.content.image" style="top: 40px" class="button"  (click)="onPlusButtonClick()" >Zoom in</button>
-                        <button *ngIf="element.content.image" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>
+                        <button *ngIf="element.content.image" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>\n\
+                        <button *ngIf="element.content && element.content.image" (click)="onDoneAdjustButtonClick()" class="button">Done adjusting</button>
                     </span>
                 </span>
         </div>
     `,
     styles:[`
         .inner {
-            position: absolute;  
+            position: absolute;
             overflow: hidden;         
             background-color: rgba(0, 0, 0, 0.25);
         }
         .button{
-            z-index: 1000;\n\
-            position: absolute;\n\
+            z-index: 1000;
+            position: absolute;
             margin-right: 10px;
         }
     `],
@@ -71,7 +71,7 @@ export class NewElementComponent implements AfterViewInit, ImageRefreshable, Fon
     @ViewChild(DisplayContentImgDragComponent)
     displayContentImgDrag :  DisplayContentImgDragComponent
     
-    draggable: boolean = false;
+    draggable: boolean = true;
     
     constructor(
         public elementRef: ElementRef, 
@@ -87,7 +87,12 @@ export class NewElementComponent implements AfterViewInit, ImageRefreshable, Fon
         if (this.element.type == 'text_element'){
             (<TextElement>this.element).font_size = this.styleToNum(this.elementRef.nativeElement.children[0].style.fontSize);
         }
-        this.displayContent.saveContent();
+        if (this.displayContent){
+            this.displayContent.saveContent();
+        }
+        if (this.displayContentImgDrag){
+            this.displayContentImgDrag.saveContent();
+        }
     }
     
     styleToNum(style){
@@ -131,6 +136,16 @@ export class NewElementComponent implements AfterViewInit, ImageRefreshable, Fon
     
     onMinusButtonClick(){
         this.displayContentImgDrag.zoomOut()    
+    }
+    
+    onDoneAdjustButtonClick(){
+        this.fillFromDOM();
+        this.draggable = true;
+    }
+    
+    onAdjustButtonClick(){
+        this.fillFromDOM();
+        this.draggable = false;
     }
     
     refreshImage(image: Image){
