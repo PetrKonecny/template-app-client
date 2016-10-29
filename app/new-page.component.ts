@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, ViewChildren, QueryList} from '@angular/core';
+import { Component, Input, ViewChildren, QueryList} from '@angular/core';
 import { Element} from './element';
 import { TextElement } from './text-element';
 import { ImageElement } from './image-element';
 import { Page} from './page';
 import { NewElementComponent } from './new-element.component';
-//import { NgGrid, NgGridItem } from 'angular2-grid';
 import { TextContent } from './text-content'
 import { ImageContent } from './image-content'
 

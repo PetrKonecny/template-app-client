@@ -2,11 +2,9 @@ import { Component, OnInit, Input, ViewChildren, QueryList} from '@angular/core'
 import { Template} from './template';
 import { Page} from './page';
 import { NewPageComponent } from './new-page.component';
-import { TemplateService } from './template.service';
 import { ElementSelector } from './element-selector';
 import { ElementSelectorComponent} from './element-selector.component';
 import { TemplateInstanceStore } from './template-instance.store';
-import { TemplateInstanceService } from './template-instance.service'
 import { ImageSelectorComponent } from './image-selector.component';
 import { ImageSelector } from './image-selector';
 

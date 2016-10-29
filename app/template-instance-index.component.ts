@@ -9,7 +9,7 @@ import { Observable }     from 'rxjs/Observable';
     selector: 'template-instance-index',
     template: `
         <h2>My Template Instances</h2>
-        <template-instance-list [templateInstances] = templateInstances></template-instance-list>
+        <template-instance-list [templateInstances] = "templateInstances" (onDeleteClicked) = "onDeleteClicked($event)"></template-instance-list>
     `,
     directives: [TemplateInstanceListComponent],
     providers: [TemplateInstanceService]
@@ -34,6 +34,16 @@ export class TemplateInstanceIndexComponent implements OnInit  {
                                templateInstances => this.templateInstances = templateInstances,
                                error =>  this.errorMessage = <any>error
         );
+    }
+    
+    onDeleteClicked(instance: TemplateInstance){
+        this.templateInstanceService.removeTemplateInstance(instance.id).subscribe(res => this.deleteFromList(instance));
+    }
+    
+    deleteFromList(instance: TemplateInstance){
+        console.log('deleting');
+        var index = this.templateInstances.indexOf(instance);
+        this.templateInstances.splice(index,1);
     }
      
 }

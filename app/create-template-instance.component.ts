@@ -4,7 +4,6 @@ import { TemplateInstanceService } from './template-instance.service';
 import { TemplateService } from './template.service';
 import { TemplateInstanceStore } from './template-instance.store';
 import { TemplateInstance} from './template-instance';
-import { Observable }     from 'rxjs/Observable';
 import { Router, ActivatedRoute} from '@angular/router'
 import { Template} from './template';
 
@@ -12,7 +11,7 @@ import { Template} from './template';
 @Component({
     selector: 'template-create',
     template: `
-        <h2>Edit Template Instance</h2>
+        <h2>Create Template Instance</h2>
         <create-new-template-instance [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
     `,
     directives: [NewTemplateInstanceComponent],
@@ -26,13 +25,10 @@ export class TemplateInstanceCreateComponent implements OnInit  {
     template : Template;
     private sub: any;
 
-
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
         private templateInstanceStore: TemplateInstanceStore 
     ){ }
-    
     
     ngOnInit(){
         this.sub = this.route.params.subscribe(params => {

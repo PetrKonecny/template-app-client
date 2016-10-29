@@ -1,8 +1,9 @@
 import { Component }       from '@angular/core';
 import { HTTP_PROVIDERS }    from '@angular/http';
 import { ROUTER_DIRECTIVES} from '@angular/router'
-import { NewTemplateComponent } from './new-template.component';
-
+import { TemplateInstanceService } from './template-instance.service';
+import { TemplateService } from './template.service';
+import { TemplateInstanceStore } from './template-instance.store';
 @Component({
     selector: 'my-app',
     template: `
@@ -15,8 +16,7 @@ import { NewTemplateComponent } from './new-template.component';
     `,
     directives: [ROUTER_DIRECTIVES],
     providers: [
-        HTTP_PROVIDERS
-    ]
+        HTTP_PROVIDERS, TemplateInstanceService,TemplateInstanceStore,TemplateService ] 
 })
 
 export class AppComponent {

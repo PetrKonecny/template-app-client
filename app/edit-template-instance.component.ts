@@ -1,12 +1,10 @@
 import { Component, OnInit} from '@angular/core';
 import {NewTemplateInstanceComponent} from './new-template-instance.component';
-import { TemplateInstanceService } from './template-instance.service';
-import { TemplateService } from './template.service';
 import { TemplateInstanceStore } from './template-instance.store';
 import { TemplateInstance} from './template-instance';
-import { Observable }     from 'rxjs/Observable';
 import { Router, ActivatedRoute} from '@angular/router'
 import { Template} from './template';
+import { NewTemplateComponent } from './new-template.component'
 
 
 @Component({
@@ -15,8 +13,8 @@ import { Template} from './template';
         <h2>Edit Template Instance</h2>
         <create-new-template-instance [templateInstance] = "templateInstance" [template] = "template"></create-new-template-instance>
     `,
-    directives: [NewTemplateInstanceComponent],
-    providers: [TemplateInstanceService,TemplateInstanceStore,TemplateService]
+    directives: [NewTemplateInstanceComponent, NewTemplateComponent],
+    providers: []
 })
 
 export class TemplateInstanceEditComponent implements OnInit  {
@@ -25,15 +23,13 @@ export class TemplateInstanceEditComponent implements OnInit  {
     templateInstance : TemplateInstance;
     template : Template;
     private sub: any;
-
-
+    
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private templateInstanceStore: TemplateInstanceStore 
     ){ }
-    
-    
+      
     ngOnInit(){
         this.sub = this.route.params.subscribe(params => {
             let id = +params['id']; // (+) converts string 'id' to a number

@@ -1,7 +1,5 @@
-import { Component,Input} from '@angular/core';
-import { TemplateService } from './template.service';
+import { Component,Input, Output, EventEmitter} from '@angular/core';
 import { TemplateInstance} from './template-instance';
-import { Router } from '@angular/router'
 import { ROUTER_DIRECTIVES} from '@angular/router'
 
 @Component({
@@ -11,7 +9,8 @@ import { ROUTER_DIRECTIVES} from '@angular/router'
             <li *ngFor="let templateInstance of templateInstances">
                 <span class="badge">{{templateInstance.id}}</span> {{templateInstance.name}}
                 <a [routerLink] = "['/template-instances', templateInstance.id]">Open</a>\n\
-                <a href="http://localhost:8080/templateInstance/{{templateInstance.id}}/pdf">Open as pdf</a>
+                <a href="http://localhost:8080/templateInstance/{{templateInstance.id}}/pdf">Open as pdf</a>\n\
+                <a href="javascript:void(0)"(click)="onDelete(templateInstance)">Delete</a>
             </li>
         </ul>
     `
@@ -25,6 +24,12 @@ export class TemplateInstanceListComponent {
     @Input()
     templateInstances : TemplateInstance[] 
     
-    constructor(private router: Router){}
+    @Output() 
+    onDeleteClicked = new EventEmitter<TemplateInstance>();
+
     
+    onDelete(templateInstance: TemplateInstance){
+        this.onDeleteClicked.emit(templateInstance);
+    }
+        
 }

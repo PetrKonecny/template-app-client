@@ -21,10 +21,12 @@ export class TemplateInstanceStore {
     private _template: BehaviorSubject<Template> = new BehaviorSubject(new Template);
     public template: Observable<Template> = this._template.asObservable();
     
+    private cleanLocked: boolean = false;
+    
     getTemplateInstance(id: number){
         this.templateInstanceService.getTemplateInstance(id).subscribe((res) => {
-        this._templateInstance.next(res);
-        this.getTemplate(res.template_id);
+            this._templateInstance.next(res);
+            this.getTemplate(res.template_id);
         });
     }
     
@@ -128,4 +130,19 @@ export class TemplateInstanceStore {
         element.content = content;
         return content;
     }
+    
+    cleanStore(){
+        if (this.cleanLocked){
+            this.cleanLocked = false;
+        }else{
+            this._template.next(new Template);
+            this._templateInstance.next(new TemplateInstance);
+        }
+    }
+    
+    ignoreNextClean(){
+        this.cleanLocked = true;
+    }
+    
+    
 }

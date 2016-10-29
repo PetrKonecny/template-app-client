@@ -17,7 +17,7 @@ import {FontService} from './font.service';
                 Height: <input [(ngModel)]="elementSelector.selectedComponent.elementRef.nativeElement.children[0].style.height"  (keyup)="0"><br>
                 Position X: <input [(ngModel)]="elementSelector.selectedComponent.elementRef.nativeElement.children[0].style.left"   (keyup)="0"><br>
                 Position Y: <input [(ngModel)]="elementSelector.selectedComponent.elementRef.nativeElement.children[0].style.top"   (keyup)="0">
-                <div>
+                <div *ngIf="element.type == 'text_element'">
                 <span *ngIf="element.font"> Font: {{element.font.name}}</span>
                 <font-selector *ngIf="fontsOpened" ></font-selector>
                 <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>

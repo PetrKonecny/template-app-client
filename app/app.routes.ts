@@ -10,7 +10,7 @@ import { FontIndexComponent} from './font-index.component';
 
 
 export const routes: RouterConfig = [
-    { path: 'templates/new', component: TemplateEditComponent },
+    { path: 'templates/new', component: TemplateCreateComponent },
     { path: 'templates', component: TemplateIndexComponent },
     { path: 'templates/:id/edit', component: TemplateEditComponent },
     { path: 'templates/:id/instance', component: TemplateInstanceCreateComponent }, 
