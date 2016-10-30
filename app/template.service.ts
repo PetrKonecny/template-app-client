@@ -43,14 +43,24 @@ export class TemplateService {
                     .map(this.extractData)
                     .catch(this.handleError);
     }
+    
+    removeTemplate(id: number): Observable<Template> {
+        return this.http.delete(this._templatesUrl+"/"+id)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
 
     private extractData(res: Response) {
         if (res.status < 200 || res.status >= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
-        let body = res.json();
+        let body;
+        if (res.text()) {
+            body = res.json();
+        }
         return body || {};
     }
+    
     private handleError(error: any) {
         // In a real world app, we might send the error to remote logging infrastructure
         let errMsg = error.message || 'Server error';

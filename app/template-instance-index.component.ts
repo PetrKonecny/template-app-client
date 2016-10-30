@@ -41,7 +41,6 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     }
     
     deleteFromList(instance: TemplateInstance){
-        console.log('deleting');
         var index = this.templateInstances.indexOf(instance);
         this.templateInstances.splice(index,1);
     }

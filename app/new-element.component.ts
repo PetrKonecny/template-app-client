@@ -22,7 +22,7 @@ import { DisplayContentImgDragComponent } from './display-content-img-drag.compo
                     <span *ngSwitchCase="'image_element'">
                         <display-content *ngIf="element.content" [content] = "element.content"></display-content>
                         <button *ngIf="element.content && !element.content.image" style="top: 20px" class="button" (click)="onAddButtonClick()" >Add image</button>
-                        <button *ngIf="element.content && element.content.image" style="top: 40px" class="button" (click)="onDeleteButtonClick()" class="button">Delete image</button>\n\
+                        <button *ngIf="element.content && element.content.image" style="top: 40px" class="button" (click)="onDeleteButtonClick()" class="button">Delete image</button>
                         <button *ngIf="element.content && element.content.image && draggable" style="top: 60px" class="button" (click)="onAdjustButtonClick()" class="button">Adjust image</button>
                     </span>
                 </span>
@@ -36,7 +36,7 @@ import { DisplayContentImgDragComponent } from './display-content-img-drag.compo
                     <span *ngSwitchCase="'image_element'">
                         <display-content-img-drag *ngIf="element.content" [content] = "element.content"></display-content-img-drag>
                         <button *ngIf="element.content.image" style="top: 40px" class="button"  (click)="onPlusButtonClick()" >Zoom in</button>
-                        <button *ngIf="element.content.image" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>\n\
+                        <button *ngIf="element.content.image" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>
                         <button *ngIf="element.content && element.content.image" (click)="onDoneAdjustButtonClick()" class="button">Done adjusting</button>
                     </span>
                 </span>
@@ -155,4 +155,14 @@ export class NewElementComponent implements AfterViewInit, ImageRefreshable, Fon
     refreshFont(font: Font){
         this.textContainer.nativeElement.style.fontFamily = "font"+(<TextElement>this.element).font.id;
     }
+    
+    changeTextAlign(align: string){
+        this.textContainer.nativeElement.style.textAlign = align
+    }
+    
+    changeTextAlignVertical(align: string){
+        this.textContainer.nativeElement.style.display = "inline-block"
+        this.textContainer.nativeElement.style.verticalAlign = align
+    }
+ 
 }

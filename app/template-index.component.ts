@@ -10,11 +10,11 @@ import { ROUTER_DIRECTIVES} from '@angular/router'
     selector: 'template-index',
     template: `
         <h2>My Templates</h2>
-        <template-list [templates] = templates></template-list>\n\
+        <template-list [templates] = "templates" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>\n\
         <a [routerLink] = "['/templates/new']">New template</a>
     `,
     directives: [TemplateListComponent, ROUTER_DIRECTIVES],
-    providers: [TemplateService]
+    providers: []
 })
 
 export class TemplateIndexComponent implements OnInit  {
@@ -29,6 +29,15 @@ export class TemplateIndexComponent implements OnInit  {
     
     ngOnInit(){
         this.getTemplates();
+    }
+    
+    onDeleteClicked(template: Template){
+        this.templateService.removeTemplate(template.id).subscribe(res => this.deleteFromList(template));
+    }
+    
+    deleteFromList(template: Template){
+        var index = this.templates.indexOf(template);
+        this.templates.splice(index,1);
     }
     
     getTemplates(){

@@ -6,18 +6,20 @@ import { Page} from './page';
 import { NewElementComponent } from './new-element.component';
 import { TextContent } from './text-content'
 import { ImageContent } from './image-content'
+import { TemplateInstanceStore } from './template-instance.store'
 
 @Component({
     selector: 'create-new-page',
     template: `
           <h3>New Page</h3>\n\
-          <div class ="page">
+          <div class ="page">\n\
             <div class="grid">
                   <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>
             </div>
           </div>
           <button (click)="createNewTextElement()">Add text element</button>
-          <button (click)="createNewImageElement()">Add image element</button>
+          <button (click)="createNewImageElement()">Add image element</button>\n\
+          <button (click)="onDeleteClicked()">Delete page</button>\n\
     `,
     styles:[`
         .grid {
@@ -41,6 +43,8 @@ export class NewPageComponent  {
     @ViewChildren(NewElementComponent)
     elementsComponents : QueryList<NewElementComponent>;
     
+    constructor(private templateInstanceStore: TemplateInstanceStore) { }
+
     createNewTextElement(){
         if (this.page.elements == null) {
             this.page.elements = new Array<Element>();
@@ -67,9 +71,13 @@ export class NewPageComponent  {
         element.content = new ImageContent();
         this.page.elements.push(element);
     }
-    
+        
     fillFromDOM(){
         this.elementsComponents.toArray().forEach((child) => child.fillFromDOM());
+    }
+    
+    onDeleteClicked(){
+        this.templateInstanceStore.deletePageFromTemplate(this.page);
     }
 
 }

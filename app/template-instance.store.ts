@@ -9,6 +9,7 @@ import {Element} from './element'
 import {TextContent} from './text-content'
 import {ImageContent} from './image-content'
 import {Content} from './content'
+import {Page} from './page'
 
 
 @Injectable()
@@ -97,7 +98,6 @@ export class TemplateInstanceStore {
         
         for (var page of this._template.value.pages){
             for (var element of page.elements){
-                console.log(element.content);
                 if(element.content == null){
                     //this.createNewContentForElement(element);
                 } 
@@ -129,6 +129,22 @@ export class TemplateInstanceStore {
         }
         element.content = content;
         return content;
+    }
+    
+    deleteElementFromTemplate(element: Element){
+        this._template.value.pages.forEach((page) => {
+            var index = page.elements.indexOf(element)
+            if(index > -1){
+                page.elements.splice(index,1)
+            }
+        })
+    }
+    
+    deletePageFromTemplate(page: Page){
+        var index = this._template.value.pages.indexOf(page)
+        if(index > -1){
+            this._template.value.pages.splice(index,1)
+        }
     }
     
     cleanStore(){
