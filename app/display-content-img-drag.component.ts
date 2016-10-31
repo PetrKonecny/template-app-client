@@ -1,9 +1,5 @@
-import { Component, OnInit, Input, ViewChild, QueryList, OnChanges, HostListener, EventEmitter, ElementRef} from '@angular/core';
-import { Content} from './content';
-import { TextContent } from './text-content'
+import { Component, OnInit, Input, ViewChild, HostListener, EventEmitter, ElementRef} from '@angular/core';
 import { ImageContent } from './image-content'
-import { NewElementComponent } from './new-element.component';
-import { TemplateInstanceStore} from './template-instance.store'
 import { Draggable} from './draggable.directive'
 
 @Component({

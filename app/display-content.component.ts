@@ -1,9 +1,7 @@
-import { Component, AfterViewInit, Input, ViewChild, QueryList, OnChanges, ElementRef} from '@angular/core';
+import { Component, Input, ViewChild, ElementRef} from '@angular/core';
 import { Content} from './content';
 import { TextContent } from './text-content'
 import { ImageContent } from './image-content'
-import { NewElementComponent } from './new-element.component';
-import { TemplateInstanceStore} from './template-instance.store'
 
 @Component({
     selector: 'display-content',

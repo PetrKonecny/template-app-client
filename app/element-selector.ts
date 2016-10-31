@@ -1,19 +1,16 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Subject} from 'rxjs/Rx';
+import {BehaviorSubject} from 'rxjs/Rx';
 import {Observable} from 'rxjs/Observable';
 import {Element} from './element'
-import {NewElementComponent} from './new-element.component'
+import {NewTextElementComponent} from './new-text-element.component'
 import {Font} from './font'
 import {TextElement} from './text-element'
 import {TemplateInstanceStore} from './template-instance.store'
 
-export interface FontRefreshable{
-    refreshFont(font:Font)
-}
 @Injectable()
 export class ElementSelector {
     
-    public selectedComponent: NewElementComponent
+    public selectedComponent: any
   
     private _selectedElement: BehaviorSubject<Element> = new BehaviorSubject(new Element());
     public selectedElement: Observable<Element> = this._selectedElement.asObservable();
@@ -22,14 +19,14 @@ export class ElementSelector {
         private templateInstanceStore: TemplateInstanceStore
     ){}
   
-    public changeElement(element: Element, elementComponent: NewElementComponent){
+    public changeElement(element: Element, elementComponent: any){
         this.selectedComponent = elementComponent;
         this._selectedElement.next(element);
     }
     
     public changeFont(font: Font) {
         (<TextElement> this._selectedElement.value).font = font;
-        (<FontRefreshable>this.selectedComponent).refreshFont(font);
+        (<NewTextElementComponent>this.selectedComponent).refreshFont(font);
     }
     
     public deleteElement(){
@@ -37,11 +34,11 @@ export class ElementSelector {
     }
     
     changeTextAlign(align: string){
-        this.selectedComponent.changeTextAlign(align)
+        (<NewTextElementComponent>this.selectedComponent).changeTextAlign(align)
     }
     
     changeTextAlignVertical(align: string){
-        this.selectedComponent.changeTextAlignVertical(align)
+        (<NewTextElementComponent>this.selectedComponent).changeTextAlignVertical(align)
     }
     
 }

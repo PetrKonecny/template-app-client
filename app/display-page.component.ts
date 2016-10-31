@@ -1,6 +1,5 @@
-import { Component, OnInit, Input, ViewChildren, QueryList} from '@angular/core';
+import { Component, Input, ViewChildren, QueryList} from '@angular/core';
 import { Page} from './page';
-import { NewElementComponent } from './new-element.component';
 import { DisplayElementComponent } from './display-element.component';
 
 

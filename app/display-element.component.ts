@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Query, ElementRef, AfterViewInit} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 import { Element} from './element';
 import { Image } from './image';
 import { DisplayContentComponent } from './display-content.component';
