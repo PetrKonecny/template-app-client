@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, HostListener, EventEmitter, ElementRef} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, HostListener, EventEmitter, ElementRef, DoCheck, KeyValueDiffers} from '@angular/core';
 import { ImageContent } from './image-content'
 import { Draggable} from './draggable.directive'
 
@@ -21,7 +21,7 @@ import { Draggable} from './draggable.directive'
     directives: [Draggable]
 })
 
-export class DisplayContentImgDragComponent implements OnInit {
+export class DisplayContentImgDragComponent implements OnInit, DoCheck {
 
     @Input()
     content: ImageContent;
@@ -32,12 +32,58 @@ export class DisplayContentImgDragComponent implements OnInit {
     @ViewChild('image')
     image: ElementRef;
     
+    differ: any;
+    
     saveContent(){
         this.content.left = this.styleToNum(this.frame.nativeElement.style.left);
         this.content.top = this.styleToNum(this.frame.nativeElement.style.top);
         this.content.width = this.image.nativeElement.width;
         this.content.height = this.image.nativeElement.height;
     }
+    
+    ngDoCheck(){
+        var changes = this.differ.diff(this.content);
+        if(changes) {
+                changes.forEachChangedItem(r => this.applyInputChanges(r));
+                changes.forEachAddedItem(r => this.applyInputChanges(r));
+        } 
+    }
+    applyInputChanges(change: any){
+        if(change.key == 'width'){
+            this.changeWidth(this.content.width)
+        }else if(change.key == 'height'){
+            this.changeHeight(this.content.height)
+        }else if(change.key == 'left'){
+            this.changeX(this.content.left)
+        }else if(change.key == 'top'){
+            this.changeY(this.content.top)
+        }
+    }
+    
+    changeWidth(width: number){
+        if(width <= 0) return
+        if(!this.image) return
+        this.image.nativeElement.style.width = width;
+    }
+    
+    changeHeight(height: number){
+        if(height <= 0) return
+        if(!this.image) return
+        this.image.nativeElement.style.height = height;
+    }
+    
+    changeX(x: number){
+        if(x <= 0) return
+        if(!this.frame) return
+        this.frame.nativeElement.style.left = x;
+    }
+    
+    changeY(y: number){
+        if(y <= 0) return
+        if(!this.frame) return
+        this.frame.nativeElement.style.top = y;
+    }
+
     
     startElement: ElementDimensions;
     mousedrag;
@@ -71,7 +117,8 @@ export class DisplayContentImgDragComponent implements OnInit {
         this.mousemove.emit(event);
     }
 
-    constructor() {
+    constructor(private differs: KeyValueDiffers) {
+        this.differ = differs.find({}).create(null);
         this.mousedrag = this.mousedown.map((event: MouseEvent) => {
             this.startElement = this.getStats();
             return {
@@ -91,20 +138,20 @@ export class DisplayContentImgDragComponent implements OnInit {
     ngOnInit() {
         this.mousedrag.subscribe({
             next: pos => {
-                this.frame.nativeElement.style.top = this.startElement.top + pos.top + 'px';
-                this.frame.nativeElement.style.left = this.startElement.left + pos.left + 'px';               
+                this.content.top = this.startElement.top + pos.top;
+                this.content.left = this.startElement.left + pos.left;               
             }
         });      
     }
     
     zoomOut(){
-        this.image.nativeElement.style.width = (this.image.nativeElement.scrollWidth*0.9) + 'px';
-        this.image.nativeElement.style.height = (this.image.nativeElement.scrollHeight*0.9) + 'px';
+        this.content.width = this.content.width * 0.9;
+        this.content.height = this.content.height * 0.9;
     }
     
     zoomIn(){
-        this.image.nativeElement.style.width = (this.image.nativeElement.scrollWidth*1.1) + 'px';
-        this.image.nativeElement.style.height = (this.image.nativeElement.scrollHeight*1.1) + 'px';
+        this.content.width = this.content.width * 1.1;
+        this.content.height = this.content.height * 1.1;
     }
     
     styleToNum(style){
@@ -112,21 +159,25 @@ export class DisplayContentImgDragComponent implements OnInit {
     }
     
     getHeight() {
-        return this.styleToNum(this.frame.nativeElement.style.height)
+        return this.content.height
+        //return this.styleToNum(this.frame.nativeElement.style.height)
         //eturn this.element.nativeElement.scrollHeight;
     }
 
     getWidth() {
-        return this.styleToNum(this.frame.nativeElement.style.width)
+        return this.content.width
+        //return this.styleToNum(this.frame.nativeElement.style.width)
         //return this.element.nativeElement.scrollWidth;
     }
     
     getLeft() {
-        return this.styleToNum(this.frame.nativeElement.style.left);
+        return this.content.left
+        //return this.styleToNum(this.frame.nativeElement.style.left);
     }
     
     getTop() {
-        return this.styleToNum(this.frame.nativeElement.style.top);
+        return this.content.top
+        //return this.styleToNum(this.frame.nativeElement.style.top);
     }
     
     getStats() {

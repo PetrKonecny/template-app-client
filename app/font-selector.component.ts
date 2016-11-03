@@ -26,13 +26,11 @@ import {Element} from './element'
 export class FontSelectorComponent implements OnInit {
     
     private fonts: Font[];
-    private element: Element;    
     
     constructor(private elementSelector: ElementSelector, private fontSelector: FontSelector,  private fontService: FontService){}
      
     ngOnInit(){
         this.fontService.getFonts().subscribe(fonts => this.fonts = fonts);
-        this.elementSelector.selectedElement.subscribe(element => this.element = element);
     }
     
     onFontClicked(font: Font){

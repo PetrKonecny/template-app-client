@@ -82,7 +82,7 @@ export class NewImageElementComponent {
     }
            
     onElementClicked(){
-        this.elementSelector.changeElement(this.element, this);
+        this.elementSelector.changeElement(this.element);
     }
     
     onAddButtonClick(){

@@ -6,4 +6,6 @@ export class TextElement extends Element {
     max_text_length: number;
     type: string = 'text_element';
     font: Font;
+    text_align: string;
+    text_align_vertical: string;
 }

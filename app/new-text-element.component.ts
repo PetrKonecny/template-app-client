@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild, AfterViewInit, OnChanges} from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, AfterViewInit, OnChanges, DoCheck, KeyValueDiffers, KeyValueDiffer} from '@angular/core';
 //import { NgGrid, NgGridItem } from 'angular2-grid';
 import { Element} from './element';
 import { ElementSelector } from './element-selector'
@@ -15,7 +15,7 @@ import { NewElementComponent} from './new-element.component'
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable (click)="onElementClicked()" class= "inner" [style.font-size.px]="element.font_size" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <div draggable #container (click)="onElementClicked()" class= "inner" [style.font-size.px]="element.font_size" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>                       
         </div>
     `,
@@ -34,7 +34,7 @@ import { NewElementComponent} from './new-element.component'
     directives: [Draggable, DisplayContentComponent]
 })
 
-export class NewTextElementComponent implements AfterViewInit {
+export class NewTextElementComponent implements AfterViewInit, DoCheck {
     
     @Input()
     element : TextElement
@@ -42,14 +42,22 @@ export class NewTextElementComponent implements AfterViewInit {
     @ViewChild('textContainer')
     textContainer : ElementRef
     
+    @ViewChild('container')
+    container : ElementRef
+    
     @ViewChild(DisplayContentComponent)
     displayContent :  DisplayContentComponent
       
+    differ: KeyValueDiffer;
+
     constructor(
         public elementRef: ElementRef, 
         private elementSelector: ElementSelector,
-        private imageSelector: ImageSelector
-    ){}
+        private imageSelector: ImageSelector,
+        private differs: KeyValueDiffers
+    ){
+        this.differ = differs.find({}).create(null);
+    }
     
     fillFromDOM(){
         this.element.height = this.elementRef.nativeElement.children[0].offsetHeight;
@@ -62,13 +70,34 @@ export class NewTextElementComponent implements AfterViewInit {
             this.displayContent.saveContent();
         }      
     }
+  
+    ngDoCheck(){
+        var changes = this.differ.diff(this.element);
+        if(changes) {
+                changes.forEachChangedItem(r => this.applyInputChanges(r));
+                changes.forEachAddedItem(r => this.applyInputChanges(r));
+        } 
+    }
+    
+    applyInputChanges(change: any){
+        if(change.key == 'font'){
+            this.refreshFont(this.element.font);
+        }else if(change.key == 'width'){
+            this.changeWidth(this.element.width)
+        }else if(change.key == 'height'){
+            this.changeHeight(this.element.height)
+        }else if(change.key == 'positionX'){
+            this.changeX(this.element.positionX)
+        }else if(change.key == 'positionY'){
+            this.changeY(this.element.positionY)
+        }
+    }
     
     styleToNum(style){
         return Number(style.substring(0, style.length - 2));
     }
     
     ngAfterViewInit(){
-        console.log(this.element);
         if(this.element.font && this.element.font.id){
             var newStyle = document.createElement('style');
             newStyle.appendChild(document.createTextNode("\
@@ -83,7 +112,7 @@ export class NewTextElementComponent implements AfterViewInit {
     }
     
     onElementClicked(){
-        this.elementSelector.changeElement(this.element, this);
+        this.elementSelector.changeElement(this.element);
     } 
     
     refreshFont(font: Font){
@@ -97,6 +126,22 @@ export class NewTextElementComponent implements AfterViewInit {
     changeTextAlignVertical(align: string){
         this.textContainer.nativeElement.style.display = "inline-block"
         this.textContainer.nativeElement.style.verticalAlign = align
+    }
+    
+    changeWidth(width: number){
+        this.container.nativeElement.style.width = width;
+    }
+    
+    changeHeight(height: number){
+        this.container.nativeElement.style.height = height;
+    }
+    
+    changeX(x: number){
+        this.container.nativeElement.style.left = x;
+    }
+    
+    changeY(y: number){
+        this.container.nativeElement.style.top = y;
     }
  
 }

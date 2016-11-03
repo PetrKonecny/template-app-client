@@ -1,4 +1,4 @@
-import {Directive, HostListener, EventEmitter, ElementRef, OnInit, ContentChild} from '@angular/core';
+import {Directive, HostListener, EventEmitter, Output, ElementRef, OnInit, ContentChild} from '@angular/core';
 
 @Directive({
     selector: '[draggable]'
@@ -13,16 +13,25 @@ export class Draggable implements OnInit {
     mousedown = new EventEmitter();
     mousemove = new EventEmitter();
     mouseover = new EventEmitter();
+    
+    @Output()
+    resize = new EventEmitter<ElementDimensions>()
+    @Output()
+    move = new EventEmitter<ElementDimensions>()
+    @Output()
+    returnToValidPos = new EventEmitter<ElementDimensions>()
     borderClick;
     
    
     @HostListener('document:mouseup', ['$event'])
     onMouseup(event) {
         if (this.nearestViablePos != null) {
+            this.returnToValidPos.emit(this.nearestViablePos)
+            /*
             this.element.nativeElement.style.top = this.nearestViablePos.top + 'px';
             this.element.nativeElement.style.left = this.nearestViablePos.left + 'px';
             this.element.nativeElement.style.width = this.nearestViablePos.width + 'px';
-            this.element.nativeElement.style.height = this.nearestViablePos.height + 'px';
+            this.element.nativeElement.style.height = this.nearestViablePos.height + 'px';*/
         }
         this.mouseup.emit(event);
 
@@ -68,13 +77,21 @@ export class Draggable implements OnInit {
         this.mousedrag.subscribe({
             next: pos => {
                 this.checkOutOfBounds();
-                if (this.borderClick == null) {
+                var dimensions = this.getStats();
+                if (this.borderClick == null) {/*
                     this.element.nativeElement.style.top = this.startElement.top + pos.top + 'px';
-                    this.element.nativeElement.style.left = this.startElement.left + pos.left + 'px';
+                    this.element.nativeElement.style.left = this.startElement.left + pos.left + 'px';*/
+                    dimensions.left += pos.left
+                    dimensions.top += pos.top
+                    this.move.emit(dimensions)
                 } else if (this.borderClick == Border.right) {
-                    this.element.nativeElement.style.width = this.startElement.width + pos.left + 'px';
+                    //this.element.nativeElement.style.width = this.startElement.width + pos.left + 'px';
+                    dimensions.width += pos.left
+                    this.resize.emit(dimensions)
                 } else if (this.borderClick == Border.bottom) {
-                    this.element.nativeElement.style.height = this.startElement.height + pos.top  + 'px';
+                    dimensions.height += pos.top
+                    this.resize.emit(dimensions)
+                    //this.element.nativeElement.style.height = this.startElement.height + pos.top  + 'px';
                 }
             }
         });

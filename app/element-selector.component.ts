@@ -12,18 +12,19 @@ import {FontService} from './font.service';
 @Component({
     selector: 'element-select',
     template: `
-                <span *ngIf="elementSelector.selectedComponent"> 
-                <br><b>Element ID: {{element.id}}</b><br>
+                <span *ngIf="elementSelector.selectedElement"> 
+                <br><b>Element ID: {{elementSelector.selectedElement.id}}</b><br>
                 <button (click)="deleteElement()">Delete element</button>
-                Width: <input [(ngModel)]="elementSelector.selectedComponent.elementRef.nativeElement.children[0].style.width"  (keyup)="0"><br>
-                Height: <input [(ngModel)]="elementSelector.selectedComponent.elementRef.nativeElement.children[0].style.height"  (keyup)="0"><br>
-                Position X: <input [(ngModel)]="elementSelector.selectedComponent.elementRef.nativeElement.children[0].style.left"   (keyup)="0"><br>
-                Position Y: <input [(ngModel)]="elementSelector.selectedComponent.elementRef.nativeElement.children[0].style.top"   (keyup)="0">
-                <div *ngIf="element.type == 'text_element'">
-                    <span *ngIf="element.font"> Font: {{element.font.name}}</span>
+                Width: <input [(ngModel)]="elementSelector.selectedElement.width"  (keyup)="0"><br>
+                Height: <input [(ngModel)]="elementSelector.selectedElement.height"  (keyup)="0"><br>
+                Position X: <input [(ngModel)]="elementSelector.selectedElement.positionX"   (keyup)="0"><br>
+                Position Y: <input [(ngModel)]="elementSelector.selectedElement.positionY"   (keyup)="0">
+
+                <div *ngIf="elementSelector.selectedElement.type == 'text_element'">
+                    <span *ngIf="elementSelector.selectedElement.font"> Font: {{elementSelector.selectedElement.font.name}}</span>
                     <font-selector *ngIf="fontsOpened" ></font-selector>
                     <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
-                    <br>Font size: <input [(ngModel)]="elementSelector.selectedComponent.elementRef.nativeElement.children[0].style.fontSize" (keyup)="0">
+                    <br>Font size: <input [(ngModel)]="elementSelector.selectedElement.font_size" (keyup)="0">
                     <div>
                         <h2>Text align</h2><br>
                         <button (click)="changeTextAlign('left')">Allign left</button>
@@ -46,15 +47,11 @@ import {FontService} from './font.service';
 
 export class ElementSelectorComponent implements OnInit {
     
-    element : Element;
     fontsOpened : boolean;
     
     constructor(private elementSelector: ElementSelector, private fontSelector: FontSelector){}
     
     ngOnInit(){
-        this.elementSelector.selectedElement.subscribe(element => {
-            this.element = element                 
-        });
         this.fontSelector.selectorWindowOpened.subscribe(opened => this.fontsOpened = opened)
     }
     

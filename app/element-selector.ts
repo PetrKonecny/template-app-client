@@ -10,35 +10,31 @@ import {TemplateInstanceStore} from './template-instance.store'
 @Injectable()
 export class ElementSelector {
     
-    public selectedComponent: any
   
-    private _selectedElement: BehaviorSubject<Element> = new BehaviorSubject(new Element());
-    public selectedElement: Observable<Element> = this._selectedElement.asObservable();
+    public selectedElement: Element;
     
     constructor(
         private templateInstanceStore: TemplateInstanceStore
     ){}
   
-    public changeElement(element: Element, elementComponent: any){
-        this.selectedComponent = elementComponent;
-        this._selectedElement.next(element);
+    public changeElement(element: Element){
+        this.selectedElement = element;
     }
     
     public changeFont(font: Font) {
-        (<TextElement> this._selectedElement.value).font = font;
-        (<NewTextElementComponent>this.selectedComponent).refreshFont(font);
+        (<TextElement>this.selectedElement).font = font;
     }
     
     public deleteElement(){
-        this.templateInstanceStore.deleteElementFromTemplate(this._selectedElement.value);
+        this.templateInstanceStore.deleteElementFromTemplate(this.selectedElement);
     }
     
     changeTextAlign(align: string){
-        (<NewTextElementComponent>this.selectedComponent).changeTextAlign(align)
+        (<TextElement>this.selectedElement).text_align = align;
     }
     
     changeTextAlignVertical(align: string){
-        (<NewTextElementComponent>this.selectedComponent).changeTextAlignVertical(align)
+        (<TextElement>this.selectedElement).text_align_vertical = align;
     }
     
 }
