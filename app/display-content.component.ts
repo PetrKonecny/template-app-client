@@ -6,9 +6,9 @@ import { ImageContent } from './image-content'
 @Component({
     selector: 'display-content',
     template:
-    `   <div *ngIf="content.type === 'text_content'" #textBox class="content text" contenteditable="true">
-            <span>{{content.text}}</span>
-        </div>
+    `   <textarea *ngIf="content.type === 'text_content'"[(ngModel)]='content.text' #textBox class="content text">
+            {{content.text}}
+        </textarea>
         <div *ngIf="content.type === 'image_content'" #frame [style.left.px]="content.left" [style.top.px]="content.top" class="content image">
             <img *ngIf="content.image && content.width && content.height" #image [width]="content.width" [height]="content.height" class="image" src="http://localhost:8080/img/{{content.image.image_key}}.{{content.image.extension}}">\n\
             <img *ngIf="content.image &&!content.width && !content.height" #image class="image" src="http://localhost:8080/img/{{content.image.image_key}}.{{content.image.extension}}">
@@ -27,6 +27,14 @@ import { ImageContent } from './image-content'
         .text{
             min-height: 100%;
             min-width: 100%;
+            resize: none;
+            background: none;
+            width: 100%;
+            height: 100%;
+            overflow:hidden;
+            font-family: inherit;
+            font-size: inherit;
+            text-align: inherit;
         }
     `],
     directives: []
@@ -45,9 +53,9 @@ export class DisplayContentComponent {
     
     @ViewChild('frame')
     frame: ElementRef;    
-  
+    
     saveContent(){
-        if(this.content.type == 'text_content'){
+        /*if(this.content.type == 'text_content'){
             (<TextContent> this.content).text = this.child.nativeElement.textContent;
             this.child.nativeElement.textContent = (<TextContent>this.content).text;
         }
@@ -59,7 +67,7 @@ export class DisplayContentComponent {
                 content.left = this.styleToNum(this.frame.nativeElement.style.left);
                 content.top = this.styleToNum(this.frame.nativeElement.style.top);
             }
-        }
+        }*/
     }
     
     styleToNum(style){

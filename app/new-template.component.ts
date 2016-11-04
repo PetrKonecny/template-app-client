@@ -47,7 +47,6 @@ export class NewTemplateComponent implements OnInit {
     }
     
     saveTemplate() {
-        this.pagesComponents.toArray().forEach((child) => child.fillFromDOM());
         this.templateService.saveTemplate();
     }
     

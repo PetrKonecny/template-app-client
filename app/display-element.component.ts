@@ -45,31 +45,19 @@ import { DisplayContentImgDragComponent } from './display-content-img-drag.compo
     directives: [DisplayContentComponent, DisplayContentImgDragComponent]
 })
 
-export class DisplayElementComponent implements OnInit, AfterViewInit, ImageRefreshable{
+export class DisplayElementComponent implements AfterViewInit {
 
     @Input()
     element: Element;
-    
-    @ViewChild(DisplayContentComponent)
-    displayContent : DisplayContentComponent;
-    
-    @ViewChild(DisplayContentImgDragComponent)
-    displayContentImgDrag :  DisplayContentImgDragComponent
     
     @ViewChild('textContainer')
     textContainer : ElementRef;
     
     draggable:boolean = true;
     
-    constructor(private templateInstanceStore: TemplateInstanceStore,
-                private imageSelector: ImageSelector
+    constructor(
+        private imageSelector: ImageSelector
     ){}
-    
-
-    ngOnInit(){
-        //this.element.content = this.templateInstanceStore.getContentForElement(this.element);
-        //this.element.content.element_id = this.element.id;
-    }
     
     ngAfterViewInit(){
         if(this.element.type == 'text_element' &&(<TextElement>this.element).font && (<TextElement>this.element).font.id){
@@ -86,7 +74,7 @@ export class DisplayElementComponent implements OnInit, AfterViewInit, ImageRefr
     }
     
     onAddButtonClick(){
-        this.imageSelector.openSelectorWindow(this);
+        this.imageSelector.openSelectorWindow(<ImageContent>this.element.content);
     }
     
     onDeleteButtonClick(){
@@ -94,41 +82,26 @@ export class DisplayElementComponent implements OnInit, AfterViewInit, ImageRefr
     }
     
     onPlusButtonClick(){
-        this.displayContentImgDrag.zoomIn()    
+        var content = <ImageContent>this.element.content
+        content.width = content.width * 1.1;
+        content.height = content.height * 1.1;    
     }
     
     onMinusButtonClick(){
-        this.displayContentImgDrag.zoomOut()    
+        var content = <ImageContent>this.element.content
+        content.width = content.width * 0.9;
+        content.height = content.height * 0.9;     
     }
     
     onDoneAdjustButtonClick(){
-        this.saveContent();
         this.draggable = true;
     }
     
     onAdjustButtonClick(){
-        this.saveContent();
         this.draggable = false;
     }
     
     refreshImage(image: Image){
         (<ImageContent>this.element.content).image = image;
-    }
-        
-    getWidth(){
-        return this.element.width + "mm";
-    }
-    
-    getHeight(){
-        return this.element.height + "mm";
-    }
-    
-    saveContent(){
-        if (this.displayContent){
-            this.displayContent.saveContent();
-        }
-        if (this.displayContentImgDrag){
-            this.displayContentImgDrag.saveContent();
-        }
     }
 }

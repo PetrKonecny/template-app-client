@@ -52,12 +52,10 @@ export class NewTemplateInstanceComponent implements OnInit {
     }
       
     saveTemplateInstance() {
-        this.contentComponents.toArray().forEach((child) => child.saveContent());
         this.templateInstanceStore.saveTemplateInstance();
     }
     
     openAsTemplate(){
-        this.contentComponents.toArray().forEach((child) => child.saveContent());
         this.templateInstanceStore.ignoreNextClean();
     }
 }

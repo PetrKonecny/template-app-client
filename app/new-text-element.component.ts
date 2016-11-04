@@ -11,11 +11,12 @@ import {Image} from './image'
 import {Font} from './font'
 import { DisplayContentImgDragComponent } from './display-content-img-drag.component';
 import { NewElementComponent} from './new-element.component'
+import { ElementDimensions } from './draggable.directive'
 
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable #container (click)="onElementClicked()" class= "inner" [style.font-size.px]="element.font_size" [style.width.px]="element.width" [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <div draggable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (click)="onElementClicked()" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>                       
         </div>
     `,
@@ -59,18 +60,6 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck {
         this.differ = differs.find({}).create(null);
     }
     
-    fillFromDOM(){
-        this.element.height = this.elementRef.nativeElement.children[0].offsetHeight;
-        this.element.width = this.elementRef.nativeElement.children[0].offsetWidth;
-        this.element.positionX = this.elementRef.nativeElement.children[0].offsetLeft;
-        this.element.positionY = this.elementRef.nativeElement.children[0].offsetTop;
-        
-        this.element.font_size = this.styleToNum(this.elementRef.nativeElement.children[0].style.fontSize);
-        if (this.displayContent){
-            this.displayContent.saveContent();
-        }      
-    }
-  
     ngDoCheck(){
         var changes = this.differ.diff(this.element);
         if(changes) {
@@ -82,14 +71,10 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck {
     applyInputChanges(change: any){
         if(change.key == 'font'){
             this.refreshFont(this.element.font);
-        }else if(change.key == 'width'){
-            this.changeWidth(this.element.width)
-        }else if(change.key == 'height'){
-            this.changeHeight(this.element.height)
-        }else if(change.key == 'positionX'){
-            this.changeX(this.element.positionX)
-        }else if(change.key == 'positionY'){
-            this.changeY(this.element.positionY)
+        }else if(change.key == 'font_size'){
+            this.changeFontSize(this.element.font_size)
+        }else if(change.key == 'text_align'){
+            this.changeTextAlign(this.element.text_align)
         }
     }
     
@@ -111,15 +96,38 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck {
         }
     }
     
+    resize(dimensions: ElementDimensions){
+        this.element.width = dimensions.width
+        this.element.height = dimensions.height
+    }
+    
+    move(dimensions: ElementDimensions){
+        this.element.positionX = dimensions.left
+        this.element.positionY = dimensions.top 
+    }
+    
+    outOfBounds(dimensions: ElementDimensions){
+        this.element.width = dimensions.width
+        this.element.height = dimensions.height
+        this.element.positionX = dimensions.left
+        this.element.positionY = dimensions.top
+    }
+    
     onElementClicked(){
         this.elementSelector.changeElement(this.element);
     } 
     
     refreshFont(font: Font){
+        if(!font || !font.id) return
         this.textContainer.nativeElement.style.fontFamily = "font"+(<TextElement>this.element).font.id;
     }
     
+    changeFontSize(size: number){
+        if(size <= 0) return
+        this.textContainer.nativeElement.style.fontSize = size
+    }    
     changeTextAlign(align: string){
+        if(!align) return
         this.textContainer.nativeElement.style.textAlign = align
     }
     
@@ -127,21 +135,4 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck {
         this.textContainer.nativeElement.style.display = "inline-block"
         this.textContainer.nativeElement.style.verticalAlign = align
     }
-    
-    changeWidth(width: number){
-        this.container.nativeElement.style.width = width;
-    }
-    
-    changeHeight(height: number){
-        this.container.nativeElement.style.height = height;
-    }
-    
-    changeX(x: number){
-        this.container.nativeElement.style.left = x;
-    }
-    
-    changeY(y: number){
-        this.container.nativeElement.style.top = y;
-    }
- 
 }

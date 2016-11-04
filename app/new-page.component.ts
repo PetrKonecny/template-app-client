@@ -28,7 +28,7 @@ import { TemplateInstanceStore } from './template-instance.store'
             min-width: 100%;
             min-height: 100%;
         }
-        .page {\n\
+        .page {
             position: relative;
             width: 210mm;
             height: 297mm;
@@ -40,10 +40,7 @@ import { TemplateInstanceStore } from './template-instance.store'
 export class NewPageComponent  {
 
     @Input()
-    page: Page = new Page();
-    
-    @ViewChildren(NewElementComponent)
-    elementsComponents : QueryList<NewElementComponent>;
+    page: Page = new Page();  
     
     constructor(private templateInstanceStore: TemplateInstanceStore) { }
 
@@ -89,11 +86,6 @@ export class NewPageComponent  {
         element.content = new ImageContent();
         this.page.elements.push(element);
     }
-        
-    fillFromDOM(){
-        this.elementsComponents.toArray().forEach((child) => child.fillFromDOM());
-    }
-    
     onDeleteClicked(){
         this.templateInstanceStore.deletePageFromTemplate(this.page);
     }

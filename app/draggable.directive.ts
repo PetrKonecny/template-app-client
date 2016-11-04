@@ -19,14 +19,14 @@ export class Draggable implements OnInit {
     @Output()
     move = new EventEmitter<ElementDimensions>()
     @Output()
-    returnToValidPos = new EventEmitter<ElementDimensions>()
+    outOfBounds = new EventEmitter<ElementDimensions>()
     borderClick;
     
    
     @HostListener('document:mouseup', ['$event'])
     onMouseup(event) {
         if (this.nearestViablePos != null) {
-            this.returnToValidPos.emit(this.nearestViablePos)
+            this.outOfBounds.emit(this.nearestViablePos)
             /*
             this.element.nativeElement.style.top = this.nearestViablePos.top + 'px';
             this.element.nativeElement.style.left = this.nearestViablePos.left + 'px';
@@ -40,6 +40,7 @@ export class Draggable implements OnInit {
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
         console.log(event);
+        console.log(this.element)
         this.mousedown.emit(event);
         //return false; // Call preventDefault() on the event
     }
@@ -81,15 +82,15 @@ export class Draggable implements OnInit {
                 if (this.borderClick == null) {/*
                     this.element.nativeElement.style.top = this.startElement.top + pos.top + 'px';
                     this.element.nativeElement.style.left = this.startElement.left + pos.left + 'px';*/
-                    dimensions.left += pos.left
-                    dimensions.top += pos.top
+                    dimensions.left = this.startElement.left + pos.left
+                    dimensions.top = this.startElement.top + pos.top
                     this.move.emit(dimensions)
                 } else if (this.borderClick == Border.right) {
                     //this.element.nativeElement.style.width = this.startElement.width + pos.left + 'px';
-                    dimensions.width += pos.left
+                    dimensions.width = this.startElement.width +  pos.left
                     this.resize.emit(dimensions)
                 } else if (this.borderClick == Border.bottom) {
-                    dimensions.height += pos.top
+                    dimensions.height = this.startElement.top + pos.top
                     this.resize.emit(dimensions)
                     //this.element.nativeElement.style.height = this.startElement.height + pos.top  + 'px';
                 }
@@ -180,7 +181,7 @@ export class Draggable implements OnInit {
 
 enum Border { left, right, bottom, top };
 
-interface ElementDimensions {
+export interface ElementDimensions {
     left
     top
     height

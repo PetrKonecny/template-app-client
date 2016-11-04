@@ -19,7 +19,6 @@ export interface ImageRefreshable {
 @Injectable()
 export class ImageSelector {
     
-    private selectedComponent: ImageRefreshable
     
     /*
     private _imageContent: BehaviorSubject<ImageContent> = new BehaviorSubject(new ImageContent);
@@ -28,6 +27,7 @@ export class ImageSelector {
     private _selectorWindowOpened: BehaviorSubject<boolean> = new BehaviorSubject(false);
     public selectorWindowOpened: Observable<boolean> = this._selectorWindowOpened.asObservable();
     
+    public imageContent:ImageContent
     /*
     selectImage(id: number){
         var imageContent = <ImageContent> this.selectedComponent.element.content;
@@ -35,13 +35,13 @@ export class ImageSelector {
         this._imageContent.next(imageContent);
     }*/
     
-    openSelectorWindow(component: ImageRefreshable){
-        this.selectedComponent = component;
+    openSelectorWindow(content: ImageContent){
+        this.imageContent = content
         this._selectorWindowOpened.next(true);
     }
     
-    sendImageToComponent(image: Image){
-        this.selectedComponent.refreshImage(image);
+    changeImage(image: Image){
+        this.imageContent.image = image
     }
         
     closeSelectorWindow(){

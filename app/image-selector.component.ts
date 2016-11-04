@@ -36,7 +36,8 @@ export class ImageSelectorComponent implements OnInit{
     }
     
     onImageClicked(image: Image){
-        this.imageSelector.sendImageToComponent(image);
+        console.log(image)
+        this.imageSelector.changeImage(image);
         this.imageSelector.closeSelectorWindow();
     }
     

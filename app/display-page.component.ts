@@ -25,13 +25,6 @@ import { DisplayElementComponent } from './display-element.component';
 export class DisplayPageComponent  {
 
     @Input()
-    page: Page;
-        
-    @ViewChildren(DisplayElementComponent)
-    elementsComponents : QueryList<DisplayElementComponent>;
+    page: Page; 
     
-    saveContent(){
-        console.log(this.elementsComponents);
-        this.elementsComponents.toArray().forEach((child) => child.saveContent());
-    }
 }

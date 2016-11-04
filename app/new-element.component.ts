@@ -19,19 +19,5 @@ export class NewElementComponent {
     
     @Input()
     element : Element
-    
-    @ViewChild(NewTextElementComponent)
-    textElement : NewTextElementComponent
-    
-    @ViewChild(NewImageElementComponent)
-    imageElement : NewImageElementComponent
-    
-    @ViewChild(NewTableElementComponent)
-    tableElement : NewTableElementComponent
-    
-    fillFromDOM(){
-        if (this.textElement) { this.textElement.fillFromDOM()}
-        if (this.imageElement) { this.imageElement.fillFromDOM()}
-        if (this.tableElement) { this.imageElement.fillFromDOM()}          
-    }    
+      
 }
