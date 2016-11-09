@@ -12,11 +12,13 @@ import {Font} from './font'
 import { DisplayContentImgDragComponent } from './display-content-img-drag.component';
 import { NewElementComponent} from './new-element.component'
 import { ElementDimensions } from './draggable.directive'
+import { Draggable2 } from './draggable2.directive'
+import { Resizable } from './resizable.directive'
 
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (click)="onElementClicked()" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
+        <div draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (click)="onElementClicked()" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>                       
         </div>
     `,
@@ -32,7 +34,7 @@ import { ElementDimensions } from './draggable.directive'
             margin-right: 10px;
         }
     `],
-    directives: [Draggable, DisplayContentComponent]
+    directives: [DisplayContentComponent, Draggable2, Draggable, Resizable]
 })
 
 export class NewTextElementComponent implements AfterViewInit, DoCheck {
@@ -97,8 +99,8 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck {
     }
     
     resize(dimensions: ElementDimensions){
-        this.element.width = dimensions.width
-        this.element.height = dimensions.height
+        this.element.width += dimensions.width
+        this.element.height += dimensions.height
     }
     
     move(dimensions: ElementDimensions){

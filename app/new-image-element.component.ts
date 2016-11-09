@@ -13,11 +13,13 @@ import {Font} from './font'
 import { DisplayContentImgDragComponent } from './display-content-img-drag.component';
 import { NewElementComponent} from './new-element.component'
 import { ElementDimensions } from './draggable.directive'
+import { Draggable2 } from './draggable2.directive'
+import { Resizable } from './resizable.directive'
 
 @Component({
     selector: 'create-new-image-element',
     template: `
-        <div #frame *ngIf="draggable" draggable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" (click)="onElementClicked()" class= "inner" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
+        <div #frame *ngIf="draggable" draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" (click)="onElementClicked()" class= "inner" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
             <display-content *ngIf="element.content" [content] = "element.content"></display-content>
             <button *ngIf="element.content && !element.content.image" style="top: 20px" class="button" (click)="onAddButtonClick()" >Add image</button>
             <button *ngIf="element.content && element.content.image" style="top: 40px" class="button" (click)="onDeleteButtonClick()" class="button">Delete image</button>
@@ -43,7 +45,7 @@ import { ElementDimensions } from './draggable.directive'
         }
 
     `],
-    directives: [Draggable, DisplayContentComponent, DisplayContentImgDragComponent]
+    directives: [Draggable, Resizable, Draggable2, DisplayContentComponent, DisplayContentImgDragComponent]
 })
 
 export class NewImageElementComponent {

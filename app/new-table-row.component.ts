@@ -1,23 +1,31 @@
 import { Component, Input, OnInit} from '@angular/core';
 import { NewTableCellComponent } from './new-table-cell.component'
+import { TableElement } from './table-element'
 
 @Component({
     selector: 'tr',
     template: `
-                <td *ngFor = "let width of widths" [width]="width" [style.width.px]="width"></td>
+                <td *ngFor = "let cell of element.cells; let i = index" [element]="element" [y]="y" [x]="i" [style.width.px]="cell.width"></td>
         `
-,
-    directives: [NewTableCellComponent]
+    ,
+    directives: [NewTableCellComponent], 
+    styles: [`
+        td {
+            height: inherit;
+            border: 1px solid black;
+            border-collapse: collapse;\n\
+        }
+    `]
 })
 
        
 export class NewTableRowComponent implements OnInit{
     
     @Input()
-    widths: Array<number>;
-  
+    element: TableElement;
+    
     @Input()
-    height: number;
+    y: number;
     
     
     fillFromDOM(){

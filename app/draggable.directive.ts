@@ -47,6 +47,7 @@ export class Draggable implements OnInit {
 
     @HostListener('mousemove', ['$event'])
     onMouseover(event: MouseEvent) {
+        console.log('gg');
         this.mouseover.emit(event);
         //return false;
     }
