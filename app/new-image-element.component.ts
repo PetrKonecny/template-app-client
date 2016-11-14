@@ -63,13 +63,16 @@ export class NewImageElementComponent {
     }
     
     resize(dimensions: ElementDimensions){
-        this.element.width = dimensions.width
-        this.element.height = dimensions.height
+        if (dimensions.width){
+            this.element.width += dimensions.width
+        } else if (dimensions.height){
+        this.element.height += dimensions.height
+        }
     }
     
     move(dimensions: ElementDimensions){
-        this.element.positionX = dimensions.left
-        this.element.positionY = dimensions.top 
+        this.element.positionX += dimensions.left
+        this.element.positionY += dimensions.top 
     }
     
     outOfBounds(dimensions: ElementDimensions){

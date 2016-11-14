@@ -5,8 +5,9 @@ import { TableElement } from './table-element'
 @Component({
     selector: 'td',
     template: `
-                <div resizable (resize)="resize($event)" > Hello</div>
-        `
+                <div *ngIf="!element.locked" resizable (resize)="resize($event)" > Hello</div>
+                <div *ngIf="element.locked"> Hello</div>
+    `
 ,
     directives: [Resizable],
     styles: [`
@@ -32,7 +33,6 @@ export class NewTableCellComponent implements OnInit{
     }    
     
     resize(dimensions: any){
-        console.log(dimensions.width,dimensions.height)
         if(dimensions.width){
             this.element.cells[this.x].width += dimensions.width
         }else if(dimensions.height){

@@ -8,12 +8,12 @@ export class Draggable2 implements OnInit {
 
     mousedrag;
     enabled: boolean = true;
-    started: boolean = false;
+    running: boolean = false;
     mouseup = new EventEmitter();
     mousedown = new EventEmitter();
     mousemove = new EventEmitter();
     mouseover = new EventEmitter();
-    startElement: ElementDimensions;
+    position: any = {left: 0, top: 0}
 
    
     @Output()
@@ -26,20 +26,23 @@ export class Draggable2 implements OnInit {
     onMouseup(event) {
         this.mouseup.emit(event);
         this.enabled = true
+        this.running = false
     }
 
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
         if (this.enabled){     
             this.mousedown.emit(event)
+            this.running = true
         }
-        //return false; // Call preventDefault() on the event
+        return false; // Call preventDefault() on the event
     }
 
     @HostListener('mousemove', ['$event'])
     onMouseover(event: MouseEvent) {
-        this.mouseover.emit(event);
-        //return false;
+        if (this.enabled && !this.running) {
+            this.mouseover.emit(event);
+        }
     }
 
     @HostListener('document:mousemove', ['$event'])
@@ -51,12 +54,11 @@ export class Draggable2 implements OnInit {
 
     constructor(public element: ElementRef) {
         this.mousedrag = this.mousedown.map((event: MouseEvent) => {
-            this.startElement = this.getStats()
-            this.started = true
             var border = this.detectBorderPosition({left: event.offsetX, top: event.offsetY})
             if(border){
                 this.enabled = false;
             }
+            this.position = { left: event.clientX, top: event.clientY}
             return {
                 left: event.clientX ,
                 top: event.clientY
@@ -64,8 +66,8 @@ export class Draggable2 implements OnInit {
         })
         .flatMap(imageOffset => this.mousemove.map((pos: MouseEvent) => {
             return {
-                top: pos.clientY - imageOffset.top,
-                left: pos.clientX - imageOffset.left
+                top: pos.clientY,
+                left: pos.clientX
             }
         })
         .takeUntil(this.mouseup));
@@ -74,10 +76,11 @@ export class Draggable2 implements OnInit {
     ngOnInit() {
         this.mousedrag.subscribe({
             next: pos => {
-                var dimensions = this.getStats();
-                dimensions.left = this.startElement.left + pos.left
-                dimensions.top = this.startElement.top + pos.top
+                var dimensions: ElementDimensions = new ElementDimensions();
+                dimensions.left = pos.left - this.position.left
+                dimensions.top =  pos.top - this.position.top 
                 this.move.emit(dimensions)
+                this.position = pos
             }
         });       
     }
@@ -87,12 +90,14 @@ export class Draggable2 implements OnInit {
     }
 
     getHeight() {
-        return this.styleToNum(this.element.nativeElement.style.height)
+        return this.element.nativeElement.clientHeight
+        //return this.styleToNum(this.element.nativeElement.parentElement.style.height)
         //eturn this.element.nativeElement.scrollHeight;
     }
 
     getWidth() {
-        return this.styleToNum(this.element.nativeElement.style.width)
+        return this.element.nativeElement.clientWidth
+        //return this.styleToNum(this.element.nativeElement.parentElement.style.width)
         //return this.element.nativeElement.scrollWidth;
     }
     
@@ -131,7 +136,7 @@ export class Draggable2 implements OnInit {
 
 enum Border { left, right, bottom, top };
 
-export interface ElementDimensions {
+export class ElementDimensions {
     left
     top
     height

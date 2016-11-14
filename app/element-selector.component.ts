@@ -31,13 +31,9 @@ import {FontService} from './font.service';
                         <button (click)="changeTextAlign('right')">Allign right</button>
                         <button (click)="changeTextAlign('center')">Allign center</button>
                         <button (click)="changeTextAlign('justify')">Justify</button>
-                    </div>
-                    <div>
-                        <h2>Vertical text align</h2><br>
-                        <button (click)="changeTextAlignVertical('middle')">Allign middle</button>
-                        <button (click)="changeTextAlignVertical('top')">Allign top</button>
-                        <button (click)="changeTextAlignVertical('bottom')">Allign bottom</button>
-                    </div>
+                    </div>                    
+                </div>
+                <div *ngIf="elementSelector.selectedElement.type == 'table_element'">                            
                 </div>
                 </span>
              `,

@@ -42,14 +42,14 @@ export class Draggable implements OnInit {
         console.log(event);
         console.log(this.element)
         this.mousedown.emit(event);
-        //return false; // Call preventDefault() on the event
+        return false; // Call preventDefault() on the event
     }
 
     @HostListener('mousemove', ['$event'])
     onMouseover(event: MouseEvent) {
         console.log('gg');
         this.mouseover.emit(event);
-        //return false;
+        return false;
     }
 
     @HostListener('document:mousemove', ['$event'])

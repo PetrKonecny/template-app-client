@@ -11,8 +11,6 @@ export class Resizable implements OnInit {
     running: boolean = false;
     border: Border
     position: any = {left: 0, top: 0}
-    startElement: ElementDimensions;
-    nearestViablePos: ElementDimensions;
     mouseup = new EventEmitter();
     mousedown = new EventEmitter();
     mousemove = new EventEmitter();
@@ -52,11 +50,10 @@ export class Resizable implements OnInit {
 
     constructor(public element: ElementRef) {
         this.mousedrag = this.mousedown.map((event: MouseEvent) => {
-            this.startElement = this.getStats();
             if(!this.border){
                 this.enabled = false
             }
-             this.position = { left: event.clientX, top: event.clientY}
+            this.position = { left: event.clientX, top: event.clientY}
             return {
                 left: event.clientX ,
                 top: event.clientY
@@ -105,14 +102,14 @@ export class Resizable implements OnInit {
     }   
 
     getHeight() {
-        //return this.element.nativeElement.scrollHeight
-        return this.styleToNum(this.element.nativeElement.parentElement.style.height)
+        return this.element.nativeElement.clientHeight
+        //return this.styleToNum(this.element.nativeElement.parentElement.style.height)
         //eturn this.element.nativeElement.scrollHeight;
     }
 
     getWidth() {
-        //return this.element.nativeElement.scrollWidth
-        return this.styleToNum(this.element.nativeElement.parentElement.style.width)
+        return this.element.nativeElement.clientWidth
+        //return this.styleToNum(this.element.nativeElement.parentElement.style.width)
         //return this.element.nativeElement.scrollWidth;
     }
     

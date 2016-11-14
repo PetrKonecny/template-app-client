@@ -6,7 +6,8 @@ export class TableElement extends Element {
     type: string = 'table_element';
     font: Font;
     rows: Array<Row>;
-    cells: Array<Cell>;  
+    cells: Array<Cell>;
+    locked: boolean = true;  
 }
 
 

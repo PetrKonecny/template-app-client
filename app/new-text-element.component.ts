@@ -18,7 +18,7 @@ import { Resizable } from './resizable.directive'
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (click)="onElementClicked()" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
+        <div draggable2 resizable  (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (click)="onElementClicked()" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>                       
         </div>
     `,
@@ -99,13 +99,16 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck {
     }
     
     resize(dimensions: ElementDimensions){
-        this.element.width += dimensions.width
+        if (dimensions.width){
+            this.element.width += dimensions.width
+        } else if (dimensions.height){
         this.element.height += dimensions.height
+        }
     }
     
     move(dimensions: ElementDimensions){
-        this.element.positionX = dimensions.left
-        this.element.positionY = dimensions.top 
+        this.element.positionX += dimensions.left
+        this.element.positionY += dimensions.top 
     }
     
     outOfBounds(dimensions: ElementDimensions){
