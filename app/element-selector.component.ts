@@ -33,7 +33,13 @@ import {FontService} from './font.service';
                         <button (click)="changeTextAlign('justify')">Justify</button>
                     </div>                    
                 </div>
-                <div *ngIf="elementSelector.selectedElement.type == 'table_element'">                            
+                <div *ngIf="elementSelector.selectedElement.type == 'table_element'"> 
+                    <button *ngIf="elementSelector.selectedElement.locked" (click)="unlock()">Edit rows/columns</button>
+                    <div *ngIf="!elementSelector.selectedElement.locked" >
+                        <button (click)="lock()">Done editing</button>
+                        <button (click)="distributeRows()">Distribute rows</button>
+                        <button (click)="distributeColumns()">Distribute columns</button>
+                    </div>
                 </div>
                 </span>
              `,
@@ -53,6 +59,22 @@ export class ElementSelectorComponent implements OnInit {
     
     openFonts(){
         this.fontSelector.openSelectorWindow()
+    }
+    
+    unlock(){
+        this.elementSelector.unlockTable()
+    }
+    
+    lock(){
+        this.elementSelector.lockTable()
+    }
+    
+    distributeRows(){
+        this.elementSelector.distributeTableRows()
+    }
+    
+    distributeColumns(){
+        this.elementSelector.distributeTableColumns()
     }
     
     deleteElement(){

@@ -6,6 +6,7 @@ import {NewTextElementComponent} from './new-text-element.component'
 import {Font} from './font'
 import {TextElement} from './text-element'
 import {TemplateInstanceStore} from './template-instance.store'
+import {TableElement} from './table-element'
 
 @Injectable()
 export class ElementSelector {
@@ -37,4 +38,27 @@ export class ElementSelector {
         (<TextElement>this.selectedElement).text_align_vertical = align;
     }
     
+    unlockTable(){
+        (<TableElement>this.selectedElement).locked = false
+    }
+    
+    lockTable(){
+        (<TableElement>this.selectedElement).locked = true
+    }    
+    
+    distributeTableRows(){
+        var element = <TableElement>this.selectedElement
+        var total = 0
+        element.rows.forEach((row) => total += row.height)
+        var avg = Math.ceil(total / (element.rows.length - 1))
+        element.rows.forEach((row) => row.height = avg)
+    }
+    
+    distributeTableColumns(){
+        var element = <TableElement>this.selectedElement
+        var total = 0
+        element.cells.forEach((cell) => total += cell.width)
+        var avg = Math.ceil(total / (element.cells.length - 1))
+        element.cells.forEach((cell) => cell.width = avg)
+    }
 }

@@ -115,17 +115,18 @@ export class Draggable2 implements OnInit {
     
     detectBorderPosition(pos) {
         var borderPosition;
+        var range = 10
         var fromLeft = pos.left;
         var fromTop = pos.top;
         var fromRight = this.getWidth() - pos.left;
         var fromBottom = this.getHeight() - pos.top;
-        if (fromLeft < 10) {
+        if (fromLeft < range) {
             borderPosition = Border.left;
-        } else if (fromTop < 10) {
+        } else if (fromTop < range) {
             borderPosition = Border.top;
-        } else if (fromRight < 10) {
+        } else if (fromRight < range) {
             borderPosition = Border.right;
-        } else if (fromBottom < 10) {
+        } else if (fromBottom < range) {
             borderPosition = Border.bottom;
         } else {
             borderPosition = null;

@@ -1,26 +1,30 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit, HostListener} from '@angular/core';
 import { NewTextElementComponent} from './new-text-element.component'
 import { NewImageElementComponent} from './new-image-element.component'
-import { TableElement } from './table-element'
+import { TableElement, Cell, Row } from './table-element'
 import { Draggable2, ElementDimensions} from './draggable2.directive'
+import { Resizable } from './resizable.directive'
 import { NewTableRowComponent } from './new-table-row.component'
 import { ElementSelector } from './element-selector'
 
 @Component({
     selector: 'create-new-table-element',
     template: `
-        <table *ngIf="element.locked" draggable2 (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
-            <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i" [style.height.px]="row.height"></tr>
+        <table *ngIf="element.locked" draggable2 resizable (resize)="resize($event)" (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+            <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i" [style.height.px]="row.height" [content]="element.content.rows[i]" class="locked"></tr>
         </table>
-        <table *ngIf="!element.locked" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <table *ngIf="!element.locked || element.editable" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i" [style.height.px]="row.height"></tr>
-        </table>
+        </table>     
         `,
     styles:[`
         .inner {
             position: absolute;
             overflow: hidden;         
             background-color: rgba(0, 0, 0, 0.25);
+        }
+        .locked {
+            pointer-events: none;
         }
         .button{
             z-index: 1000;
@@ -38,7 +42,7 @@ import { ElementSelector } from './element-selector'
             border: 1px solid black;
         }`
     ],
-    directives: [Draggable2,  NewTextElementComponent, NewImageElementComponent, NewTableRowComponent ]
+    directives: [Draggable2,  NewTextElementComponent, NewImageElementComponent, NewTableRowComponent, Resizable ]
 })
 
        
@@ -46,10 +50,43 @@ export class NewTableElementComponent implements OnInit{
     
     @Input()
     element : TableElement
+    counter: number
     
     move(dimensions: ElementDimensions){
         this.element.positionX += dimensions.left
         this.element.positionY += dimensions.top 
+    }
+    
+    resize(dimensions: ElementDimensions){
+        if (dimensions.width){
+            this.counter += dimensions.width
+            if (this.counter > this.element.default_cell_width){
+                this.element.cells.push(new Cell(this.element.default_cell_width))
+                this.counter = 0
+            } else if (this.counter < -this.element.default_cell_width){
+                if (this.element.cells.length > 1){
+                    this.element.cells.pop()
+                }
+                this.counter = 0
+            }
+        } else if (dimensions.height){
+            this.counter += dimensions.height
+            if (this.counter > this.element.default_row_height){
+                this.element.rows.push(new Row(this.element.default_row_height))
+                this.counter = 0
+            } else if (this.counter < -this.element.default_row_height){
+                if (this.element.rows.length > 1){
+                    this.element.rows.pop()
+                }
+                this.counter = 0
+            }
+        }
+        
+    }
+    
+    @HostListener('mousedown', ['$event'])
+    onMousedown(event) {
+        this.counter = 0
     }
     
     constructor (private elementSelector: ElementSelector){}

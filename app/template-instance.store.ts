@@ -10,6 +10,8 @@ import {TextContent} from './text-content'
 import {ImageContent} from './image-content'
 import {Content} from './content'
 import {Page} from './page'
+import {TableElement} from './table-element'
+import {TableContent, RowContent, CellContent} from './table-content'
 
 
 @Injectable()
@@ -126,6 +128,17 @@ export class TemplateInstanceStore {
         }       
         if (element.type == 'image_element'){
             content = new ImageContent();
+        }
+        if (element.type == 'table_element'){
+            var tableContent = new TableContent()
+            var tableElement = <TableElement>element
+            tableElement.rows.forEach(
+                (row) => {
+                    var rowContent = new RowContent()
+                    tableElement.cells.forEach((cell) => rowContent.cells.push(new CellContent()))
+                    tableContent.rows.push(new RowContent)
+                }
+            )
         }
         element.content = content;
         return content;
