@@ -10,7 +10,7 @@ export class TableElement extends Element {
     rows: Array<Row>;
     cells: Array<Cell>;
     locked: boolean = true;
-    editable: boolean = true;  
+    editable: boolean = false;  
 }
 
 

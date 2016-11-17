@@ -6,15 +6,16 @@ import { Draggable2, ElementDimensions} from './draggable2.directive'
 import { Resizable } from './resizable.directive'
 import { NewTableRowComponent } from './new-table-row.component'
 import { ElementSelector } from './element-selector'
+import { TableContent, CellContent, RowContent } from './table-content'
 
 @Component({
     selector: 'create-new-table-element',
     template: `
-        <table *ngIf="element.locked" draggable2 resizable (resize)="resize($event)" (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <table *ngIf="element.locked && !element.editable" draggable2 resizable (resize)="resize($event)" (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i" [style.height.px]="row.height" [content]="element.content.rows[i]" class="locked"></tr>
         </table>
-        <table *ngIf="!element.locked || element.editable" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
-            <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i" [style.height.px]="row.height"></tr>
+        <table *ngIf="!element.locked || element.editable" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
+            <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height"></tr>
         </table>     
         `,
     styles:[`
@@ -61,22 +62,33 @@ export class NewTableElementComponent implements OnInit{
         if (dimensions.width){
             this.counter += dimensions.width
             if (this.counter > this.element.default_cell_width){
+                for (var row of (<TableContent>this.element.content).rows){
+                    row.cells.push(new CellContent)
+                }
                 this.element.cells.push(new Cell(this.element.default_cell_width))
                 this.counter = 0
             } else if (this.counter < -this.element.default_cell_width){
                 if (this.element.cells.length > 1){
+                    for (var row of (<TableContent>this.element.content).rows){
+                        row.cells.pop
+                    }
                     this.element.cells.pop()
                 }
                 this.counter = 0
             }
         } else if (dimensions.height){
+            var content = <TableContent> this.element.content
             this.counter += dimensions.height
             if (this.counter > this.element.default_row_height){
+                var row = new RowContent;
+                content.rows.push(row)
+                row.addCells(this.element.cells.length)
                 this.element.rows.push(new Row(this.element.default_row_height))
                 this.counter = 0
             } else if (this.counter < -this.element.default_row_height){
                 if (this.element.rows.length > 1){
                     this.element.rows.pop()
+                    content.rows.pop()
                 }
                 this.counter = 0
             }

@@ -8,6 +8,7 @@ import { NewElementComponent } from './new-element.component';
 import { TextContent } from './text-content'
 import { ImageContent } from './image-content'
 import { TemplateInstanceStore } from './template-instance.store'
+import { TableContent} from './table-content'
 
 @Component({
     selector: 'create-new-page',
@@ -76,14 +77,17 @@ export class NewPageComponent  {
             this.page.elements = new Array<Element>();
         }
         var element = new TableElement();
-        element.width = 100;
-        element.height = 100;
-        element.positionX = 0;
-        element.positionY = 0;
+        element.width = 100
+        element.height = 100
+        element.positionX = 0
+        element.positionY = 0
         element.cells = [new Cell(30),new Cell(60),new Cell(90),new Cell(120),new Cell(150)]
         element.rows = [new Row(20),new Row(40),new Row(60),new Row(80),new Row(100)]
-        element.content = new ImageContent();
-        this.page.elements.push(element);
+        var content = new TableContent()
+        content.addRows(5,5)
+        element.content = content
+        console.log(content)
+        this.page.elements.push(element)
     }
     onDeleteClicked(){
         this.templateInstanceStore.deletePageFromTemplate(this.page);

@@ -34,9 +34,10 @@ import {FontService} from './font.service';
                     </div>                    
                 </div>
                 <div *ngIf="elementSelector.selectedElement.type == 'table_element'"> 
-                    <button *ngIf="elementSelector.selectedElement.locked" (click)="unlock()">Edit rows/columns</button>
+                    <button *ngIf="elementSelector.selectedElement.locked" (click)="editTable()">Edit table</button>
+                    <button *ngIf="!elementSelector.selectedElement.locked || elementSelector.selectedElement.editable" (click)="moveTable()">Move or resize table</button>
+                    <button *ngIf="!elementSelector.selectedElement.editable" (click)="filloutTable()">FilloutTable</button>
                     <div *ngIf="!elementSelector.selectedElement.locked" >
-                        <button (click)="lock()">Done editing</button>
                         <button (click)="distributeRows()">Distribute rows</button>
                         <button (click)="distributeColumns()">Distribute columns</button>
                     </div>
@@ -61,12 +62,19 @@ export class ElementSelectorComponent implements OnInit {
         this.fontSelector.openSelectorWindow()
     }
     
-    unlock(){
-        this.elementSelector.unlockTable()
+    editTable(){
+        this.elementSelector.setLocked(false)
+        this.elementSelector.setEditable(false)
     }
     
-    lock(){
-        this.elementSelector.lockTable()
+    moveTable(){
+        this.elementSelector.setLocked(true)
+        this.elementSelector.setEditable(false)
+    }
+    
+    filloutTable(){
+        this.elementSelector.setLocked(true)
+        this.elementSelector.setEditable(true)
     }
     
     distributeRows(){

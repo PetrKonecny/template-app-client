@@ -133,12 +133,13 @@ export class TemplateInstanceStore {
             var tableContent = new TableContent()
             var tableElement = <TableElement>element
             tableElement.rows.forEach(
-                (row) => {
+                () => {
                     var rowContent = new RowContent()
-                    tableElement.cells.forEach((cell) => rowContent.cells.push(new CellContent()))
+                    tableElement.cells.forEach(() => rowContent.cells.push(new CellContent()))
                     tableContent.rows.push(new RowContent)
                 }
             )
+            content = tableContent
         }
         element.content = content;
         return content;

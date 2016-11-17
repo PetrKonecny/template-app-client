@@ -34,7 +34,6 @@ export class NewTableRowComponent implements OnInit{
     fillFromDOM(){
     }    
     
-    ngOnInit(){
-      
+    ngOnInit(){    
     }
 }

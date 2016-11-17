@@ -5,8 +5,8 @@ import { CellContent } from './table-content'
 @Component({
     selector: 'td',
     template: `
-                <div *ngIf="!element.locked && !element.editable" resizable (resize)="resize($event)" > Hello</div>
-                <div *ngIf="element.locked && !element.editable">Hello</div>
+                <div *ngIf="!element.locked && !element.editable" resizable (resize)="resize($event)" >{{content.text}}</div>
+                <div *ngIf="element.locked && !element.editable">{{content.text}}</div>
                 <textarea  *ngIf="element.locked && element.editable" [(ngModel)]="content.text"></textarea>
     `
 ,
@@ -16,8 +16,6 @@ import { CellContent } from './table-content'
             height: inherit;
         }
         textarea{
-            min-height: 100%;
-            min-width: 100%;
             resize: none;
             background: none;
             border: none;

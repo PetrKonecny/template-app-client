@@ -38,13 +38,19 @@ export class ElementSelector {
         (<TextElement>this.selectedElement).text_align_vertical = align;
     }
     
-    unlockTable(){
-        (<TableElement>this.selectedElement).locked = false
+    setLocked(locked: boolean ){
+        (<TableElement>this.selectedElement).locked = locked
+    }
+     
+    setEditable(editable: boolean){
+        (<TableElement>this.selectedElement).editable = editable
     }
     
-    lockTable(){
-        (<TableElement>this.selectedElement).locked = true
-    }    
+    editTable(){
+        var element = 
+        (<TableElement>this.selectedElement).editable = true
+    }  
+    
     
     distributeTableRows(){
         var element = <TableElement>this.selectedElement
