@@ -6,7 +6,7 @@ import { RowContent } from './table-content'
 @Component({
     selector: 'tr',
     template: `
-                <td *ngFor = "let cell of element.cells; let i = index" [element]="element" [y]="y" [x]="i" [content]="content.cells[i]" [style.width.px]="cell.width"></td>
+                <td *ngFor = "let cell of element.rows[y].cells; let i = index" [element]="element" [y]="y" [x]="i" [content]="content.cells[i]" [style.width.px]="cell.width"></td>
         `
     ,
     directives: [NewTableCellComponent], 

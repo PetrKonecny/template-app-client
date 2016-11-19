@@ -8,6 +8,7 @@ import {UPLOAD_DIRECTIVES} from 'ng2-uploader/ng2-uploader';
 import {FontSelector} from './font-selector';
 import {FontSelectorComponent} from './font-selector.component';
 import {FontService} from './font.service';
+import {ClientState} from './table-element'
 
 @Component({
     selector: 'element-select',
@@ -34,10 +35,14 @@ import {FontService} from './font.service';
                     </div>                    
                 </div>
                 <div *ngIf="elementSelector.selectedElement.type == 'table_element'"> 
-                    <button *ngIf="elementSelector.selectedElement.locked" (click)="editTable()">Edit table</button>
-                    <button *ngIf="!elementSelector.selectedElement.locked || elementSelector.selectedElement.editable" (click)="moveTable()">Move or resize table</button>
-                    <button *ngIf="!elementSelector.selectedElement.editable" (click)="filloutTable()">FilloutTable</button>
-                    <div *ngIf="!elementSelector.selectedElement.locked" >
+                    <button *ngIf="elementSelector.selectedElement.clientState != 2" (click)="editTable()">Edit table</button>
+                    <button *ngIf="elementSelector.selectedElement.clientState != 0" (click)="moveTable()">Move or resize table</button>
+                    <button *ngIf="elementSelector.selectedElement.clientState != 1" (click)="filloutTable()">Fillout table</button>\n\
+                    <button *ngIf="elementSelector.selectedElement.clientState != 3" (click)="editCells()">Edit cells</button>
+                    <div *ngIf="elementSelector.selectedElement.clientState == 3"  >
+                        Font size: <input #fontsize (keyup)="changeSelectedCellsFontSize(fontsize.value)">
+                    </div>
+                    <div *ngIf="elementSelector.selectedElement.clientState == 2"  >
                         <button (click)="distributeRows()">Distribute rows</button>
                         <button (click)="distributeColumns()">Distribute columns</button>
                     </div>
@@ -63,18 +68,19 @@ export class ElementSelectorComponent implements OnInit {
     }
     
     editTable(){
-        this.elementSelector.setLocked(false)
-        this.elementSelector.setEditable(false)
+        this.elementSelector.setElementClientState(ClientState.editTable)
     }
     
     moveTable(){
-        this.elementSelector.setLocked(true)
-        this.elementSelector.setEditable(false)
+        this.elementSelector.setElementClientState(ClientState.moveResize)
     }
     
     filloutTable(){
-        this.elementSelector.setLocked(true)
-        this.elementSelector.setEditable(true)
+        this.elementSelector.setElementClientState(ClientState.fillOut)
+    }
+    
+    editCells(){
+        this.elementSelector.setElementClientState(ClientState.editCells)
     }
     
     distributeRows(){
@@ -83,6 +89,10 @@ export class ElementSelectorComponent implements OnInit {
     
     distributeColumns(){
         this.elementSelector.distributeTableColumns()
+    }
+    
+    changeSelectedCellsFontSize(size: number){
+        this.elementSelector.changeSelectedCellsFontSize(size)
     }
     
     deleteElement(){

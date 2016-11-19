@@ -81,8 +81,7 @@ export class NewPageComponent  {
         element.height = 100
         element.positionX = 0
         element.positionY = 0
-        element.cells = [new Cell(30),new Cell(60),new Cell(90),new Cell(120),new Cell(150)]
-        element.rows = [new Row(20),new Row(40),new Row(60),new Row(80),new Row(100)]
+        element.addRows(5,5)
         var content = new TableContent()
         content.addRows(5,5)
         element.content = content

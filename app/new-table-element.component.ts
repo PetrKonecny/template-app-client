@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core';
 import { NewTextElementComponent} from './new-text-element.component'
 import { NewImageElementComponent} from './new-image-element.component'
-import { TableElement, Cell, Row } from './table-element'
+import { TableElement, Cell, Row, ClientState} from './table-element'
 import { Draggable2, ElementDimensions} from './draggable2.directive'
 import { Resizable } from './resizable.directive'
 import { NewTableRowComponent } from './new-table-row.component'
@@ -11,10 +11,10 @@ import { TableContent, CellContent, RowContent } from './table-content'
 @Component({
     selector: 'create-new-table-element',
     template: `
-        <table *ngIf="element.locked && !element.editable" draggable2 resizable (resize)="resize($event)" (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <table *ngIf="element.clientState == 0" draggable2 resizable (resize)="resize($event)" (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i" [style.height.px]="row.height" [content]="element.content.rows[i]" class="locked"></tr>
         </table>
-        <table *ngIf="!element.locked || element.editable" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
+        <table *ngIf="element.clientState > 0" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height"></tr>
         </table>     
         `,
@@ -65,14 +65,14 @@ export class NewTableElementComponent implements OnInit{
                 for (var row of (<TableContent>this.element.content).rows){
                     row.cells.push(new CellContent)
                 }
-                this.element.cells.push(new Cell(this.element.default_cell_width))
+                this.element.addCellToRows()
                 this.counter = 0
             } else if (this.counter < -this.element.default_cell_width){
-                if (this.element.cells.length > 1){
+                if (this.element.rows[0].cells.length > 1){
                     for (var row of (<TableContent>this.element.content).rows){
                         row.cells.pop
                     }
-                    this.element.cells.pop()
+                    this.element.removeCellFromRows()
                 }
                 this.counter = 0
             }
@@ -82,8 +82,8 @@ export class NewTableElementComponent implements OnInit{
             if (this.counter > this.element.default_row_height){
                 var row = new RowContent;
                 content.rows.push(row)
-                row.addCells(this.element.cells.length)
-                this.element.rows.push(new Row(this.element.default_row_height))
+                row.addCells(this.element.rows[0].cells.length)
+                this.element.addRows(1, this.element.rows[0].cells.length)
                 this.counter = 0
             } else if (this.counter < -this.element.default_row_height){
                 if (this.element.rows.length > 1){

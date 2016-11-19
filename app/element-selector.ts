@@ -6,7 +6,7 @@ import {NewTextElementComponent} from './new-text-element.component'
 import {Font} from './font'
 import {TextElement} from './text-element'
 import {TemplateInstanceStore} from './template-instance.store'
-import {TableElement} from './table-element'
+import {TableElement, ClientState} from './table-element'
 
 @Injectable()
 export class ElementSelector {
@@ -38,19 +38,9 @@ export class ElementSelector {
         (<TextElement>this.selectedElement).text_align_vertical = align;
     }
     
-    setLocked(locked: boolean ){
-        (<TableElement>this.selectedElement).locked = locked
+    setElementClientState(state: ClientState){
+        (<TableElement>this.selectedElement).clientState = state
     }
-     
-    setEditable(editable: boolean){
-        (<TableElement>this.selectedElement).editable = editable
-    }
-    
-    editTable(){
-        var element = 
-        (<TableElement>this.selectedElement).editable = true
-    }  
-    
     
     distributeTableRows(){
         var element = <TableElement>this.selectedElement
@@ -59,12 +49,17 @@ export class ElementSelector {
         var avg = Math.ceil(total / (element.rows.length - 1))
         element.rows.forEach((row) => row.height = avg)
     }
-    
+
     distributeTableColumns(){
         var element = <TableElement>this.selectedElement
         var total = 0
-        element.cells.forEach((cell) => total += cell.width)
-        var avg = Math.ceil(total / (element.cells.length - 1))
-        element.cells.forEach((cell) => cell.width = avg)
+        element.rows[0].cells.forEach((cell) => total += cell.width)
+        var avg = Math.ceil(total / (element.rows[0].cells.length - 1))
+        element.rows.forEach((row)=> row.cells.forEach((cell) => cell.width = avg))
+    }
+    
+    changeSelectedCellsFontSize(size: number){
+        var element = <TableElement>this.selectedElement
+        element.selectedCells.forEach((cell) => cell.font_size = size)
     }
 }
