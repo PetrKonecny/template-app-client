@@ -39,8 +39,22 @@ import {ClientState} from './table-element'
                     <button *ngIf="elementSelector.selectedElement.clientState != 0" (click)="moveTable()">Move or resize table</button>
                     <button *ngIf="elementSelector.selectedElement.clientState != 1" (click)="filloutTable()">Fillout table</button>\n\
                     <button *ngIf="elementSelector.selectedElement.clientState != 3" (click)="editCells()">Edit cells</button>
-                    <div *ngIf="elementSelector.selectedElement.clientState == 3"  >
+                    <div *ngIf="elementSelector.selectedElement.clientState == 3">
+                        <font-selector *ngIf="fontsOpened" ></font-selector>
+                        <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
+                        <br>
                         Font size: <input #fontsize (keyup)="changeSelectedCellsFontSize(fontsize.value)">
+                        <br>
+                        Bold: <input type='checkbox' #bold (change)="changeSelectedCellsBold(bold.checked)">
+                        Italic: <input type='checkbox' #italic (change)="changeSelectedCellsItalic(italic.checked)">
+                        <br>
+                        <button (click)="changeSelectedCellsTextAlign('left')">Allign left</button>
+                        <button (click)="changeSelectedCellsTextAlign('right')">Allign right</button>
+                        <button (click)="changeSelectedCellsTextAlign('center')">Allign center</button>
+                        <br>
+                        <button (click)="changeSelectedCellsTextAlignVert('top')">Align top</button>
+                        <button (click)="changeSelectedCellsTextAlignVert('bottom')">Align bottom</button>
+                        <button (click)="changeSelectedCellsTextAlignVert('middle')">Align middle</button>
                     </div>
                     <div *ngIf="elementSelector.selectedElement.clientState == 2"  >
                         <button (click)="distributeRows()">Distribute rows</button>
@@ -95,6 +109,21 @@ export class ElementSelectorComponent implements OnInit {
         this.elementSelector.changeSelectedCellsFontSize(size)
     }
     
+    changeSelectedCellsBold(bold: boolean){
+        this.elementSelector.changeSelectedCellsBold(bold)
+    }
+    changeSelectedCellsItalic(italic: boolean){
+        this.elementSelector.changeSelectedCellsItalic(italic)
+    }
+    
+    changeSelectedCellsTextAlign(align: string){
+        this.elementSelector.changeSelectedCellsTextAlign(align)
+    }
+    
+    changeSelectedCellsTextAlignVert(align: string){
+        this.elementSelector.changeSelectedCellsTextAlignVert(align)
+    }
+  
     deleteElement(){
         this.elementSelector.deleteElement();
     }

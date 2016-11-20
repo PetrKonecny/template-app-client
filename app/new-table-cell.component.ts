@@ -1,14 +1,14 @@
-import { Component, Input, OnInit, HostListener} from '@angular/core';
+import { Component, Input, OnInit, HostListener, ElementRef, Inject} from '@angular/core';
 import { Resizable } from './resizable.directive' 
 import { TableElement } from './table-element'
 import { CellContent } from './table-content'
 @Component({
-    selector: 'td',
+    selector: '[myComponent]',
     template: `
-                <div *ngIf="element.clientState == 2" resizable (resize)="resize($event)" [style.font-size.px]="element.rows[y].cells[x].font_size">{{content.text}}</div>
-                <div *ngIf="element.clientState == 0" [style.font-size.px]="element.rows[y].cells[x].font_size">{{content.text}}</div>
-                <div *ngIf="element.clientState == 3" [class.selected]="element.rows[y].cells[x].selected" [style.font-size.px]="element.rows[y].cells[x].font_size">{{content.text}}</div>
-                <textarea  *ngIf="element.clientState == 1" [(ngModel)]="content.text" [style.font-size.px]="element.rows[y].cells[x].font_size"></textarea>
+                <td *ngIf="element.clientState == 2" resizable (resize)="resize($event)" [style.text-align]="element.rows[y].cells[x].text_align" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size">{{content.text}}</td>
+                <td *ngIf="element.clientState == 0" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size">{{content.text}}</td>
+                <td *ngIf="element.clientState == 3" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [class.selected]="element.rows[y].cells[x].selected" [style.font-size.px]="element.rows[y].cells[x].font_size">{{content.text}}</td>
+                <td><textarea  *ngIf="element.clientState == 1" [(ngModel)]="content.text" [style.text-align]="element.rows[y].cells[x].text_align"  [style.font-size.px]="element.rows[y].cells[x].font_size" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold"></textarea></td>
     `
 ,
     directives: [Resizable],
@@ -16,7 +16,7 @@ import { CellContent } from './table-content'
         div{
             height: inherit;
             overflow: hidden;
-        }
+        }    
         textarea{
             resize: none;
             background: none;
@@ -31,6 +31,12 @@ import { CellContent } from './table-content'
         .selected{
             background-color: yellow;
         }
+        .bold{
+            font-weight: bold;
+        }
+        .italic{
+            font-style: italic;
+        }
     `]
 })
 
@@ -39,6 +45,8 @@ export class NewTableCellComponent implements OnInit{
         
     @Input()
     element: TableElement;
+    
+    @Input('myTd') td;
     
     @Input()
     x: number
@@ -49,7 +57,7 @@ export class NewTableCellComponent implements OnInit{
     @Input()
     content: CellContent
     
-    selecting: boolean
+    selecting: boolean   
     
     fillFromDOM(){
     }    

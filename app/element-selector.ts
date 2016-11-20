@@ -23,7 +23,11 @@ export class ElementSelector {
     }
     
     public changeFont(font: Font) {
-        (<TextElement>this.selectedElement).font = font;
+        if (this.selectedElement.type == 'text_element'){
+            (<TextElement>this.selectedElement).font = font
+        } else if (this.selectedElement.type == 'table_element'){
+            (<TableElement>this.selectedElement).selectedCells.forEach((cell) => cell.font = font)
+        }
     }
     
     public deleteElement(){
@@ -61,5 +65,25 @@ export class ElementSelector {
     changeSelectedCellsFontSize(size: number){
         var element = <TableElement>this.selectedElement
         element.selectedCells.forEach((cell) => cell.font_size = size)
+    }
+    
+    changeSelectedCellsBold(bold: boolean){
+        var element = <TableElement>this.selectedElement
+        element.selectedCells.forEach((cell) => cell.bold = bold)
+    }
+    
+    changeSelectedCellsItalic(italic: boolean){
+        var element = <TableElement>this.selectedElement
+        element.selectedCells.forEach((cell) => cell.italic = italic)
+    }
+    
+    changeSelectedCellsTextAlign(align: string){
+        var element = <TableElement>this.selectedElement
+        element.selectedCells.forEach((cell) => cell.text_align = align)
+    }
+    
+    changeSelectedCellsTextAlignVert(align: string){
+        var element = <TableElement>this.selectedElement
+        element.selectedCells.forEach((cell) => cell.vertical_align = align)
     }
 }

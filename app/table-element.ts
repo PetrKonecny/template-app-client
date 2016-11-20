@@ -68,5 +68,9 @@ export class Cell{
     width: number
     font: Font
     font_size: number
+    bold: boolean
+    italic: boolean
+    text_align: string
+    vertical_align: string
     selected: boolean
 }
