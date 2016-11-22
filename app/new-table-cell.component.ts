@@ -80,7 +80,7 @@ export class NewTableCellComponent implements OnInit{
             }
             var cell = this.element.rows[this.y].cells[this.x]
             if (!cell.selected){
-                this.element.selectCell(cell)
+                TableElement.selectCell(this.element,cell)
             }
         }
     }

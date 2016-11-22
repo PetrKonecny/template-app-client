@@ -7,44 +7,44 @@ export class TableElement extends Element {
     font_size: number;
     type: string = 'table_element';
     font: Font;
-    default_cell_width: number = 100
-    default_row_height: number = 30
+    static default_cell_width: number = 100
+    static default_row_height: number = 30
     rows: Array<Row>;
     selectedCells: Array<Cell>
     clientState: ClientState = ClientState.moveResize 
     
-    addRows(count: number, length: number, height: number = this.default_row_height, width: number = this.default_cell_width){
-        if(!this.rows) this.rows = new Array()
+    static addRows(element:TableElement, count: number, length: number, height: number = this.default_row_height, width: number = this.default_cell_width){
+        if(!element.rows) element.rows = new Array()
         for(var i = 0; i<count; i++){
             var row = new Row()
             row.height = height
-            row.addCells(length,width)
-            this.rows.push(row)
+            Row.addCells(row,length,width)
+            element.rows.push(row)
         }
     }
     
-    addCellToRows(width: number = this.default_cell_width){
-        for(var row of this.rows){
+    static addCellToRows(element:TableElement, width: number = this.default_cell_width){
+        for(var row of element.rows){
             var cell = new Cell
             cell.width = width
             row.cells.push(cell)
         }
     }
     
-    removeCellFromRows(){
-        for(var row of this.rows){
+    static removeCellFromRows(element: TableElement){
+        for(var row of element.rows){
             row.cells.pop()
         }
     }
     
-    selectCell(cell: Cell){
+    static selectCell(element: TableElement, cell: Cell){
         cell.selected = true
-        this.selectedCells.push(cell)
+        element.selectedCells.push(cell)
     }
     
-    clearSelectedCells(){
-        this.selectedCells.forEach((cell) => cell.selected = false)
-        this.selectedCells = new Array
+    static clearSelectedCells(element: TableElement){
+        element.selectedCells.forEach((cell) => cell.selected = false)
+        element.selectedCells = new Array
     }
     
 }
@@ -54,12 +54,12 @@ export class Row{
     cells: Array<Cell>;
     height: number
     
-    addCells (count: number, width: number){
-        if (!this.cells) this.cells = new Array()
+    static addCells (row: Row, count: number, width: number){
+        if (!row.cells) row.cells = new Array()
         for(var i = 0; i<count; i++){
             var cell = new Cell()
             cell.width = width
-            this.cells.push(cell)
+            row.cells.push(cell)
         }
     }
 }

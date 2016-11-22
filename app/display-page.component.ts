@@ -15,6 +15,7 @@ import { DisplayElementComponent } from './display-element.component';
         .page {
             width: 210mm;
             background-color: white;
+            border: 1px solid grey;
             height: 297mm;
             position: relative;
         }

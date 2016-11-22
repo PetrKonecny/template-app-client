@@ -7,11 +7,13 @@ import { ImageSelector, ImageRefreshable} from './image-selector';
 import { ImageContent } from './image-content';
 import { TextContent } from './text-content' 
 import { TextElement} from './text-element'
+import { TableElement } from './table-element'
+import { DisplayTableElementComponent } from './display-table-element.component'
 import { DisplayContentImgDragComponent } from './display-content-img-drag.component';
 
 @Component({
     selector: 'display-element',
-    template: `\n\
+    template: `
         <div *ngIf="element.type === 'text_element'" class ="element" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY" [style.font-size.px] = "element.font_size">
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
         </div>
@@ -29,6 +31,7 @@ import { DisplayContentImgDragComponent } from './display-content-img-drag.compo
                 <button *ngIf="element.content && element.content.image" (click)="onDoneAdjustButtonClick()" class="button">Done adjusting</button>
             </div>
         </div>
+        <display-table-element *ngIf="element.type == 'table_element'" [element]="element"></display-table-element>
     `,
     styles:[`
         .element {
@@ -42,7 +45,7 @@ import { DisplayContentImgDragComponent } from './display-content-img-drag.compo
             z-index: 1000;
         }
     `],
-    directives: [DisplayContentComponent, DisplayContentImgDragComponent]
+    directives: [DisplayContentComponent, DisplayContentImgDragComponent,  DisplayTableElementComponent]
 })
 
 export class DisplayElementComponent implements AfterViewInit {

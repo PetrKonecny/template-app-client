@@ -61,31 +61,31 @@ export class NewTableElementComponent implements OnInit{
     resize(dimensions: ElementDimensions){
         if (dimensions.width){
             this.counter += dimensions.width
-            if (this.counter > this.element.default_cell_width){
+            if (this.counter > TableElement.default_cell_width){
                 for (var row of (<TableContent>this.element.content).rows){
                     row.cells.push(new CellContent)
                 }
-                this.element.addCellToRows()
+                TableElement.addCellToRows(this.element)
                 this.counter = 0
-            } else if (this.counter < -this.element.default_cell_width){
+            } else if (this.counter < -TableElement.default_cell_width){
                 if (this.element.rows[0].cells.length > 1){
                     for (var row of (<TableContent>this.element.content).rows){
                         row.cells.pop
                     }
-                    this.element.removeCellFromRows()
+                    TableElement.removeCellFromRows(this.element)
                 }
                 this.counter = 0
             }
         } else if (dimensions.height){
             var content = <TableContent> this.element.content
             this.counter += dimensions.height
-            if (this.counter > this.element.default_row_height){
+            if (this.counter > TableElement.default_row_height){
                 var row = new RowContent;
                 content.rows.push(row)
                 row.addCells(this.element.rows[0].cells.length)
-                this.element.addRows(1, this.element.rows[0].cells.length)
+                TableElement.addRows(this.element,1, this.element.rows[0].cells.length)
                 this.counter = 0
-            } else if (this.counter < -this.element.default_row_height){
+            } else if (this.counter < -TableElement.default_row_height){
                 if (this.element.rows.length > 1){
                     this.element.rows.pop()
                     content.rows.pop()
@@ -111,5 +111,6 @@ export class NewTableElementComponent implements OnInit{
     }    
     
     ngOnInit(){
+        this.element.clientState = 0
     }
 }

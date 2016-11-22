@@ -12,6 +12,29 @@ export class TableContent extends Content {
             this.rows.push(row)
         }
     }
+    
+    
+    static fillEmptyCells(content: TableContent){
+        
+        /*for (var row of content.rows){
+            for (var cell of row.cells){
+                console.log(cell)
+                if(!cell.text){
+                    cell = new CellContent()
+                }
+            }
+        }*/
+        
+        
+               
+        content.rows.forEach((row) => {row.cells = row.cells.map((cell) => {
+            if (!cell.text){
+                return new CellContent()
+            }else{
+                return cell
+            }
+        })})
+    }
 }
 
 export class RowContent{

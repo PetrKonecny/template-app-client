@@ -38,9 +38,9 @@ export class TemplateInstanceEditComponent implements OnInit  {
                 this.templateInstance = templateInstance
             });
             this.templateInstanceStore.template.subscribe(template => {
-                this.template = template                
-                this.templateInstanceStore.copyContentsFromTemplate();
-                this.templateInstanceStore.getContentsFromTemplateInstance();
+                this.template = template
+                this.templateInstanceStore.copyContentsFromTemplate()
+                this.templateInstanceStore.getContentsFromTemplateInstance()                
             });
         });
     }

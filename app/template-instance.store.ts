@@ -65,6 +65,7 @@ export class TemplateInstanceStore {
     }
     
     copyContentsFromTemplate(){
+        console.log(this._template.value)
         if(!this._template.value.pages) {
             return
         }
@@ -74,7 +75,10 @@ export class TemplateInstanceStore {
         
         for (var page of this._template.value.pages){
             for (var element of page.elements){
-                if(element.content){
+                if (this._templateInstance.value.contents.find((content)=>content.element_id == element.id) == null && element.content){
+                    if (element.content.type == 'table_content'){
+                        TableContent.fillEmptyCells(<TableContent>element.content)
+                    }
                     element.content.id = null;
                     this._templateInstance.value.contents.push(element.content);
                 }
@@ -115,6 +119,9 @@ export class TemplateInstanceStore {
         
         for (var content of this._templateInstance.value.contents){
             if(content.element_id === element.id){
+                if (content.type == 'table_content'){
+                    TableContent.fillEmptyCells(<TableContent>content)
+                }
                 return content;
             }        
         }

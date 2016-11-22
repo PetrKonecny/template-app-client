@@ -28,15 +28,20 @@ import { Resizable } from './resizable.directive'
             resize: none;
             background: none;
             border: none;
-            width: inherit;
+            width: 100%;
             height: inherit;
-            overflow:hidden;
+            overflow: hidden;
             font-family: inherit;
+            margin: 0;
             font-size: inherit;
             text-align: inherit;
+            -webkit-box-sizing: border-box; /* <=iOS4, <= Android  2.3 */
+            -moz-box-sizing: border-box; /* FF1+ */
+            box-sizing: border-box; /* Chrome, IE8, Opera, Safari 5.1*/
         }
         td {
             height: inherit;
+            padding: 0;
             border: 1px solid black;
             border-collapse: collapse;
         }
@@ -86,7 +91,7 @@ export class NewTableRowComponent implements OnInit{
             }
             var cell = this.element.rows[this.y].cells[this.x]
             if (!cell.selected){
-                this.element.selectCell(cell)
+                TableElement.selectCell(this.element,cell)
             }
         }
     }

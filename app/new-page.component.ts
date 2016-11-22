@@ -81,11 +81,10 @@ export class NewPageComponent  {
         element.height = 100
         element.positionX = 0
         element.positionY = 0
-        element.addRows(5,5)
+        TableElement.addRows(element,5,5)
         var content = new TableContent()
         content.addRows(5,5)
         element.content = content
-        console.log(content)
         this.page.elements.push(element)
     }
     onDeleteClicked(){
