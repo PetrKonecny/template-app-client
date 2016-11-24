@@ -15,6 +15,7 @@ import { NewElementComponent} from './new-element.component'
 import { ElementDimensions } from './draggable.directive'
 import { Draggable2 } from './draggable2.directive'
 import { Resizable } from './resizable.directive'
+import { NewPage } from './new-page'
 
 @Component({
     selector: 'create-new-image-element',
@@ -58,21 +59,17 @@ export class NewImageElementComponent {
     constructor(
         public elementRef: ElementRef, 
         private elementSelector: ElementSelector,
-        private imageSelector: ImageSelector
+        private imageSelector: ImageSelector,
+        private newPage: NewPage
     ){
     }
     
     resize(dimensions: ElementDimensions){
-        if (dimensions.width){
-            this.element.width += dimensions.width
-        } else if (dimensions.height){
-        this.element.height += dimensions.height
-        }
+        this.newPage.resize(this.element,dimensions)
     }
     
     move(dimensions: ElementDimensions){
-        this.element.positionX += dimensions.left
-        this.element.positionY += dimensions.top 
+        this.newPage.move(this.element,dimensions)
     }
     
     outOfBounds(dimensions: ElementDimensions){

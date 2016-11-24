@@ -7,6 +7,8 @@ import { Resizable } from './resizable.directive'
 import { NewTableRowComponent } from './new-table-row.component'
 import { ElementSelector } from './element-selector'
 import { TableContent, CellContent, RowContent } from './table-content'
+import { NewPage } from './new-page'
+
 
 @Component({
     selector: 'create-new-table-element',
@@ -54,46 +56,11 @@ export class NewTableElementComponent implements OnInit{
     counter: number
     
     move(dimensions: ElementDimensions){
-        this.element.positionX += dimensions.left
-        this.element.positionY += dimensions.top 
+        this.newPage.move(this.element,dimensions)
     }
     
     resize(dimensions: ElementDimensions){
-        if (dimensions.width){
-            this.counter += dimensions.width
-            if (this.counter > TableElement.default_cell_width){
-                for (var row of (<TableContent>this.element.content).rows){
-                    row.cells.push(new CellContent)
-                }
-                TableElement.addCellToRows(this.element)
-                this.counter = 0
-            } else if (this.counter < -TableElement.default_cell_width){
-                if (this.element.rows[0].cells.length > 1){
-                    for (var row of (<TableContent>this.element.content).rows){
-                        row.cells.pop
-                    }
-                    TableElement.removeCellFromRows(this.element)
-                }
-                this.counter = 0
-            }
-        } else if (dimensions.height){
-            var content = <TableContent> this.element.content
-            this.counter += dimensions.height
-            if (this.counter > TableElement.default_row_height){
-                var row = new RowContent;
-                content.rows.push(row)
-                row.addCells(this.element.rows[0].cells.length)
-                TableElement.addRows(this.element,1, this.element.rows[0].cells.length)
-                this.counter = 0
-            } else if (this.counter < -TableElement.default_row_height){
-                if (this.element.rows.length > 1){
-                    this.element.rows.pop()
-                    content.rows.pop()
-                }
-                this.counter = 0
-            }
-        }
-        
+        this.newPage.resizeTableElement(this.element,dimensions)      
     }
     
     @HostListener('mousedown', ['$event'])
@@ -101,7 +68,7 @@ export class NewTableElementComponent implements OnInit{
         this.counter = 0
     }
     
-    constructor (private elementSelector: ElementSelector){}
+    constructor (private elementSelector: ElementSelector, private newPage: NewPage){}
     
     onElementClicked(){
         this.elementSelector.changeElement(this.element)

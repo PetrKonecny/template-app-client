@@ -1,4 +1,4 @@
-import { Component, Input, ViewChildren, QueryList} from '@angular/core';
+import { Component, Input, ViewChildren, QueryList, Injectable, HostListener} from '@angular/core';
 import { Element} from './element';
 import { TextElement } from './text-element';
 import { ImageElement } from './image-element';
@@ -9,14 +9,18 @@ import { TextContent } from './text-content'
 import { ImageContent } from './image-content'
 import { TemplateInstanceStore } from './template-instance.store'
 import { TableContent} from './table-content'
+import { NewPage} from './new-page'
+import { Guide } from './guide'
+import { DisplayGuideComponent } from './display-guide.component'
 
 @Component({
     selector: 'create-new-page',
     template: `
-          <h3>New Page</h3>\n\
-          <div class ="page">\n\
+          <h3>New Page</h3>
+          <div class ="page">
             <div class="grid">
-                  <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>
+                  <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>\n\
+                  <display-guide *ngFor="let guide of guides" [guide] = "guide" ></display-guide>
             </div>
           </div>
           <button (click)="createNewTextElement()">Add text element</button>
@@ -35,15 +39,30 @@ import { TableContent} from './table-content'
             height: 297mm;
         }
     `],
-    directives: [NewElementComponent]
+    directives: [NewElementComponent, DisplayGuideComponent],
+    providers: [NewPage]
 })
 
 export class NewPageComponent  {
+    
+    @HostListener('mousedown', ['$event'])
+    onMousedown(event) {
+        this.newPage.mouseDown()
+    }
+
+    guides: Array<Guide>
 
     @Input()
     page: Page = new Page();  
     
-    constructor(private templateInstanceStore: TemplateInstanceStore) { }
+    constructor(private templateInstanceStore: TemplateInstanceStore, private newPage: NewPage) {
+        this.newPage.component = this
+        var guide = new Guide();
+        guide.positionY = 200;
+        guide.horizontal = true;
+        this.guides = new Array
+        this.guides.push(guide);
+    }
 
     createNewTextElement(){
         if (this.page.elements == null) {
