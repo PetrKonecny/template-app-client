@@ -55,6 +55,7 @@ import {ClientState} from './table-element'
                         <button (click)="changeSelectedCellsTextAlignVert('top')">Align top</button>
                         <button (click)="changeSelectedCellsTextAlignVert('bottom')">Align bottom</button>
                         <button (click)="changeSelectedCellsTextAlignVert('middle')">Align middle</button>
+                        <button *ngIf="elementSelector.selectedElement.selectedCells?.length > 0" (click)="clearSelection()">Clear selection</button>
                     </div>
                     <div *ngIf="elementSelector.selectedElement.clientState == 2"  >
                         <button (click)="distributeRows()">Distribute rows</button>
@@ -122,6 +123,10 @@ export class ElementSelectorComponent implements OnInit {
     
     changeSelectedCellsTextAlignVert(align: string){
         this.elementSelector.changeSelectedCellsTextAlignVert(align)
+    }
+    
+    clearSelection(){
+        this.elementSelector.clearSelection()
     }
   
     deleteElement(){

@@ -26,7 +26,7 @@ export class TemplateCreateComponent implements OnInit  {
     
     ngOnInit(){
         this.templateService.cleanStore();
-        this.templateService.template.subscribe( template => {           
+        this.templateService.template.subscribe( template => {
             this.template = template
             this.templateService.createContentsForTemplate()
         });

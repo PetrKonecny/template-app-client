@@ -8,7 +8,7 @@ import { TemplateInstanceService } from './template-instance.service';
 import { TemplateInstanceStore } from './template-instance.store';
 import { ImageSelectorComponent } from './image-selector.component';
 import { ImageSelector } from './image-selector';
-import { ROUTER_DIRECTIVES} from '@angular/router'
+import { ROUTER_DIRECTIVES, Router} from '@angular/router'
 
 @Component({
     selector: 'create-new-template-instance',
@@ -20,8 +20,8 @@ import { ROUTER_DIRECTIVES} from '@angular/router'
                 <label>name: </label>
                 <input [(ngModel)]="templateInstance.name" placeholder="name"/>
             </div>
-            <button (click)="saveTemplateInstance()">Save</button>\n\\n\
-            <a [routerLink] = "['/templates/new']" (click)="openAsTemplate()">Open as new template</a>\n\
+            <button (click)="saveTemplateInstance()">Save</button>
+            <button (click)="openAsTemplate()">Open as new template</button>
             <div *ngIf="template">
                 <display-page *ngFor="let page of template.pages" [page]="page"></display-page>
             </div>
@@ -43,7 +43,8 @@ export class NewTemplateInstanceComponent implements OnInit {
     
     constructor(
         private templateInstanceStore: TemplateInstanceStore,
-        private imageSelector: ImageSelector
+        private imageSelector: ImageSelector,
+        private router: Router
     ){ 
     }
     
@@ -56,7 +57,9 @@ export class NewTemplateInstanceComponent implements OnInit {
     }
     
     openAsTemplate(){
+        this.templateInstanceStore.removeIdFromTemplate()
         this.templateInstanceStore.ignoreNextClean();
+        this.router.navigate(['/templates','new'])
     }
 }
    

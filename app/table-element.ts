@@ -43,7 +43,7 @@ export class TableElement extends Element {
     }
     
     static clearSelectedCells(element: TableElement){
-        element.selectedCells.forEach((cell) => cell.selected = false)
+        element.rows.forEach((row)=> row.cells.forEach((cell) => cell.selected = false))
         element.selectedCells = new Array
     }
     

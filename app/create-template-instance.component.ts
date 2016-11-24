@@ -15,7 +15,7 @@ import { Template} from './template';
         <create-new-template-instance [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
     `,
     directives: [NewTemplateInstanceComponent],
-    providers: [TemplateInstanceService,TemplateInstanceStore,TemplateService]
+    providers: [TemplateInstanceService,TemplateService]
 })
 
 export class TemplateInstanceCreateComponent implements OnInit  {

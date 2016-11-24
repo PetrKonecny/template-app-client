@@ -86,4 +86,9 @@ export class ElementSelector {
         var element = <TableElement>this.selectedElement
         element.selectedCells.forEach((cell) => cell.vertical_align = align)
     }
+    
+    clearSelection(){
+        var element = <TableElement>this.selectedElement
+        TableElement.clearSelectedCells(element)
+    }
 }

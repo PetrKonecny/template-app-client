@@ -65,7 +65,6 @@ export class TemplateInstanceStore {
     }
     
     copyContentsFromTemplate(){
-        console.log(this._template.value)
         if(!this._template.value.pages) {
             return
         }
@@ -177,8 +176,20 @@ export class TemplateInstanceStore {
         }
     }
     
+    loadTemplate(template: Template){
+        this._template.next(template)
+    }
+    
     ignoreNextClean(){
         this.cleanLocked = true;
+    }
+    
+    removeIdFromTemplate(){
+        delete this._template.value.id
+        this._template.value.pages.forEach(page=>{
+            delete page.id
+            page.elements.forEach(element => delete element.id)
+        })
     }
     
     
