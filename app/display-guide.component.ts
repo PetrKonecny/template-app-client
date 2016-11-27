@@ -4,8 +4,8 @@ import { Guide } from './guide'
 @Component({
     selector: 'display-guide',
     template: `
-        <div *ngIf="guide.horizontal" class="horizontal" [style.left]="guide.positionX" [style.top]="guide.positionY"></div>
-        <div *ngIf="!guide.horizontal" [style.left]="guide.positionX" [style.top]="guide.positionY" class="vertical"></div>
+        <div *ngIf="guide.positionX" class="vertical" [style.left]="guide.positionX" ></div>
+        <div *ngIf="guide.positionY" [style.top]="guide.positionY" class="horizontal"></div>
     `,
     styles: [` 
             .vertical{
@@ -17,7 +17,7 @@ import { Guide } from './guide'
                 width: 100%;
             }
             div{
-                background-color:black; 
+                background-color: red; 
                 position: absolute;
             } 
     `]

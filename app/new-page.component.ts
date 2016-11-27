@@ -49,6 +49,11 @@ export class NewPageComponent  {
     onMousedown(event) {
         this.newPage.mouseDown()
     }
+    
+    @HostListener('mouseup', ['$event'])
+    onMouseup(event) {
+        this.newPage.mouseUp()
+    }
 
     guides: Array<Guide>
 
@@ -57,11 +62,6 @@ export class NewPageComponent  {
     
     constructor(private templateInstanceStore: TemplateInstanceStore, private newPage: NewPage) {
         this.newPage.component = this
-        var guide = new Guide();
-        guide.positionY = 200;
-        guide.horizontal = true;
-        this.guides = new Array
-        this.guides.push(guide);
     }
 
     createNewTextElement(){

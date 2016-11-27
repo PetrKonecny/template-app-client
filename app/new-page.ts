@@ -5,41 +5,111 @@ import { Element } from './element'
 import { TableElement } from './table-element'
 import { TableContent, CellContent, RowContent } from './table-content'
 import { ElementDimensions } from './resizable.directive'
-
+import { Guide } from './guide'
 @Injectable()
 export class NewPage {
    
     component: NewPageComponent
     widths: Array<number>
     heights: Array<number>
+    horizontals: Array<Break>
+    verticals: Array<Break>
     counter: number
     activeElement : Element
-    bufferVertical: number = 0
+    bufferVertical: Buffer
+    bufferHorizontal: Buffer
 
     
     move(element: Element, dimensions: ElementDimensions){
         if (!this.activeElement){
-            this.widths = this.component.page.elements.filter(elmnt => elmnt != element).map((elmnt) => elmnt.width + elmnt.positionX)
-            this.heights = this.component.page.elements.filter(elmnt => elmnt != element).map((elmnt) => elmnt.height + elmnt.positionY)
-            console.log(this.widths)
+            this.horizontals = new Array
+            this.verticals = new Array 
+            this.component.page.elements.filter(elmnt => elmnt != element).forEach(elmnt => { 
+                this.verticals.push({positionX: elmnt.width + elmnt.positionX, guide: null, active: false})
+                this.verticals.push({positionX: elmnt.positionX, guide: null , active: false})
+                this.horizontals.push({positionY: elmnt.height + elmnt.positionY, guide: null, active: false })
+                this.horizontals.push({positionY: elmnt.positionY, guide: null , active: false})              
+            })
+            this.horizontals.sort((n1,n2) => n2.positionY - n1.positionY)
+            this.verticals.sort((n1,n2) => n2.positionX - n1.positionX)
             this.activeElement = element
+            this.bufferVertical = {value: 0}
+            this.bufferHorizontal = {value: 0}
         }
-        for (var width of this.widths){
-            var pos = element.positionX +element.width + dimensions.left
-            if (pos < width + 10 && pos > width - 10){
+        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.top, 'positionY', 'height', this.bufferHorizontal)
+        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.left, 'positionX', 'width', this.bufferVertical)
+        
+        
+        /*
+        for (var vertical of this.verticals){
+            var fromLeft = element['positionX'] + element.width <= vertical.positionX && element.positionX + element.width > vertical.positionX - 10
+            var fromRight = element.positionX >= vertical.positionX && element.positionX < vertical.positionX + 10
+            if (fromLeft || fromRight){
+                if (!vertical.active){
+                    var guide = new Guide()
+                    guide.horizontal = false
+                    guide.positionX = vertical.positionX
+                    vertical.guide = guide
+                    this.component.guides.push(guide)                
+                }
                 this.bufferVertical += dimensions.left
-                if (Math.abs(this.bufferVertical) < 100){
-                    element.positionX = width - element.width
+                if (Math.abs(this.bufferVertical) < 20){
+                    if (fromLeft){
+                        element.positionX = vertical.positionX - element.width
+                    }else if(fromRight){
+                        element.positionX = vertical.positionX
+                    }
+                    vertical.active = true                    
                 }else{
-                    console.log(this.bufferVertical)
+                    this.component.guides.splice(this.component.guides.indexOf(vertical.guide))
+                    vertical.guide = null
                     element.positionX += this.bufferVertical
+                    vertical.active = false                    
                 }
                 return
             }
+        }*/
+        if(horizontalBreak){
+            element.positionX += dimensions.left
+        }else if(verticalBreak){
+            element.positionY += dimensions.top
+        }else{
+            element.positionX += dimensions.left
+            element.positionY += dimensions.top
+            this.bufferVertical.value = 0
+            this.bufferHorizontal.value = 0
+        }      
+    }
+    
+    resolveBreaks(breaks: Array<Break>,element: Element, deltaPos: number ,paramPosition: string, paramDimension: string, buffer: Buffer){
+        for (var guideBreak of breaks){
+            var edge1 = element[paramPosition] + element[paramDimension] <= guideBreak[paramPosition] && element[paramPosition] + element[paramDimension] > guideBreak[paramPosition] - 10
+            var edge2 = element[paramPosition] >= guideBreak[paramPosition] && element[paramPosition] < guideBreak[paramPosition] + 10
+            if (edge1 || edge2){
+                if (!guideBreak.active){
+                    var guide = new Guide()
+                    guide[paramPosition] = guideBreak[paramPosition]
+                    guideBreak.guide = guide
+                    this.component.guides.push(guide)                
+                }
+                buffer.value += deltaPos
+                if (Math.abs(buffer.value) < 20){
+                    if (edge1){
+                        element[paramPosition]= guideBreak[paramPosition] - element[paramDimension]
+                    }else if(edge2){
+                        element[paramPosition] = guideBreak[paramPosition]
+                    }
+                    guideBreak.active = true                    
+                }else{
+                    this.component.guides.splice(this.component.guides.indexOf(guideBreak.guide))
+                    guideBreak.guide = null
+                    element[paramPosition] += buffer.value
+                    guideBreak.active = false                    
+                }
+                return true
+            }
         }
-        element.positionX += dimensions.left
-        element.positionY += dimensions.top
-        this.bufferVertical = 0      
+        return false     
     }
     
     resize(element: Element,dimensions: ElementDimensions){
@@ -54,6 +124,11 @@ export class NewPage {
         this.counter = 0
         delete this.activeElement
         
+    }
+    
+    mouseUp(){
+        delete this.activeElement
+        this.component.guides = new Array
     }
         
     resizeTableElement(element: TableElement, dimensions: ElementDimensions){
@@ -93,5 +168,16 @@ export class NewPage {
         }
     }
     
+}
+
+interface Break{
+    positionX?:number
+    positionY?:number
+    guide: Guide
+    active: boolean
+}
+
+interface Buffer{
+    value: number
 }
 
