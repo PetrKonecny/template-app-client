@@ -1,4 +1,4 @@
-import {Directive, HostListener, EventEmitter, Output, ElementRef, OnInit} from '@angular/core';
+import {Directive, HostListener, EventEmitter, Output, ElementRef, OnInit, Input} from '@angular/core';
 
 @Directive({
     selector: '[draggable2]'
@@ -15,6 +15,8 @@ export class Draggable2 implements OnInit {
     mouseover = new EventEmitter();
     position: any = {left: 0, top: 0}
 
+    @Input('borderCheck')
+    borderCheck: boolean = true
    
     @Output()
     move = new EventEmitter<ElementDimensions>()
@@ -54,7 +56,10 @@ export class Draggable2 implements OnInit {
 
     constructor(public element: ElementRef) {
         this.mousedrag = this.mousedown.map((event: MouseEvent) => {
-            var border = this.detectBorderPosition({left: event.offsetX, top: event.offsetY})
+            var border
+            if (this.borderCheck){
+                border = this.detectBorderPosition({left: event.offsetX, top: event.offsetY})
+            }
             if(border){
                 this.enabled = false;
             }

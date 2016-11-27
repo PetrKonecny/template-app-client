@@ -12,6 +12,7 @@ import { TableContent} from './table-content'
 import { NewPage} from './new-page'
 import { Guide } from './guide'
 import { DisplayGuideComponent } from './display-guide.component'
+import { DisplayRulerComponent } from './display-ruler.component'
 
 @Component({
     selector: 'create-new-page',
@@ -21,6 +22,7 @@ import { DisplayGuideComponent } from './display-guide.component'
             <div class="grid">
                   <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>\n\
                   <display-guide *ngFor="let guide of guides" [guide] = "guide" ></display-guide>
+                  <display-ruler *ngFor="let guide of rulers" [guide] = "guide" ></display-ruler>
             </div>
           </div>
           <button (click)="createNewTextElement()">Add text element</button>
@@ -39,7 +41,7 @@ import { DisplayGuideComponent } from './display-guide.component'
             height: 297mm;
         }
     `],
-    directives: [NewElementComponent, DisplayGuideComponent],
+    directives: [NewElementComponent, DisplayGuideComponent, DisplayRulerComponent],
     providers: [NewPage]
 })
 
@@ -56,12 +58,21 @@ export class NewPageComponent  {
     }
 
     guides: Array<Guide>
+    
+    rulers: Array<Guide>
 
     @Input()
     page: Page = new Page();  
     
     constructor(private templateInstanceStore: TemplateInstanceStore, private newPage: NewPage) {
         this.newPage.component = this
+        this.rulers = new Array
+        var ruler = new Guide
+        ruler.positionX = 20
+        this.rulers.push(ruler)
+        var ruler2 = new Guide
+        ruler2.positionY = 20
+        this.rulers.push(ruler2)
     }
 
     createNewTextElement(){

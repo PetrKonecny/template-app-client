@@ -10,8 +10,6 @@ import { Guide } from './guide'
 export class NewPage {
    
     component: NewPageComponent
-    widths: Array<number>
-    heights: Array<number>
     horizontals: Array<Break>
     verticals: Array<Break>
     counter: number
@@ -30,6 +28,13 @@ export class NewPage {
                 this.horizontals.push({positionY: elmnt.height + elmnt.positionY, guide: null, active: false })
                 this.horizontals.push({positionY: elmnt.positionY, guide: null , active: false})              
             })
+            this.component.rulers.forEach(ruler => {
+                if (ruler.positionX){
+                    this.verticals.push({ positionX: ruler.positionX, guide: null, active: false})
+                } else if (ruler.positionY){
+                    this.horizontals.push({ positionY: ruler.positionY, guide: null, active: false})
+                }
+            })
             this.horizontals.sort((n1,n2) => n2.positionY - n1.positionY)
             this.verticals.sort((n1,n2) => n2.positionX - n1.positionX)
             this.activeElement = element
@@ -39,36 +44,6 @@ export class NewPage {
         var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.top, 'positionY', 'height', this.bufferHorizontal)
         var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.left, 'positionX', 'width', this.bufferVertical)
         
-        
-        /*
-        for (var vertical of this.verticals){
-            var fromLeft = element['positionX'] + element.width <= vertical.positionX && element.positionX + element.width > vertical.positionX - 10
-            var fromRight = element.positionX >= vertical.positionX && element.positionX < vertical.positionX + 10
-            if (fromLeft || fromRight){
-                if (!vertical.active){
-                    var guide = new Guide()
-                    guide.horizontal = false
-                    guide.positionX = vertical.positionX
-                    vertical.guide = guide
-                    this.component.guides.push(guide)                
-                }
-                this.bufferVertical += dimensions.left
-                if (Math.abs(this.bufferVertical) < 20){
-                    if (fromLeft){
-                        element.positionX = vertical.positionX - element.width
-                    }else if(fromRight){
-                        element.positionX = vertical.positionX
-                    }
-                    vertical.active = true                    
-                }else{
-                    this.component.guides.splice(this.component.guides.indexOf(vertical.guide))
-                    vertical.guide = null
-                    element.positionX += this.bufferVertical
-                    vertical.active = false                    
-                }
-                return
-            }
-        }*/
         if(horizontalBreak){
             element.positionX += dimensions.left
         }else if(verticalBreak){
