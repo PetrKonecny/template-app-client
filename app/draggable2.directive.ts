@@ -37,7 +37,7 @@ export class Draggable2 implements OnInit {
             this.mousedown.emit(event)
             this.running = true
         }
-        return false; // Call preventDefault() on the event
+        //return false; // Call preventDefault() on the event
     }
 
     @HostListener('mousemove', ['$event'])

@@ -6,6 +6,8 @@ import { TableElement } from './table-element'
 import { TableContent, CellContent, RowContent } from './table-content'
 import { ElementDimensions } from './resizable.directive'
 import { Guide } from './guide'
+import { BasicStep, StepSelector } from './step-selector'
+
 @Injectable()
 export class NewPage {
    
@@ -16,10 +18,13 @@ export class NewPage {
     activeElement : Element
     bufferVertical: Buffer
     bufferHorizontal: Buffer
-
+    startPosition: any  
+    
+    constructor(private stepSelector: StepSelector){}
     
     move(element: Element, dimensions: ElementDimensions){
         if (!this.activeElement){
+            this.startPosition = { positionX: element.positionX, positionY: element.positionY}
             this.horizontals = new Array
             this.verticals = new Array 
             this.component.page.elements.filter(elmnt => elmnt != element).forEach(elmnt => { 
@@ -97,12 +102,19 @@ export class NewPage {
     
     mouseDown(){
         this.counter = 0
-        delete this.activeElement
+        this.activeElement = null
         
     }
     
     mouseUp(){
-        delete this.activeElement
+        if (this.startPosition){
+            this.stepSelector.makeStep(new BasicStep(this.activeElement, [
+                { paramName: "positionX", oldValue: this.startPosition.positionX, newValue: this.activeElement.positionX},
+                { paramName: "positionY", oldValue: this.startPosition.positionY, newValue: this.activeElement.positionY}
+            ]))
+            this.startPosition = null
+        }
+        this.activeElement = null
         this.component.guides = new Array
     }
         

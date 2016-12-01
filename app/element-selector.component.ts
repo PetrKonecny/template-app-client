@@ -14,8 +14,8 @@ import {ClientState} from './table-element'
     selector: 'element-select',
     template: `
                 <span *ngIf="elementSelector.selectedElement"> 
-                <br><b>Element ID: {{elementSelector.selectedElement.id}}</b><br>
-                <button (click)="deleteElement()">Delete element</button>
+                <br><b *ngIf="elementSelector.selectedElement.id">Element ID: {{elementSelector.selectedElement.id}}</b><br>
+                <button (click)="deleteElement()">Delete element</button><br>
                 Width: <input [(ngModel)]="elementSelector.selectedElement.width"  (keyup)="0"><br>
                 Height: <input [(ngModel)]="elementSelector.selectedElement.height"  (keyup)="0"><br>
                 Position X: <input [(ngModel)]="elementSelector.selectedElement.positionX"   (keyup)="0"><br>

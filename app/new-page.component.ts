@@ -13,6 +13,8 @@ import { NewPage} from './new-page'
 import { Guide } from './guide'
 import { DisplayGuideComponent } from './display-guide.component'
 import { DisplayRulerComponent } from './display-ruler.component'
+import { StepSelector, ArrayStepPush } from './step-selector'
+
 
 @Component({
     selector: 'create-new-page',
@@ -64,9 +66,10 @@ export class NewPageComponent  {
     @Input()
     page: Page = new Page();  
     
-    constructor(private templateInstanceStore: TemplateInstanceStore, private newPage: NewPage) {
+    constructor(private templateInstanceStore: TemplateInstanceStore, private newPage: NewPage, private stepSelector: StepSelector) {
         this.newPage.component = this
         this.rulers = new Array
+        this.guides = new Array
         var ruler = new Guide
         ruler.positionX = 20
         this.rulers.push(ruler)
@@ -86,6 +89,7 @@ export class NewPageComponent  {
         element.positionY = 0;
         element.font_size = 20;
         element.content = new TextContent();
+        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
         this.page.elements.push(element);
     }
     
@@ -99,6 +103,7 @@ export class NewPageComponent  {
         element.positionX = 0;
         element.positionY = 0;
         element.content = new ImageContent();
+            this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
         this.page.elements.push(element);
     }
     
@@ -115,6 +120,7 @@ export class NewPageComponent  {
         var content = new TableContent()
         content.addRows(5,5)
         element.content = content
+        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
         this.page.elements.push(element)
     }
     onDeleteClicked(){

@@ -16,7 +16,7 @@ import { TemplateInstanceStore } from './template-instance.store';
     `,
     directives: [ROUTER_DIRECTIVES],
     providers: [
-        HTTP_PROVIDERS, TemplateInstanceService,TemplateInstanceStore,TemplateService ] 
+        HTTP_PROVIDERS, TemplateInstanceService,TemplateInstanceStore,TemplateService ]
 })
 
 export class AppComponent {

@@ -62,7 +62,7 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck {
     ){
         this.differ = differs.find({}).create(null);
     }
-    
+        
     ngDoCheck(){
         var changes = this.differ.diff(this.element);
         if(changes) {
