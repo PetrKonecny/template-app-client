@@ -6,7 +6,7 @@ import { TableElement } from './table-element'
 import { TableContent, CellContent, RowContent } from './table-content'
 import { ElementDimensions } from './resizable.directive'
 import { Guide } from './guide'
-import { BasicStep, StepSelector } from './step-selector'
+import { BasicStep, StepSelector , ArrayStepPop, ArrayStepPush, FunctionStep, CompositeStep} from './step-selector'
 
 @Injectable()
 export class NewPage {
@@ -18,33 +18,38 @@ export class NewPage {
     activeElement : Element
     bufferVertical: Buffer
     bufferHorizontal: Buffer
-    startPosition: any  
+    startState: any
+    finalStep: any
     
     constructor(private stepSelector: StepSelector){}
     
+    initGuides(){
+        this.horizontals = new Array
+        this.verticals = new Array 
+        this.component.page.elements.filter(elmnt => elmnt != this.activeElement).forEach(elmnt => { 
+            this.verticals.push({positionX: elmnt.width + elmnt.positionX, guide: null, active: false})
+            this.verticals.push({positionX: elmnt.positionX, guide: null , active: false})
+            this.horizontals.push({positionY: elmnt.height + elmnt.positionY, guide: null, active: false })
+            this.horizontals.push({positionY: elmnt.positionY, guide: null , active: false})              
+        })
+        this.component.rulers.forEach(ruler => {
+            if (ruler.positionX){
+                this.verticals.push({ positionX: ruler.positionX, guide: null, active: false})
+            } else if (ruler.positionY){
+                this.horizontals.push({ positionY: ruler.positionY, guide: null, active: false})
+            }
+        })
+        this.horizontals.sort((n1,n2) => n2.positionY - n1.positionY)
+        this.verticals.sort((n1,n2) => n2.positionX - n1.positionX)
+        this.bufferVertical = {value: 0}
+        this.bufferHorizontal = {value: 0}      
+    }
+    
     move(element: Element, dimensions: ElementDimensions){
         if (!this.activeElement){
-            this.startPosition = { positionX: element.positionX, positionY: element.positionY}
-            this.horizontals = new Array
-            this.verticals = new Array 
-            this.component.page.elements.filter(elmnt => elmnt != element).forEach(elmnt => { 
-                this.verticals.push({positionX: elmnt.width + elmnt.positionX, guide: null, active: false})
-                this.verticals.push({positionX: elmnt.positionX, guide: null , active: false})
-                this.horizontals.push({positionY: elmnt.height + elmnt.positionY, guide: null, active: false })
-                this.horizontals.push({positionY: elmnt.positionY, guide: null , active: false})              
-            })
-            this.component.rulers.forEach(ruler => {
-                if (ruler.positionX){
-                    this.verticals.push({ positionX: ruler.positionX, guide: null, active: false})
-                } else if (ruler.positionY){
-                    this.horizontals.push({ positionY: ruler.positionY, guide: null, active: false})
-                }
-            })
-            this.horizontals.sort((n1,n2) => n2.positionY - n1.positionY)
-            this.verticals.sort((n1,n2) => n2.positionX - n1.positionX)
+            this.startState = { positionX: element.positionX, positionY: element.positionY}
             this.activeElement = element
-            this.bufferVertical = {value: 0}
-            this.bufferHorizontal = {value: 0}
+            this.initGuides()
         }
         var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.top, 'positionY', 'height', this.bufferHorizontal)
         var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.left, 'positionX', 'width', this.bufferVertical)
@@ -58,7 +63,8 @@ export class NewPage {
             element.positionY += dimensions.top
             this.bufferVertical.value = 0
             this.bufferHorizontal.value = 0
-        }      
+        }
+        this.finalStep = this.stepSelector.makePosition(element, this.startState.positionX, element.positionX, this.startState.positionY, element.positionY)    
     }
     
     resolveBreaks(breaks: Array<Break>,element: Element, deltaPos: number ,paramPosition: string, paramDimension: string, buffer: Buffer){
@@ -66,6 +72,7 @@ export class NewPage {
             var edge1 = element[paramPosition] + element[paramDimension] <= guideBreak[paramPosition] && element[paramPosition] + element[paramDimension] > guideBreak[paramPosition] - 10
             var edge2 = element[paramPosition] >= guideBreak[paramPosition] && element[paramPosition] < guideBreak[paramPosition] + 10
             if (edge1 || edge2){
+                console.log(edge1,edge2)
                 if (!guideBreak.active){
                     var guide = new Guide()
                     guide[paramPosition] = guideBreak[paramPosition]
@@ -93,10 +100,20 @@ export class NewPage {
     }
     
     resize(element: Element,dimensions: ElementDimensions){
+        if (!this.activeElement){
+            this.activeElement = element
+            this.initGuides()
+        }
+        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal)
+        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical)
         if (dimensions.width){
-            element.width += dimensions.width
+            if (!verticalBreak){
+                element.width += dimensions.width
+            }
         } else if (dimensions.height){
-            element.height += dimensions.height
+            if (!horizontalBreak){
+                element.height += dimensions.height
+            }
         }
     }
     
@@ -107,18 +124,20 @@ export class NewPage {
     }
     
     mouseUp(){
-        if (this.startPosition){
-            this.stepSelector.makeStep(new BasicStep(this.activeElement, [
-                { paramName: "positionX", oldValue: this.startPosition.positionX, newValue: this.activeElement.positionX},
-                { paramName: "positionY", oldValue: this.startPosition.positionY, newValue: this.activeElement.positionY}
-            ]))
-            this.startPosition = null
+        if (this.finalStep){
+            this.stepSelector.makeStep(this.finalStep)        
+            this.finalStep = null
         }
         this.activeElement = null
         this.component.guides = new Array
     }
         
     resizeTableElement(element: TableElement, dimensions: ElementDimensions){
+        if (!this.activeElement){
+            this.activeElement = element
+            this.startState = JSON.parse(JSON.stringify(element.rows))
+        }
+        
         if (dimensions.width){
             this.counter += dimensions.width
             if (this.counter > TableElement.default_cell_width){
@@ -127,6 +146,7 @@ export class NewPage {
                 }
                 TableElement.addCellToRows(element)
                 this.counter = 0
+                this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
             } else if (this.counter < -TableElement.default_cell_width){
                 if (element.rows[0].cells.length > 1){
                     for (var row of (<TableContent>element.content).rows){
@@ -135,6 +155,7 @@ export class NewPage {
                     TableElement.removeCellFromRows(element)
                 }
                 this.counter = 0
+                this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
             }
         } else if (dimensions.height){
             var content = <TableContent> element.content
@@ -145,16 +166,18 @@ export class NewPage {
                 row.addCells(element.rows[0].cells.length)
                 TableElement.addRows(element,1, element.rows[0].cells.length)
                 this.counter = 0
+                this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
             } else if (this.counter < -TableElement.default_row_height){
                 if (element.rows.length > 1){
                     element.rows.pop()
                     content.rows.pop()
                 }
                 this.counter = 0
+                this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
             }
         }
     }
-    
+       
 }
 
 interface Break{

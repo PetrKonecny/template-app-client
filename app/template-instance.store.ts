@@ -160,6 +160,16 @@ export class TemplateInstanceStore {
         })
     }
     
+    getPageForElement(element: Element){
+        for (var page of this._template.value.pages){
+            for (var elmnt of page.elements){
+                if(element == element) {
+                    return page
+                }
+            }
+        }
+    }
+    
     deletePageFromTemplate(page: Page){
         var index = this._template.value.pages.indexOf(page)
         if(index > -1){

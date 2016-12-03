@@ -14,22 +14,47 @@ interface SingleBasicStep{
     paramName: string
 }
 
-export class BasicStep implements Step{
-  
-    constructor(private element: any, private steps: Array<SingleBasicStep>){}    
+export class FunctionStep implements Step{
+    
+    constructor(private element: any, private undoFunction, private redoFunction){}
+    
     undo(){
-        for (var step of this.steps){
-            this.element[step.paramName] = step.oldValue
-        }
+        this.undoFunction
     }
     redo(){
-        for (var step of this.steps){
-            this.element[step.paramName] = step.newValue
-        }
+        this.redoFunction
     }
-
+      
 }
 
+export class CompositeStep implements Step{
+    
+    constructor(private steps: Array<Step>){}
+    
+    undo(){
+        this.steps.forEach(step => step.undo())
+    }
+    
+    redo(){
+        this.steps.forEach(step => step.redo())
+    }
+    
+    
+}
+
+export class BasicStep implements Step{
+  
+    constructor(private element: any, private paramName: string, private oldValue: any, private newValue: any){}    
+    
+    undo(){
+        this.element[this.paramName] = this.oldValue
+    }
+    redo(){
+        this.element[this.paramName] = this.newValue
+    }
+    
+}
+    
 export class ArrayStepPush implements Step{
     
     
@@ -43,7 +68,7 @@ export class ArrayStepPush implements Step{
     
 }
 
-export class ArrayStepPop implements Step{
+export class ArrayStepSplice implements Step{
     
     
     constructor(private element: any, private array: Array<any>){}
@@ -55,6 +80,20 @@ export class ArrayStepPop implements Step{
     }
     
 }
+
+export class ArrayStepPop implements Step{
+    
+    
+    constructor(private element: any, private array: Array<any>){}
+    redo(){
+        this.array.pop()
+    }
+    undo(){
+        this.array.push(this.element)
+    }
+    
+}
+
 
 
 @Injectable()
@@ -85,6 +124,11 @@ export class StepSelector {
             step.redo()
             this.undoSteps.push(step)        
         }
+    }
+    
+    makePosition(element: any, oldX: number, newX: number, oldY: number, newY: number){
+        var steps = [new BasicStep(element,"positionX", oldX, newX),new BasicStep(element,"positionY",oldY,newY)]
+        return new CompositeStep(steps)
     }
     
 }
