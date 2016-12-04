@@ -51,8 +51,14 @@ export class NewPage {
             this.activeElement = element
             this.initGuides()
         }
-        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.top, 'positionY', 'height', this.bufferHorizontal)
-        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.left, 'positionX', 'width', this.bufferVertical)
+        let edge1FuncHorizontal = function(guideBreak: Break){element["positionY"] = guideBreak["positionY"] - element["height"]}
+        let edge2FuncHorizontal = function(guideBreak: Break){element["positionY"] = guideBreak["positionY"]}
+        let edge1FuncVertical = function(guideBreak: Break){element["positionX"] = guideBreak["positionX"] - element["width"]}
+        let edge2FuncVertical = function(guideBreak: Break){element["positionX"] = guideBreak["positionX"]}
+        let releaseFuncVert = () => { element.positionX += this.bufferVertical.value }
+        let releaseFuncHor = () => { element.positionY += this.bufferHorizontal.value }
+        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.top, 'positionY', 'height', this.bufferHorizontal, edge1FuncHorizontal, edge2FuncHorizontal, releaseFuncHor)
+        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.left, 'positionX', 'width', this.bufferVertical,edge1FuncVertical,edge2FuncVertical,releaseFuncVert)
         
         if(horizontalBreak){
             element.positionX += dimensions.left
@@ -61,18 +67,15 @@ export class NewPage {
         }else{
             element.positionX += dimensions.left
             element.positionY += dimensions.top
-            this.bufferVertical.value = 0
-            this.bufferHorizontal.value = 0
         }
         this.finalStep = this.stepSelector.makePosition(element, this.startState.positionX, element.positionX, this.startState.positionY, element.positionY)    
     }
     
-    resolveBreaks(breaks: Array<Break>,element: Element, deltaPos: number ,paramPosition: string, paramDimension: string, buffer: Buffer){
+    resolveBreaks(breaks: Array<Break>,element: Element, deltaPos: number ,paramPosition: string, paramDimension: string, buffer: Buffer, edge1Func: (guideBreak: Break)=>void, edge2Func: (guideBreak: Break)=>void, releaseFunc: ()=>void){
         for (var guideBreak of breaks){
             var edge1 = element[paramPosition] + element[paramDimension] <= guideBreak[paramPosition] && element[paramPosition] + element[paramDimension] > guideBreak[paramPosition] - 10
             var edge2 = element[paramPosition] >= guideBreak[paramPosition] && element[paramPosition] < guideBreak[paramPosition] + 10
             if (edge1 || edge2){
-                console.log(edge1,edge2)
                 if (!guideBreak.active){
                     var guide = new Guide()
                     guide[paramPosition] = guideBreak[paramPosition]
@@ -82,16 +85,17 @@ export class NewPage {
                 buffer.value += deltaPos
                 if (Math.abs(buffer.value) < 20){
                     if (edge1){
-                        element[paramPosition]= guideBreak[paramPosition] - element[paramDimension]
+                        edge1Func(guideBreak)
                     }else if(edge2){
-                        element[paramPosition] = guideBreak[paramPosition]
+                        edge2Func(guideBreak)
                     }
                     guideBreak.active = true                    
                 }else{
+                    releaseFunc()
                     this.component.guides.splice(this.component.guides.indexOf(guideBreak.guide))
                     guideBreak.guide = null
-                    element[paramPosition] += buffer.value
-                    guideBreak.active = false                    
+                    guideBreak.active = false
+                    buffer.value = 0                    
                 }
                 return true
             }
@@ -102,19 +106,22 @@ export class NewPage {
     resize(element: Element,dimensions: ElementDimensions){
         if (!this.activeElement){
             this.activeElement = element
+            this.startState = { width: element.width, height: element.height}
             this.initGuides()
         }
-        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal)
-        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical)
-        if (dimensions.width){
-            if (!verticalBreak){
-                element.width += dimensions.width
-            }
-        } else if (dimensions.height){
-            if (!horizontalBreak){
+        let edge1Func = function(guideBreak: Break){console.log('hey')}
+        let edge2FuncHorizontal = function(guideBreak: Break) { element.height = guideBreak.positionY - element.positionY}
+        let edge2FuncVertical = function(guideBreak: Break) { element.width = guideBreak.positionX - element.positionX}
+        let releaseFuncVert = () => { element.width += this.bufferVertical.value }
+        let releaseFuncHor = () => { element.height += this.bufferHorizontal.value }
+        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal,edge2FuncHorizontal, edge2FuncHorizontal, releaseFuncHor)
+        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical, edge2FuncVertical, edge2FuncVertical, releaseFuncVert)
+        if (!verticalBreak && dimensions.width){
+            element.width += dimensions.width
+        } else if (!horizontalBreak && dimensions.height){
                 element.height += dimensions.height
-            }
         }
+        this.finalStep = this.stepSelector.makeDimensions(element, this.startState.width, element.width, this.startState.height, element.height)    
     }
     
     mouseDown(){

@@ -131,5 +131,10 @@ export class StepSelector {
         return new CompositeStep(steps)
     }
     
+    makeDimensions(element: any, oldWidth: number, newWidth: number, oldHeight: number, newHeight: number){
+        var steps = [new BasicStep(element,"width", oldWidth, newWidth),new BasicStep(element,"height",oldHeight,newHeight)]
+        return new CompositeStep(steps)
+    }
+    
 }
 
