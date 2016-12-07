@@ -12,9 +12,8 @@ import {Image} from './image'
 import {Font} from './font'
 import { DisplayContentImgDragComponent } from './display-content-img-drag.component';
 import { NewElementComponent} from './new-element.component'
-import { ElementDimensions } from './draggable.directive'
 import { Draggable2 } from './draggable2.directive'
-import { Resizable } from './resizable.directive'
+import { Resizable , ElementDimensions} from './resizable.directive'
 import { NewPage } from './new-page'
 
 @Component({

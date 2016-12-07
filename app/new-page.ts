@@ -1,13 +1,19 @@
-import { Component, Input, ViewChildren, QueryList, Injectable, HostListener} from '@angular/core';
-import { Page} from './page';
+import { Injectable } from '@angular/core';
 import { NewPageComponent } from './new-page.component'
 import { Element } from './element' 
 import { TableElement } from './table-element'
 import { TableContent, CellContent, RowContent } from './table-content'
-import { ElementDimensions } from './resizable.directive'
+import { ElementDimensions, Border} from './resizable.directive'
 import { Guide } from './guide'
-import { BasicStep, StepSelector , ArrayStepPop, ArrayStepPush, FunctionStep, CompositeStep} from './step-selector'
+import { BasicStep, StepSelector } from './step-selector'
 
+
+/*
+ * Extension of NewPage component that can be injected by any other component under it
+ * NewPage is responsible for any state change of element relative to page
+ * such as resizing, moving, deleting
+ */
+ 
 @Injectable()
 export class NewPage {
    
@@ -39,10 +45,13 @@ export class NewPage {
                 this.horizontals.push({ positionY: ruler.positionY, guide: null, active: false})
             }
         })
-        this.horizontals.sort((n1,n2) => n2.positionY - n1.positionY)
-        this.verticals.sort((n1,n2) => n2.positionX - n1.positionX)
         this.bufferVertical = {value: 0}
         this.bufferHorizontal = {value: 0}      
+    }
+    
+    moveSimple(element: Element, dimensions: ElementDimensions){
+        element.positionX += dimensions.left
+        element.positionY += dimensions.top
     }
     
     move(element: Element, dimensions: ElementDimensions){
@@ -51,30 +60,31 @@ export class NewPage {
             this.activeElement = element
             this.initGuides()
         }
-        let edge1FuncHorizontal = function(guideBreak: Break){element["positionY"] = guideBreak["positionY"] - element["height"]}
-        let edge2FuncHorizontal = function(guideBreak: Break){element["positionY"] = guideBreak["positionY"]}
-        let edge1FuncVertical = function(guideBreak: Break){element["positionX"] = guideBreak["positionX"] - element["width"]}
-        let edge2FuncVertical = function(guideBreak: Break){element["positionX"] = guideBreak["positionX"]}
+        let edge2FuncHorizontal = function(guideBreak: Break){element["positionY"] = guideBreak["positionY"] - element["height"]}
+        let edge1FuncHorizontal = function(guideBreak: Break){element["positionY"] = guideBreak["positionY"]}
+        let edge2FuncVertical = function(guideBreak: Break){element["positionX"] = guideBreak["positionX"] - element["width"]}
+        let edge1FuncVertical = function(guideBreak: Break){element["positionX"] = guideBreak["positionX"]}
         let releaseFuncVert = () => { element.positionX += this.bufferVertical.value }
         let releaseFuncHor = () => { element.positionY += this.bufferHorizontal.value }
         var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.top, 'positionY', 'height', this.bufferHorizontal, edge1FuncHorizontal, edge2FuncHorizontal, releaseFuncHor)
         var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.left, 'positionX', 'width', this.bufferVertical,edge1FuncVertical,edge2FuncVertical,releaseFuncVert)
         
-        if(horizontalBreak){
+        if (!verticalBreak && horizontalBreak) {
             element.positionX += dimensions.left
-        }else if(verticalBreak){
+        }else if(verticalBreak && !horizontalBreak){
             element.positionY += dimensions.top
-        }else{
+        }else if(!horizontalBreak && !verticalBreak){
             element.positionX += dimensions.left
             element.positionY += dimensions.top
-        }
+        }  
+              
         this.finalStep = this.stepSelector.makePosition(element, this.startState.positionX, element.positionX, this.startState.positionY, element.positionY)    
     }
     
-    resolveBreaks(breaks: Array<Break>,element: Element, deltaPos: number ,paramPosition: string, paramDimension: string, buffer: Buffer, edge1Func: (guideBreak: Break)=>void, edge2Func: (guideBreak: Break)=>void, releaseFunc: ()=>void){
+    private resolveBreaks(breaks: Array<Break>,element: Element, deltaPos: number ,paramPosition: string, paramDimension: string, buffer: Buffer, edge1Func: (guideBreak: Break)=>void, edge2Func: (guideBreak: Break)=>void, releaseFunc: ()=>void){
         for (var guideBreak of breaks){
-            var edge1 = element[paramPosition] + element[paramDimension] <= guideBreak[paramPosition] && element[paramPosition] + element[paramDimension] > guideBreak[paramPosition] - 10
-            var edge2 = element[paramPosition] >= guideBreak[paramPosition] && element[paramPosition] < guideBreak[paramPosition] + 10
+            var edge2 = element[paramPosition] + element[paramDimension] <= guideBreak[paramPosition] + 10 && element[paramPosition] + element[paramDimension] > guideBreak[paramPosition] - 10
+            var edge1 = element[paramPosition] > guideBreak[paramPosition] -10 && element[paramPosition] < guideBreak[paramPosition] + 10
             if (edge1 || edge2){
                 if (!guideBreak.active){
                     var guide = new Guide()
@@ -84,15 +94,15 @@ export class NewPage {
                 }
                 buffer.value += deltaPos
                 if (Math.abs(buffer.value) < 20){
-                    if (edge1){
+                    if (edge1  && !edge2){
                         edge1Func(guideBreak)
-                    }else if(edge2){
+                    }else if(!edge1 && edge2){
                         edge2Func(guideBreak)
                     }
                     guideBreak.active = true                    
                 }else{
                     releaseFunc()
-                    this.component.guides.splice(this.component.guides.indexOf(guideBreak.guide))
+                    this.component.guides.splice(this.component.guides.indexOf(guideBreak.guide),1)
                     guideBreak.guide = null
                     guideBreak.active = false
                     buffer.value = 0                    
@@ -103,24 +113,57 @@ export class NewPage {
         return false     
     }
     
+    private filterOpositeBorder(guideBreak: Break, dimensions: ElementDimensions, element: Element){
+        switch (dimensions.border){
+            case Border.left :{
+                return guideBreak.positionX != element.width + element.positionX
+            }
+            case Border.right :{
+                return guideBreak.positionX != element.positionX
+            }
+            case Border.top :{
+                return guideBreak.positionY != element.positionY + element.height
+            }
+            case Border.bottom :{
+                return guideBreak.positionY != element.positionY
+            }
+        }
+    }
+    
+    resizeSimple(element: Element, dimensions: ElementDimensions){
+        if (dimensions.width){
+            element.width += dimensions.width
+        } else if (dimensions.height){
+            element.height += dimensions.height
+        }
+    }
+    
     resize(element: Element,dimensions: ElementDimensions){
         if (!this.activeElement){
             this.activeElement = element
             this.startState = { width: element.width, height: element.height}
             this.initGuides()
+            this.verticals = this.verticals.filter(guideBreak => this.filterOpositeBorder(guideBreak, dimensions, element))
+            this.horizontals = this.horizontals.filter(guideBreak => this.filterOpositeBorder(guideBreak, dimensions, element))
         }
-        let edge1Func = function(guideBreak: Break){console.log('hey')}
+        
         let edge2FuncHorizontal = function(guideBreak: Break) { element.height = guideBreak.positionY - element.positionY}
         let edge2FuncVertical = function(guideBreak: Break) { element.width = guideBreak.positionX - element.positionX}
+        let emptyFunc = function (guideBreak: Break) {}
         let releaseFuncVert = () => { element.width += this.bufferVertical.value }
         let releaseFuncHor = () => { element.height += this.bufferHorizontal.value }
-        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal,edge2FuncHorizontal, edge2FuncHorizontal, releaseFuncHor)
-        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical, edge2FuncVertical, edge2FuncVertical, releaseFuncVert)
-        if (!verticalBreak && dimensions.width){
-            element.width += dimensions.width
-        } else if (!horizontalBreak && dimensions.height){
+        if (dimensions.height){
+            var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal,emptyFunc, edge2FuncHorizontal, releaseFuncHor)
+            if(!horizontalBreak){
                 element.height += dimensions.height
+            }
+        } else if (dimensions.width){
+            var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical, emptyFunc, edge2FuncVertical, releaseFuncVert)
+            if(!verticalBreak){
+                element.width += dimensions.width
+            }
         }
+                
         this.finalStep = this.stepSelector.makeDimensions(element, this.startState.width, element.width, this.startState.height, element.height)    
     }
     
@@ -138,6 +181,43 @@ export class NewPage {
         this.activeElement = null
         this.component.guides = new Array
     }
+    
+    private resizeTableVertical(element: TableElement, dimensions: ElementDimensions){
+        this.counter += dimensions.width
+        if (this.counter > TableElement.default_cell_width){
+            for (var row of (<TableContent>element.content).rows){
+                row.cells.push(new CellContent)
+            }
+            TableElement.addCellToRows(element)
+            this.rowsChanged(element)                              
+        } else if (this.counter < -TableElement.default_cell_width){
+            if (element.rows[0].cells.length > 1){
+                for (var row of (<TableContent>element.content).rows){
+                    row.cells.pop
+                }
+                TableElement.removeCellFromRows(element)
+                this.rowsChanged(element)               
+            }               
+        }
+    }
+    
+    private resizeTableHorizontal(element: TableElement, dimensions: ElementDimensions){
+        var content = <TableContent> element.content
+        this.counter += dimensions.height
+        if (this.counter > TableElement.default_row_height){
+            var row = new RowContent;
+            content.rows.push(row)
+            row.addCells(element.rows[0].cells.length)
+            TableElement.addRows(element,1, element.rows[0].cells.length)
+            this.rowsChanged(element)               
+        } else if (this.counter < -TableElement.default_row_height){
+            if (element.rows.length > 1){
+                element.rows.pop()
+                content.rows.pop()
+                this.rowsChanged(element)               
+            }              
+        }
+    }
         
     resizeTableElement(element: TableElement, dimensions: ElementDimensions){
         if (!this.activeElement){
@@ -146,43 +226,15 @@ export class NewPage {
         }
         
         if (dimensions.width){
-            this.counter += dimensions.width
-            if (this.counter > TableElement.default_cell_width){
-                for (var row of (<TableContent>element.content).rows){
-                    row.cells.push(new CellContent)
-                }
-                TableElement.addCellToRows(element)
-                this.counter = 0
-                this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
-            } else if (this.counter < -TableElement.default_cell_width){
-                if (element.rows[0].cells.length > 1){
-                    for (var row of (<TableContent>element.content).rows){
-                        row.cells.pop
-                    }
-                    TableElement.removeCellFromRows(element)
-                }
-                this.counter = 0
-                this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
-            }
+            this.resizeTableVertical(element,dimensions)
         } else if (dimensions.height){
-            var content = <TableContent> element.content
-            this.counter += dimensions.height
-            if (this.counter > TableElement.default_row_height){
-                var row = new RowContent;
-                content.rows.push(row)
-                row.addCells(element.rows[0].cells.length)
-                TableElement.addRows(element,1, element.rows[0].cells.length)
-                this.counter = 0
-                this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
-            } else if (this.counter < -TableElement.default_row_height){
-                if (element.rows.length > 1){
-                    element.rows.pop()
-                    content.rows.pop()
-                }
-                this.counter = 0
-                this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
-            }
+            this.resizeTableHorizontal(element,dimensions)
         }
+    }
+    
+    private rowsChanged(element: TableElement){
+        this.counter = 0
+        this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
     }
        
 }

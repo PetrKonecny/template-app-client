@@ -72,6 +72,7 @@ export class Resizable implements OnInit {
         this.mousedrag.subscribe({
             next: pos => {
                 var dimensions: ElementDimensions = new ElementDimensions();
+                dimensions.border = this.border
                 if (this.border <= 1 ){
                     dimensions.width = pos.left - this.position.left
                 }else{
@@ -149,11 +150,12 @@ export class Resizable implements OnInit {
     }
 }
 
-enum Border { left, right, bottom, top };
+export enum Border { left, right, bottom, top };
 
 export class ElementDimensions {
     left
     top
     height
     width
+    border: Border
 }
