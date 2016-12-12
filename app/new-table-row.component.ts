@@ -1,8 +1,9 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core';
 import { NewTableCellComponent } from './new-table-cell.component'
-import { TableElement } from './table-element'
+import { TableElement, Cell } from './table-element'
 import { RowContent } from './table-content'
 import { Resizable } from './resizable.directive' 
+import { NewTableElement } from './new-table-element'
 
 @Component({
     selector: 'tr',
@@ -15,7 +16,7 @@ import { Resizable } from './resizable.directive'
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" (mousedown)="onMousedown(x)" [style.width.px]="cell.width" resizable (resize)="resize($event)" [style.text-align]="element.rows[y].cells[x].text_align" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
                 </template>
                 <template [ngIf]="element.clientState == 3">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" (mousemove)="onMousemove($event,x)" [style.width.px]="cell.width" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [class.selected]="element.rows[y].cells[x].selected" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
+                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan (mousedown)="onMousedownSelect($event,cell)" (mouseover)="onMouseover($event,cell)" [style.width.px]="cell.width" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [class.selected]="element.rows[y].cells[x].selected" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
                 </template>
                 <template [ngIf]="element.clientState == 1">
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" [style.width.px]="cell.width"><textarea  *ngIf="element.clientState == 1" [(ngModel)]="content.cells[x].text" [style.text-align]="element.rows[y].cells[x].text_align"  [style.font-size.px]="element.rows[y].cells[x].font_size" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-family]="'font' + element.rows[y].cells[x].font?.id"></textarea></td>
@@ -73,6 +74,8 @@ export class NewTableRowComponent implements OnInit{
     @Input()
     content: RowContent
     
+    constructor(private tableElement: NewTableElement){}
+    
     @HostListener('document:mouseup', ['$event'])
     onDocMouseup(event) {    
         this.selecting = false
@@ -83,8 +86,9 @@ export class NewTableRowComponent implements OnInit{
         this.selecting = true
     }
     
-    onMousemove(event: MouseEvent, x: number) {
-        this.x = x
+    onMouseover(event: MouseEvent, cell: Cell) {
+        let x = this.element.rows[this.y].cells.indexOf(cell)
+        /*
         if (this.selecting){
             if (!this.element.selectedCells) {
                 this.element.selectedCells = new Array()
@@ -93,6 +97,9 @@ export class NewTableRowComponent implements OnInit{
             if (!cell.selected){
                 TableElement.selectCell(this.element,cell)
             }
+        }*/
+        if (this.selecting){
+            this.tableElement.continueSelection(cell,x,this.y)
         }
     }
     
@@ -108,6 +115,12 @@ export class NewTableRowComponent implements OnInit{
     
     onMousedown(x: number){
         this.x = x
+    }
+    
+    onMousedownSelect(event: MouseEvent,cell: Cell){
+        let x = this.element.rows[this.y].cells.indexOf(cell)
+        this.tableElement.startSelection(this.element.rows[this.y].cells[x],x,this.y)
+        event.preventDefault()
     }
     
     fillFromDOM(){

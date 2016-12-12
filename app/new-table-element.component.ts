@@ -8,7 +8,7 @@ import { NewTableRowComponent } from './new-table-row.component'
 import { ElementSelector } from './element-selector'
 import { TableContent, CellContent, RowContent } from './table-content'
 import { NewPage } from './new-page'
-
+import { NewTableElement } from './new-table-element'
 
 @Component({
     selector: 'create-new-table-element',
@@ -45,7 +45,8 @@ import { NewPage } from './new-page'
             border: 1px solid black;
         }`
     ],
-    directives: [Draggable2,  NewTextElementComponent, NewImageElementComponent, NewTableRowComponent, Resizable ]
+    directives: [Draggable2,  NewTextElementComponent, NewImageElementComponent, NewTableRowComponent, Resizable ],
+    providers: [NewTableElement]
 })
 
        
@@ -68,7 +69,13 @@ export class NewTableElementComponent implements OnInit{
         this.counter = 0
     }
     
-    constructor (private elementSelector: ElementSelector, private newPage: NewPage){}
+    @HostListener('document:mousedown', ['$event'])
+    onDocMousedown(event) {
+    }
+    
+    constructor (private elementSelector: ElementSelector, private newPage: NewPage, private newTableElement: NewTableElement){
+        this.newTableElement.component = this
+    }
     
     onElementClicked(){
         this.elementSelector.changeElement(this.element)

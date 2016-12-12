@@ -11,6 +11,10 @@ export class TableElement extends Element {
     static default_row_height: number = 30
     rows: Array<Row>;
     selectedCells: Array<Cell>
+    selectionWidth: number
+    selectionHeight: number
+    selectionStart: CellPosition
+    selectionEnd: CellPosition
     clientState: ClientState = ClientState.moveResize 
     
     static addRows(element:TableElement, count: number, length: number, height: number = this.default_row_height, width: number = this.default_cell_width){
@@ -39,6 +43,9 @@ export class TableElement extends Element {
     
     static selectCell(element: TableElement, cell: Cell){
         cell.selected = true
+        if (!element.selectedCells){
+            element.selectedCells = new Array
+        }
         element.selectedCells.push(cell)
     }
     
@@ -66,11 +73,20 @@ export class Row{
 
 export class Cell{
     width: number
+    position: CellPosition
+    originalPosition: CellPosition
     font: Font
+    colspan: number
+    rowspan: number
     font_size: number
     bold: boolean
     italic: boolean
     text_align: string
     vertical_align: string
     selected: boolean
+}
+
+export class CellPosition {
+    x: number
+    y: number
 }

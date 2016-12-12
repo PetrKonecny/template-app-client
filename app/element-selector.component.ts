@@ -8,7 +8,8 @@ import {UPLOAD_DIRECTIVES} from 'ng2-uploader/ng2-uploader';
 import {FontSelector} from './font-selector';
 import {FontSelectorComponent} from './font-selector.component';
 import {FontService} from './font.service';
-import {ClientState} from './table-element'
+import {ClientState, TableElement} from './table-element'
+
 
 @Component({
     selector: 'element-select',
@@ -55,7 +56,8 @@ import {ClientState} from './table-element'
                         <button (click)="changeSelectedCellsTextAlignVert('top')">Align top</button>
                         <button (click)="changeSelectedCellsTextAlignVert('bottom')">Align bottom</button>
                         <button (click)="changeSelectedCellsTextAlignVert('middle')">Align middle</button>
-                        <button *ngIf="elementSelector.selectedElement.selectedCells?.length > 0" (click)="clearSelection()">Clear selection</button>
+                        <button *ngIf="elementSelector.selectedElement.selectedCells?.length > 0" (click)="clearSelection()">Clear selection</button>\n\
+                        <button *ngIf="elementSelector.selectedElement.selectionWidth > 1" (click)="mergeCells()">Merge Cells</button>
                     </div>
                     <div *ngIf="elementSelector.selectedElement.clientState == 2"  >
                         <button (click)="distributeRows()">Distribute rows</button>
@@ -139,6 +141,54 @@ export class ElementSelectorComponent implements OnInit {
     
     changeTextAlignVertical(align: string){
         this.elementSelector.changeTextAlignVertical(align)
+    }
+    
+
+    mergeCells(){
+        var element = <TableElement> this.elementSelector.selectedElement
+        var firstCell = element.selectedCells[0]
+        firstCell.selected = false
+        console.log(element.selectionWidth, element.selectionHeight)
+        firstCell.colspan = element.selectionWidth
+        firstCell.rowspan = element.selectionHeight
+        element.selectedCells.splice(0,1)
+        element.rows.forEach(row=>{
+            for (let i = row.cells.length; i> -1; i--){
+                element.selectedCells.forEach(cell =>{
+                    if (cell == row.cells[i]){
+                        row.cells.splice(i,1)
+                    }
+                })
+            }
+        })
+        
+        
+        /*
+        let first = true
+        element.rows.forEach(row =>{
+            let splice = true
+            row.cells.forEach(cell =>{
+                element.selectedCells.forEach(selectedCell => {
+                    if(cell == selectedCell && splice){
+                        row.cells.splice(row.cells.indexOf(cell), first ? element.selectionWidth - 1 : element.selectionWidth)
+                        splice = false
+                        first = false
+                    }
+                })
+            })            
+        })*/
+        TableElement.clearSelectedCells(<TableElement>this.elementSelector.selectedElement)
+
+        /*
+        var element = <TableElement> this.elementSelector.selectedElement
+        var cell = element.rows[element.selectionStart.y].cells[element.selectionStart.x]
+        element.rows[element.selectionStart.y].cells.splice(element.selectionStart.x + 1, element.selectionEnd.x - element.selectionStart.x) 
+        for (let i = element.selectionStart.y + 1; i <= element.selectionEnd.y; i++){
+            element.rows[i].cells.splice(element.selectionStart.x, element.selectionEnd.x - element.selectionStart.x + 1)
+        }
+        element.selectedCells[0].selected = false
+        element.selectedCells = new Array
+        */
     }
     
     onKey(){
