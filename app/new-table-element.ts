@@ -21,36 +21,12 @@ export class NewTableElement {
         let rows = this.cloneRows(this.component.element)       
         this.component.element.rows.forEach(row => row.cells.forEach(cell => { if (cell.colspan) { this.expandCell(rows,cell)}}))
         this.indexRowCopy(rows)
-        this.selectionStart = this.translateToCopyPosition(this.selectionStart,rows)
+        let selectionStart = this.translateToCopyPosition(this.selectionStart,rows)
         let currentSelection = this.translateToCopyPosition(cell.position,rows)
-        /*
-        if (this.selectionStart.x <= currentSelection.x){
-            topLeftCorner.x = this.selectionStart.x
-            bottomRightCorner.x = currentSelection.x 
-        }else{
-            topLeftCorner.x = currentSelection.x
-            bottomRightCorner.x = this.selectionStart.x
-        }
-        
-        if (this.selectionStart.y <= y){
-            topLeftCorner.y = this.selectionStart.y
-            bottomRightCorner.y = currentSelection.y 
-        }else{
-            topLeftCorner.y = currentSelection.y
-            bottomRightCorner.y = this.selectionStart.y
-        }
-        console.log(this.selectionStart, currentSelection)
-        /*
-        this.cellSelections.push({x: x, y: y})
-        let sortedX = this.cellSelections.sort((cellP1,cellP2) => cellP1.x - cellP2.x)
-        let lowestX = sortedX[0].x
-        let highestX = sortedX.reverse()[0].x
-        let sortedY = this.cellSelections.sort((cellP1,cellP2) => cellP1.y - cellP2.y)
-        let lowestY = sortedY[0].y
-        let highestY = sortedY.reverse()[0].y
-        this.selectRect({x:lowestX,y:lowestY},{x:highestX, y:highestY})*/
+        console.log(rows)
+        console.log(cell.position,currentSelection)
         TableElement.clearSelectedCells(this.component.element)
-        let corners = this.getCornersFromSelection([this.selectionStart,currentSelection])        
+        let corners = this.getCornersFromSelection([selectionStart,currentSelection])        
         let selectedRect = this.selectRect(corners.topLeft, corners.bottomRight,rows)
         let expandedSelect = this.getExpandedSelection(rows,selectedRect)
         while (selectedRect.length != expandedSelect.length){
@@ -58,7 +34,11 @@ export class NewTableElement {
             selectedRect = this.selectRect(corners.topLeft, corners.bottomRight,rows)
             expandedSelect = this.getExpandedSelection(rows,selectedRect)
         }
-        selectedRect.forEach(cell => TableElement.selectCell(this.component.element,cell.cell))
+        selectedRect.forEach(cell => { 
+            if (this.component.element.selectedCells.indexOf(cell.cell) < 0){
+                TableElement.selectCell(this.component.element,cell.cell)
+            }
+        })
         this.component.element.selectionWidth = corners.bottomRight.x - corners.topLeft.x + 1
         this.component.element.selectionHeight = corners.bottomRight.y - corners.topLeft.y + 1
     }
@@ -89,10 +69,11 @@ export class NewTableElement {
     
     private expandCell(rows: Array<RowCopy>, cell: Cell){
         let cells = rows[cell.position.y].cells
-        Array.prototype.splice.apply(cells, [cell.position.x, 1].concat(<any>this.multiplyCell(cell,cell.colspan)))
+        var translatedPosition = this.translateToCopyPosition(cell.position,rows)
+        Array.prototype.splice.apply(cells, [translatedPosition.x, 1].concat(<any>this.multiplyCell(cell,cell.colspan)))
         for (let i = cell.position.y + 1; i < cell.rowspan + cell.position.y; i++ ){
             cells = rows[i].cells
-            Array.prototype.splice.apply(cells, [cell.position.x, 0].concat(<any>this.multiplyCell(cell,cell.colspan)))
+            Array.prototype.splice.apply(cells, [translatedPosition.x, 0].concat(<any>this.multiplyCell(cell,cell.colspan)))
         }        
     }
     
@@ -109,7 +90,6 @@ export class NewTableElement {
                 overlapingCellCopy.push(nsCell)
             }
         })}})
-        console.log(allCells,notSelectedCells,selectedCells)
         return selectedCells.concat(overlapingCellCopy)
     }
     
@@ -143,9 +123,7 @@ export class NewTableElement {
         }
         TableElement.selectCell(this.component.element, cell)
         this.indexTable(this.component.element)
-        this.selectionStart = {x:cell.position.x, y:cell.position.y}
-        //this.cellSelections = new Array
-        //this.cellSelections.push({x: x, y: y})
+        this.selectionStart = {x:cell.position.x, y:cell.position.y}     
     }
     
     translateToCopyPosition(position: CellPosition, rows: Array<RowCopy>){

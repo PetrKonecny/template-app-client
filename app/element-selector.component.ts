@@ -8,7 +8,7 @@ import {UPLOAD_DIRECTIVES} from 'ng2-uploader/ng2-uploader';
 import {FontSelector} from './font-selector';
 import {FontSelectorComponent} from './font-selector.component';
 import {FontService} from './font.service';
-import {ClientState, TableElement} from './table-element'
+import {ClientState, TableElement, Cell} from './table-element'
 
 
 @Component({
@@ -143,52 +143,37 @@ export class ElementSelectorComponent implements OnInit {
         this.elementSelector.changeTextAlignVertical(align)
     }
     
+    private getTopLeftCorner(selectedCells: Array<Cell>){
+        let minCell: Cell = selectedCells[0]
+        selectedCells.forEach(cell => { 
+            if (minCell.position.x >= cell.position.x) { 
+                if (minCell.position.y > cell.position.y){
+                    minCell = cell
+                }
+            } 
+        })
+        return minCell
+    }
 
     mergeCells(){
         var element = <TableElement> this.elementSelector.selectedElement
-        var firstCell = element.selectedCells[0]
+        var firstCell = this.getTopLeftCorner(element.selectedCells)
         firstCell.selected = false
-        console.log(element.selectionWidth, element.selectionHeight)
         firstCell.colspan = element.selectionWidth
         firstCell.rowspan = element.selectionHeight
-        element.selectedCells.splice(0,1)
+        element.selectedCells.splice(element.selectedCells.indexOf(firstCell),1)
+        console.log(element.selectedCells)
         element.rows.forEach(row=>{
             for (let i = row.cells.length; i> -1; i--){
                 element.selectedCells.forEach(cell =>{
                     if (cell == row.cells[i]){
+                        console.log(row.cells[i].position)
                         row.cells.splice(i,1)
                     }
                 })
             }
-        })
-        
-        
-        /*
-        let first = true
-        element.rows.forEach(row =>{
-            let splice = true
-            row.cells.forEach(cell =>{
-                element.selectedCells.forEach(selectedCell => {
-                    if(cell == selectedCell && splice){
-                        row.cells.splice(row.cells.indexOf(cell), first ? element.selectionWidth - 1 : element.selectionWidth)
-                        splice = false
-                        first = false
-                    }
-                })
-            })            
-        })*/
+        })       
         TableElement.clearSelectedCells(<TableElement>this.elementSelector.selectedElement)
-
-        /*
-        var element = <TableElement> this.elementSelector.selectedElement
-        var cell = element.rows[element.selectionStart.y].cells[element.selectionStart.x]
-        element.rows[element.selectionStart.y].cells.splice(element.selectionStart.x + 1, element.selectionEnd.x - element.selectionStart.x) 
-        for (let i = element.selectionStart.y + 1; i <= element.selectionEnd.y; i++){
-            element.rows[i].cells.splice(element.selectionStart.x, element.selectionEnd.x - element.selectionStart.x + 1)
-        }
-        element.selectedCells[0].selected = false
-        element.selectedCells = new Array
-        */
     }
     
     onKey(){
