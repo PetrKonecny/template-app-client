@@ -8,7 +8,7 @@ import { Element } from './element'
     selector: 'create-new-element',
     template: `
         <create-new-text-element  *ngIf="element.type == 'text_element'" [element] = "element"></create-new-text-element>
-        <create-new-image-element *ngIf="element.type == 'image_element'" [element] = "element"></create-new-image-element>\n\
+        <create-new-image-element *ngIf="element.type == 'image_element'" [element] = "element"></create-new-image-element>
         <create-new-table-element *ngIf="element.type == 'table_element'" [element] = "element"></create-new-table-element>
     `,
     directives: [NewTextElementComponent, NewImageElementComponent, NewTableElementComponent]

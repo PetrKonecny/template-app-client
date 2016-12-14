@@ -18,7 +18,7 @@ import { NewPage } from './new-page'
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable2 resizable  (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (click)="onElementClicked()" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
+        <div draggable2 resizable  (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (click)="onElementClicked()" [style.background-color] = "element.background_color" [style.color]="element.text_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>                       
         </div>
     `,
@@ -26,7 +26,6 @@ import { NewPage } from './new-page'
         .inner {
             position: absolute;
             overflow: hidden;         
-            background-color: rgba(0, 0, 0, 0.25);
         }
         .button{
             z-index: 1000;

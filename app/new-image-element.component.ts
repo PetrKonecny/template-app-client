@@ -19,13 +19,13 @@ import { NewPage } from './new-page'
 @Component({
     selector: 'create-new-image-element',
     template: `
-        <div #frame *ngIf="draggable" draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" (click)="onElementClicked()" class= "inner" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
+        <div #frame *ngIf="draggable" draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" (click)="onElementClicked()" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
             <display-content *ngIf="element.content" [content] = "element.content"></display-content>
             <button *ngIf="element.content && !element.content.image" style="top: 20px" class="button" (click)="onAddButtonClick()" >Add image</button>
             <button *ngIf="element.content && element.content.image" style="top: 40px" class="button" (click)="onDeleteButtonClick()" class="button">Delete image</button>
             <button *ngIf="element.content && element.content.image && draggable" style="top: 60px" class="button" (click)="onAdjustButtonClick()" class="button">Adjust image</button>
         </div>
-        <div #frame *ngIf="!draggable" (click)="onElementClicked()" class= "inner" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
+        <div #frame *ngIf="!draggable" (click)="onElementClicked()" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
             <display-content-img-drag [content] = "element.content"></display-content-img-drag>
             <button *ngIf="element.content.image" style="top: 40px" class="button"  (click)="onPlusButtonClick()" >Zoom in</button>
             <button *ngIf="element.content.image" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>
@@ -36,7 +36,6 @@ import { NewPage } from './new-page'
         .inner {
             position: absolute;
             overflow: hidden;         
-            background-color: rgba(0, 0, 0, 0.25);
         }
         .button{
             z-index: 1000;

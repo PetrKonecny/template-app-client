@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ImageListComponent} from './image-list.component';
 import { ImageService } from './image.service';
 import { Image} from './image';
@@ -9,11 +9,12 @@ import {FontSelector} from './font-selector';
 import {FontSelectorComponent} from './font-selector.component';
 import {FontService} from './font.service';
 import {ClientState, TableElement, Cell} from './table-element'
+import {ColorPickerDirective} from 'ct-angular2-color-picker/component'
 
 
 @Component({
     selector: 'element-select',
-    template: `
+    template: ` 
                 <span *ngIf="elementSelector.selectedElement"> 
                 <br><b *ngIf="elementSelector.selectedElement.id">Element ID: {{elementSelector.selectedElement.id}}</b><br>
                 <button (click)="deleteElement()">Delete element</button><br>
@@ -21,12 +22,13 @@ import {ClientState, TableElement, Cell} from './table-element'
                 Height: <input [(ngModel)]="elementSelector.selectedElement.height"  (keyup)="0"><br>
                 Position X: <input [(ngModel)]="elementSelector.selectedElement.positionX"   (keyup)="0"><br>
                 Position Y: <input [(ngModel)]="elementSelector.selectedElement.positionY"   (keyup)="0">
-
+                <br>Background color: <input [(colorPicker)]="elementSelector.selectedElement.background_color" [style.background]="elementSelector.selectedElement.background_color" />
                 <div *ngIf="elementSelector.selectedElement.type == 'text_element'">
                     <span *ngIf="elementSelector.selectedElement.font"> Font: {{elementSelector.selectedElement.font.name}}</span>
                     <font-selector *ngIf="fontsOpened" ></font-selector>
                     <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
-                    <br>Font size: <input [(ngModel)]="elementSelector.selectedElement.font_size" (keyup)="0">
+                    <br>Font size: <input [(ngModel)]="elementSelector.selectedElement.font_size" (keyup)="0">\n\
+                    <br>Font color: <input [(colorPicker)]="elementSelector.selectedElement.text_color" [style.background]="elementSelector.selectedElement.text_color" />
                     <div>
                         <h2>Text align</h2><br>
                         <button (click)="changeTextAlign('left')">Allign left</button>
@@ -41,6 +43,7 @@ import {ClientState, TableElement, Cell} from './table-element'
                     <button *ngIf="elementSelector.selectedElement.clientState != 1" (click)="filloutTable()">Fillout table</button>\n\
                     <button *ngIf="elementSelector.selectedElement.clientState != 3" (click)="editCells()">Edit cells</button>
                     <div *ngIf="elementSelector.selectedElement.clientState == 3">
+                        <br>Background color: <input *ngIf="elementSelector.selectedElement.selectedCells?.length > 0" [(colorPicker)]="elementSelector.selectedElement.selectedCells[0].background_color" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)" [style.background]="elementSelector.selectedElement.selectedCells[0].background_color" />
                         <font-selector *ngIf="fontsOpened" ></font-selector>
                         <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
                         <br>
@@ -56,7 +59,7 @@ import {ClientState, TableElement, Cell} from './table-element'
                         <button (click)="changeSelectedCellsTextAlignVert('top')">Align top</button>
                         <button (click)="changeSelectedCellsTextAlignVert('bottom')">Align bottom</button>
                         <button (click)="changeSelectedCellsTextAlignVert('middle')">Align middle</button>
-                        <button *ngIf="elementSelector.selectedElement.selectedCells?.length > 0" (click)="clearSelection()">Clear selection</button>\n\
+                        <button (click)="clearSelection()">Clear selection</button>\n\
                         <button *ngIf="elementSelector.selectedElement.selectionWidth > 1" (click)="mergeCells()">Merge Cells</button>
                     </div>
                     <div *ngIf="elementSelector.selectedElement.clientState == 2"  >
@@ -66,15 +69,19 @@ import {ClientState, TableElement, Cell} from './table-element'
                 </div>
                 </span>
              `,
-    directives: [ImageListComponent, FontSelectorComponent, UPLOAD_DIRECTIVES],
+    directives: [ImageListComponent, FontSelectorComponent, UPLOAD_DIRECTIVES, ColorPickerDirective],
     providers: [ImageService, FontSelector, FontService]
 })
 
 export class ElementSelectorComponent implements OnInit {
     
     fontsOpened : boolean;
+        
+    private color: string = "#127bdc";
     
-    constructor(private elementSelector: ElementSelector, private fontSelector: FontSelector){}
+    
+    constructor(private elementSelector: ElementSelector, private fontSelector: FontSelector){
+    }
     
     ngOnInit(){
         this.fontSelector.selectorWindowOpened.subscribe(opened => this.fontsOpened = opened)
@@ -153,6 +160,19 @@ export class ElementSelectorComponent implements OnInit {
             } 
         })
         return minCell
+    } 
+    
+    changeSelectedCellsBackgroundColor(color: string){
+        console.log(color)
+        var element = <TableElement> this.elementSelector.selectedElement
+        if (element.selectedCells && element.selectedCells.length > 0){
+            element.selectedCells.forEach((cell,index) => {if(index>-1){cell.background_color = color}})
+        }
+    }
+    
+    changeSelectedCellsTextColor(color: string){
+        var element = <TableElement> this.elementSelector.selectedElement
+        element.selectedCells.forEach(cell => cell.text_color = color)
     }
 
     mergeCells(){

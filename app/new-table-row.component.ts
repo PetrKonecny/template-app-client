@@ -10,16 +10,16 @@ import { NewTableElement } from './new-table-element'
     template: `
 
                 <template [ngIf]="element.clientState == 0">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan [style.width.px]="cell.width" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
+                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan [style.background-color]="cell.background_color" [style.color]="cell.text_color" [style.width.px]="cell.width" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
                 </template>
                 <template [ngIf]="element.clientState == 2">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan (mousedown)="onMousedown(x)" [style.width.px]="cell.width" resizable (resize)="resize($event)" [style.text-align]="element.rows[y].cells[x].text_align" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
+                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan (mousedown)="onMousedown(x)" [style.width.px]="cell.width" resizable (resize)="resize($event)" [style.background-color]="cell.background_color" [style.color]="cell.text_color" [style.text-align]="element.rows[y].cells[x].text_align" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
                 </template>
                 <template [ngIf]="element.clientState == 3">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan (mousedown)="onMousedownSelect($event,cell)" (mouseover)="onMouseover($event,cell)" [style.width.px]="cell.width" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [class.selected]="element.rows[y].cells[x].selected" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
+                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan (mousedown)="onMousedownSelect($event,cell)" (mouseover)="onMouseover($event,cell)" [style.background-color]="cell.selected ? shadeHEXColor(cell.background_color,0.2) : cell.background_color" [style.color]="cell.text_color" [style.width.px]="cell.width" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
                 </template>
                 <template [ngIf]="element.clientState == 1">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan [style.width.px]="cell.width"><textarea  *ngIf="element.clientState == 1" [(ngModel)]="content.cells[x].text" [style.text-align]="element.rows[y].cells[x].text_align"  [style.font-size.px]="element.rows[y].cells[x].font_size" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-family]="'font' + element.rows[y].cells[x].font?.id"></textarea></td>
+                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan [style.width.px]="cell.width"><textarea  *ngIf="element.clientState == 1" [(ngModel)]="content.cells[x].text"  [style.color]="cell.text_color" [style.text-align]="element.rows[y].cells[x].text_align"  [style.font-size.px]="element.rows[y].cells[x].font_size" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-family]="'font' + element.rows[y].cells[x].font?.id"></textarea></td>
                 </template>
         `
     ,
@@ -122,6 +122,17 @@ export class NewTableRowComponent implements OnInit{
         this.tableElement.startSelection(this.element.rows[this.y].cells[x],x,this.y)
         event.preventDefault()
     }
+    
+    shadeRGBColor(color, percent) {
+        var f=color.split(","),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=parseInt(f[0].slice(4)),G=parseInt(f[1]),B=parseInt(f[2]);
+        return "rgb("+(Math.round((t-R)*p)+R)+","+(Math.round((t-G)*p)+G)+","+(Math.round((t-B)*p)+B)+")";
+    }
+    
+    shadeHEXColor(color, percent) {   
+        var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+        return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+    }
+
     
     fillFromDOM(){
     }    

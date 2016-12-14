@@ -35,6 +35,7 @@ import { ImageContent } from './image-content'
             font-family: inherit;
             font-size: inherit;
             text-align: inherit;
+            color: inherit;
         }
     `],
     directives: []
