@@ -18,7 +18,7 @@ import { NewPage } from './new-page'
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable2 resizable  (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (click)="onElementClicked()" [style.background-color] = "element.background_color" [style.color]="element.text_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
+        <div draggable2 resizable  (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (click)="onElementClicked()" [style.background-color] = "element.background_color ? element.background_color : defaultBackgroundColor" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>                       
         </div>
     `,
@@ -51,6 +51,9 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck {
     displayContent :  DisplayContentComponent
       
     differ: KeyValueDiffer;
+    
+    defaultTextColor = TextElement.defaultTextColor
+    defaultBackgroundColor = Element.defaultBackgroundColor
 
     constructor(
         public elementRef: ElementRef, 

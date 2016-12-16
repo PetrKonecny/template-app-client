@@ -10,16 +10,81 @@ import { NewTableElement } from './new-table-element'
     template: `
 
                 <template [ngIf]="element.clientState == 0">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan [style.background-color]="cell.background_color" [style.color]="cell.text_color" [style.width.px]="cell.width" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
+                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
+                        [attr.colspan]=cell.colspan 
+                        [attr.rowspan]=cell.rowspan 
+                        [style.background-color]="cell.background_color ? cell.background_color : defaultBackgroundColor"
+                        [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
+                        [style.width.px]="cell.width" 
+                        [style.text-align]="element.rows[y].cells[x].text_align"  
+                        [class.italic]="element.rows[y].cells[x].italic" 
+                        [class.bold]="element.rows[y].cells[x].bold" 
+                        [style.font-size.px]="element.rows[y].cells[x].font_size"  
+                        [style.border-style]="cell.border_style" 
+                        [style.border-color]="cell.border_color" 
+                        [style.border-width.px]="cell.border_width" 
+                        [style.vertical-align]="element.rows[y].cells[x].vertical_align" 
+                        [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
+                    >{{content.cells[x].text}}</td> 
                 </template>
                 <template [ngIf]="element.clientState == 2">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan (mousedown)="onMousedown(x)" [style.width.px]="cell.width" resizable (resize)="resize($event)" [style.background-color]="cell.background_color" [style.color]="cell.text_color" [style.text-align]="element.rows[y].cells[x].text_align" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
+                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
+                        [attr.colspan]=cell.colspan 
+                        [attr.rowspan]=cell.rowspan (mousedown)="onMousedown(x)" 
+                        [style.width.px]="cell.width" resizable (resize)="resize($event)" 
+                        [style.background-color]="cell.background_color ? cell.background_color : defaultBackgroundColor"
+                        [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
+                        [style.text-align]="element.rows[y].cells[x].text_align" 
+                        [class.italic]="element.rows[y].cells[x].italic"  
+                        [style.border-style]="cell.border_style" 
+                        [style.border-color]="cell.border_color" 
+                        [style.border-width.px]="cell.border_width"  
+                        [class.bold]="element.rows[y].cells[x].bold" 
+                        [style.font-size.px]="element.rows[y].cells[x].font_size" 
+                        [style.vertical-align]="element.rows[y].cells[x].vertical_align" 
+                        [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
+                    >{{content.cells[x].text}}</td> 
                 </template>
                 <template [ngIf]="element.clientState == 3">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan (mousedown)="onMousedownSelect($event,cell)" (mouseover)="onMouseover($event,cell)" [style.background-color]="cell.selected ? shadeHEXColor(cell.background_color,0.2) : cell.background_color" [style.color]="cell.text_color" [style.width.px]="cell.width" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size" [style.vertical-align]="element.rows[y].cells[x].vertical_align" [style.font-family]="'font' + element.rows[y].cells[x].font?.id">{{content.cells[x].text}}</td> 
+                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
+                        [attr.colspan]=cell.colspan 
+                        [attr.rowspan]=cell.rowspan 
+                        (mousedown)="onMousedownSelect($event,cell)" 
+                        (mouseover)="onMouseover($event,cell)" 
+                        [style.background-color]="cell.selected ? shadeHEXColor(cell.background_color ? cell.background_color: defaultBackgroundColor,0.2) : cell.background_color ? cell.background_color: defaultBackgroundColor" 
+                        [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
+                        [style.width.px]="cell.width"  
+                        [style.border-style]="cell.border_style" 
+                        [style.border-color]="cell.border_color" 
+                        [style.border-width.px]="cell.border_width" 
+                        [style.text-align]="element.rows[y].cells[x].text_align"  
+                        [class.italic]="element.rows[y].cells[x].italic" 
+                        [class.bold]="element.rows[y].cells[x].bold" 
+                        [style.font-size.px]="element.rows[y].cells[x].font_size" 
+                        [style.vertical-align]="element.rows[y].cells[x].vertical_align" 
+                        [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
+                    >{{content.cells[x].text}}</td> 
                 </template>
                 <template [ngIf]="element.clientState == 1">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" [attr.colspan]=cell.colspan [attr.rowspan]=cell.rowspan [style.width.px]="cell.width"><textarea  *ngIf="element.clientState == 1" [(ngModel)]="content.cells[x].text"  [style.color]="cell.text_color" [style.text-align]="element.rows[y].cells[x].text_align"  [style.font-size.px]="element.rows[y].cells[x].font_size" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-family]="'font' + element.rows[y].cells[x].font?.id"></textarea></td>
+                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
+                        [attr.colspan]=cell.colspan 
+                        [attr.rowspan]=cell.rowspan 
+                        [style.background-color]="cell.background_color ? cell.background_color : defaultBackgroundColor"
+                        [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
+                        [style.width.px]="cell.width" 
+                        [style.border-style]="cell.border_style" 
+                        [style.border-color]="cell.border_color" 
+                        [style.border-width.px]="cell.border_width">
+                        <textarea  *ngIf="element.clientState == 1" 
+                            [(ngModel)]="content.cells[x].text"  
+                            [style.color]="cell.text_color" 
+                            [style.text-align]="element.rows[y].cells[x].text_align"  
+                            [style.font-size.px]="element.rows[y].cells[x].font_size" 
+                            [class.italic]="element.rows[y].cells[x].italic" 
+                            [class.bold]="element.rows[y].cells[x].bold" 
+                            [style.font-family]="'font' + element.rows[y].cells[x].font?.id">
+                    </textarea>
+                </td>
                 </template>
         `
     ,
@@ -70,6 +135,9 @@ export class NewTableRowComponent implements OnInit{
     x: number;
     
     selecting: boolean
+    
+    defaultBackgroundColor: string = Cell.defaultBackgroundColor
+    defaultTextColor: string = Cell.defaultTextColor
     
     @Input()
     content: RowContent

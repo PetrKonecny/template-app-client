@@ -8,5 +8,6 @@ export class TextElement extends Element {
     font: Font;
     text_align: string;
     text_align_vertical: string;
-    text_color: string = "#000"
+    static defaultTextColor: string = "#000"
+    text_color: string
 }

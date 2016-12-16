@@ -84,8 +84,14 @@ export class Cell{
     text_align: string
     vertical_align: string
     selected: boolean
-    text_color: string = "#000"
-    background_color: string = "#fff"
+    static defaultTextColor: string = "#000"
+    text_color: string
+    static defaultBackgroundColor: string = "#ccc"
+    background_color: string
+    border_style: string
+    static defaultBorderColor: string = "#000"
+    border_color: string
+    border_width: number
 }
 
 export class CellPosition {

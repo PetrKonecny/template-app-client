@@ -12,5 +12,6 @@ export class Element {
     page: Page;
     content: Content;
     draggable: boolean = true;
-    background_color: string = "#000"
+    static defaultBackgroundColor: string = "#ccc"
+    background_color: string
 }
