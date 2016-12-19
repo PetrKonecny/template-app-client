@@ -21,7 +21,7 @@ import { NewTableElement } from './new-table-element'
                         [class.bold]="element.rows[y].cells[x].bold" 
                         [style.font-size.px]="element.rows[y].cells[x].font_size"  
                         [style.border-style]="cell.border_style" 
-                        [style.border-color]="cell.border_color" 
+                        [style.border-color]="cell.border_color ? cell.border_color : defaultBorderColor " 
                         [style.border-width.px]="cell.border_width" 
                         [style.vertical-align]="element.rows[y].cells[x].vertical_align" 
                         [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
@@ -37,7 +37,7 @@ import { NewTableElement } from './new-table-element'
                         [style.text-align]="element.rows[y].cells[x].text_align" 
                         [class.italic]="element.rows[y].cells[x].italic"  
                         [style.border-style]="cell.border_style" 
-                        [style.border-color]="cell.border_color" 
+                        [style.border-color]="cell.border_color ? cell.border_color : defaultBorderColor " 
                         [style.border-width.px]="cell.border_width"  
                         [class.bold]="element.rows[y].cells[x].bold" 
                         [style.font-size.px]="element.rows[y].cells[x].font_size" 
@@ -51,12 +51,12 @@ import { NewTableElement } from './new-table-element'
                         [attr.rowspan]=cell.rowspan 
                         (mousedown)="onMousedownSelect($event,cell)" 
                         (mouseover)="onMouseover($event,cell)" 
-                        [style.background-color]="cell.selected ? shadeHEXColor(cell.background_color ? cell.background_color: defaultBackgroundColor,0.2) : cell.background_color ? cell.background_color: defaultBackgroundColor" 
+                        [style.background-color]="cell.background_color ? cell.background_color : defaultBackgroundColor"
                         [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
                         [style.width.px]="cell.width"  
                         [style.border-style]="cell.border_style" 
-                        [style.border-color]="cell.border_color" 
-                        [style.border-width.px]="cell.border_width" 
+                        [style.border-color]="cell.border_color ? cell.border_color : defaultBorderColor " 
+                        [style.border-width.px]="cell.selected ? getSelectedBorderWidth(cell) : cell.border_width" 
                         [style.text-align]="element.rows[y].cells[x].text_align"  
                         [class.italic]="element.rows[y].cells[x].italic" 
                         [class.bold]="element.rows[y].cells[x].bold" 
@@ -73,7 +73,7 @@ import { NewTableElement } from './new-table-element'
                         [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
                         [style.width.px]="cell.width" 
                         [style.border-style]="cell.border_style" 
-                        [style.border-color]="cell.border_color" 
+                        [style.border-color]="cell.border_color ? cell.border_color : defaultBorderColor " 
                         [style.border-width.px]="cell.border_width">
                         <textarea  *ngIf="element.clientState == 1" 
                             [(ngModel)]="content.cells[x].text"  
@@ -138,6 +138,7 @@ export class NewTableRowComponent implements OnInit{
     
     defaultBackgroundColor: string = Cell.defaultBackgroundColor
     defaultTextColor: string = Cell.defaultTextColor
+    defaultBorderColor: string = Cell.defaultBorderColor
     
     @Input()
     content: RowContent
@@ -183,6 +184,11 @@ export class NewTableRowComponent implements OnInit{
     
     onMousedown(x: number){
         this.x = x
+    }
+    
+    getSelectedBorderWidth(cell: Cell){
+        let width: number = +cell.border_width
+        return width + 1
     }
     
     onMousedownSelect(event: MouseEvent,cell: Cell){

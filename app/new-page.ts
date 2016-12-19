@@ -38,7 +38,7 @@ export class NewPage {
             this.horizontals.push({positionY: elmnt.height + elmnt.positionY, guide: null, active: false })
             this.horizontals.push({positionY: elmnt.positionY, guide: null , active: false})              
         })
-        this.component.rulers.forEach(ruler => {
+        this.component.page.rulers.forEach(ruler => {
             if (ruler.positionX){
                 this.verticals.push({ positionX: ruler.positionX, guide: null, active: false})
             } else if (ruler.positionY){

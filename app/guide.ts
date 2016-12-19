@@ -1,3 +1,5 @@
+import {Page} from './page'
+
 export class Guide{
     
     positionX: number

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core';
 import { NewTableCellComponent } from './new-table-cell.component'
-import { TableElement } from './table-element'
+import { TableElement, Cell } from './table-element'
 import { RowContent } from './table-content'
 import { Resizable } from './resizable.directive' 
 
@@ -8,7 +8,26 @@ import { Resizable } from './resizable.directive'
     selector: 'tr',
     template: `
 
-        <td *ngFor = "let cell of element.rows[y].cells; let x = index" [style.width.px]="cell.width"><textarea [(ngModel)]="content.cells[x].text" [style.text-align]="element.rows[y].cells[x].text_align"  [style.font-size.px]="element.rows[y].cells[x].font_size" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-family]="'font' + element.rows[y].cells[x].font?.id"></textarea></td>
+        <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
+            [style.width.px]="cell.width"
+            [attr.colspan]=cell.colspan 
+            [attr.rowspan]=cell.rowspan 
+            [style.background-color]="cell.background_color ? cell.background_color : defaultBackgroundColor"
+            [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
+            [style.width.px]="cell.width" 
+            [style.border-style]="cell.border_style" 
+            [style.border-color]="cell.border_color ? cell.border_color : defaultBorderColor " 
+            [style.border-width.px]="cell.border_width" >
+            <textarea 
+                [(ngModel)]="content.cells[x].text" 
+                [style.color]="cell.text_color" 
+                [style.text-align]="element.rows[y].cells[x].text_align"  
+                [style.font-size.px]="element.rows[y].cells[x].font_size" 
+                [class.italic]="element.rows[y].cells[x].italic" 
+                [class.bold]="element.rows[y].cells[x].bold" 
+                [style.font-family]="'font' + element.rows[y].cells[x].font?.id">
+            </textarea>
+        </td>
         `
     ,
     directives: [Resizable], 
@@ -51,6 +70,10 @@ export class DisplayTableRowComponent {
     
     @Input()
     element: TableElement;
+    
+    defaultBackgroundColor: string = Cell.defaultBackgroundColor
+    defaultTextColor: string = Cell.defaultTextColor
+    defaultBorderColor: string = Cell.defaultBorderColor
     
     @Input()
     y: number;

@@ -17,6 +17,9 @@ export class Draggable2 implements OnInit {
 
     @Input('borderCheck')
     borderCheck: boolean = true
+    
+    @Input('propagate')
+    propagate: boolean = true
    
     @Output()
     move = new EventEmitter<ElementDimensions>()
@@ -37,7 +40,7 @@ export class Draggable2 implements OnInit {
             this.mousedown.emit(event)
             this.running = true
         }
-        //return false; // Call preventDefault() on the event
+        return this.propagate
     }
 
     @HostListener('mousemove', ['$event'])

@@ -20,22 +20,30 @@ import {TextElement} from './text-element'
 import {StepSelector, FunctionStep} from './step-selector'
 import {TableElement} from './table-element'
 import {TemplateInstanceStore} from './template-instance.store'
+import {Guide} from './guide'
 
 @Component({
     selector: 'page-select',
     template: `
-                <span *ngIf="page">                 
+                <span *ngIf="page">\n\
+                    <br>
+                    <button (click)="createNewTextElement()">Add text element</button>
+                    <button (click)="createNewImageElement()">Add image element</button>
+                    <button (click)="createNewTableElement()">Add table element</button>\n\
+                    <button (click)="createNewRulerX()">Add vertical ruler</button>
+                    <button (click)="createNewRulerY()">Add horizontal ruler</button>
+                    <button (click)="onDeleteClicked()">Delete page</button>
                 </span>
              `,
     directives: [],
-    providers: [PageSelector]
+    providers: []
 })
 
 export class PageSelectorComponent {
         
     page: Page
     
-    constructor(private pageSelector: PageSelector, private stepSelector: StepSelector,private templateInstanceStore: TemplateInstanceStore){
+    constructor(private pageSelector: PageSelector, private stepSelector: StepSelector,private templateInstanceStore: TemplateInstanceStore, private elementSelector: ElementSelector){
         this.pageSelector.component = this
     }
     
@@ -85,8 +93,28 @@ export class PageSelectorComponent {
         this.page.elements.push(element)
     }
     
+    createNewRulerX(){
+        if (this.page.rulers == null) {
+            this.page.rulers = new Array<Guide>();
+        }
+        let ruler = new Guide
+        ruler.positionX = 20
+        this.page.rulers.push(ruler)
+    }
+    
+    createNewRulerY(){
+        if (this.page.rulers == null) {
+            this.page.rulers = new Array<Guide>();
+        }
+        let ruler = new Guide
+        ruler.positionY = 20
+        this.page.rulers.push(ruler)
+    }
+    
     onDeleteClicked(){
         this.templateInstanceStore.deletePageFromTemplate(this.page);
+        this.page = null
+        this.elementSelector.selectedElement = null
     }
  
     

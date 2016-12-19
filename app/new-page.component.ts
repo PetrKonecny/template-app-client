@@ -1,4 +1,4 @@
-import { Component, Input, ViewChildren, QueryList, Injectable, HostListener} from '@angular/core';
+import { Component, Input, ViewChildren, QueryList, Injectable, HostListener, OnInit} from '@angular/core';
 import { Element} from './element';
 import { TextElement } from './text-element';
 import { ImageElement } from './image-element';
@@ -14,23 +14,20 @@ import { Guide } from './guide'
 import { DisplayGuideComponent } from './display-guide.component'
 import { DisplayRulerComponent } from './display-ruler.component'
 import { StepSelector, ArrayStepPush } from './step-selector'
+import {PageSelector} from './page-selector'
 
 
 @Component({
     selector: 'create-new-page',
     template: `
           <h3>New Page</h3>
-          <div class ="page">
+          <div class ="page" (click)="onPageClicked()">
             <div class="grid">
                   <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>\n\
                   <display-guide *ngFor="let guide of guides" [guide] = "guide" ></display-guide>
-                  <display-ruler *ngFor="let guide of rulers" [guide] = "guide" ></display-ruler>
+                  <display-ruler *ngFor="let guide of page.rulers" [guide] = "guide" ></display-ruler>
             </div>
-          </div>
-          <button (click)="createNewTextElement()">Add text element</button>
-          <button (click)="createNewImageElement()">Add image element</button>
-          <button (click)="createNewTableElement()">Add table element</button>
-          <button (click)="onDeleteClicked()">Delete page</button>
+          </div>        
     `,
     styles:[`
         .grid {
@@ -47,7 +44,7 @@ import { StepSelector, ArrayStepPush } from './step-selector'
     providers: [NewPage]
 })
 
-export class NewPageComponent  {
+export class NewPageComponent implements OnInit {
     
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
@@ -61,70 +58,26 @@ export class NewPageComponent  {
 
     guides: Array<Guide>
     
-    rulers: Array<Guide>
-
     @Input()
-    page: Page = new Page();  
+    page: Page  
     
-    constructor(private templateInstanceStore: TemplateInstanceStore, private newPage: NewPage, private stepSelector: StepSelector) {
+    constructor(private templateInstanceStore: TemplateInstanceStore, private newPage: NewPage, private stepSelector: StepSelector, private pageSelector: PageSelector) {
         this.newPage.component = this
-        this.rulers = new Array
-        this.guides = new Array
+        this.guides = new Array      
+    }
+    
+    ngOnInit(){
+        this.page.rulers = new Array
         var ruler = new Guide
         ruler.positionX = 20
-        this.rulers.push(ruler)
+        this.page.rulers.push(ruler)
         var ruler2 = new Guide
         ruler2.positionY = 20
-        this.rulers.push(ruler2)
-    }
-
-    createNewTextElement(){
-        if (this.page.elements == null) {
-            this.page.elements = new Array<Element>();
-        }
-        var element = new TextElement();
-        element.width = 100;
-        element.height = 100;
-        element.positionX = 0;
-        element.positionY = 0;
-        element.font_size = 20;
-        element.content = new TextContent();
-        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
-        this.page.elements.push(element);
+        this.page.rulers.push(ruler2)
     }
     
-    createNewImageElement(){
-        if (this.page.elements == null) {
-            this.page.elements = new Array<Element>();
-        }
-        var element = new ImageElement();
-        element.width = 100;
-        element.height = 100;
-        element.positionX = 0;
-        element.positionY = 0;
-        element.content = new ImageContent();
-            this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
-        this.page.elements.push(element);
-    }
-    
-    createNewTableElement(){
-        if (this.page.elements == null) {
-            this.page.elements = new Array<Element>();
-        }
-        var element = new TableElement();
-        element.width = 100
-        element.height = 100
-        element.positionX = 0
-        element.positionY = 0
-        TableElement.addRows(element,5,5)
-        var content = new TableContent()
-        content.addRows(5,5)
-        element.content = content
-        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
-        this.page.elements.push(element)
-    }
-    onDeleteClicked(){
-        this.templateInstanceStore.deletePageFromTemplate(this.page);
+    onPageClicked(){
+        this.pageSelector.selectPage(this.page)
     }
 
 }

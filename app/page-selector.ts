@@ -20,10 +20,10 @@ import {PageSelectorComponent} from './page-selector.component'
 export class PageSelector {
     
   
-    public page: Page
-    public component: PageSelectorComponent
+    component: PageSelectorComponent
     
-    constructor(
-        private templateInstanceStore: TemplateInstanceStore, private stepSelector: StepSelector
-    ){}   
+    
+    selectPage(page: Page){
+        this.component.page = page
+    }
 }

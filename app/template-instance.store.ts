@@ -12,7 +12,7 @@ import {Content} from './content'
 import {Page} from './page'
 import {TableElement} from './table-element'
 import {TableContent, RowContent, CellContent} from './table-content'
-
+import {Guide} from './guide'
 
 @Injectable()
 export class TemplateInstanceStore {
@@ -156,6 +156,15 @@ export class TemplateInstanceStore {
             var index = page.elements.indexOf(element)
             if(index > -1){
                 page.elements.splice(index,1)
+            }
+        })
+    }
+    
+    deleteRulerFromTemplate(ruler: Guide){
+        this._template.value.pages.forEach((page) => {
+            var index = page.rulers.indexOf(ruler)
+            if(index > -1){
+                page.rulers.splice(index,1)
             }
         })
     }

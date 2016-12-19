@@ -14,7 +14,7 @@ import { DisplayContentImgDragComponent } from './display-content-img-drag.compo
 @Component({
     selector: 'display-element',
     template: `
-        <div *ngIf="element.type === 'text_element'" class ="element" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY" [style.font-size.px] = "element.font_size">
+        <div *ngIf="element.type === 'text_element'" class ="element" [style.background-color] = "element.background_color ? element.background_color : defaultBackgroundColor" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY" [style.font-size.px] = "element.font_size">
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
         </div>
         <div *ngIf="element.type === 'image_element'" class ="element" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">\n\
@@ -57,6 +57,9 @@ export class DisplayElementComponent implements AfterViewInit {
     textContainer : ElementRef;
     
     draggable:boolean = true;
+    
+    defaultTextColor = TextElement.defaultTextColor
+    defaultBackgroundColor = Element.defaultBackgroundColor
     
     constructor(
         private imageSelector: ImageSelector

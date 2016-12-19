@@ -8,6 +8,10 @@ import { TemplateInstanceStore } from './template-instance.store';
 import { ImageSelectorComponent } from './image-selector.component';
 import { ImageSelector } from './image-selector';
 import { StepSelector } from './step-selector'
+import {PageSelectorComponent } from './page-selector.component'
+import {PageSelector} from './page-selector'
+import { RulerSelector } from './ruler-selector'
+import { RulerSelectorComponent } from './ruler-selector.component'
 
 @Component({
     selector: 'create-new-template',
@@ -19,15 +23,17 @@ import { StepSelector } from './step-selector'
             <input [(ngModel)]="template.name" placeholder="name"/><br>
             <button (click)="createNewPage()">Add page</button>
             <button (click)="saveTemplate()">Save</button>
-            <button (click)="undo()">Undo</button>
-            <element-select class="selector"></element-select>
+            <button (click)="undo()">Undo</button>\n\
+            <page-select></page-select>
+            <element-select></element-select>
+            <ruler-select></ruler-select>
         </div>       
         <div class="pages">
         <create-new-page *ngFor="let page of template.pages" [page]="page"></create-new-page>
         </div>
     `,
-    directives: [NewPageComponent, ElementSelectorComponent, ImageSelectorComponent],
-    providers: [ElementSelector, ImageSelector, StepSelector],
+    directives: [NewPageComponent, ElementSelectorComponent, ImageSelectorComponent, PageSelectorComponent, RulerSelectorComponent],
+    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector],
     styles: [`.leftPanel {
             position: relative;
             float: left;

@@ -91,7 +91,7 @@ export class Cell{
     border_style: string
     static defaultBorderColor: string = "#000"
     border_color: string
-    border_width: number
+    border_width: number = 1
 }
 
 export class CellPosition {
