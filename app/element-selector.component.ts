@@ -11,7 +11,7 @@ import {FontSelectorComponent} from './font-selector.component';
 import {FontService} from './font.service';
 import {ClientState, TableElement, Cell} from './table-element'
 import {ColorPickerDirective} from 'ct-angular2-color-picker/component'
-
+import {TextSelectorComponent} from './text-selector.component'
 
 @Component({
     selector: 'element-select',
@@ -36,7 +36,9 @@ import {ColorPickerDirective} from 'ct-angular2-color-picker/component'
                         <button (click)="changeTextAlign('right')">Allign right</button>
                         <button (click)="changeTextAlign('center')">Allign center</button>
                         <button (click)="changeTextAlign('justify')">Justify</button>
-                    </div>                    
+                    </div>
+                    Editor Controlls:<br>
+                    <text-select *ngIf="elementSelector.selectedElement.content" [content]="elementSelector.selectedElement.content"></text-select>
                 </div>
                 <div *ngIf="elementSelector.selectedElement.type == 'table_element'"> 
                     <button *ngIf="elementSelector.selectedElement.clientState != 2" (click)="editTable()">Edit table</button>
@@ -77,7 +79,7 @@ import {ColorPickerDirective} from 'ct-angular2-color-picker/component'
                 </div>
                 </span>
              `,
-    directives: [ImageListComponent, FontSelectorComponent, UPLOAD_DIRECTIVES, ColorPickerDirective],
+    directives: [ImageListComponent, FontSelectorComponent, UPLOAD_DIRECTIVES, ColorPickerDirective, TextSelectorComponent],
     providers: [ImageService, FontSelector, FontService]
 })
 

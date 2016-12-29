@@ -2,13 +2,28 @@ import { Component, Input, ViewChild, ElementRef} from '@angular/core';
 import { Content} from './content';
 import { TextContent } from './text-content'
 import { ImageContent } from './image-content'
+import { DomSanitizationService } from '@angular/platform-browser';
+import { Pipe } from '@angular/core'
+import { SimpleTinyComponent } from './simple-tiny.component'
+	
+@Pipe({name: 'safeHtml'})
+export class SafeHtml {
+  constructor(private sanitizer:DomSanitizationService){}
+
+  transform(html) {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+}
 
 @Component({
     selector: 'display-content',
-    template:
-    `   <textarea *ngIf="content.type === 'text_content'"[(ngModel)]='content.text' #textBox class="content text">
-            {{content.text}}
-        </textarea>
+    template:        
+    `   <simple-tiny *ngIf="content.type === 'text_content'" 
+            [content]="content"
+            (onEditorKeyup)="keyupHandlerFunction($event)"
+            clasś="content text"
+        >
+        </simple-tiny>
         <div *ngIf="content.type === 'image_content'" #frame [style.left.px]="content.left" [style.top.px]="content.top" class="content image">
             <img *ngIf="content.image && content.width && content.height" #image [width]="content.width" [height]="content.height" class="image" src="http://localhost:8080/img/{{content.image.image_key}}.{{content.image.extension}}">\n\
             <img *ngIf="content.image &&!content.width && !content.height" #image class="image" src="http://localhost:8080/img/{{content.image.image_key}}.{{content.image.extension}}">
@@ -32,13 +47,15 @@ import { ImageContent } from './image-content'
             width: 100%;
             height: 100%;
             overflow:hidden;
+            user-select: none;
             font-family: inherit;
             font-size: inherit;
             text-align: inherit;
             color: inherit;
         }
     `],
-    directives: []
+    pipes: [SafeHtml],
+    directives: [SimpleTinyComponent]
 })
 
 export class DisplayContentComponent {
@@ -54,6 +71,20 @@ export class DisplayContentComponent {
     
     @ViewChild('frame')
     frame: ElementRef;    
+    
+    boldText(){
+        var content = <TextContent>this.content
+        var selection = window.getSelection()
+        var start = selection.anchorOffset
+        var end = selection.focusOffset
+        console.log(selection)
+        content.text = content.text.substring(0, start) + "<span style='font-weight:bold;'>" + content.text.substring(start + 1, end) + "</span>" + content.text.substring(end + 1, content.text.length)
+    }
+    
+    keyupHandlerFunction(text: string){
+        let content =<TextContent> this.content
+        content.text = text
+    }
     
     saveContent(){
         /*if(this.content.type == 'text_content'){
@@ -74,5 +105,7 @@ export class DisplayContentComponent {
     styleToNum(style){
         return Number(style.substring(0, style.length - 2));
     }
+    
+    
    
 }
