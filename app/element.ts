@@ -9,7 +9,6 @@ export class Element {
     positionY: number;
     rotation: number;
     type: string;
-    page: Page;
     content: Content;
     draggable: boolean = true;
     static defaultBackgroundColor: string = "#ccc"

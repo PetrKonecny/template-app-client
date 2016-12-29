@@ -13,7 +13,8 @@
     'angular2-grid':              'node_modules/angular2-grid/dist',
     'ng2-uploader':               'node_modules/ng2-uploader',
     'rxjs':                       'node_modules/rxjs',
-    'ct-angular2-color-picker':   '/node_modules/ct-angular2-color-picker'
+    'ct-angular2-color-picker':   '/node_modules/ct-angular2-color-picker',
+    'tinymce':                    '/node_modules/tinymce',
   };
 
   // packages tells the System loader how to load when no filename and/or no extension
@@ -23,7 +24,8 @@
     'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
     'angular2-grid' :             { main: 'ngGrid.js',defaultExtension: 'js' },
     'ng2-uploader' :              { main: 'ng2-uploader.js',defaultExtension: 'js' },
-    'ct-angular2-color-picker':   { main: 'ct-angular2-color-picker.js',defaultExtension: 'js' }
+    'ct-angular2-color-picker':   { main: 'ct-angular2-color-picker.js',defaultExtension: 'js' },
+    'tinymce':                    { main: 'tinymce.js', defaultExtension: 'js' },  
   };
 
   var ngPackageNames = [

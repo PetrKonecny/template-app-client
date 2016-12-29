@@ -12,6 +12,7 @@ import {FontService} from './font.service';
 import {ClientState, TableElement, Cell} from './table-element'
 import {ColorPickerDirective} from 'ct-angular2-color-picker/component'
 import {TextSelectorComponent} from './text-selector.component'
+import {Font} from './font'
 
 @Component({
     selector: 'element-select',
@@ -47,7 +48,7 @@ import {TextSelectorComponent} from './text-selector.component'
                     <button *ngIf="elementSelector.selectedElement.clientState != 3" (click)="editCells()">Edit cells</button>
                     <div *ngIf="elementSelector.selectedElement.clientState == 3 && elementSelector.selectedElement.selectedCells?.length > 0">
                         <br>Background color: <input [colorPicker]="elementSelector.selectedElement.selectedCells[0].background_color ? elementSelector.selectedElement.selectedCells[0].background_color : defaultCellBackgroundColor" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)" [style.background]="elementSelector.selectedElement.selectedCells[0].background_color ? elementSelector.selectedElement.selectedCells[0].background_color : defaultCellBackgroundColor" />
-                        <font-selector *ngIf="fontsOpened" ></font-selector>
+                        <font-selector *ngIf="fontsOpened" (onFontSelected)="changeFont($event)"></font-selector>
                         <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
                         <br>Text color: <input [colorPicker]="elementSelector.selectedElement.selectedCells[0].text_color ? elementSelector.selectedElement.selectedCells[0].text_color : defaultCellTextColor" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsTextColor($event)" [style.background]="elementSelector.selectedElement.selectedCells[0].text_color ? elementSelector.selectedElement.selectedCells[0].text_color : defaultCellTextColor" />
                         <br>Text size: <input #fontsize [value]="elementSelector.selectedElement.selectedCells[0].text_size" (keyup)="changeSelectedCellsFontSize(fontsize.value)">
@@ -102,6 +103,10 @@ export class ElementSelectorComponent implements OnInit {
     
     openFonts(){
         this.fontSelector.openSelectorWindow()
+    }
+    
+    changeFont(font: Font){
+        this.elementSelector.changeFont(font)
     }
     
     editTable(){

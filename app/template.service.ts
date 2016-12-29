@@ -31,15 +31,16 @@ export class TemplateService {
     addTemplate(template: Template) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this._templatesUrl, JSON.stringify(template), options)
+        return this.http.post(this._templatesUrl, JSON.stringify(template,this.replacer), options)
                     .map(this.extractData)
                     .catch(this.handleError);
     }
     
     updateTemplate(template: Template) {
+        
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        return this.http.put(this._templatesUrl+"/"+template.id, JSON.stringify(template), options)
+        return this.http.put(this._templatesUrl+"/"+template.id, JSON.stringify(template,this.replacer), options)
                     .map(this.extractData)
                     .catch(this.handleError);
     }
@@ -67,5 +68,10 @@ export class TemplateService {
         console.error(error);
         console.error(errMsg); // log to console instead
         return Observable.throw(errMsg);
+    }
+    
+    replacer(key,value) {
+        if (key=="editor") return undefined;
+        else return value;
     }
 }

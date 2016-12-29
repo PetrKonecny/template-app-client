@@ -3,7 +3,7 @@ import {Content} from './content';
 export class TextContent extends Content {
     text: string
     type: string = "text_content";
-    editor: Editor  
+    editor: Editor
 }
 
 export class Editor {

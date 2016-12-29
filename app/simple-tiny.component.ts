@@ -59,15 +59,21 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit {
                     const content = editor.getContent();
                     this.onEditorKeyup.emit(content);
                 });
-                    editor.on('NodeChange', (e) => {
+                editor.on('NodeChange', (e) => {
                     this.content.editor.editorCurColor = tinymce.DOM.getStyle(e.element, 'color', true)
+                    this.content.editor.editorCurFont = tinymce.DOM.getStyle(e.element,'font-family',true)
+                });
+                editor.on('init', (e) => {
+                    if (this.content.text){
+                        this.content.editor.editor.setContent(this.content.text)
+                    }
                 });
             },
       });
     }
     
     ngOnDestroy() {
-        tinymce.remove(this.content.editor);
+        tinymce.remove(this.content.editor.editor);
     }
 
     bold(){

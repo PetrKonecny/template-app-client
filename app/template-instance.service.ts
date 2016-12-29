@@ -32,7 +32,7 @@ export class TemplateInstanceService {
     addTemplateInstance(templateInstance: TemplateInstance) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.templateInstancesUrl, JSON.stringify(templateInstance), options)
+        return this.http.post(this.templateInstancesUrl, JSON.stringify(templateInstance, this.replacer), options)
                     .map(this.extractData)
                     .catch(this.handleError);
     }
@@ -41,7 +41,7 @@ export class TemplateInstanceService {
         console.log(templateInstance);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        return this.http.put(this.templateInstancesUrl+"/"+templateInstance.id, JSON.stringify(templateInstance), options)
+        return this.http.put(this.templateInstancesUrl+"/"+templateInstance.id, JSON.stringify(templateInstance, this.replacer), options)
                     .map(this.extractData)
                     .catch(this.handleError);
     }
@@ -70,5 +70,10 @@ export class TemplateInstanceService {
         console.error(error);
         console.error(errMsg); // log to console instead
         return Observable.throw(errMsg);
+    }
+    
+    replacer(key,value) {
+        if (key=="editor") return undefined;
+        else return value;
     }
 }

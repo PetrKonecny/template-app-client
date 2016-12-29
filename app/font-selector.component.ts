@@ -1,4 +1,4 @@
-import { Component, OnInit, Injectable} from '@angular/core';
+import { Component, OnInit, Injectable, Output, EventEmitter} from '@angular/core';
 import { ImageListComponent} from './image-list.component';
 import { ImageService } from './image.service';
 import { Image} from './image';
@@ -27,14 +27,17 @@ export class FontSelectorComponent implements OnInit {
     
     private fonts: Font[];
     
-    constructor(private elementSelector: ElementSelector, private fontSelector: FontSelector,  private fontService: FontService){}
+    @Output()
+    onFontSelected = new EventEmitter<Font>()
+    
+    constructor(private fontSelector: FontSelector,  private fontService: FontService){}
      
     ngOnInit(){
         this.fontService.getFonts().subscribe(fonts => this.fonts = fonts);
     }
     
     onFontClicked(font: Font){
-        this.elementSelector.changeFont(font);
+        this.onFontSelected.emit(font)
         this.fontSelector.closeSelectorWindow();
     }
   

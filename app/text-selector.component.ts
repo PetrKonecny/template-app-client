@@ -12,22 +12,29 @@ import {FontService} from './font.service';
 import {ClientState, TableElement, Cell} from './table-element'
 import {ColorPickerDirective} from 'ct-angular2-color-picker/component'
 import {TextContent} from './text-content'
+import {Font} from './font'
 
 
 @Component({
     selector: 'text-select',
     template: ` 
-                <span> Font: Some font</span>
-                <font-selector *ngIf="fontsOpened" ></font-selector>
+                <span> Font: {{content.editor.editorCurFont}}</span>
+                <font-selector *ngIf="fontsOpened" (onFontSelected)="changeEditorFont($event)" ></font-selector>
                 <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
                 <br>Font color: <input [colorPicker]="content.editor.editorCurColor" (colorPickerChange)="changeEditorTextColor($event)" [style.background]="content.editor.editorCurColor" />
                 <div>
-                    <h2>Text align</h2><br>
-                    <button (click)="changeEditorTextAlign('left')">Allign left</button>
-                    <button (click)="changeEditorTextAlign('right')">Allign right</button>
-                    <button (click)="changeEditorTextAlign('center')">Allign center</button>
-                    <button (click)="changeEditorTextAlign('justify')">Justify</button>
-                </div>                    
+                    <button (click)="changeEditorTextAlign('JustifyLeft')">Allign left</button>
+                    <button (click)="changeEditorTextAlign('JustifyRight')">Allign right</button>
+                    <button (click)="changeEditorTextAlign('JustifyCenter')">Allign center</button>
+                    <button (click)="changeEditorTextAlign('JustifyFull')">Justify</button>
+                </div>
+                <div><button (click)="changeEditorTextBold()">Bold</button><button (click)="changeEditorTextItalic()">Italic</button>
+                </div>
+                <div>
+                    <button (click)="changeEditorFormatBlock('h1')">H1</button>
+                    <button (click)="changeEditorFormatBlock('h2')">H2</button>
+                    <button (click)="changeEditorFormatBlock('p')">P</button>
+                </div>
              `,
     directives: [FontSelectorComponent, UPLOAD_DIRECTIVES, ColorPickerDirective],
     providers: [ImageService, FontSelector, FontService]
@@ -48,21 +55,31 @@ export class TextSelectorComponent implements OnInit {
     }
     
     openFonts(){
+        this.fontSelector.openSelectorWindow()
     }
     
     changeEditorFontSize(size: number){
       
     }
     
-    changeEditorTextBold(bold: boolean){
+    changeEditorTextBold(){
         this.content.editor.editor.execCommand("Bold")     
     }
     
-    changeEditorTextItalic(italic: boolean){
+    changeEditorTextItalic(){
+        this.content.editor.editor.execCommand("Italic")     
+    }
+    
+    changeEditorFormatBlock(block: string){
+        this.content.editor.editor.execCommand('FormatBlock', false , block)
+    }
+    
+    changeEditorFont(font: Font){
+        this.content.editor.editor.execCommand('FontName',false,'font'+font.id)       
     }
     
     changeEditorTextAlign(align: string){
-    
+        this.content.editor.editor.execCommand(align)
     }
      
     changeEditorTextColor(color: string){
