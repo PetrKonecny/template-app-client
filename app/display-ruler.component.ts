@@ -3,6 +3,7 @@ import { Guide } from './guide'
 import { ElementDimensions } from './draggable.directive'
 import { Draggable2 } from './draggable2.directive'
 import { RulerSelector } from './ruler-selector'
+import { Resizable } from './resizable.directive'
 
 @Component({
     selector: 'display-ruler',
@@ -25,8 +26,7 @@ import { RulerSelector } from './ruler-selector'
                 background-color: blue; 
                 position: absolute;
             } 
-    `],
-    directives: [Draggable2]
+    `]
 })
 
        

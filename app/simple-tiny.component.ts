@@ -6,7 +6,7 @@ import {
   Input,
   Output, OnInit
 } from '@angular/core';
-import {ColorPickerDirective} from 'ct-angular2-color-picker/component'
+import {ColorPickerDirective, ColorPickerService} from 'angular2-color-picker'
 import {TextContent, Editor} from './text-content'
 
 declare var tinymce: any;
@@ -33,11 +33,12 @@ declare var tinymce: any;
             overflow:hidden;
             user-select: none;
         }`],
-    directives:[ColorPickerDirective]
 })
 export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit {
     @Input() content: TextContent;
     @Output() onEditorKeyup = new EventEmitter<any>();
+    
+    constructor(private colorService: ColorPickerService){}
     
     ngOnInit(){
         this.content.editor = new Editor()
@@ -60,7 +61,8 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit {
                     this.onEditorKeyup.emit(content);
                 });
                 editor.on('NodeChange', (e) => {
-                    this.content.editor.editorCurColor = tinymce.DOM.getStyle(e.element, 'color', true)
+                    this.content.editor.editorCurColor = null
+                    this.content.editor.editorCurColor = this.rgb2hex(tinymce.DOM.getStyle(e.element, 'color', true))
                     this.content.editor.editorCurFont = tinymce.DOM.getStyle(e.element,'font-family',true)
                 });
                 editor.on('init', (e) => {
@@ -83,4 +85,12 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit {
     textColor(color: string){
         this.content.editor.editor.execCommand('ForeColor', false, color);
     }
+    
+    rgb2hex(rgb){
+        rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        return  (rgb && rgb.length === 4) ? "#" +
+                ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+    }     
 }

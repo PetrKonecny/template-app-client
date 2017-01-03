@@ -1,7 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter, ElementRef} from '@angular/core';
 import { Font } from './font';
- import { DomSanitizationService } from '@angular/platform-browser';
-
 
 @Component({
     selector: 'font-display',
@@ -19,7 +17,7 @@ export class DisplayFontComponent implements OnInit{
     @Input()
     font : Font
     
-    constructor(private sanitizer: DomSanitizationService, public elementRef: ElementRef){
+    constructor(public elementRef: ElementRef){
     }
     
     

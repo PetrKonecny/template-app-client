@@ -11,7 +11,6 @@ import { Observable }     from 'rxjs/Observable';
         <h2>My Template Instances</h2>
         <template-instance-list [templateInstances] = "templateInstances" (onDeleteClicked) = "onDeleteClicked($event)"></template-instance-list>
     `,
-    directives: [TemplateInstanceListComponent],
     providers: [TemplateInstanceService]
 })
 

@@ -35,7 +35,6 @@ import {Guide} from './guide'
                     <button (click)="onDeleteClicked()">Delete page</button>
                 </span>
              `,
-    directives: [],
     providers: []
 })
 

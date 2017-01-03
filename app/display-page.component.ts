@@ -19,8 +19,7 @@ import { DisplayElementComponent } from './display-element.component';
             height: 297mm;
             position: relative;
         }
-    `],
-    directives: [DisplayElementComponent]
+    `]
 })
 
 export class DisplayPageComponent  {

@@ -10,7 +10,6 @@ import {ActivatedRoute} from '@angular/router';
         <h2>Edit Template</h2>
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    directives: [NewTemplateComponent],
     providers: []
 })
 

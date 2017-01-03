@@ -3,8 +3,6 @@ import {TemplateListComponent} from './template-list.component';
 import { TemplateService } from './template.service';
 import { Template} from './template';
 import { Observable }     from 'rxjs/Observable';
-import { ROUTER_DIRECTIVES} from '@angular/router'
-
 
 @Component({
     selector: 'template-index',
@@ -13,7 +11,6 @@ import { ROUTER_DIRECTIVES} from '@angular/router'
         <template-list [templates] = "templates" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>\n\
         <a [routerLink] = "['/templates/new']">New template</a>
     `,
-    directives: [TemplateListComponent, ROUTER_DIRECTIVES],
     providers: []
 })
 

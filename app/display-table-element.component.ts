@@ -40,7 +40,6 @@ import { TableContent, CellContent, RowContent } from './table-content'
             border: 1px solid black;
         }`
     ],
-    directives: [Draggable2,  NewTextElementComponent, NewImageElementComponent, DisplayTableRowComponent, Resizable ]
 })
 
        

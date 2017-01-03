@@ -9,11 +9,10 @@
     'app':                        'app', // 'dist',
 
     '@angular':                   'node_modules/@angular',
-    'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
     'angular2-grid':              'node_modules/angular2-grid/dist',
     'ng2-uploader':               'node_modules/ng2-uploader',
     'rxjs':                       'node_modules/rxjs',
-    'ct-angular2-color-picker':   '/node_modules/ct-angular2-color-picker',
+    'angular2-color-picker':   '/node_modules/angular2-color-picker',
     'tinymce':                    '/node_modules/tinymce',
   };
 
@@ -21,10 +20,9 @@
   var packages = {
     'app':                        { main: 'main.js',  defaultExtension: 'js' },
     'rxjs':                       { defaultExtension: 'js' },
-    'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
     'angular2-grid' :             { main: 'ngGrid.js',defaultExtension: 'js' },
     'ng2-uploader' :              { main: 'ng2-uploader.js',defaultExtension: 'js' },
-    'ct-angular2-color-picker':   { main: 'ct-angular2-color-picker.js',defaultExtension: 'js' },
+    'angular2-color-picker':   { main: 'index.js',defaultExtension: 'js' },
     'tinymce':                    { main: 'tinymce.js', defaultExtension: 'js' },  
   };
 
@@ -36,7 +34,7 @@
     'platform-browser',
     'platform-browser-dynamic',
     'router',
-    'router-deprecated',
+    'forms',
     'upgrade',
   ];
 
@@ -47,11 +45,7 @@
 
   // Bundled (~40 requests):
   function packUmd(pkgName) {
-    if(pkgName === 'router'){
-        packages['@angular/'+pkgName] = { main: 'index.js', defaultExtension: 'js' };
-    }else{
-        packages['@angular/'+pkgName] = { main: 'bundles/' + pkgName + '.umd.js', defaultExtension: 'js' };
-    }
+    packages['@angular/'+pkgName] = { main: 'bundles/' + pkgName + '.umd.js', defaultExtension: 'js' };
   }
 
   var setPackageConfig = System.packageWithIndex ? packIndex : packUmd;

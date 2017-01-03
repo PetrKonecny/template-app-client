@@ -2,18 +2,8 @@ import { Component, Input, ViewChild, ElementRef} from '@angular/core';
 import { Content} from './content';
 import { TextContent } from './text-content'
 import { ImageContent } from './image-content'
-import { DomSanitizationService } from '@angular/platform-browser';
 import { Pipe } from '@angular/core'
 import { SimpleTinyComponent } from './simple-tiny.component'
-	
-@Pipe({name: 'safeHtml'})
-export class SafeHtml {
-  constructor(private sanitizer:DomSanitizationService){}
-
-  transform(html) {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
-  }
-}
 
 @Component({
     selector: 'display-content',
@@ -54,8 +44,6 @@ export class SafeHtml {
             color: inherit;
         }
     `],
-    pipes: [SafeHtml],
-    directives: [SimpleTinyComponent]
 })
 
 export class DisplayContentComponent {

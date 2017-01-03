@@ -88,7 +88,6 @@ import { NewTableElement } from './new-table-element'
                 </template>
         `
     ,
-    directives: [Resizable], 
     styles: [`
         textarea{
             resize: none;

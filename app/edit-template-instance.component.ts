@@ -13,7 +13,6 @@ import { NewTemplateComponent } from './new-template.component'
         <h2>Edit Template Instance</h2>
         <create-new-template-instance [templateInstance] = "templateInstance" [template] = "template"></create-new-template-instance>
     `,
-    directives: [NewTemplateInstanceComponent, NewTemplateComponent],
     providers: []
 })
 

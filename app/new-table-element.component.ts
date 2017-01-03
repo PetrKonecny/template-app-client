@@ -45,7 +45,6 @@ import { NewTableElement } from './new-table-element'
             border: 1px solid black;
         }`
     ],
-    directives: [Draggable2,  NewTextElementComponent, NewImageElementComponent, NewTableRowComponent, Resizable ],
     providers: [NewTableElement]
 })
 

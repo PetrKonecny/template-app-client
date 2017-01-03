@@ -9,8 +9,6 @@ import { Template} from './template';
         <h2>Create Template</h2>
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    directives: [NewTemplateComponent],
-    providers: []
 })
 
 export class TemplateCreateComponent implements OnInit  {

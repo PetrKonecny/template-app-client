@@ -11,7 +11,6 @@ import { CellContent } from './table-content'
                 <td><textarea  *ngIf="element.clientState == 1" [(ngModel)]="content.text" [style.text-align]="element.rows[y].cells[x].text_align"  [style.font-size.px]="element.rows[y].cells[x].font_size" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold"></textarea></td>
     `
 ,
-    directives: [Resizable],
     styles: [`
         div{
             height: inherit;

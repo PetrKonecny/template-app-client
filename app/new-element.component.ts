@@ -11,7 +11,6 @@ import { Element } from './element'
         <create-new-image-element *ngIf="element.type == 'image_element'" [element] = "element"></create-new-image-element>
         <create-new-table-element *ngIf="element.type == 'table_element'" [element] = "element"></create-new-table-element>
     `,
-    directives: [NewTextElementComponent, NewImageElementComponent, NewTableElementComponent]
 })
 
        

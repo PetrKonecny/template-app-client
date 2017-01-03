@@ -14,7 +14,6 @@ import { Template} from './template';
         <h2>Create Template Instance</h2>
         <create-new-template-instance [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
     `,
-    directives: [NewTemplateInstanceComponent],
     providers: [TemplateInstanceService,TemplateService]
 })
 

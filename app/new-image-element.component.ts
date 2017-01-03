@@ -43,8 +43,7 @@ import { NewPage } from './new-page'
             margin-right: 10px;
         }
 
-    `],
-    directives: [Draggable, Resizable, Draggable2, DisplayContentComponent, DisplayContentImgDragComponent]
+    `]
 })
 
 export class NewImageElementComponent {

@@ -1,9 +1,9 @@
 import { Component }       from '@angular/core';
-import { HTTP_PROVIDERS }    from '@angular/http';
-import { ROUTER_DIRECTIVES} from '@angular/router'
 import { TemplateInstanceService } from './template-instance.service';
 import { TemplateService } from './template.service';
 import { TemplateInstanceStore } from './template-instance.store';
+import { Draggable} from './draggable.directive'
+
 @Component({
     selector: 'my-app',
     template: `
@@ -14,9 +14,8 @@ import { TemplateInstanceStore } from './template-instance.store';
         <a routerLink="/fonts" routerLinkActive="active">Fonts</a>
         <router-outlet></router-outlet>
     `,
-    directives: [ROUTER_DIRECTIVES],
     providers: [
-        HTTP_PROVIDERS, TemplateInstanceService,TemplateInstanceStore,TemplateService ]
+        TemplateInstanceService,TemplateInstanceStore,TemplateService,Draggable ]
 })
 
 export class AppComponent {

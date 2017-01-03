@@ -33,7 +33,6 @@ import { NewPage } from './new-page'
             margin-right: 10px;
         }
     `],
-    directives: [DisplayContentComponent, Draggable2, Draggable, Resizable]
 })
 
 export class NewTextElementComponent implements AfterViewInit, DoCheck {

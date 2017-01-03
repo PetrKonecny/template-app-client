@@ -20,8 +20,7 @@ import { Draggable} from './draggable.directive'
         .image{
             pointer-events: none;
         }        
-    `],
-    directives: [Draggable]
+    `]
 })
 
 export class DisplayContentImgDragComponent implements  DoCheck {

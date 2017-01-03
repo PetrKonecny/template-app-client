@@ -12,7 +12,6 @@ import { TemplateInstanceStore } from './template-instance.store'
                     <button (click)="onDeleteClicked()">Delete ruler</button>
                 </span>
              `,
-    directives: [],
     providers: []
 })
 

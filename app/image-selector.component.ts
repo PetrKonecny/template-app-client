@@ -14,7 +14,6 @@ import {UPLOAD_DIRECTIVES} from 'ng2-uploader/ng2-uploader';
             >
             <h2>My Images</h2>
             <image-list [images] = images (onImageClicked) = "onImageClicked($event)"></image-list> `,
-    directives: [ImageListComponent,UPLOAD_DIRECTIVES],
     providers: [ImageService]
 })
 

@@ -17,7 +17,6 @@ import {UPLOAD_DIRECTIVES} from 'ng2-uploader/ng2-uploader';
         <font-list [fonts] = fonts></font-list>
     `,
     styles: [],
-    directives: [FontListComponent,UPLOAD_DIRECTIVES],
     providers: [FontService]
 })
 

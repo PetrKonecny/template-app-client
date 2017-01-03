@@ -1,7 +1,6 @@
 import { Component,Input, Output, EventEmitter} from '@angular/core';
 import { Template} from './template';
 import { Router } from '@angular/router'
-import { ROUTER_DIRECTIVES} from '@angular/router'
 import { TemplateInstance} from './template-instance';
  
 @Component({
@@ -15,7 +14,7 @@ import { TemplateInstance} from './template-instance';
                 <a href="javascript:void(0)"(click)="onDelete(template)">Delete</a>            
             </li>
         </ul>
-    `,  directives:[ROUTER_DIRECTIVES]
+    `,
 })
 
 export class TemplateListComponent {

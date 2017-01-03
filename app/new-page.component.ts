@@ -40,7 +40,6 @@ import {PageSelector} from './page-selector'
             height: 297mm;
         }
     `],
-    directives: [NewElementComponent, DisplayGuideComponent, DisplayRulerComponent],
     providers: [NewPage]
 })
 

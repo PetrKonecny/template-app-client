@@ -1,6 +1,5 @@
 import { Component,Input, Output, EventEmitter} from '@angular/core';
 import { TemplateInstance} from './template-instance';
-import { ROUTER_DIRECTIVES} from '@angular/router'
 
 @Component({
     selector: 'template-instance-list',
@@ -14,7 +13,6 @@ import { ROUTER_DIRECTIVES} from '@angular/router'
             </li>
         </ul>
     `
-    ,  directives:[ROUTER_DIRECTIVES]
 })
 
 export class TemplateInstanceListComponent {

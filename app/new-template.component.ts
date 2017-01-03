@@ -32,7 +32,6 @@ import { RulerSelectorComponent } from './ruler-selector.component'
         <create-new-page *ngFor="let page of template.pages" [page]="page"></create-new-page>
         </div>
     `,
-    directives: [NewPageComponent, ElementSelectorComponent, ImageSelectorComponent, PageSelectorComponent, RulerSelectorComponent],
     providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector],
     styles: [`.leftPanel {
             position: relative;

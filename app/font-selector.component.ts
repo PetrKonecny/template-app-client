@@ -18,7 +18,6 @@ import {Element} from './element'
     template: `
                 <font-list [fonts] = "fonts" (onFontClicked) = "onFontClicked($event)"></font-list>
             `,
-    directives: [FontListComponent],
     providers: [FontService]
 })
 

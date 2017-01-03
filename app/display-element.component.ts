@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 import { Element} from './element';
 import { Image } from './image';
-import { DisplayContentComponent } from './display-content.component';
 import { TemplateInstanceStore} from './template-instance.store';
 import { ImageSelector, ImageRefreshable} from './image-selector';
 import { ImageContent } from './image-content';
@@ -9,7 +8,6 @@ import { TextContent } from './text-content'
 import { TextElement} from './text-element'
 import { TableElement } from './table-element'
 import { DisplayTableElementComponent } from './display-table-element.component'
-import { DisplayContentImgDragComponent } from './display-content-img-drag.component';
 
 @Component({
     selector: 'display-element',
@@ -44,8 +42,7 @@ import { DisplayContentImgDragComponent } from './display-content-img-drag.compo
             position: absolute;
             z-index: 1000;
         }
-    `],
-    directives: [DisplayContentComponent, DisplayContentImgDragComponent,  DisplayTableElementComponent]
+    `]
 })
 
 export class DisplayElementComponent implements AfterViewInit {

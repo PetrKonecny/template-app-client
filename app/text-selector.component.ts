@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef , Input} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef , Input, OnChanges} from '@angular/core';
 import { ImageListComponent} from './image-list.component';
 import { ImageService } from './image.service';
 import { Image} from './image';
@@ -10,18 +10,18 @@ import {FontSelector} from './font-selector';
 import {FontSelectorComponent} from './font-selector.component';
 import {FontService} from './font.service';
 import {ClientState, TableElement, Cell} from './table-element'
-import {ColorPickerDirective} from 'ct-angular2-color-picker/component'
-import {TextContent} from './text-content'
+import {ColorPickerDirective} from 'angular2-color-picker'
+import {Editor} from './text-content'
 import {Font} from './font'
 
 
 @Component({
     selector: 'text-select',
     template: ` 
-                <span> Font: {{content.editor.editorCurFont}}</span>
+                <span> Font: {{editor.editorCurFont}}</span>
                 <font-selector *ngIf="fontsOpened" (onFontSelected)="changeEditorFont($event)" ></font-selector>
                 <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
-                <br>Font color: <input [colorPicker]="content.editor.editorCurColor" (colorPickerChange)="changeEditorTextColor($event)" [style.background]="content.editor.editorCurColor" />
+                <br>Font color: <input [colorPicker]="editor.editorCurColor" (colorPickerChange)="changeEditorTextColor($event)" [style.background]="editor.editorCurColor" />
                 <div>
                     <button (click)="changeEditorTextAlign('JustifyLeft')">Allign left</button>
                     <button (click)="changeEditorTextAlign('JustifyRight')">Allign right</button>
@@ -36,18 +36,20 @@ import {Font} from './font'
                     <button (click)="changeEditorFormatBlock('p')">P</button>
                 </div>
              `,
-    directives: [FontSelectorComponent, UPLOAD_DIRECTIVES, ColorPickerDirective],
     providers: [ImageService, FontSelector, FontService]
 })
 
-export class TextSelectorComponent implements OnInit {
+export class TextSelectorComponent implements OnInit, OnChanges {
     
     fontsOpened : boolean;
     
     @Input()
-    content: TextContent
+    editor: Editor
       
     constructor(private fontSelector: FontSelector){
+    }
+    
+    ngOnChanges(){
     }
     
     ngOnInit(){
@@ -63,27 +65,27 @@ export class TextSelectorComponent implements OnInit {
     }
     
     changeEditorTextBold(){
-        this.content.editor.editor.execCommand("Bold")     
+        this.editor.editor.execCommand("Bold")     
     }
     
     changeEditorTextItalic(){
-        this.content.editor.editor.execCommand("Italic")     
+        this.editor.editor.execCommand("Italic")     
     }
     
     changeEditorFormatBlock(block: string){
-        this.content.editor.editor.execCommand('FormatBlock', false , block)
+        this.editor.editor.execCommand('FormatBlock', false , block)
     }
     
     changeEditorFont(font: Font){
-        this.content.editor.editor.execCommand('FontName',false,'font'+font.id)       
+        this.editor.editor.execCommand('FontName',false,'font'+font.id)       
     }
     
     changeEditorTextAlign(align: string){
-        this.content.editor.editor.execCommand(align)
+        this.editor.editor.execCommand(align)
     }
      
     changeEditorTextColor(color: string){
-        this.content.editor.editor.execCommand('ForeColor', false, color);
+        this.editor.editor.execCommand('ForeColor', false, color);
     }
     
 }

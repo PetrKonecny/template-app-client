@@ -8,7 +8,7 @@ import { TemplateInstanceService } from './template-instance.service';
 import { TemplateInstanceStore } from './template-instance.store';
 import { ImageSelectorComponent } from './image-selector.component';
 import { ImageSelector } from './image-selector';
-import { ROUTER_DIRECTIVES, Router} from '@angular/router'
+import {  Router} from '@angular/router'
 
 @Component({
     selector: 'create-new-template-instance',
@@ -27,7 +27,6 @@ import { ROUTER_DIRECTIVES, Router} from '@angular/router'
             </div>
         </div>
     `,
-    directives: [DisplayPageComponent, ImageSelectorComponent, ROUTER_DIRECTIVES],
     providers: [ImageSelector]
 })
 

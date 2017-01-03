@@ -1,16 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ImageListComponent} from './image-list.component';
+import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { ImageService } from './image.service';
 import { Image} from './image';
 import { Element } from './element';
 import { TextElement } from './text-element';
 import { ElementSelector} from './element-selector';
-import {UPLOAD_DIRECTIVES} from 'ng2-uploader/ng2-uploader';
 import {FontSelector} from './font-selector';
 import {FontSelectorComponent} from './font-selector.component';
 import {FontService} from './font.service';
 import {ClientState, TableElement, Cell} from './table-element'
-import {ColorPickerDirective} from 'ct-angular2-color-picker/component'
+import {ColorPickerDirective} from 'angular2-color-picker'
 import {TextSelectorComponent} from './text-selector.component'
 import {Font} from './font'
 
@@ -39,7 +37,7 @@ import {Font} from './font'
                         <button (click)="changeTextAlign('justify')">Justify</button>
                     </div>
                     Editor Controlls:<br>
-                    <text-select *ngIf="elementSelector.selectedElement.content" [content]="elementSelector.selectedElement.content"></text-select>
+                    <text-select *ngIf="elementSelector.selectedElement.content.editor" [editor]="elementSelector.selectedElement.content.editor"></text-select>
                 </div>
                 <div *ngIf="elementSelector.selectedElement.type == 'table_element'"> 
                     <button *ngIf="elementSelector.selectedElement.clientState != 2" (click)="editTable()">Edit table</button>
@@ -80,7 +78,6 @@ import {Font} from './font'
                 </div>
                 </span>
              `,
-    directives: [ImageListComponent, FontSelectorComponent, UPLOAD_DIRECTIVES, ColorPickerDirective, TextSelectorComponent],
     providers: [ImageService, FontSelector, FontService]
 })
 

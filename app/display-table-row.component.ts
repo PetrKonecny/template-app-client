@@ -5,7 +5,7 @@ import { RowContent } from './table-content'
 import { Resizable } from './resizable.directive' 
 
 @Component({
-    selector: 'tr',
+    selector: '[tr]',
     template: `
 
         <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
@@ -30,7 +30,6 @@ import { Resizable } from './resizable.directive'
         </td>
         `
     ,
-    directives: [Resizable], 
     styles: [`
         textarea{
             resize: none;
