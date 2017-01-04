@@ -21,6 +21,8 @@ import {StepSelector, FunctionStep} from './step-selector'
 import {TableElement} from './table-element'
 import {TemplateInstanceStore} from './template-instance.store'
 import {Guide} from './guide'
+import {FrameElement} from './frame-element'
+import {ImageSelector} from './image-selector'
 
 @Component({
     selector: 'page-select',
@@ -28,7 +30,8 @@ import {Guide} from './guide'
                 <span *ngIf="page">\n\
                     <br>
                     <button (click)="createNewTextElement()">Add text element</button>
-                    <button (click)="createNewImageElement()">Add image element</button>
+                    <button (click)="onAddImageButtonClick()">Add image element</button>\n\
+                    <button (click)="createNewFrameElement()">Add frame element</button>
                     <button (click)="createNewTableElement()">Add table element</button>\n\
                     <button (click)="createNewRulerX()">Add vertical ruler</button>
                     <button (click)="createNewRulerY()">Add horizontal ruler</button>
@@ -41,9 +44,10 @@ import {Guide} from './guide'
 export class PageSelectorComponent {
         
     page: Page
+    imagesOpened: boolean
     
-    constructor(private pageSelector: PageSelector, private stepSelector: StepSelector,private templateInstanceStore: TemplateInstanceStore, private elementSelector: ElementSelector){
-        this.pageSelector.component = this
+    constructor(private pageSelector: PageSelector, private stepSelector: StepSelector,private templateInstanceStore: TemplateInstanceStore, private elementSelector: ElementSelector, private imageSelector: ImageSelector){
+        this.pageSelector.component = this     
     }
     
     createNewTextElement(){
@@ -61,7 +65,27 @@ export class PageSelectorComponent {
         this.page.elements.push(element);
     }
     
-    createNewImageElement(){
+    createNewFrameElement(){
+        if (this.page.elements == null) {
+            this.page.elements = new Array<Element>();
+        }
+        var element = new FrameElement();
+        element.width = 100;
+        element.height = 100;
+        element.positionX = 0;
+        element.positionY = 0;
+        element.content = new ImageContent();
+        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
+        this.page.elements.push(element);
+    }
+    
+    onAddImageButtonClick(){
+        this.imageSelector.openSelectorWindow()
+        let sub = this.imageSelector.selectorWindowOpened.take(1).subscribe() 
+        this.imageSelector.image.takeWhile(image => !sub.closed).subscribe((image) => this.createNewImageElement(image))
+    }
+    
+    createNewImageElement(image: Image){
         if (this.page.elements == null) {
             this.page.elements = new Array<Element>();
         }
@@ -70,9 +94,9 @@ export class PageSelectorComponent {
         element.height = 100;
         element.positionX = 0;
         element.positionY = 0;
-        element.content = new ImageContent();
-            this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
-        this.page.elements.push(element);
+        element.image = image
+        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
+        this.page.elements.push(element);        
     }
     
     createNewTableElement(){

@@ -21,7 +21,7 @@ import {Font} from './font'
                 <span> Font: {{editor.editorCurFont}}</span>
                 <font-selector *ngIf="fontsOpened" (onFontSelected)="changeEditorFont($event)" ></font-selector>
                 <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
-                <br>Font color: <input [colorPicker]="editor.editorCurColor" (colorPickerChange)="changeEditorTextColor($event)" [style.background]="editor.editorCurColor" />
+                <br>Font color: <input [colorPicker]="editor.editorCurColor" (mousedown)="$event.preventDefault()" (colorPickerChange)="curColor =$event" (cpToggleChange)="onCpToggleChange($event)" [style.background]="editor.editorCurColor" />
                 <div>
                     <button (click)="changeEditorTextAlign('JustifyLeft')">Allign left</button>
                     <button (click)="changeEditorTextAlign('JustifyRight')">Allign right</button>
@@ -46,7 +46,16 @@ export class TextSelectorComponent implements OnInit, OnChanges {
     @Input()
     editor: Editor
       
+    curColor: string
+    
+    
     constructor(private fontSelector: FontSelector){
+    }
+      
+    onCpToggleChange(toggle: boolean){
+        if(!toggle){
+            this.changeEditorTextColor(this.curColor)
+        }
     }
     
     ngOnChanges(){

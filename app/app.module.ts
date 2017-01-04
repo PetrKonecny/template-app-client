@@ -23,7 +23,7 @@ import { DisplayElementComponent } from './display-element.component';
 import { Draggable2 } from './draggable2.directive'
 import { DisplayTableRowComponent } from './display-table-row.component'
 import { NewTextElementComponent} from './new-text-element.component'
-import { NewImageElementComponent} from './new-image-element.component'
+import { NewFrameElementComponent} from './new-frame-element.component'
 import { Resizable } from './resizable.directive'
 import { ImageListComponent} from './image-list.component';
 import { UPLOAD_DIRECTIVES} from 'ng2-uploader/ng2-uploader';
@@ -46,6 +46,7 @@ import { RulerSelectorComponent } from './ruler-selector.component'
 import { ElementSelectorComponent} from './element-selector.component';
 import { TemplateListComponent} from './template-list.component';
 import {TemplateInstanceListComponent} from './template-instance-list.component';
+import { NewImageElementComponent } from './new-image-element.component'
 
 const routes: Routes = [
     { path: 'templates/new', component: TemplateCreateComponent },
@@ -62,7 +63,7 @@ const routes: Routes = [
     // directives, components, and pipes
     declarations: [
         AppComponent, NewTemplateInstanceComponent, NewTemplateComponent,SimpleTinyComponent,DisplayContentComponent,DisplayContentImgDragComponent,DisplayTableElementComponent,DisplayElementComponent,
-        Draggable2,  NewTextElementComponent, NewImageElementComponent, DisplayTableRowComponent, Resizable, ImageListComponent, FontSelectorComponent, UPLOAD_DIRECTIVES, ColorPickerDirective,
+        Draggable2,  NewTextElementComponent, NewFrameElementComponent, NewImageElementComponent, DisplayTableRowComponent, Resizable, ImageListComponent, FontSelectorComponent, UPLOAD_DIRECTIVES, ColorPickerDirective,
         TextSelectorComponent, FontListComponent, DisplayFontComponent, NewTableElementComponent, Draggable, NewElementComponent, DisplayGuideComponent, DisplayRulerComponent,
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,

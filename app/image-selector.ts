@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/Rx';
+import {BehaviorSubject, Subject} from 'rxjs/Rx';
 import {TemplateInstanceService} from './template-instance.service'
 import {TemplateService} from './template.service'
 import { TemplateInstance} from './template-instance';
@@ -24,8 +24,11 @@ export class ImageSelector {
     private _imageContent: BehaviorSubject<ImageContent> = new BehaviorSubject(new ImageContent);
     public imageContent: Observable<ImageContent> = this._imageContent.asObservable();
     */
-    private _selectorWindowOpened: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private _selectorWindowOpened: Subject<boolean> = new Subject<boolean>();
     public selectorWindowOpened: Observable<boolean> = this._selectorWindowOpened.asObservable();
+    
+    private _image: Subject<Image> = new Subject<Image>();
+    public image: Observable<Image> = this._image.asObservable();
     
     public imageContent:ImageContent
     /*
@@ -35,13 +38,12 @@ export class ImageSelector {
         this._imageContent.next(imageContent);
     }*/
     
-    openSelectorWindow(content: ImageContent){
-        this.imageContent = content
+    openSelectorWindow(){
         this._selectorWindowOpened.next(true);
     }
     
     changeImage(image: Image){
-        this.imageContent.image = image
+        this._image.next(image)
     }
         
     closeSelectorWindow(){

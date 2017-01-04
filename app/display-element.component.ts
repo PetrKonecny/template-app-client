@@ -77,7 +77,7 @@ export class DisplayElementComponent implements AfterViewInit {
     }
     
     onAddButtonClick(){
-        this.imageSelector.openSelectorWindow(<ImageContent>this.element.content);
+        this.imageSelector.openSelectorWindow();
     }
     
     onDeleteButtonClick(){

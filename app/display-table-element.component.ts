@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core';
 import { NewTextElementComponent} from './new-text-element.component'
-import { NewImageElementComponent} from './new-image-element.component'
 import { TableElement, Cell, Row, ClientState} from './table-element'
 import { Draggable2, ElementDimensions} from './draggable2.directive'
 import { Resizable } from './resizable.directive'
