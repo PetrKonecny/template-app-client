@@ -33,7 +33,6 @@ export class ImageSelectorComponent implements OnInit{
     }
     
     onImageClicked(image: Image){
-        console.log(image)
         this.imageSelector.changeImage(image);
         this.imageSelector.closeSelectorWindow();
     }

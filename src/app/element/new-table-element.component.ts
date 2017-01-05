@@ -2,7 +2,7 @@ import { Component, Input, OnInit, HostListener} from '@angular/core';
 import { TableElement} from './table-element'
 import { ElementDimensions} from '../resizable.directive'
 import { ElementSelector } from './element-selector'
-import { NewPage } from '../page/new-page'
+import { PageService } from '../page/page.service'
 import { NewTableElement } from './new-table-element'
 
 @Component({
@@ -67,7 +67,7 @@ export class NewTableElementComponent implements OnInit{
     onDocMousedown(event) {
     }
     
-    constructor (private elementSelector: ElementSelector, private newPage: NewPage, private newTableElement: NewTableElement){
+    constructor (private elementSelector: ElementSelector, private newPage: PageService, private newTableElement: NewTableElement){
         this.newTableElement.component = this
     }
     

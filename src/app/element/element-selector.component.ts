@@ -7,24 +7,26 @@ import {FontSelector} from '../font/font-selector';
 import {FontService} from '../font/font.service';
 import {ClientState, TableElement, Cell} from './table-element'
 import {Font} from '../font/font'
+import {TextContent} from '../content/text-content'
+import {TextSelector} from '../editor/text-selector'
 
 @Component({
     selector: 'element-select',
     template: ` 
-                <span *ngIf="elementSelector.selectedElement"> 
-                <br><b *ngIf="elementSelector.selectedElement.id">Element ID: {{elementSelector.selectedElement.id}}</b><br>
+                <span *ngIf="element"> 
+                <br><b *ngIf="element.id">Element ID: {{element.id}}</b><br>
                 <button (click)="deleteElement()">Delete element</button><br>
-                Width: <input [(ngModel)]="elementSelector.selectedElement.width"  (keyup)="0"><br>
-                Height: <input [(ngModel)]="elementSelector.selectedElement.height"  (keyup)="0"><br>
-                Position X: <input [(ngModel)]="elementSelector.selectedElement.positionX"   (keyup)="0"><br>
-                Position Y: <input [(ngModel)]="elementSelector.selectedElement.positionY"   (keyup)="0">
-                <br>Background color: <input [colorPicker]="elementSelector.selectedElement.background_color ? elementSelector.selectedElement.background_color : defaultBackgroundColor"  (colorPickerChange)="changeBackgroundColor($event)" [style.background]="elementSelector.selectedElement.background_color ? elementSelector.selectedElement.background_color : defaultBackgroundColor" />
-                <div *ngIf="elementSelector.selectedElement.type == 'text_element'">
-                    <span *ngIf="elementSelector.selectedElement.font"> Font: {{elementSelector.selectedElement.font.name}}</span>
+                Width: <input [(ngModel)]="element.width"  (keyup)="0"><br>
+                Height: <input [(ngModel)]="element.height"  (keyup)="0"><br>
+                Position X: <input [(ngModel)]="element.positionX"   (keyup)="0"><br>
+                Position Y: <input [(ngModel)]="element.positionY"   (keyup)="0">
+                <br>Background color: <input [colorPicker]="element.background_color ? element.background_color : defaultBackgroundColor"  (colorPickerChange)="changeBackgroundColor($event)" [style.background]="element.background_color ? element.background_color : defaultBackgroundColor" />
+                <div *ngIf="element.type == 'text_element'">
+                    <span *ngIf="element.font"> Font: {{element.font.name}}</span>
                     <font-selector *ngIf="fontsOpened" ></font-selector>
-                    <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
-                    <br>Font size: <input [(ngModel)]="elementSelector.selectedElement.font_size" (keyup)="0">\n\
-                    <br>Font color: <input [colorPicker]="elementSelector.selectedElement.text_color ? elementSelector.selectedElement.text_color : defaultTextColor" (colorPickerChange)="changeTextColor($event)" [style.background]="elementSelector.selectedElement.text_color ? elementSelector.selectedElement.text_color : defaultTextColor" />
+                    <button *ngIf="!fontsOpened" (click)="onChangeFontButtonClick()">Change font</button>
+                    <br>Font size: <input [(ngModel)]="element.font_size" (keyup)="0">
+                    <br>Font color: <input [colorPicker]="element.text_color ? element.text_color : defaultTextColor" (colorPickerChange)="changeTextColor($event)" [style.background]="element.text_color ? element.text_color : defaultTextColor" />
                     <div>
                         <h2>Text align</h2><br>
                         <button (click)="changeTextAlign('left')">Allign left</button>
@@ -33,19 +35,19 @@ import {Font} from '../font/font'
                         <button (click)="changeTextAlign('justify')">Justify</button>
                     </div>
                     Editor Controlls:<br>
-                    <text-select *ngIf="elementSelector.selectedElement.content.editor" [editor]="elementSelector.selectedElement.content.editor"></text-select>
+                    <text-select *ngIf="element.content.editor"></text-select>
                 </div>
-                <div *ngIf="elementSelector.selectedElement.type == 'table_element'"> 
-                    <button *ngIf="elementSelector.selectedElement.clientState != 2" (click)="editTable()">Edit table</button>
-                    <button *ngIf="elementSelector.selectedElement.clientState != 0" (click)="moveTable()">Move or resize table</button>
-                    <button *ngIf="elementSelector.selectedElement.clientState != 1" (click)="filloutTable()">Fillout table</button>\n\
-                    <button *ngIf="elementSelector.selectedElement.clientState != 3" (click)="editCells()">Edit cells</button>
-                    <div *ngIf="elementSelector.selectedElement.clientState == 3 && elementSelector.selectedElement.selectedCells?.length > 0">
-                        <br>Background color: <input [colorPicker]="elementSelector.selectedElement.selectedCells[0].background_color ? elementSelector.selectedElement.selectedCells[0].background_color : defaultCellBackgroundColor" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)" [style.background]="elementSelector.selectedElement.selectedCells[0].background_color ? elementSelector.selectedElement.selectedCells[0].background_color : defaultCellBackgroundColor" />
+                <div *ngIf="element.type == 'table_element'"> 
+                    <button *ngIf="element.clientState != 2" (click)="editTable()">Edit table</button>
+                    <button *ngIf="element.clientState != 0" (click)="moveTable()">Move or resize table</button>
+                    <button *ngIf="element.clientState != 1" (click)="filloutTable()">Fillout table</button>
+                    <button *ngIf="element.clientState != 3" (click)="editCells()">Edit cells</button>
+                    <div *ngIf="element.clientState == 3 && element.selectedCells?.length > 0">
+                        <br>Background color: <input [colorPicker]="element.selectedCells[0].background_color ? element.selectedCells[0].background_color : defaultCellBackgroundColor" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)" [style.background]="element.selectedCells[0].background_color ? element.selectedCells[0].background_color : defaultCellBackgroundColor" />
                         <font-selector *ngIf="fontsOpened" (onFontSelected)="changeFont($event)"></font-selector>
-                        <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
-                        <br>Text color: <input [colorPicker]="elementSelector.selectedElement.selectedCells[0].text_color ? elementSelector.selectedElement.selectedCells[0].text_color : defaultCellTextColor" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsTextColor($event)" [style.background]="elementSelector.selectedElement.selectedCells[0].text_color ? elementSelector.selectedElement.selectedCells[0].text_color : defaultCellTextColor" />
-                        <br>Text size: <input #fontsize [value]="elementSelector.selectedElement.selectedCells[0].text_size" (keyup)="changeSelectedCellsFontSize(fontsize.value)">
+                        <button *ngIf="!fontsOpened" (click)="onChangeFontButtonClick()">Change font</button>
+                        <br>Text color: <input [colorPicker]="element.selectedCells[0].text_color ? element.selectedCells[0].text_color : defaultCellTextColor" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsTextColor($event)" [style.background]="element.selectedCells[0].text_color ? element.selectedCells[0].text_color : defaultCellTextColor" />
+                        <br>Text size: <input #fontsize [value]="element.selectedCells[0].text_size" (keyup)="changeSelectedCellsFontSize(fontsize.value)">
                         <br>
                         Bold: <input type='checkbox' #bold (change)="changeSelectedCellsBold(bold.checked)">
                         Italic: <input type='checkbox' #italic (change)="changeSelectedCellsItalic(italic.checked)">
@@ -57,29 +59,30 @@ import {Font} from '../font/font'
                         <button (click)="changeSelectedCellsTextAlignVert('top')">Align top</button>
                         <button (click)="changeSelectedCellsTextAlignVert('bottom')">Align bottom</button>
                         <button (click)="changeSelectedCellsTextAlignVert('middle')">Align middle</button>
-                        <button (click)="clearSelection()">Clear selection</button>\n\
-                        <button *ngIf="elementSelector.selectedElement.selectionWidth > 1" (click)="mergeCells()">Merge Cells</button>\n\
+                        <button (click)="clearSelection()">Clear selection</button>
+                        <button *ngIf="element.selectionWidth > 1" (click)="mergeCells()">Merge Cells</button>
                         <br>
                         <button (click)="changeSelectedCellsBorderStyle('none')">No border</button>
                         <button (click)="changeSelectedCellsBorderStyle('solid none')">Top and bottom</button>
-                        <button (click)="changeSelectedCellsBorderStyle('none solid')">Left and right</button>\n\
-                        <button (click)="changeSelectedCellsBorderStyle('solid')">All sides</button>\n\
-                        <br>Border color: <input [colorPicker]="elementSelector.selectedElement.selectedCells[0].border_color ? elementSelector.selectedElement.selectedCells[0].border_color : defaultCellBorderColor" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBorderColor($event)" [style.background]="elementSelector.selectedElement.selectedCells[0].border_color ? elementSelector.selectedElement.selectedCells[0].border_color : defaultCellBorderColor" />
-                        <br>Border width: <input #borderWidth [value]="elementSelector.selectedElement.selectedCells[0].border_width" (keyup)="changeSelectedCellsBorderWidth(borderWidth.value)">
+                        <button (click)="changeSelectedCellsBorderStyle('none solid')">Left and right</button>
+                        <button (click)="changeSelectedCellsBorderStyle('solid')">All sides</button>
+                        <br>Border color: <input [colorPicker]="element.selectedCells[0].border_color ? element.selectedCells[0].border_color : defaultCellBorderColor" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBorderColor($event)" [style.background]="element.selectedCells[0].border_color ? element.selectedCells[0].border_color : defaultCellBorderColor" />
+                        <br>Border width: <input #borderWidth [value]="element.selectedCells[0].border_width" (keyup)="changeSelectedCellsBorderWidth(borderWidth.value)">
                     </div>
-                    <div *ngIf="elementSelector.selectedElement.clientState == 2"  >
+                    <div *ngIf="element.clientState == 2"  >
                         <button (click)="distributeRows()">Distribute rows</button>
                         <button (click)="distributeColumns()">Distribute columns</button>
                     </div>
                 </div>
                 </span>
              `,
-    providers: [ImageService, FontSelector, FontService]
+    providers: [ImageService, FontSelector, FontService, TextSelector]
 })
 
 export class ElementSelectorComponent implements OnInit {
     
     fontsOpened : boolean;
+    element: Element
     
     defaultBackgroundColor: string = Element.defaultBackgroundColor
     defaultTextColor: string = TextElement.defaultTextColor
@@ -87,11 +90,23 @@ export class ElementSelectorComponent implements OnInit {
     defaultCellBorderColor: string = Cell.defaultBorderColor
     defaultCellTextColor: string = Cell.defaultTextColor
             
-    constructor(private elementSelector: ElementSelector, private fontSelector: FontSelector){
+    constructor(private elementSelector: ElementSelector, private fontSelector: FontSelector, private textSelector: TextSelector){
+        this.elementSelector.element.subscribe(element=> {
+            this.element = element
+            if(this.element && this.element.content && this.element.content.type == 'text_content' && (<TextContent>this.element.content).editor){
+                this.textSelector.changeEditor((<TextContent>this.element.content).editor)
+            }
+        })
     }
     
     ngOnInit(){
         this.fontSelector.selectorWindowOpened.subscribe(opened => this.fontsOpened = opened)
+    }
+
+    onChangeFontButtonClick(){
+        this.fontSelector.openSelectorWindow()
+        let sub = this.fontSelector.selectorWindowOpened.take(1).subscribe() 
+        this.fontSelector.font.takeWhile(font => !sub.closed).subscribe((font) => this.elementSelector.changeFont(font))
     }
     
     openFonts(){
@@ -151,7 +166,6 @@ export class ElementSelectorComponent implements OnInit {
   
     deleteElement(){
         this.elementSelector.deleteElement();
-        this.elementSelector.selectedElement = null
     }
      
     changeTextAlign(align: string){
@@ -162,81 +176,37 @@ export class ElementSelectorComponent implements OnInit {
         this.elementSelector.changeTextAlignVertical(align)
     }
     
-    private getTopLeftCorner(selectedCells: Array<Cell>){
-        let minCell: Cell = selectedCells[0]
-        selectedCells.forEach(cell => { 
-            if (minCell.position.x >= cell.position.x) { 
-                if (minCell.position.y > cell.position.y){
-                    minCell = cell
-                }
-            } 
-        })
-        return minCell
-    } 
     
     changeTextColor(color: string){
-        let element = <TextElement> this.elementSelector.selectedElement
-        element.text_color = color
+        this.elementSelector.changeTextColor(color)
     }
     
     changeBackgroundColor(color: string){
-        this.elementSelector.selectedElement.background_color = color
+        this.elementSelector.changeBackgroundColor(color)
     }
         
     changeSelectedCellsBackgroundColor(color: string){
-        var element = <TableElement> this.elementSelector.selectedElement
-        if (element.selectedCells && element.selectedCells.length > 0){
-            element.selectedCells.forEach((cell,index) => {if(index>-1){cell.background_color = color}})
-        }
+        this.elementSelector.changeSelectedCellsBackgroundColor(color)
     }
     
     changeSelectedCellsTextColor(color: string){
-        var element = <TableElement> this.elementSelector.selectedElement
-        if (element.selectedCells && element.selectedCells.length > 0){
-            element.selectedCells.forEach(cell => cell.text_color = color)
-        }
+        this.elementSelector.changeSelectedCellsTextColor(color)
     }
     
     changeSelectedCellsBorderStyle(style: string){
-        var element = <TableElement> this.elementSelector.selectedElement
-        if (element.selectedCells && element.selectedCells.length > 0){
-            element.selectedCells.forEach(cell => cell.border_style = style)
-        }
+        this.elementSelector.changeSelectedCellsBorderStyle(style)
     }
     
     changeSelectedCellsBorderColor(color: string){
-        var element = <TableElement> this.elementSelector.selectedElement
-        if (element.selectedCells && element.selectedCells.length > 0){
-            element.selectedCells.forEach(cell => cell.border_color = color)
-        }
+        this.elementSelector.changeSelectedCellsBorderColor(color)
     }
     
     changeSelectedCellsBorderWidth(width: number){
-        var element = <TableElement> this.elementSelector.selectedElement
-        if (element.selectedCells && element.selectedCells.length > 0){
-            element.selectedCells.forEach(cell => cell.border_width = width)
-        }
+        this.elementSelector.changeSelectedCellsBorderWidth(width)
     }
     
     mergeCells(){
-        var element = <TableElement> this.elementSelector.selectedElement
-        var firstCell = this.getTopLeftCorner(element.selectedCells)
-        firstCell.selected = false
-        firstCell.colspan = element.selectionWidth
-        firstCell.rowspan = element.selectionHeight
-        element.selectedCells.splice(element.selectedCells.indexOf(firstCell),1)
-        console.log(element.selectedCells)
-        element.rows.forEach(row=>{
-            for (let i = row.cells.length; i> -1; i--){
-                element.selectedCells.forEach(cell =>{
-                    if (cell == row.cells[i]){
-                        console.log(row.cells[i].position)
-                        row.cells.splice(i,1)
-                    }
-                })
-            }
-        })       
-        TableElement.clearSelectedCells(<TableElement>this.elementSelector.selectedElement)
+        this.elementSelector.mergeCells()
     }
     
     onKey(){

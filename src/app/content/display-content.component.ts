@@ -44,10 +44,8 @@ import { TextContent } from './text-content'
 })
 
 export class DisplayContentComponent {
-
     @Input()
     content: Content;
-    
     @ViewChild('textBox')
     child: any;   
     
@@ -55,16 +53,7 @@ export class DisplayContentComponent {
     image: ElementRef;
     
     @ViewChild('frame')
-    frame: ElementRef;    
-    
-    boldText(){
-        var content = <TextContent>this.content
-        var selection = window.getSelection()
-        var start = selection.anchorOffset
-        var end = selection.focusOffset
-        console.log(selection)
-        content.text = content.text.substring(0, start) + "<span style='font-weight:bold;'>" + content.text.substring(start + 1, end) + "</span>" + content.text.substring(end + 1, content.text.length)
-    }
+    frame: ElementRef;   
     
     keyupHandlerFunction(text: string){
         let content =<TextContent> this.content

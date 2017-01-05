@@ -39,98 +39,38 @@ export class PageSelectorComponent {
     page: Page
     imagesOpened: boolean
     
-    constructor(private pageSelector: PageSelector, private stepSelector: StepSelector,private templateInstanceStore: TemplateInstanceStore, private elementSelector: ElementSelector, private imageSelector: ImageSelector){
-        this.pageSelector.component = this     
+    constructor(private pageSelector: PageSelector,  private imageSelector: ImageSelector){
+        this.pageSelector.page.subscribe(page => this.page = page)   
     }
     
     createNewTextElement(){
-        if (this.page.elements == null) {
-            this.page.elements = new Array<Element>();
-        }
-        var element = new TextElement();
-        element.width = 100;
-        element.height = 100;
-        element.positionX = 0;
-        element.positionY = 0;
-        element.font_size = 20;
-        element.content = new TextContent();
-        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
-        this.page.elements.push(element);
+        this.pageSelector.createNewTextElement()
     }
     
     createNewFrameElement(){
-        if (this.page.elements == null) {
-            this.page.elements = new Array<Element>();
-        }
-        var element = new FrameElement();
-        element.width = 100;
-        element.height = 100;
-        element.positionX = 0;
-        element.positionY = 0;
-        element.content = new ImageContent();
-        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
-        this.page.elements.push(element);
+        this.pageSelector.createNewFrameElement()
     }
     
     onAddImageButtonClick(){
         this.imageSelector.openSelectorWindow()
         let sub = this.imageSelector.selectorWindowOpened.take(1).subscribe() 
-        this.imageSelector.image.takeWhile(image => !sub.closed).subscribe((image) => this.createNewImageElement(image))
+        this.imageSelector.image.takeWhile(image => !sub.closed).subscribe((image) => this.pageSelector.createNewImageElement(image))
     }
-    
-    createNewImageElement(image: Image){
-        if (this.page.elements == null) {
-            this.page.elements = new Array<Element>();
-        }
-        var element = new ImageElement();
-        element.width = 100;
-        element.height = 100;
-        element.positionX = 0;
-        element.positionY = 0;
-        element.image = image
-        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
-        this.page.elements.push(element);        
-    }
-    
+        
     createNewTableElement(){
-        if (this.page.elements == null) {
-            this.page.elements = new Array<Element>();
-        }
-        var element = new TableElement();
-        element.width = 100
-        element.height = 100
-        element.positionX = 0
-        element.positionY = 0
-        TableElement.addRows(element,5,5)
-        var content = new TableContent()
-        content.addRows(5,5)
-        element.content = content
-        this.stepSelector.makeStep(new ArrayStepPush(element, this.page.elements))
-        this.page.elements.push(element)
+        this.pageSelector.createNewTableElement()
     }
     
     createNewRulerX(){
-        if (this.page.rulers == null) {
-            this.page.rulers = new Array<Guide>();
-        }
-        let ruler = new Guide
-        ruler.positionX = 20
-        this.page.rulers.push(ruler)
+        this.pageSelector.createNewRulerX()
     }
     
     createNewRulerY(){
-        if (this.page.rulers == null) {
-            this.page.rulers = new Array<Guide>();
-        }
-        let ruler = new Guide
-        ruler.positionY = 20
-        this.page.rulers.push(ruler)
+        this.pageSelector.createNewRulerY()
     }
     
     onDeleteClicked(){
-        this.templateInstanceStore.deletePageFromTemplate(this.page);
-        this.page = null
-        this.elementSelector.selectedElement = null
+        this.pageSelector.deletePage()
     }
  
     

@@ -4,7 +4,7 @@ import { ElementSelector } from './element-selector'
 import { TextElement} from './text-element'
 import { Font} from '../font/font'
 import { ElementDimensions } from '../resizable.directive'
-import { NewPage } from '../page/new-page'
+import { PageService } from '../page/page.service'
 
 @Component({
     selector: 'create-new-text-element',
@@ -45,7 +45,7 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck {
     constructor(
         public elementRef: ElementRef, 
         private elementSelector: ElementSelector,
-        private newPage: NewPage,
+        private newPage: PageService,
         private differs: KeyValueDiffers
     ){
         this.differ = differs.find({}).create(null);

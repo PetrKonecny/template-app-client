@@ -1,6 +1,6 @@
 import { Component, Input, ElementRef } from '@angular/core';
 import { ImageElement } from './image-element'
-import { NewPage } from '../page/new-page'
+import { PageService } from '../page/page.service'
 import { ElementDimensions } from '../resizable.directive'
 import { ElementSelector } from './element-selector'
 
@@ -25,7 +25,7 @@ export class NewImageElementComponent {
     @Input()
     element : ImageElement
      
-    constructor(private image: ElementRef, private newPage: NewPage, private elementSelector: ElementSelector){}
+    constructor(private image: ElementRef, private newPage: PageService, private elementSelector: ElementSelector){}
     
     ngDoCheck(){
         if((!this.element.width || !this.element.height) && this.image ){

@@ -1,6 +1,6 @@
 import { Component, Input, HostListener, OnInit} from '@angular/core';
 import { Page} from './page';
-import { NewPage} from './new-page'
+import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
 import {PageSelector} from '../page/page-selector'
 
@@ -10,7 +10,7 @@ import {PageSelector} from '../page/page-selector'
     template: `
           <h3>New Page</h3>
           <div class ="page" (click)="onPageClicked()">
-            <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>\n\
+            <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>
             <display-guide *ngFor="let guide of guides" [guide] = "guide" ></display-guide>
             <display-ruler *ngFor="let guide of page.rulers" [guide] = "guide" ></display-ruler>
           </div>        
@@ -26,19 +26,21 @@ import {PageSelector} from '../page/page-selector'
             height: 297mm;
         }
     `],
-    providers: [NewPage]
+    providers: [PageService]
 })
 
 export class NewPageComponent implements OnInit {
     
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
-        this.newPage.mouseDown()
     }
     
     @HostListener('mouseup', ['$event'])
     onMouseup(event) {
-        this.newPage.mouseUp()
+        this.guides = new Array
+        this.newPage.guides = this.guides
+        this.newPage.save()
+        this.newPage.resetState()
     }
 
     guides: Array<Guide>
@@ -46,9 +48,8 @@ export class NewPageComponent implements OnInit {
     @Input()
     page: Page  
     
-    constructor(private newPage: NewPage, private pageSelector: PageSelector) {
-        this.newPage.component = this
-        this.guides = new Array      
+    constructor(private newPage: PageService, private pageSelector: PageSelector) {
+        this.guides = new Array
     }
     
     ngOnInit(){
@@ -59,6 +60,8 @@ export class NewPageComponent implements OnInit {
         var ruler2 = new Guide
         ruler2.positionY = 20
         this.page.rulers.push(ruler2)
+        this.newPage.page = this.page
+        this.newPage.guides = this.guides      
     }
     
     onPageClicked(){

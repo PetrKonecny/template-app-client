@@ -4,43 +4,44 @@ import {FontSelector} from '../font/font-selector';
 import {FontService} from '../font/font.service';
 import {Editor} from './editor'
 import {Font} from '../font/font'
-
+import {TextSelector} from './text-selector'
 
 @Component({
     selector: 'text-select',
-    template: ` 
-                <span> Font: {{editor.editorCurFont}}</span>
-                <font-selector *ngIf="fontsOpened" (onFontSelected)="changeEditorFont($event)" ></font-selector>
-                <button *ngIf="!fontsOpened" (click)="openFonts()">Change font</button>
-                <br>Font color: <input [colorPicker]="editor.editorCurColor" (mousedown)="$event.preventDefault()" (colorPickerChange)="curColor =$event" (cpToggleChange)="onCpToggleChange($event)" [style.background]="editor.editorCurColor" />
-                <div>
-                    <button (click)="changeEditorTextAlign('JustifyLeft')">Allign left</button>
-                    <button (click)="changeEditorTextAlign('JustifyRight')">Allign right</button>
-                    <button (click)="changeEditorTextAlign('JustifyCenter')">Allign center</button>
-                    <button (click)="changeEditorTextAlign('JustifyFull')">Justify</button>
-                </div>
-                <div><button (click)="changeEditorTextBold()">Bold</button><button (click)="changeEditorTextItalic()">Italic</button>
-                </div>
-                <div>
-                    <button (click)="changeEditorFormatBlock('h1')">H1</button>
-                    <button (click)="changeEditorFormatBlock('h2')">H2</button>
-                    <button (click)="changeEditorFormatBlock('p')">P</button>
+    template: ` <div *ngIf="editor">
+                    <span> Font: {{editor.editorCurFont}}</span>
+                    <font-selector *ngIf="fontsOpened"></font-selector>
+                    <button *ngIf="!fontsOpened" (click)="onChangeFontButtonClick()">Change font</button>
+                    <br>Font color: <input [colorPicker]="editor.editorCurColor" (mousedown)="$event.preventDefault()" (colorPickerChange)="curColor =$event" (cpToggleChange)="onCpToggleChange($event)" [style.background]="editor.editorCurColor" />
+                    <div>
+                        <button (click)="changeEditorTextAlign('JustifyLeft')">Allign left</button>
+                        <button (click)="changeEditorTextAlign('JustifyRight')">Allign right</button>
+                        <button (click)="changeEditorTextAlign('JustifyCenter')">Allign center</button>
+                        <button (click)="changeEditorTextAlign('JustifyFull')">Justify</button>
+                    </div>
+                    <div><button (click)="changeEditorTextBold()">Bold</button><button (click)="changeEditorTextItalic()">Italic</button>
+                    </div>
+                    <div>
+                        <button (click)="changeEditorFormatBlock('h1')">H1</button>
+                        <button (click)="changeEditorFormatBlock('h2')">H2</button>
+                        <button (click)="changeEditorFormatBlock('p')">P</button>
+                    </div>
                 </div>
              `,
-    providers: [ImageService, FontSelector, FontService]
+    providers: [FontSelector]
 })
 
-export class TextSelectorComponent implements OnInit, OnChanges {
+export class TextSelectorComponent {
     
     fontsOpened : boolean;
-    
-    @Input()
-    editor: Editor
+    editor: Editor  
       
     curColor: string
     
     
-    constructor(private fontSelector: FontSelector){
+    constructor(private textSelector: TextSelector, private fontSelector: FontSelector){
+        this.textSelector.editor.subscribe(editor => this.editor = editor)
+        this.fontSelector.selectorWindowOpened.subscribe(value => this.fontsOpened = value)
     }
       
     onCpToggleChange(toggle: boolean){
@@ -49,15 +50,10 @@ export class TextSelectorComponent implements OnInit, OnChanges {
         }
     }
     
-    ngOnChanges(){
-    }
-    
-    ngOnInit(){
-        this.fontSelector.selectorWindowOpened.subscribe(opened => this.fontsOpened = opened)
-    }
-    
-    openFonts(){
+    onChangeFontButtonClick(){
         this.fontSelector.openSelectorWindow()
+        let sub = this.fontSelector.selectorWindowOpened.take(1).subscribe() 
+        this.fontSelector.font.takeWhile(font => !sub.closed).subscribe((font) => this.textSelector.changeEditorFont(font))
     }
     
     changeEditorFontSize(size: number){
@@ -65,27 +61,24 @@ export class TextSelectorComponent implements OnInit, OnChanges {
     }
     
     changeEditorTextBold(){
-        this.editor.editor.execCommand("Bold")     
+        this.textSelector.changeEditorTextBold()   
     }
     
     changeEditorTextItalic(){
-        this.editor.editor.execCommand("Italic")     
+        this.textSelector.changeEditorTextItalic()    
     }
     
     changeEditorFormatBlock(block: string){
-        this.editor.editor.execCommand('FormatBlock', false , block)
+        this.textSelector.changeEditorFormatBlock(block)
     }
     
-    changeEditorFont(font: Font){
-        this.editor.editor.execCommand('FontName',false,'font'+font.id)       
-    }
     
     changeEditorTextAlign(align: string){
-        this.editor.editor.execCommand(align)
+       this.textSelector.changeEditorTextAlign(align)
     }
      
     changeEditorTextColor(color: string){
-        this.editor.editor.execCommand('ForeColor', false, color);
+        this.textSelector.changeEditorTextColor(color)
     }
     
 }

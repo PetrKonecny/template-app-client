@@ -4,7 +4,7 @@ import { ElementSelector} from '../element/element-selector'
 import { ImageSelector } from '../image/image-selector';
 import { ImageContent } from '../content/image-content';
 import { ElementDimensions} from '../resizable.directive'
-import { NewPage } from '../page/new-page'
+import { PageService } from '../page/page.service'
 
 @Component({
     selector: 'create-new-frame-element',
@@ -47,7 +47,7 @@ export class NewFrameElementComponent {
         public elementRef: ElementRef, 
         private elementSelector: ElementSelector,
         private imageSelector: ImageSelector,
-        private newPage: NewPage
+        private newPage: PageService
     ){
     }
     

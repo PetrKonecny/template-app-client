@@ -15,10 +15,7 @@ import {FontService} from './font.service'
 export class FontSelectorComponent implements OnInit {
     
     private fonts: Font[];
-    
-    @Output()
-    onFontSelected = new EventEmitter<Font>()
-    
+   
     constructor(private fontSelector: FontSelector,  private fontService: FontService){}
      
     ngOnInit(){
@@ -26,8 +23,8 @@ export class FontSelectorComponent implements OnInit {
     }
     
     onFontClicked(font: Font){
-        this.onFontSelected.emit(font)
-        this.fontSelector.closeSelectorWindow();
+        this.fontSelector.selectFont(font)
+        this.fontSelector.closeSelectorWindow()
     }
   
 }
