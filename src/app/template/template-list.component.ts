@@ -9,8 +9,8 @@ import { TemplateInstance} from '../template-instance/template-instance';
         <ul class="heroes">
             <li *ngFor="let template of templates">
                 <span class="badge">{{template.id}}</span> {{template.name}}
-                <a [routerLink] = "['/templates', template.id, '/edit']">Edit</a>
-                <a [routerLink] = "['/templates', template.id, '/instance']">New Instance</a>\n\
+                <a [routerLink] = "['/templates', template.id, 'edit']">Edit</a>
+                <a [routerLink] = "['/templates', template.id, 'instance']">New Instance</a>\n\
                 <a href="javascript:void(0)"(click)="onDelete(template)">Delete</a>            
             </li>
         </ul>

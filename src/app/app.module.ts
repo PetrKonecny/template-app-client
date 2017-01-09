@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";  
 import {BrowserModule} from "@angular/platform-browser";  
 import {HttpModule} from "@angular/http";  
-import {FormsModule} from "@angular/forms";  
+import {FormsModule, ReactiveFormsModule } from "@angular/forms";  
 import "rxjs/Rx";
 import { RouterModule, Routes } from '@angular/router';
 import { TemplateIndexComponent} from './template/template-index.component';
@@ -47,16 +47,22 @@ import { ElementSelectorComponent} from './element/element-selector.component';
 import { TemplateListComponent} from './template/template-list.component';
 import {TemplateInstanceListComponent} from './template-instance/template-instance-list.component';
 import { NewImageElementComponent } from './element/new-image-element.component'
+import {UserGuard} from './user/user.guard'
+import {UserService} from './user/user.service'
+import {UserStore} from './user/user.store'
+import {UserLoginComponent} from './user/user-login.component'
 
 const routes: Routes = [
-    { path: 'templates/new', component: TemplateCreateComponent },
-    { path: 'templates', component: TemplateIndexComponent },
-    { path: 'templates/:id/edit', component: TemplateEditComponent },
-    { path: 'templates/:id/instance', component: TemplateInstanceCreateComponent }, 
-    { path: 'template-instances', component: TemplateInstanceIndexComponent },
-    { path: 'template-instances/:id', component: TemplateInstanceEditComponent },
-    { path: 'images', component: ImageIndexComponent },
-    { path: 'fonts', component: FontIndexComponent },
+    { path: 'templates/new', component: TemplateCreateComponent, canActivate: [UserGuard]},
+    { path: 'templates', component: TemplateIndexComponent, canActivate: [UserGuard]},
+    { path: 'templates/:id/edit', component: TemplateEditComponent, canActivate: [UserGuard]},
+    { path: 'templates/:id/instance', component: TemplateInstanceCreateComponent, canActivate: [UserGuard] }, 
+    { path: 'template-instances', component: TemplateInstanceIndexComponent, canActivate: [UserGuard] },
+    { path: 'template-instances/:id', component: TemplateInstanceEditComponent, canActivate: [UserGuard] },
+    { path: 'images', component: ImageIndexComponent, canActivate: [UserGuard] },
+    { path: 'fonts', component: FontIndexComponent, canActivate: [UserGuard] },
+    { path: 'login', component: UserLoginComponent },
+    { path: '**', redirectTo: '/templates', pathMatch: 'full' },
 ];
 
 @NgModule({
@@ -67,7 +73,7 @@ const routes: Routes = [
         TextSelectorComponent, FontListComponent, DisplayFontComponent, NewTableElementComponent, Draggable, NewElementComponent, DisplayGuideComponent, DisplayRulerComponent,
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
-        ImageIndexComponent, FontIndexComponent
+        ImageIndexComponent, FontIndexComponent, UserLoginComponent
         
     ],
     // modules
@@ -76,11 +82,12 @@ const routes: Routes = [
         HttpModule,
         RouterModule.forRoot(routes),
         FormsModule,
+        ReactiveFormsModule,
         Ng2UploaderModule      
     ],
     // providers
     providers: [
-        ColorPickerService
+        ColorPickerService, UserService, UserGuard, UserStore
     ],
     bootstrap: [
         AppComponent
