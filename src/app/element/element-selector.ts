@@ -157,6 +157,7 @@ export class ElementSelector {
     }
     
     changeBackgroundColor(color: string){
+        this._element.value.changing = true 
         this._element.value.background_color = color
     }
         

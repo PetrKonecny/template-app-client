@@ -51,6 +51,7 @@ import {UserGuard} from './user/user.guard'
 import {UserService} from './user/user.service'
 import {UserStore} from './user/user.store'
 import {UserLoginComponent} from './user/user-login.component'
+import {PageService} from './page/page.service'
 
 const routes: Routes = [
     { path: 'templates/new', component: TemplateCreateComponent, canActivate: [UserGuard]},
@@ -87,7 +88,7 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        ColorPickerService, UserService, UserGuard, UserStore
+        ColorPickerService, UserService, UserGuard, UserStore, PageService
     ],
     bootstrap: [
         AppComponent

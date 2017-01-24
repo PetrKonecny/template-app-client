@@ -10,6 +10,9 @@ export class Element {
     type: string;
     content: Content;
     draggable: boolean = true;
+    changing = false;
+    redoing = false;
     static defaultBackgroundColor: string = "#ccc"
+    static notRecordedParams: Array<string> = ['draggable','changing','redoing', 'clientState']
     background_color: string
 }

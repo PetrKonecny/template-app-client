@@ -1,10 +1,10 @@
-import { Component, ElementRef, Input} from '@angular/core';
+import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@angular/core';
 import { ImageElement } from './image-element'
 import { ElementSelector} from '../element/element-selector'
 import { ImageSelector } from '../image/image-selector';
 import { ImageContent } from '../content/image-content';
 import { ElementDimensions} from '../resizable.directive'
-import { PageService } from '../page/page.service'
+import { NewPageRemote } from '../page/new-page.remote'
 
 @Component({
     selector: 'create-new-frame-element',
@@ -42,13 +42,31 @@ export class NewFrameElementComponent {
     element : ImageElement
     
     draggable: boolean = true;
+    differ: KeyValueDiffer;
+
         
     constructor(
         public elementRef: ElementRef, 
         private elementSelector: ElementSelector,
         private imageSelector: ImageSelector,
-        private newPage: PageService
+        private newPage: NewPageRemote,
+        private differs: KeyValueDiffers,
     ){
+        this.differ = differs.find({}).create(null);
+    }
+
+    ngDoCheck(){
+        /*
+        var changes = this.differ.diff(this.element);
+        if(changes) {
+            changes.forEachAddedItem(item => {
+                console.log(item.key,item.currentValue,item.previousValue,item.currentValue === item.previousValue)
+            })
+            changes.forEachChangedItem(item => {
+                console.log(item.key,item.currentValue,item.previousValue,item.currentValue === item.previousValue)                
+            })
+        }*/
+        
     }
     
     resize(dimensions: ElementDimensions){

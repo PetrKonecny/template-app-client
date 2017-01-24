@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, KeyValueDiffer, KeyValueDiffers, DoCheck, HostListener } from '@angular/core';
 import { Element } from './element'
+import {StepSelector, StateChangeRespond} from '../step-selector'
 
 @Component({
     selector: 'create-new-element',
@@ -12,9 +13,34 @@ import { Element } from './element'
 })
 
        
-export class NewElementComponent {
+export class NewElementComponent implements DoCheck, StateChangeRespond{
     
     @Input()
     element : Element
+    continuousChangeRunning : boolean = false
+    differ: KeyValueDiffer;
+
+    @HostListener('document:mouseup', ['$event'])
+    onDocMouseUp(event) {
+        if(this.element){
+            this.element.changing = false
+        }
+    }
+
+     constructor(
+        private differs: KeyValueDiffers,
+        private stateService: StepSelector
+    ){
+        this.differ = differs.find({}).create(null);
+    }
+
+    ngDoCheck(){
+        var changes = this.differ.diff(this.element);
+        if(changes) {
+            this.stateService.respond(changes,this)           
+        }
+        
+    }
+
       
 }

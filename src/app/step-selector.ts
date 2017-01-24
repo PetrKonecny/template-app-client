@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Element} from './element/element'
 
 interface Step {
     undo()
@@ -44,12 +45,27 @@ export class BasicStep implements Step{
     constructor(private element: any, private paramName: string, private oldValue: any, private newValue: any){}    
     
     undo(){
+        this.element.redoing = true
         this.element[this.paramName] = this.oldValue
     }
     redo(){
+        this.element.redoing = true
         this.element[this.paramName] = this.newValue
     }
     
+}
+
+export class SimpleStep implements Step{
+    constructor(private element: any, private paramName: string, private value: any){}    
+    undo(){
+        this.element.redoing = true
+        this.element[this.paramName] = this.value
+    }
+    redo(){
+        this.element.redoing = true
+        this.element[this.paramName] = this.value
+    }
+
 }
     
 export class ArrayStepPush implements Step{
@@ -110,7 +126,7 @@ export class StepSelector {
     undo(){
         if (this.undoSteps && this.undoSteps.length > 0){
             var step = this.undoSteps.pop()
-            step.undo()
+            this.undoSteps[this.undoSteps.length - 1].redo()
             this.redoSteps.push(step)
         } 
     }
@@ -132,6 +148,62 @@ export class StepSelector {
         var steps = [new BasicStep(element,"width", oldWidth, newWidth),new BasicStep(element,"height",oldHeight,newHeight)]
         return new CompositeStep(steps)
     }
+
+    recordChangesAfterChangeFinished(changes, responder: StateChangeRespond){
+        let steps: Array<Step> = new Array 
+        changes.forEachItem(item =>{
+            if(Element.notRecordedParams.indexOf(item.key) < 0){
+                let change = this.makeChange(item,responder)
+                steps.push(change)
+            }
+        })
+        if(!steps.some(step => step == null)){
+            this.makeStep(new CompositeStep(steps))
+        }
+    }
+
+    makeChange(change,responder: StateChangeRespond){
+        if(change.previousValue){
+            console.log(change.key)
+            return new SimpleStep(responder.element,change.key, change.currentValue)
+        }
+    }
+
+    respond(changes,responder: StateChangeRespond){
+        let terminate = false
+        changes.forEachChangedItem(item => {
+            if(item.key == 'redoing'){
+                responder.element.redoing = false
+                terminate = true 
+            }
+            else if(item.key == 'changing'){
+                if(item.currentValue){
+                    responder.continuousChangeRunning = true
+                }else if(item.previousValue){
+                    this.recordChangesAfterChangeFinished(changes,responder)
+                    responder.continuousChangeRunning = false
+                }
+                terminate = true 
+            }
+        })           
+        if(!responder.continuousChangeRunning && !terminate){
+            this.recordChangesAfterChangeFinished(changes,responder)
+        }
+
+    }
+
+    replacer(key,value) {
+        if (key=="editor") return undefined;
+        else return value;
+    }
     
 }
+
+export interface StateChangeRespond{
+
+    continuousChangeRunning: boolean
+    element: any
+
+}
+
 

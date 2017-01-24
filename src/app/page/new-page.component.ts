@@ -1,9 +1,9 @@
-import { Component, Input, HostListener, OnInit} from '@angular/core';
+import { Component, Input, HostListener, OnInit,KeyValueDiffers, KeyValueDiffer} from '@angular/core';
 import { Page} from './page';
 import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
 import {PageSelector} from '../page/page-selector'
-
+import {NewPageRemote} from './new-page.remote'
 
 @Component({
     selector: 'create-new-page',
@@ -26,30 +26,46 @@ import {PageSelector} from '../page/page-selector'
             height: 297mm;
         }
     `],
-    providers: [PageService]
+    providers: [NewPageRemote]
 })
 
 export class NewPageComponent implements OnInit {
     
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
+        this.newPageRemote.onMouseDown()
     }
     
     @HostListener('mouseup', ['$event'])
     onMouseup(event) {
         this.guides = new Array
-        this.newPage.guides = this.guides
-        this.newPage.save()
-        this.newPage.resetState()
+        this.newPageRemote.onMouseUp()
     }
 
     guides: Array<Guide>
-    
+        differ: KeyValueDiffer;
+
     @Input()
     page: Page  
     
-    constructor(private newPage: PageService, private pageSelector: PageSelector) {
+    ngDoCheck(){
+        var changes = this.differ.diff(this.page);
+        if(changes) {
+            changes.forEachAddedItem(item => {
+                console.log(item.key,item.currentValue,item.previousValue,item.currentValue === item.previousValue)
+            })
+            changes.forEachChangedItem(item => {
+                console.log(item.key,item.currentValue,item.previousValue,item.currentValue === item.previousValue)                
+            })
+        }
+        
+    }
+
+    constructor(private newPageRemote: NewPageRemote, private pageSelector: PageSelector,         private differs: KeyValueDiffers) {
+        this.newPageRemote.component = this
         this.guides = new Array
+                this.differ = differs.find({}).create(null);
+
     }
     
     ngOnInit(){
@@ -60,8 +76,6 @@ export class NewPageComponent implements OnInit {
         var ruler2 = new Guide
         ruler2.positionY = 20
         this.page.rulers.push(ruler2)
-        this.newPage.page = this.page
-        this.newPage.guides = this.guides      
     }
     
     onPageClicked(){

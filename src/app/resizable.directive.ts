@@ -153,9 +153,9 @@ export class Resizable implements OnInit {
 export enum Border { left, right, bottom, top };
 
 export class ElementDimensions {
-    left
-    top
-    height
-    width
+    left: number
+    top: number
+    height: number
+    width: number
     border: Border
 }

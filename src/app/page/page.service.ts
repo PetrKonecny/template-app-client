@@ -12,29 +12,27 @@ import { Page } from './page'
 @Injectable()
 export class PageService {
    
-    page: Page
-    guides: Guide[]
-
     horizontals: Array<Break>
     verticals: Array<Break>
-    counter: number
+    counter: number = 0
     bufferVertical: Buffer
     bufferHorizontal: Buffer
     startState: any
     finalStep: any
+    element: Element
     
-    constructor(private stepSelector: StepSelector){}
+    constructor(){}
     
-    private initGuides(element: Element){
+    private initGuides(element: Element, page: Page){
         this.horizontals = new Array
         this.verticals = new Array 
-        this.page.elements.filter(elmnt => elmnt != element).forEach(elmnt => { 
+        page.elements.filter(elmnt => elmnt != element).forEach(elmnt => { 
             this.verticals.push({positionX: elmnt.width + elmnt.positionX, guide: null, active: false})
             this.verticals.push({positionX: elmnt.positionX, guide: null , active: false})
             this.horizontals.push({positionY: elmnt.height + elmnt.positionY, guide: null, active: false })
             this.horizontals.push({positionY: elmnt.positionY, guide: null , active: false})              
         })
-        this.page.rulers.forEach(ruler => {
+        page.rulers.forEach(ruler => {
             if (ruler.positionX){
                 this.verticals.push({ positionX: ruler.positionX, guide: null, active: false})
             } else if (ruler.positionY){
@@ -46,14 +44,17 @@ export class PageService {
     }
     
     moveSimple(element: Element, dimensions: ElementDimensions){
+        element.changing = true 
         element.positionX += dimensions.left
         element.positionY += dimensions.top
     }
     
-    move(element: Element, dimensions: ElementDimensions){
-        if (!this.startState){
-            this.startState = { positionX: element.positionX, positionY: element.positionY}
-            this.initGuides(element)
+    move(element: Element, dimensions: ElementDimensions, page: Page, guides: Guide[]){
+        element.changing = true 
+        if (this.element != element){
+            this.element = element
+            //this.startState = { positionX: element.positionX, positionY: element.positionY}
+            this.initGuides(element, page)
         }
         let edge2FuncHorizontal = function(guideBreak: Break){element["positionY"] = guideBreak["positionY"] - element["height"]}
         let edge1FuncHorizontal = function(guideBreak: Break){element["positionY"] = guideBreak["positionY"]}
@@ -61,22 +62,22 @@ export class PageService {
         let edge1FuncVertical = function(guideBreak: Break){element["positionX"] = guideBreak["positionX"]}
         let releaseFuncVert = () => { element.positionX += this.bufferVertical.value }
         let releaseFuncHor = () => { element.positionY += this.bufferHorizontal.value }
-        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.top, 'positionY', 'height', this.bufferHorizontal, edge1FuncHorizontal, edge2FuncHorizontal, releaseFuncHor)
-        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.left, 'positionX', 'width', this.bufferVertical,edge1FuncVertical,edge2FuncVertical,releaseFuncVert)
+        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.top, 'positionY', 'height', this.bufferHorizontal, edge1FuncHorizontal, edge2FuncHorizontal, releaseFuncHor,guides)
+        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.left, 'positionX', 'width', this.bufferVertical,edge1FuncVertical,edge2FuncVertical,releaseFuncVert,guides)
         
         if (!verticalBreak && horizontalBreak) {
             element.positionX += dimensions.left
         }else if(verticalBreak && !horizontalBreak){
             element.positionY += dimensions.top
         }else if(!horizontalBreak && !verticalBreak){
-            element.positionX += dimensions.left
             element.positionY += dimensions.top
+            element.positionX += dimensions.left
         }  
               
-        this.finalStep = this.stepSelector.makePosition(element, this.startState.positionX, element.positionX, this.startState.positionY, element.positionY)    
+        //this.finalStep = this.stepSelector.makePosition(element, this.startState.positionX, element.positionX, this.startState.positionY, element.positionY)    
     }
     
-    private resolveBreaks(breaks: Array<Break>,element: Element, deltaPos: number ,paramPosition: string, paramDimension: string, buffer: Buffer, edge1Func: (guideBreak: Break)=>void, edge2Func: (guideBreak: Break)=>void, releaseFunc: ()=>void){
+    private resolveBreaks(breaks: Array<Break>,element: Element, deltaPos: number ,paramPosition: string, paramDimension: string, buffer: Buffer, edge1Func: (guideBreak: Break)=>void, edge2Func: (guideBreak: Break)=>void, releaseFunc: ()=>void, guides: Guide[]){
         for (var guideBreak of breaks){
             var edge2 = element[paramPosition] + element[paramDimension] <= guideBreak[paramPosition] + 10 && element[paramPosition] + element[paramDimension] > guideBreak[paramPosition] - 10
             var edge1 = element[paramPosition] > guideBreak[paramPosition] -10 && element[paramPosition] < guideBreak[paramPosition] + 10
@@ -85,7 +86,7 @@ export class PageService {
                     var guide = new Guide()
                     guide[paramPosition] = guideBreak[paramPosition]
                     guideBreak.guide = guide
-                    this.guides.push(guide)                
+                    guides.push(guide)                
                 }
                 buffer.value += deltaPos
                 if (Math.abs(buffer.value) < 20){
@@ -97,7 +98,7 @@ export class PageService {
                     guideBreak.active = true                    
                 }else{
                     releaseFunc()
-                    this.guides.splice(this.guides.indexOf(guideBreak.guide),1)
+                    guides.splice(guides.indexOf(guideBreak.guide),1)
                     guideBreak.guide = null
                     guideBreak.active = false
                     buffer.value = 0                    
@@ -126,6 +127,7 @@ export class PageService {
     }
     
     resizeSimple(element: Element, dimensions: ElementDimensions){
+        element.changing = true 
         if (dimensions.width){
             element.width += dimensions.width
         } else if (dimensions.height){
@@ -133,10 +135,11 @@ export class PageService {
         }
     }
     
-    resize(element: Element,dimensions: ElementDimensions){
+    resize(element: Element,dimensions: ElementDimensions, page: Page, guides: Guide[]){
+        element.changing = true 
         if (!this.startState){
             this.startState = { width: element.width, height: element.height}
-            this.initGuides(element)
+            this.initGuides(element,page)
             this.verticals = this.verticals.filter(guideBreak => this.filterOpositeBorder(guideBreak, dimensions, element))
             this.horizontals = this.horizontals.filter(guideBreak => this.filterOpositeBorder(guideBreak, dimensions, element))
         }
@@ -147,30 +150,31 @@ export class PageService {
         let releaseFuncVert = () => { element.width += this.bufferVertical.value }
         let releaseFuncHor = () => { element.height += this.bufferHorizontal.value }
         if (dimensions.height){
-            var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal,emptyFunc, edge2FuncHorizontal, releaseFuncHor)
+            var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal,emptyFunc, edge2FuncHorizontal, releaseFuncHor, guides)
             if(!horizontalBreak){
                 element.height += dimensions.height
             }
         } else if (dimensions.width){
-            var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical, emptyFunc, edge2FuncVertical, releaseFuncVert)
+            var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical, emptyFunc, edge2FuncVertical, releaseFuncVert,guides)
             if(!verticalBreak){
                 element.width += dimensions.width
             }
         }
                 
-        this.finalStep = this.stepSelector.makeDimensions(element, this.startState.width, element.width, this.startState.height, element.height)    
+        //this.finalStep = this.stepSelector.makeDimensions(element, this.startState.width, element.width, this.startState.height, element.height)    
     }
     
     save(){
         if(this.finalStep){
-            this.stepSelector.makeStep(this.finalStep)
+            //this.stepSelector.makeStep(this.finalStep)
         }
     }
 
     resetState(){
-        this.counter = 0
+        /*this.counter = 0
         this.finalStep = null
-        this.startState = null
+        this.startState = null*/
+        this.element = null
     }
     
     private resizeTableVertical(element: TableElement, dimensions: ElementDimensions){
@@ -211,6 +215,7 @@ export class PageService {
     }
         
     resizeTableElement(element: TableElement, dimensions: ElementDimensions){
+        element.changing = true 
         if (!this.startState){
             this.startState = JSON.parse(JSON.stringify(element.rows))
         }
