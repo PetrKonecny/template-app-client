@@ -38,6 +38,11 @@ export class ElementSelector {
         }
     }
 
+    changeFontSize(size: number){
+        let element = <TextElement>this._element.value
+        element.font_size = size
+    }
+
     clearSelect(){
         this._element.next(null)
     }
@@ -99,24 +104,26 @@ export class ElementSelector {
         this.stepSelector.makeStep(new CompositeStep(steps))
     }
     
-    changeSelectedCellsBold(bold: boolean){
+    changeSelectedCellsBold(){
+        let bold = true
         var element = <TableElement>this._element.value
-        var steps = new Array
+        if(element.selectedCells.every(cell=>cell.bold)){
+            bold = false
+        }
         element.selectedCells.forEach((cell) => {
-            steps.push(new BasicStep(cell, "bold", cell.bold, bold))
             cell.bold = bold
         })
-        this.stepSelector.makeStep(new CompositeStep(steps))
     }
     
-    changeSelectedCellsItalic(italic: boolean){
+    changeSelectedCellsItalic(){
+        let italic = true
         var element = <TableElement>this._element.value
-        var steps = new Array
+        if(element.selectedCells.every(cell=>cell.italic)){
+            italic = false
+        }
         element.selectedCells.forEach((cell) => {
-            steps.push(new BasicStep(cell, "italic", cell.italic, italic))
             cell.italic = italic
         })
-        this.stepSelector.makeStep(new CompositeStep(steps))
     }
     
     changeSelectedCellsTextAlign(align: string){

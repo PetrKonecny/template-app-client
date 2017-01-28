@@ -6,14 +6,14 @@ import { TemplateInstance} from '../template-instance/template-instance';
 @Component({
     selector: 'template-list',
     template: `
-        <ul class="heroes">
-            <li *ngFor="let template of templates">
-                <span class="badge">{{template.id}}</span> {{template.name}}
-                <a [routerLink] = "['/templates', template.id, 'edit']">Edit</a>
-                <a [routerLink] = "['/templates', template.id, 'instance']">New Instance</a>\n\
-                <a href="javascript:void(0)"(click)="onDelete(template)">Delete</a>            
-            </li>
-        </ul>
+        <md-nav-list>
+            <md-list-item *ngFor="let template of templates">
+                <a md-line href="...">{{ template.name }}</a>
+                <a md-button [routerLink] = "['/templates', template.id, 'edit']">Edit</a>
+                <a md-button [routerLink] = "['/templates', template.id, 'instance']">New </a>\n\
+                <a md-button href="javascript:void(0)"(click)="onDelete(template)">Delete</a>            
+            </md-list-item>
+        </md-nav-list>
     `,
 })
 

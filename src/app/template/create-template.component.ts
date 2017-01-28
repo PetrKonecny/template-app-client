@@ -5,7 +5,6 @@ import { Template} from './template';
 @Component({
     selector: 'template-create',
     template: `
-        <h2>Create Template</h2>
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
 })

@@ -8,25 +8,19 @@ import {TextSelector} from './text-selector'
 
 @Component({
     selector: 'text-select',
-    template: ` <div *ngIf="editor">
-                    <span> Font: {{editor.editorCurFont}}</span>
-                    <font-selector *ngIf="fontsOpened"></font-selector>
-                    <button *ngIf="!fontsOpened" (click)="onChangeFontButtonClick()">Change font</button>
-                    <br>Font color: <input [colorPicker]="editor.editorCurColor" (mousedown)="$event.preventDefault()" (colorPickerChange)="curColor =$event" (cpToggleChange)="onCpToggleChange($event)" [style.background]="editor.editorCurColor" />
-                    <div>
-                        <button (click)="changeEditorTextAlign('JustifyLeft')">Allign left</button>
-                        <button (click)="changeEditorTextAlign('JustifyRight')">Allign right</button>
-                        <button (click)="changeEditorTextAlign('JustifyCenter')">Allign center</button>
-                        <button (click)="changeEditorTextAlign('JustifyFull')">Justify</button>
-                    </div>
-                    <div><button (click)="changeEditorTextBold()">Bold</button><button (click)="changeEditorTextItalic()">Italic</button>
-                    </div>
-                    <div>
-                        <button (click)="changeEditorFormatBlock('h1')">H1</button>
-                        <button (click)="changeEditorFormatBlock('h2')">H2</button>
-                        <button (click)="changeEditorFormatBlock('p')">P</button>
-                    </div>
-                </div>
+    template: ` <span *ngIf="editor">
+                    <font-selector [fontLabel]="editor.editorCurFont" [fontSizeLabel]="editor.editorCurFontSize"></font-selector>
+                    <button style="background: none; border:none;" [colorPicker]="editor.editorCurColor" (mousedown)="$event.preventDefault()" (colorPickerChange)="curColor =$event" (cpToggleChange)="onCpToggleChange($event)"><button md-icon-button><md-icon [style.color]="editor.editorCurColor">format_color_text</md-icon></button></button>
+                    <button md-icon-button (click)="changeEditorTextAlign('JustifyLeft')"><md-icon>format_align_left</md-icon></button>
+                    <button md-icon-button (click)="changeEditorTextAlign('JustifyRight')"><md-icon>format_align_right</md-icon></button>
+                    <button md-icon-button (click)="changeEditorTextAlign('JustifyCenter')"><md-icon>format_align_center</md-icon></button>
+                    <button md-icon-button (click)="changeEditorTextAlign('JustifyFull')"><md-icon>format_align_justify</md-icon></button>
+                    <button md-icon-button (click)="changeEditorTextBold()"><md-icon>format_bold</md-icon></button>
+                    <button md-icon-button (click)="changeEditorTextItalic()"><md-icon>format_italic</md-icon></button>
+                    <button md-icon-button (click)="changeEditorFormatBlock('h1')">H1</button>
+                    <button md-icon-button (click)="changeEditorFormatBlock('h2')">H2</button>
+                    <button md-icon-button (click)="changeEditorFormatBlock('p')">P</button>
+                </span>
              `,
     providers: [FontSelector]
 })
@@ -35,13 +29,14 @@ export class TextSelectorComponent {
     
     fontsOpened : boolean;
     editor: Editor  
-      
+    fontSizes=[10,20,30,40,50]
     curColor: string
     
     
     constructor(private textSelector: TextSelector, private fontSelector: FontSelector){
         this.textSelector.editor.subscribe(editor => this.editor = editor)
-        this.fontSelector.selectorWindowOpened.subscribe(value => this.fontsOpened = value)
+        this.fontSelector.font.subscribe(font => this.textSelector.changeEditorFont(font))
+        this.fontSelector.fontSize.subscribe(fontSize => this.textSelector.changeEditorFontSize(fontSize))
     }
       
     onCpToggleChange(toggle: boolean){

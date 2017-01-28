@@ -62,6 +62,7 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit {
                     this.content.editor.editorCurColor = null
                     this.content.editor.editorCurColor = this.rgb2hex(tinymce.DOM.getStyle(e.element, 'color', true))
                     this.content.editor.editorCurFont = tinymce.DOM.getStyle(e.element,'font-family',true)
+                    this.content.editor.editorCurFontSize = tinymce.DOM.getStyle(e.element,'font-size',true)
                 });
                 editor.on('init', (e) => {
                     if (this.content.text){

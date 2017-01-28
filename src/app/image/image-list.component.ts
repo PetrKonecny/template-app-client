@@ -6,11 +6,11 @@ import { Router } from '@angular/router'
 @Component({
     selector: 'image-list',
     template: `
-            <div class="container">
-                <div *ngFor="let image of images" (click)="onSelect(image)">
+            <md-grid-list cols="3">
+                <md-grid-tile *ngFor="let image of images" (click)="onSelect(image)">
                     <img class="image" src="http://localhost:8080/img/{{image.image_key}}.{{image.extension}}?w=250&h=250&fit=crop">
-                </div>
-            </div> `,
+                </md-grid-tile>
+            </md-grid-list> `,
     styles: [`        
             .image {
                 margin: 5px;

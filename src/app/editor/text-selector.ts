@@ -18,7 +18,7 @@ export class TextSelector {
     }
 
     changeEditorFontSize(size: number){
-      
+        this._editor.value.editor.execCommand('fontSize',false,size+"px")       
     }
     
     changeEditorTextBold(){
@@ -34,7 +34,13 @@ export class TextSelector {
     }
     
     changeEditorFont(font: Font){
-        this._editor.value.editor.execCommand('FontName',false,'font'+font.id)       
+        let fontName = ""
+        if(font.id){
+            fontName = "font" + font.id
+        }else if (font.name){
+            fontName = font.name
+        }
+        this._editor.value.editor.execCommand('FontName',false,fontName)       
     }
     
     changeEditorTextAlign(align: string){

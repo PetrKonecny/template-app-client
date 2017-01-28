@@ -2,6 +2,7 @@ import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";  
 import {HttpModule} from "@angular/http";  
 import {FormsModule, ReactiveFormsModule } from "@angular/forms";  
+import {MaterialModule} from '@angular/material'
 import "rxjs/Rx";
 import { RouterModule, Routes } from '@angular/router';
 import { TemplateIndexComponent} from './template/template-index.component';
@@ -52,6 +53,12 @@ import {UserService} from './user/user.service'
 import {UserStore} from './user/user.store'
 import {UserLoginComponent} from './user/user-login.component'
 import {PageService} from './page/page.service'
+import {ImageSelector } from './image/image-selector'
+import { MyMdMenu } from './element/my-md-menu'
+import { Ng2DropdownModule } from 'ng2-material-dropdown';
+import {FontService} from './font/font.service'
+import {FontStore} from './font/font.store'
+import {CellEditToolbar} from './element/cell-edit-toolbar.component'
 
 const routes: Routes = [
     { path: 'templates/new', component: TemplateCreateComponent, canActivate: [UserGuard]},
@@ -74,7 +81,7 @@ const routes: Routes = [
         TextSelectorComponent, FontListComponent, DisplayFontComponent, NewTableElementComponent, Draggable, NewElementComponent, DisplayGuideComponent, DisplayRulerComponent,
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
-        ImageIndexComponent, FontIndexComponent, UserLoginComponent
+        ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar
         
     ],
     // modules
@@ -84,15 +91,18 @@ const routes: Routes = [
         RouterModule.forRoot(routes),
         FormsModule,
         ReactiveFormsModule,
-        Ng2UploaderModule      
+        Ng2UploaderModule,
+        MaterialModule.forRoot() ,
+        Ng2DropdownModule      
     ],
     // providers
     providers: [
-        ColorPickerService, UserService, UserGuard, UserStore, PageService
+        ColorPickerService, UserService, UserGuard, UserStore, PageService, ImageSelector, FontService, FontStore
     ],
     bootstrap: [
         AppComponent
-    ]
+    ],
+    entryComponents: [ImageSelectorComponent]
 })
 export class AppModule { }  
 

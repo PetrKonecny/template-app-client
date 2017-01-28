@@ -16,6 +16,8 @@ import {TemplateInstanceStore} from '../template-instance/template-instance.stor
 import {Guide} from '../guide/guide'
 import {FrameElement} from '../element/frame-element'
 import {ImageSelector} from '../image/image-selector'
+import {MdDialog, MdDialogRef} from '@angular/material'
+import {ImageSelectorComponent} from '../image/image-selector.component'
 
 @Component({
     selector: 'page-select',
@@ -38,9 +40,18 @@ export class PageSelectorComponent {
         
     page: Page
     imagesOpened: boolean
-    
-    constructor(private pageSelector: PageSelector,  private imageSelector: ImageSelector){
+    dialogRef: MdDialogRef<ImageSelectorComponent>
+
+    constructor(private pageSelector: PageSelector,  private imageSelector: ImageSelector,  public dialog: MdDialog){
         this.pageSelector.page.subscribe(page => this.page = page)   
+    }
+
+    openDialog() {
+        this.dialogRef = this.dialog.open(ImageSelectorComponent, {
+          disableClose: false,
+          width: "80%",
+          height: "80%"
+        });       
     }
     
     createNewTextElement(){
@@ -53,6 +64,7 @@ export class PageSelectorComponent {
     
     onAddImageButtonClick(){
         this.imageSelector.openSelectorWindow()
+        this.openDialog()
         let sub = this.imageSelector.selectorWindowOpened.take(1).subscribe() 
         this.imageSelector.image.takeWhile(image => !sub.closed).subscribe((image) => this.pageSelector.createNewImageElement(image))
     }

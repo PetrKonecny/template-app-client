@@ -22,6 +22,7 @@ import {NewPageRemote} from './new-page.remote'
         }
         .page {
             position: relative;
+            background-color: white;
             width: 210mm;
             height: 297mm;
         }

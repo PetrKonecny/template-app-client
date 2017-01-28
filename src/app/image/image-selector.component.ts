@@ -6,11 +6,12 @@ import { ImageSelector} from './image-selector';
 @Component({
     selector: 'image-select',
     template: `
+            <md-toolbar color="secondary">
             <input type="file" 
                ngFileSelect [options]="options"
                (onUpload)="handleUpload($event)"
             >
-            <h2>My Images</h2>
+            </md-toolbar>
             <image-list [images] = images (onImageClicked) = "onImageClicked($event)"></image-list> `,
     providers: [ImageService]
 })

@@ -5,29 +5,43 @@ import { ElementSelector } from '../element/element-selector';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { ImageSelector } from '../image/image-selector';
 import { StepSelector } from '../step-selector'
-import {PageSelector} from '../page/page-selector'
+import { PageSelector} from '../page/page-selector'
 import { RulerSelector } from '../guide/ruler-selector'
+import { TextSelector } from '../editor/text-selector'
 
 @Component({
     selector: 'create-new-template',
     template: `
-        <h2>Template creator</h2>\n\
-        <image-select *ngIf="displaySelectWindow"></image-select>
-        <div class="leftPanel">
-            <label>name: </label>
-            <input [(ngModel)]="template.name" placeholder="name"/><br>
-            <button (click)="createNewPage()">Add page</button>
-            <button (click)="saveTemplate()">Save</button>
-            <button (click)="undo()">Undo</button>\n\
-            <page-select></page-select>
-            <element-select></element-select>
-            <ruler-select></ruler-select>
-        </div>       
-        <div class="pages">
-        <create-new-page *ngFor="let page of template.pages" [page]="page"></create-new-page>
-        </div>
+        <md-sidenav-container style="height: 100%;">
+            <md-toolbar>
+                <button md-icon-button *ngIf="!sidenav.opened" (click)="sidenav.toggle()"><md-icon>add</md-icon></button>
+                <button md-icon-button *ngIf="sidenav.opened" (click)="sidenav.toggle()"><md-icon>close</md-icon></button>
+                <button md-icon-button (click)="saveTemplate()"><md-icon>save</md-icon></button>
+                <button md-icon-button (click)="undo()"><md-icon>undo</md-icon></button>
+                <button md-icon-button><md-icon>redo</md-icon></button>
+                <element-select></element-select>
+            </md-toolbar>
+            <md-sidenav mode ="side" #sidenav style="width: 20%;">
+                <md-tab-group>
+                    <md-tab label = "Elements">                   
+                        <page-select></page-select>
+                        <ruler-select></ruler-select>
+                    </md-tab>
+                    <md-tab label = "Images">
+                        <image-select></image-select>
+                    </md-tab>
+                    <md-tab label = "Pages">
+                        <button md-raised-button (click)="createNewPage()">Add page</button>
+                        <br> TO-DO: Different page types here
+                    </md-tab>
+                </md-tab-group>
+            </md-sidenav>       
+            <div class="pages">
+            <create-new-page *ngFor="let page of template.pages" [page]="page"></create-new-page>
+            </div>
+        </md-sidenav-container>
     `,
-    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector],
+    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector, TextSelector],
     styles: [`.leftPanel {
             position: relative;
             float: left;
@@ -39,7 +53,7 @@ import { RulerSelector } from '../guide/ruler-selector'
             overflow-y: scroll;
             height: 95%;
             margin-left: 300px;
-}
+        }       
     `]
 })
 
@@ -47,13 +61,12 @@ export class NewTemplateComponent implements OnInit {
 
     @Input()
     template: Template;
-    
     displaySelectWindow: boolean;
     
     constructor(
         private templateService: TemplateInstanceStore,
         private imageSelector: ImageSelector,
-        private stepSelector: StepSelector
+        private stepSelector: StepSelector,
     ){ }
     
     ngOnInit(){
@@ -63,14 +76,15 @@ export class NewTemplateComponent implements OnInit {
     saveTemplate() {
         this.templateService.saveTemplate();
     }
-    
+ 
     createNewPage() {
         if (this.template.pages == null) {
             this.template.pages = new Array<Page>();
         }
         this.template.pages.push(new Page());
     }
-    
+
+   
     undo(){
         this.stepSelector.undo()
     }

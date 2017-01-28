@@ -3,7 +3,8 @@ import {Subject} from 'rxjs/Rx';
 import {Observable} from 'rxjs/Observable';
 import {Image} from './image'
 import {ImageContent} from '../content/image-content'
-
+import {MdDialog, MdDialogRef} from '@angular/material'
+import {ImageSelectorComponent} from '../image/image-selector.component'
 @Injectable()
 export class ImageSelector {
     
@@ -17,7 +18,7 @@ export class ImageSelector {
     
     private _image: Subject<Image> = new Subject<Image>();
     public image: Observable<Image> = this._image.asObservable();
-    
+    dialogRef: MdDialogRef<ImageSelectorComponent>
     public imageContent:ImageContent
     /*
     selectImage(id: number){
@@ -25,9 +26,18 @@ export class ImageSelector {
         imageContent.image_id = id;
         this._imageContent.next(imageContent);
     }*/
+
+    constructor(public dialog: MdDialog) { }
+
     
     openSelectorWindow(){
         this._selectorWindowOpened.next(true);
+        this.openDialog() 
+               
+    }
+
+    openDialog() {
+          
     }
     
     changeImage(image: Image){
@@ -35,7 +45,7 @@ export class ImageSelector {
     }
         
     closeSelectorWindow(){
-        this._selectorWindowOpened.next(false);
+        this._selectorWindowOpened.next(false);      
     }
     
     
