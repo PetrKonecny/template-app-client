@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { ImageService } from './image.service';
 import { Image} from './image';
 import { ImageSelector} from './image-selector';
+import {AppConfig} from '../app.config'
 
 @Component({
     selector: 'image-select',
@@ -23,7 +24,7 @@ export class ImageSelectorComponent implements OnInit{
 
      
     constructor(private imageSelector: ImageSelector,
-    private imageService: ImageService){}
+    private imageService: ImageService, private appConfig: AppConfig){}
     
     closeSelector(){
         this.imageSelector.closeSelectorWindow();
@@ -47,7 +48,7 @@ export class ImageSelectorComponent implements OnInit{
     
     uploadFile: any;
     options: Object = {
-        url: 'http://localhost:8080/image'
+        url: this.appConfig.getConfig('api-url')+'/image'
     };
 
     handleUpload(data): void {

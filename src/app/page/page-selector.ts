@@ -46,9 +46,13 @@ export class PageSelector {
         element.positionX = 0;
         element.positionY = 0;
         element.font_size = 20;
-        element.content = new TextContent();
-        this.stepSelector.makeStep(new ArrayStepPush(element, page.elements))
-        page.elements.push(element);
+        let content = new TextContent()
+        content.text = "<p></p>"
+        element.content = content
+        element.background_color = TextElement.defaultBackgroundColor
+        let array = new Array().concat(page.elements)
+        array.push(element)
+        page.elements = array
     }
     
     createNewFrameElement(){

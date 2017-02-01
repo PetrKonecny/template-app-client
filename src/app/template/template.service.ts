@@ -9,12 +9,13 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
+import { AppConfig } from '../app.config';
 
 @Injectable()
 export class TemplateService {
-    constructor(private http: Http) { }
+    constructor(private http: Http, private config: AppConfig) { }
     
-    private _templatesUrl = 'http://localhost:8080/template';  // URL to web api
+    private _templatesUrl = this.config.getConfig('api-url')+'/template';  // URL to web api
 
     getTemplates(): Observable<Template[]> {
         return this.http.get(this._templatesUrl)

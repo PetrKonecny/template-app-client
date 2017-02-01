@@ -59,6 +59,8 @@ import { Ng2DropdownModule } from 'ng2-material-dropdown';
 import {FontService} from './font/font.service'
 import {FontStore} from './font/font.store'
 import {CellEditToolbar} from './element/cell-edit-toolbar.component'
+import {AppConfig} from './app.config'
+import { APP_INITIALIZER } from '@angular/core';
 
 const routes: Routes = [
     { path: 'templates/new', component: TemplateCreateComponent, canActivate: [UserGuard]},
@@ -97,13 +99,16 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        ColorPickerService, UserService, UserGuard, UserStore, PageService, ImageSelector, FontService, FontStore
+        ColorPickerService, UserService, UserGuard, UserStore, PageService, ImageSelector, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }         
     ],
     bootstrap: [
         AppComponent
     ],
     entryComponents: [ImageSelectorComponent]
 })
+
 export class AppModule { }  
 
-
+export function initConfig(config: AppConfig){
+ return () => config.load() 
+}

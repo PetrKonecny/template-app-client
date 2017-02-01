@@ -1,6 +1,7 @@
 import {Content} from '../content/content';
+import {StateSubject} from '../step-selector'
 
-export class Element {
+export class Element implements StateSubject {
     id: number;
     width: number;
     height: number;

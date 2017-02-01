@@ -9,12 +9,13 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
+import { AppConfig } from '../app.config';
 
 @Injectable()
 export class ImageService {
-    constructor(private http: Http) { }
+    constructor(private http: Http,  private config: AppConfig) { }
 
-    private _imagesUrl = 'http://localhost:8080/image';  // URL to web api
+    private _imagesUrl =  this.config.getConfig('api-url')+'/image';  // URL to web api
 
     getImages(): Observable<Image[]> {
         return this.http.get(this._imagesUrl)

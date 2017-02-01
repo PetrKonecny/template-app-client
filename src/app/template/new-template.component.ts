@@ -81,7 +81,9 @@ export class NewTemplateComponent implements OnInit {
         if (this.template.pages == null) {
             this.template.pages = new Array<Page>();
         }
-        this.template.pages.push(new Page());
+        let page = new Page()
+        page.elements = new Array
+        this.template.pages.push(page);
     }
 
    

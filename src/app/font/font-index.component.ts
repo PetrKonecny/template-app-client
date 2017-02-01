@@ -3,6 +3,7 @@ import { FontListComponent} from './font-list.component';
 import { FontService } from './font.service';
 import { Font} from './font';
 import {UPLOAD_DIRECTIVES} from 'ng2-uploader/ng2-uploader';
+import {AppConfig} from '../app.config'
 
 
 
@@ -26,7 +27,7 @@ export class FontIndexComponent implements OnInit  {
     fonts : Font[];
 
     constructor(
-        private fontService: FontService 
+        private fontService: FontService, private appConfig: AppConfig 
     ){ }
     
     
@@ -43,7 +44,7 @@ export class FontIndexComponent implements OnInit  {
     
     uploadFile: any;
     options: Object = {
-        url: 'http://localhost:8080/font'
+        url: this.appConfig.getConfig('api-url')+'/font'
     };
 
     handleUpload(data): void {

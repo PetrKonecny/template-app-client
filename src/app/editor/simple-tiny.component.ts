@@ -4,7 +4,8 @@ import {
   AfterViewInit,
   EventEmitter,
   Input,
-  Output, OnInit
+  NgZone,
+  Output, OnInit, DoCheck, KeyValueDiffers, KeyValueDiffer
 } from '@angular/core';
 import {TextContent} from '../content/text-content'
 import {Editor} from './editor'
@@ -34,12 +35,41 @@ declare var tinymce: any;
             user-select: none;
         }`],
 })
-export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit {
+export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit, DoCheck {
     @Input() content: TextContent;
     @Output() onEditorKeyup = new EventEmitter<any>();
-        
+    ignoreChange: boolean
+    differ: KeyValueDiffer;  
+
+    constructor(private differs: KeyValueDiffers){
+        this.differ = differs.find({}).create(null);
+    }
+
     ngOnInit(){
         this.content.editor = new Editor()
+    }
+
+    ngDoCheck(){
+        var changes = this.differ.diff(this.content);
+        if(changes){
+            /*console.log("editor change")
+            if(this.ignoreChange){
+                this.ignoreChange = false
+                return 
+            } */    
+            changes.forEachItem(
+            item =>{
+                if(item.key == 'text'){
+                    if(!this.ignoreChange){
+                        if(this.content.editor && this.content.editor.editor){
+                            this.content.editor.editor.setContent(item.currentValue)
+                        }
+                    }else{
+                        this.ignoreChange = false
+                    }
+                }
+            })
+        }
     }
   
     ngAfterViewInit() {
@@ -54,8 +84,9 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit {
             plugins: ['textcolor'],
             setup: editor => {
                 this.content.editor.editor = editor
-                editor.on('keyup change', () => {
+                editor.on('change', () => {
                     const content = editor.getContent();
+                    this.ignoreChange = true 
                     this.onEditorKeyup.emit(content);
                 });
                 editor.on('NodeChange', (e) => {

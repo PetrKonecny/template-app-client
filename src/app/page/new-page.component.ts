@@ -1,9 +1,10 @@
-import { Component, Input, HostListener, OnInit,KeyValueDiffers, KeyValueDiffer} from '@angular/core';
+import { Component, Input, HostListener, OnInit,KeyValueDiffers, KeyValueDiffer, DoCheck} from '@angular/core';
 import { Page} from './page';
 import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
 import {PageSelector} from '../page/page-selector'
 import {NewPageRemote} from './new-page.remote'
+import {StateChangeRespond, StepSelector} from '../step-selector'
 
 @Component({
     selector: 'create-new-page',
@@ -30,7 +31,7 @@ import {NewPageRemote} from './new-page.remote'
     providers: [NewPageRemote]
 })
 
-export class NewPageComponent implements OnInit {
+export class NewPageComponent implements OnInit, DoCheck, StateChangeRespond {
     
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
@@ -48,25 +49,25 @@ export class NewPageComponent implements OnInit {
 
     @Input()
     page: Page  
+
+    continuousChangeRunning: boolean  = false
     
     ngDoCheck(){
         var changes = this.differ.diff(this.page);
         if(changes) {
-            changes.forEachAddedItem(item => {
-                console.log(item.key,item.currentValue,item.previousValue,item.currentValue === item.previousValue)
-            })
-            changes.forEachChangedItem(item => {
-                console.log(item.key,item.currentValue,item.previousValue,item.currentValue === item.previousValue)                
-            })
-        }
-        
+            this.stateService.respond(changes,this)           
+        }        
     }
 
-    constructor(private newPageRemote: NewPageRemote, private pageSelector: PageSelector,         private differs: KeyValueDiffers) {
+    constructor(private newPageRemote: NewPageRemote, private pageSelector: PageSelector,  private differs: KeyValueDiffers, private stateService: StepSelector) {
         this.newPageRemote.component = this
         this.guides = new Array
-                this.differ = differs.find({}).create(null);
+        this.differ = differs.find({}).create(null);
 
+    }
+
+    getSubject(){
+        return this.page
     }
     
     ngOnInit(){

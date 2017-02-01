@@ -4,6 +4,7 @@ import {Element} from './element/element'
 interface Step {
     undo()
     redo()
+    root: boolean 
 }
 
 interface SingleBasicStep{
@@ -13,7 +14,7 @@ interface SingleBasicStep{
 }
 
 export class FunctionStep implements Step{
-    
+    root: boolean 
     constructor(private element: any, private undoFunction, private redoFunction){}
     
     undo(){
@@ -26,7 +27,7 @@ export class FunctionStep implements Step{
 }
 
 export class CompositeStep implements Step{
-    
+    root: boolean
     constructor(private steps: Array<Step>){}
     
     undo(){
@@ -41,7 +42,7 @@ export class CompositeStep implements Step{
 }
 
 export class BasicStep implements Step{
-  
+    root: boolean 
     constructor(private element: any, private paramName: string, private oldValue: any, private newValue: any){}    
     
     undo(){
@@ -56,6 +57,7 @@ export class BasicStep implements Step{
 }
 
 export class SimpleStep implements Step{
+    root: boolean 
     constructor(private element: any, private paramName: string, private value: any){}    
     undo(){
         this.element.redoing = true
@@ -69,8 +71,7 @@ export class SimpleStep implements Step{
 }
     
 export class ArrayStepPush implements Step{
-    
-    
+    root: boolean     
     constructor(private element: any, private array: Array<any>){}
     undo(){
         this.array.splice(this.array.indexOf(this.element))
@@ -82,8 +83,7 @@ export class ArrayStepPush implements Step{
 }
 
 export class ArrayStepSplice implements Step{
-    
-    
+    root: boolean    
     constructor(private element: any, private array: Array<any>){}
     redo(){
         this.array.splice(this.array.indexOf(this.element))
@@ -95,8 +95,7 @@ export class ArrayStepSplice implements Step{
 }
 
 export class ArrayStepPop implements Step{
-    
-    
+    root: boolean  
     constructor(private element: any, private array: Array<any>){}
     redo(){
         this.array.pop()
@@ -112,31 +111,51 @@ export class ArrayStepPop implements Step{
 @Injectable()
 export class StepSelector {
     
-    undoSteps: Array<Step> = new Array
-    redoSteps: Array<Step> = new Array
-    
-    makeStep(step: Step){
-        console.log(this.undoSteps)
-        if (this.redoSteps.length > 0){
-            this.redoSteps = new Array
-        }
-        this.undoSteps.push(step)
-    }
+    undoSteps: Array<StateSubjectQueue> = new Array
+    redoSteps: Array<StateSubjectQueue> = new Array
+    queues: Array<StateSubjectQueue> = new Array
+
    
     undo(){
-        if (this.undoSteps && this.undoSteps.length > 0){
+        if (this.undoSteps.length > 0){
             var step = this.undoSteps.pop()
-            this.undoSteps[this.undoSteps.length - 1].redo()
             this.redoSteps.push(step)
-        } 
+            if(!this.undoSteps[this.undoSteps.length - 1].undo()){
+                this.undo()
+            }
+        }
+        console.log(this.undoSteps) 
     }
     
     redo(){
-        if (this.redoSteps && this.redoSteps.length > 0){
+        if (this.redoSteps.length > 0){
             var step = this.redoSteps.pop()
             step.redo()
             this.undoSteps.push(step)        
         }
+    }
+
+    getQueue(subject){
+        return this.queues.find(queue=>queue.subject == subject)
+    }
+
+    add(step: Step, responder: StateChangeRespond){
+        if(this.redoSteps.length > 0){
+            this.redoSteps = new Array
+        } 
+        let queue = this.getQueue(responder.getSubject())
+        if(!queue){
+            queue = new StateSubjectQueue()
+            queue.subject = responder.getSubject()
+            this.queues.push(queue)
+        }
+        queue.add(step)      
+        this.undoSteps.push(queue)
+        console.log(this.undoSteps)
+    }
+
+    makeStep(step){
+
     }
     
     makePosition(element: any, oldX: number, newX: number, oldY: number, newY: number){
@@ -151,29 +170,41 @@ export class StepSelector {
 
     recordChangesAfterChangeFinished(changes, responder: StateChangeRespond){
         let steps: Array<Step> = new Array 
+        /*
+        let terminate1 = false
+        let terminate2 = false
+        changes.forEachItem(item =>{
+            if (item.previousVaule){
+                terminate1 = true
+            }
+            else {
+                terminate2 = true
+            }
+
+        })
+        if(terminate1 && terminate2){
+            return 
+        }*/
         changes.forEachItem(item =>{
             if(Element.notRecordedParams.indexOf(item.key) < 0){
                 let change = this.makeChange(item,responder)
                 steps.push(change)
             }
-        })
-        if(!steps.some(step => step == null)){
-            this.makeStep(new CompositeStep(steps))
-        }
+        })        
+       this.add(new CompositeStep(steps),responder)
     }
 
     makeChange(change,responder: StateChangeRespond){
-        if(change.previousValue){
-            console.log(change.key)
-            return new SimpleStep(responder.element,change.key, change.currentValue)
-        }
+        console.log(change.key,change.currentValue,change.previousValue)
+        return new SimpleStep(responder.getSubject(),change.key, change.currentValue)
     }
 
     respond(changes,responder: StateChangeRespond){
         let terminate = false
         changes.forEachChangedItem(item => {
             if(item.key == 'redoing'){
-                responder.element.redoing = false
+                console.log('redoing')
+                responder.getSubject().redoing = false
                 terminate = true 
             }
             else if(item.key == 'changing'){
@@ -202,7 +233,41 @@ export class StepSelector {
 export interface StateChangeRespond{
 
     continuousChangeRunning: boolean
-    element: any
+    getSubject(): StateSubject
+
+}
+
+export interface StateSubject{
+    changing: boolean
+    redoing: boolean
+}
+
+export class StateSubjectQueue{
+    undoSteps: Array<Step> = new Array
+    redoSteps: Array<Step> = new Array
+    subject: any
+
+    undo(){
+        if(this.undoSteps.length <= 1){
+            return false
+        }
+        let step = this.undoSteps.pop()
+        this.undoSteps[this.undoSteps.length - 1].redo()
+        this.redoSteps.push(step)
+        return true
+    }
+
+    redo(){
+
+    }
+
+    add(step: Step){
+        if(this.redoSteps.length > 0){
+            this.redoSteps = new Array
+        }
+        this.undoSteps.push(step)
+    }
+
 
 }
 

@@ -34,6 +34,10 @@ export class NewElementComponent implements DoCheck, StateChangeRespond{
         this.differ = differs.find({}).create(null);
     }
 
+    getSubject(){
+        return this.element
+    }
+
     ngDoCheck(){
         var changes = this.differ.diff(this.element);
         if(changes) {

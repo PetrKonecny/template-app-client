@@ -27,7 +27,7 @@ import {BasicStep, CompositeStep, StepSelector, StateChangeRespond} from '../ste
     `],
 })
 
-export class NewTextElementComponent implements AfterViewInit, DoCheck, StateChangeRespond {
+export class NewTextElementComponent  {
     
     @Input()
     element : TextElement
@@ -49,8 +49,6 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck, StateCha
     
     defaultTextColor = TextElement.defaultTextColor
     defaultBackgroundColor = Element.defaultBackgroundColor
-    baseValue: any
-    continuousChangeRunning = false
 
     constructor(
         public elementRef: ElementRef, 
@@ -61,7 +59,7 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck, StateCha
     ){
         this.differ = differs.find({}).create(null);
     }
-        
+
     ngDoCheck(){
         /*
         var changes = this.differ.diff(this.element);
@@ -93,27 +91,6 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck, StateCha
         */
         
     }
-
-    GetBaseValueFromChages(changes){
-       let baseValue: any = new Object
-       changes.forEachItem(item =>{
-            if(Element.notRecordedParams.indexOf(item.key) < 0){
-                baseValue[item.key] = item.previousValue
-            }
-        })
-       return baseValue
-    }
-
-    recordChangesAfterChangeFinished(changes){
-        let steps: Array<BasicStep> = new Array 
-        changes.forEachItem(item =>{
-            if(Element.notRecordedParams.indexOf(item.key) < 0){ 
-                steps.push(this.makeChange(item))
-            }
-        })
-        this.stateService.makeStep(new CompositeStep(steps))
-    }
-
     
     applyInputChanges(change: any){
         if(change.key == 'font'){
@@ -124,27 +101,9 @@ export class NewTextElementComponent implements AfterViewInit, DoCheck, StateCha
             this.changeTextAlign(this.element.text_align)
         }
     }
-
-    makeChange(change){
-        return new BasicStep(this.element,change.key,this.baseValue? this.baseValue[change.key] : change.previousValue, change.currentValue)
-    }
     
     styleToNum(style){
         return Number(style.substring(0, style.length - 2));
-    }
-    
-    ngAfterViewInit(){
-        if(this.element.font && this.element.font.id){
-            var newStyle = document.createElement('style');
-            newStyle.appendChild(document.createTextNode("\
-            @font-face {\
-                font-family: '" +"font" + this.element.font.id + "';\
-                src: url('"+"http://localhost:8080/font/"+this.element.font.id +"/file" +"');\
-            }\
-            "));
-            document.head.appendChild(newStyle);
-            this.textContainer.nativeElement.style.fontFamily = "font"+this.element.font.id;
-        }
     }
     
     resize(dimensions: ElementDimensions){

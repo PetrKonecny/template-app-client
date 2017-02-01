@@ -9,12 +9,13 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
+import { AppConfig } from '../app.config';
 
 @Injectable()
 export class FontService {
-    constructor(private http: Http) { }
+    constructor(private http: Http,  private config: AppConfig) { }
 
-    private _fontsUrl = 'http://localhost:8080/font';  // URL to web api
+    private _fontsUrl =  this.config.getConfig('api-url')+'/font';  // URL to web api
 
     getFonts(): Observable<Font[]> {
         return this.http.get(this._fontsUrl)

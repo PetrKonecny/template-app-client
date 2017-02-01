@@ -4,14 +4,15 @@ import { Image } from '../image/image';
 import { ImageSelector } from '../image/image-selector';
 import { ImageContent } from '../content/image-content';
 import { TextElement} from './text-element'
+import { ElementSelector } from '../element/element-selector';
 
 @Component({
     selector: 'display-element',
     template: `
-        <div *ngIf="element.type === 'text_element'" class ="element" [style.background-color] = "element.background_color ? element.background_color : defaultBackgroundColor" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY" [style.font-size.px] = "element.font_size">
+        <div *ngIf="element.type === 'text_element'" class ="element" (click)="onElementClick()" [style.background-color] = "element.background_color ? element.background_color : defaultBackgroundColor" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY" [style.font-size.px] = "element.font_size">
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
         </div>
-        <div *ngIf="element.type === 'image_element'" class ="element" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">\n\
+        <div *ngIf="element.type === 'image_element'" class ="element" (click)="onElementClick()" [style.width.px]="element.width"   [style.height.px]="element.height" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">\n\
             <div *ngIf="draggable">
                 <display-content *ngIf="element.content" [content] = "element.content"></display-content>
                 <button *ngIf="element.content && !element.content.image" (click)="onAddButtonClick()" >Add image</button>
@@ -25,7 +26,7 @@ import { TextElement} from './text-element'
                 <button *ngIf="element.content && element.content.image" (click)="onDoneAdjustButtonClick()" class="button">Done adjusting</button>
             </div>
         </div>
-        <display-table-element *ngIf="element.type == 'table_element'" [element]="element"></display-table-element>
+        <display-table-element *ngIf="element.type == 'table_element'" [element]="element" (click)="onElementClick()"></display-table-element>
     `,
     styles:[`
         .element {
@@ -55,21 +56,15 @@ export class DisplayElementComponent implements AfterViewInit {
     defaultBackgroundColor = Element.defaultBackgroundColor
     
     constructor(
-        private imageSelector: ImageSelector
+        private imageSelector: ImageSelector, private elementSelector: ElementSelector
     ){}
     
     ngAfterViewInit(){
-        if(this.element.type == 'text_element' &&(<TextElement>this.element).font && (<TextElement>this.element).font.id){
-            var newStyle = document.createElement('style');
-            newStyle.appendChild(document.createTextNode("\
-            @font-face {\
-                font-family: '" +"font" + (<TextElement>this.element).font.id + "';\
-                src: url('"+"http://localhost:8080/font/"+(<TextElement>this.element).font.id +"/file" +"');\
-            }\
-            "));
-            document.head.appendChild(newStyle);
-            this.textContainer.nativeElement.style.fontFamily = "font"+(<TextElement>this.element).font.id;
-        }
+        
+    }
+
+    onElementClick(){
+        this.elementSelector.changeElement(this.element)
     }
     
     onAddButtonClick(){
