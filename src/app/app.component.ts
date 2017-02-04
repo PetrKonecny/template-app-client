@@ -8,28 +8,28 @@ import {UserService} from './user/user.service'
 import {Router} from '@angular/router'
 import {FontStore} from './font/font.store'
 import {Font} from './font/font'
+import {UserGuard} from './user/user.guard'
 
 @Component({
     selector: 'app-root',
     template: `
     <md-toolbar color="primary"><h1>{{title}}</h1>
-        <a md-button *ngIf="userStore.loggedIn()" routerLink="/templates" routerLinkActive="active">TEMPLATES</a>
-        <a md-button *ngIf="userStore.loggedIn()" routerLink="/template-instances" routerLinkActive="active">YOUR DOCUMENTS</a>
-        <a md-button *ngIf="userStore.loggedIn()" routerLink="/images" routerLinkActive="active">IMAGES</a>
-        <a md-button *ngIf="userStore.loggedIn()"  routerLink="/fonts" routerLinkActive="active">FONTS</a>
-        <a md-button *ngIf="!userStore.loggedIn()" routerLink="/login" routerLinkActive="active">LOGIN</a>
-        <a md-button *ngIf="userStore.loggedIn()" (click)="onLogoutClicked()">Logout</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">TEMPLATES</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">YOUR DOCUMENTS</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="/images" routerLinkActive="active">IMAGES</a>
+        <a md-button *ngIf="guard.canActivate()"  routerLink="/fonts" routerLinkActive="active">FONTS</a>
+        <a md-button *ngIf="!guard.canActivate()" routerLink="/login" routerLinkActive="active">LOGIN</a>
+        <a md-button *ngIf="guard.canActivate()" (click)="onLogoutClicked()">Logout</a>
     </md-toolbar>
         <router-outlet></router-outlet>
     `,
-    providers: [
-        TemplateInstanceService,TemplateInstanceStore,TemplateService,Draggable ]
+    providers: [TemplateInstanceService,TemplateInstanceStore,TemplateService,Draggable ]
 })
 
 export class AppComponent implements OnInit {
     title = 'Template App';
 
-    constructor(private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore){}
+    constructor(private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, private guard: UserGuard){}
 
     onLogoutClicked(){
         this.userService.logoutUser()

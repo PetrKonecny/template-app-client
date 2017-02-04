@@ -12,3 +12,11 @@ html,body {
 .ng2-dropdown-button{min-width:0px !important; width: auto !important;}
 
 .ng2-dropdown-container{display: inline-block;}
+
+.ng2-tag-input__text-input{padding: 0 !important;}
+
+.ng2-tag-input{padding: 0 !important;}
+
+h1,h2,h3 {
+	font-family: Roboto,"Helvetica Neue",sans-serif;
+}

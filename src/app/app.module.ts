@@ -1,4 +1,4 @@
-import {NgModule} from "@angular/core";  
+import {NgModule, ElementRef} from "@angular/core";  
 import {BrowserModule} from "@angular/platform-browser";  
 import {HttpModule} from "@angular/http";  
 import {FormsModule, ReactiveFormsModule } from "@angular/forms";  
@@ -61,6 +61,11 @@ import {FontStore} from './font/font.store'
 import {CellEditToolbar} from './element/cell-edit-toolbar.component'
 import {AppConfig} from './app.config'
 import { APP_INITIALIZER } from '@angular/core';
+import { TagInputModule } from 'ng2-tag-input';
+import { SaveTemplateModal } from './template/save-template.modal'
+import { TemplateInstanceStore } from './template-instance/template-instance.store';
+import { TemplateInstanceService } from './template-instance/template-instance.service';
+import { TemplateService } from './template/template.service';
 
 const routes: Routes = [
     { path: 'templates/new', component: TemplateCreateComponent, canActivate: [UserGuard]},
@@ -83,7 +88,7 @@ const routes: Routes = [
         TextSelectorComponent, FontListComponent, DisplayFontComponent, NewTableElementComponent, Draggable, NewElementComponent, DisplayGuideComponent, DisplayRulerComponent,
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
-        ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar
+        ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal
         
     ],
     // modules
@@ -95,7 +100,8 @@ const routes: Routes = [
         ReactiveFormsModule,
         Ng2UploaderModule,
         MaterialModule.forRoot() ,
-        Ng2DropdownModule      
+        Ng2DropdownModule,
+        TagInputModule       
     ],
     // providers
     providers: [
@@ -104,7 +110,7 @@ const routes: Routes = [
     bootstrap: [
         AppComponent
     ],
-    entryComponents: [ImageSelectorComponent]
+    entryComponents: [ImageSelectorComponent, SaveTemplateModal]
 })
 
 export class AppModule { }  

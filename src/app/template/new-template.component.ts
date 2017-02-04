@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ViewChildren, QueryList} from '@angular/core';
+import { MdDialog } from '@angular/material'
 import { Template} from './template';
 import { Page} from '../page/page';
 import { ElementSelector } from '../element/element-selector';
@@ -8,6 +9,7 @@ import { StepSelector } from '../step-selector'
 import { PageSelector} from '../page/page-selector'
 import { RulerSelector } from '../guide/ruler-selector'
 import { TextSelector } from '../editor/text-selector'
+import { SaveTemplateModal } from './save-template.modal'
 
 @Component({
     selector: 'create-new-template',
@@ -67,6 +69,7 @@ export class NewTemplateComponent implements OnInit {
         private templateService: TemplateInstanceStore,
         private imageSelector: ImageSelector,
         private stepSelector: StepSelector,
+        public dialog: MdDialog
     ){ }
     
     ngOnInit(){
@@ -74,7 +77,18 @@ export class NewTemplateComponent implements OnInit {
     }
     
     saveTemplate() {
-        this.templateService.saveTemplate();
+        let dialogRef = this.dialog.open(SaveTemplateModal, {
+          height: 'auto',
+          width: '30%',
+        });
+        dialogRef.afterClosed().subscribe(value => 
+            {
+                if(value == 'save'){
+                    this.templateService.saveTemplate()
+                }
+            }
+        )
+        dialogRef.componentInstance.template = this.template
     }
  
     createNewPage() {

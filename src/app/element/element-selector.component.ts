@@ -17,10 +17,18 @@ import {TextSelector} from '../editor/text-selector'
                 <button md-icon-button (click)="deleteElement()"><md-icon>delete</md-icon></button>
                 <button md-button [mdMenuTriggerFor]="menu">Position</button>
                 <my-md-menu #menu="mdMenu">
-                    <md-input [(ngModel)]="element.width"  (keyup)="0" placeholder="width"></md-input>
-                    <md-input [(ngModel)]="element.height"  (keyup)="0"placeholder="height"></md-input>
-                    <md-input [(ngModel)]="element.positionX"   (keyup)="0" placeholder="X"></md-input>
-                    <md-input [(ngModel)]="element.positionY"   (keyup)="0" placeholder="Y"></md-input>
+                    <md-input-container>
+                        <input mdInput [(ngModel)]="element.width"  (keyup)="0" placeholder="width">
+                    </md-input-container>
+                    <md-input-container>
+                    <input  mdInput [(ngModel)]="element.height"  (keyup)="0"placeholder="height">
+                    </md-input-container>
+                    <md-input-container>
+                    <input mdInput [(ngModel)]="element.positionX"   (keyup)="0" placeholder="X">
+                    </md-input-container>
+                    <md-input-container>
+                    <input mdInput [(ngModel)]="element.positionY"   (keyup)="0" placeholder="Y">
+                    </md-input-container>
                 </my-md-menu>
                 <button style="background: none; border:none;" [colorPicker]="getBgColor()"  (colorPickerChange)="changeBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getBgColor()">format_color_fill</md-icon></button></button>
                 <text-select *ngIf="element.type == 'text_element' && element.content.editor"></text-select>

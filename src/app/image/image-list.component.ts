@@ -1,14 +1,15 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { Image } from './image';
 import { Router } from '@angular/router'
- 
+import { AppConfig } from '../app.config';
+
 
 @Component({
     selector: 'image-list',
     template: `
             <md-grid-list cols="3">
                 <md-grid-tile *ngFor="let image of images" (click)="onSelect(image)">
-                    <img class="image" src="http://localhost:8080/img/{{image.image_key}}.{{image.extension}}?w=250&h=250&fit=crop">
+                    <img class="image" src="{{config.getConfig('api-url')}}/img/{{image.image_key}}.{{image.extension}}?w=250&h=250&fit=crop">
                 </md-grid-tile>
             </md-grid-list> `,
     styles: [`        
@@ -38,7 +39,7 @@ export class ImageListComponent {
     images : Image[] 
     @Output() onImageClicked = new EventEmitter<Image>();
     
-    constructor(private router: Router){}
+    constructor( private config: AppConfig){}
     
     onSelect(image: Image) {
         this.onImageClicked.emit(image);
