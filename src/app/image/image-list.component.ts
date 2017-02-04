@@ -9,7 +9,7 @@ import { AppConfig } from '../app.config';
     template: `
             <md-grid-list cols="3">
                 <md-grid-tile *ngFor="let image of images" (click)="onSelect(image)">
-                    <img class="image" src="{{config.getConfig('api-url')}}/img/{{image.image_key}}.{{image.extension}}?w=250&h=250&fit=crop">
+                    <img class="image" draggable="true" (dragstart)="drag($event,image)" src="{{config.getConfig('api-url')}}/img/{{image.image_key}}.{{image.extension}}?w=250&h=250&fit=crop">
                 </md-grid-tile>
             </md-grid-list> `,
     styles: [`        
@@ -43,6 +43,10 @@ export class ImageListComponent {
     
     onSelect(image: Image) {
         this.onImageClicked.emit(image);
+    }
+
+    drag(event, image){
+        event.dataTransfer.setData("text",JSON.stringify(image))
     }
     
 }

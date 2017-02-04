@@ -38,7 +38,7 @@ export class ImageSelectorComponent implements OnInit{
         this.imageSelector.changeImage(image);
         this.imageSelector.closeSelectorWindow();
     }
-    
+
     getImages(){
         this.imageService.getImages().subscribe(
                                images => this.images = images,
