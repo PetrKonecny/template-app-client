@@ -10,7 +10,6 @@ import { Template} from '../template/template';
 @Component({
     selector: 'template-create',
     template: `
-        <h2>Create Template Instance</h2>
         <create-new-template-instance [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
     `,
     providers: [TemplateInstanceService,TemplateService]

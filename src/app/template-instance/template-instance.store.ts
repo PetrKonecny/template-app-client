@@ -126,6 +126,11 @@ export class TemplateInstanceStore {
         }
         this._templateInstance.value.contents.push(this.createNewContentForElement(element));
     }
+
+    filloutNewTemplate(){
+        this._template.value.pages = new Array<Page>()
+        this._template.value.pages.push(new Page)
+    }
     
     createNewContentForElement(element: Element){
         var content;

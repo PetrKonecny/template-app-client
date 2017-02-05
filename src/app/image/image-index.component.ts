@@ -11,7 +11,6 @@ import { Image} from './image';
                ngFileSelect [options]="options"
                (onUpload)="handleUpload($event)"
         >
-        <h2>My Images</h2>
         <image-list [images] = images></image-list>
     `,
     providers: [ImageService]

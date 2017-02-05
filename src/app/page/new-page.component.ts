@@ -10,7 +10,7 @@ import {ImageElement} from '../element/image-element'
 @Component({
     selector: 'create-new-page',
     template: `
-          <div class ="page" (drop)="onDrop($event)" (dragover)="onDragOver()"  (click)="onPageClicked()">
+          <div class ="page" [class.selected]="selected" (drop)="onDrop($event)" (dragover)="onDragOver()"  (click)="onPageClicked()">
             <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>
             <display-guide *ngFor="let guide of guides" [guide] = "guide" ></display-guide>
             <display-ruler *ngFor="let guide of page.rulers" [guide] = "guide" ></display-ruler>
@@ -26,7 +26,7 @@ import {ImageElement} from '../element/image-element'
             background-color: white;
             width: 210mm;
             height: 297mm;
-        }
+        }       
     `],
     providers: [NewPageRemote]
 })
@@ -48,7 +48,10 @@ export class NewPageComponent implements OnInit, DoCheck, StateChangeRespond {
         return false
     }
 
+    selected: boolean = false
+
     onDrop(event){
+        console.log('drop2')
         let data = event.dataTransfer.getData("text");
         let image = JSON.parse(data)
         let page = this.page
@@ -82,7 +85,7 @@ export class NewPageComponent implements OnInit, DoCheck, StateChangeRespond {
         this.newPageRemote.component = this
         this.guides = new Array
         this.differ = differs.find({}).create(null);
-
+        this.pageSelector.page.subscribe(page => {if(this.page == page){this.selected = true}else{this.selected = false}})
     }
 
     getSubject(){

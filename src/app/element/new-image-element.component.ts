@@ -7,7 +7,7 @@ import { ElementSelector } from './element-selector'
 @Component({
     selector: 'create-new-image-element',
     template: `
-        <img draggable2 resizable (click)="onElementClicked()" (resize) ="resize($event)" (move) ="move($event)" [propagate]="false" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [width]="element.width" [height]="element.height" src="http://localhost:8080/img/{{element.image.image_key}}.{{element.image.extension}}">          
+        <img draggable2 resizable [class.selected]="selected" (resize) ="resize($event)" (move) ="move($event)" [propagate]="false" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [width]="element.width" [height]="element.height" src="http://localhost:8080/img/{{element.image.image_key}}.{{element.image.extension}}">          
     `,
     styles: [
         `img{
@@ -24,8 +24,11 @@ export class NewImageElementComponent {
     
     @Input()
     element : ImageElement
+    selected: boolean
      
-    constructor(private image: ElementRef, private newPage: NewPageRemote, private elementSelector: ElementSelector){}
+    constructor(private image: ElementRef, private newPage: NewPageRemote, private elementSelector: ElementSelector){
+        this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
+    }
     
     ngDoCheck(){
         if((!this.element.width || !this.element.height) && this.image ){

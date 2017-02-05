@@ -14,7 +14,6 @@ import {AppConfig} from '../app.config'
                ngFileSelect [options]="options"
                (onUpload)="handleUpload($event)"
         >
-        <h2>My Fonts</h2>
         <font-list [fonts] = fonts></font-list>
     `,
     styles: [],

@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@angular/core';
-import { ImageElement } from './image-element'
+import { FrameElement } from './frame-element'
 import { ElementSelector} from '../element/element-selector'
 import { ImageSelector } from '../image/image-selector';
 import { ImageContent } from '../content/image-content';
@@ -9,13 +9,13 @@ import { NewPageRemote } from '../page/new-page.remote'
 @Component({
     selector: 'create-new-frame-element',
     template: `
-        <div #frame *ngIf="draggable" draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" (click)="onElementClicked()" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
+        <div #frame *ngIf="draggable"  (drop)="onDrop($event)" (dragover)="onDragOver()" [class.selected]="selected" draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
             <display-content *ngIf="element.content" [content] = "element.content"></display-content>
             <button *ngIf="element.content && !element.content.image" style="top: 20px" class="button" (click)="onAddButtonClick()" >Add image</button>
             <button *ngIf="element.content && element.content.image" style="top: 40px" class="button" (click)="onDeleteButtonClick()" class="button">Delete image</button>
             <button *ngIf="element.content && element.content.image && draggable" style="top: 60px" class="button" (click)="onAdjustButtonClick()" class="button">Adjust image</button>
         </div>
-        <div #frame *ngIf="!draggable" (click)="onElementClicked()" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
+        <div #frame *ngIf="!draggable" [class.selected]="selected" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
             <display-content-img-drag [content] = "element.content"></display-content-img-drag>
             <button *ngIf="element.content.image" style="top: 40px" class="button"  (click)="onPlusButtonClick()" >Zoom in</button>
             <button *ngIf="element.content.image" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>
@@ -39,11 +39,11 @@ import { NewPageRemote } from '../page/new-page.remote'
 export class NewFrameElementComponent {
     
     @Input()
-    element : ImageElement
+    element : FrameElement
     
     draggable: boolean = true;
     differ: KeyValueDiffer;
-
+    selected: boolean
         
     constructor(
         public elementRef: ElementRef, 
@@ -53,20 +53,21 @@ export class NewFrameElementComponent {
         private differs: KeyValueDiffers,
     ){
         this.differ = differs.find({}).create(null);
+        this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }
 
-    ngDoCheck(){
-        /*
-        var changes = this.differ.diff(this.element);
-        if(changes) {
-            changes.forEachAddedItem(item => {
-                console.log(item.key,item.currentValue,item.previousValue,item.currentValue === item.previousValue)
-            })
-            changes.forEachChangedItem(item => {
-                console.log(item.key,item.currentValue,item.previousValue,item.currentValue === item.previousValue)                
-            })
-        }*/
-        
+    onDragOver(){
+        console.log('dragover')
+        return false
+    }
+
+    onDrop(event){
+        console.log('drop1')
+        let data = event.dataTransfer.getData("text");
+        let image = JSON.parse(data)
+        let content = <ImageContent>this.element.content
+        content.image = image
+        event.stopPropagation();
     }
     
     resize(dimensions: ElementDimensions){
@@ -82,10 +83,6 @@ export class NewFrameElementComponent {
         this.element.height = dimensions.height
         this.element.positionX = dimensions.left
         this.element.positionY = dimensions.top
-    }
-           
-    onElementClicked(){
-        this.elementSelector.changeElement(this.element);
     }
     
     onAddButtonClick(){

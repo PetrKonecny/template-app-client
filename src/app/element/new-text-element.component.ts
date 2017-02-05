@@ -10,7 +10,7 @@ import {BasicStep, CompositeStep, StepSelector, StateChangeRespond} from '../ste
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable2 resizable  (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container (mousedown)="onElementClicked()" [style.background-color] = "element.background_color ? element.background_color : defaultBackgroundColor" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
+        <div draggable2 resizable [class.selected]="selected" (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container [style.background-color] = "element.background_color ? element.background_color : defaultBackgroundColor" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
         </div>
     `,
@@ -30,7 +30,7 @@ import {BasicStep, CompositeStep, StepSelector, StateChangeRespond} from '../ste
 export class NewTextElementComponent  {
     
     @Input()
-    element : TextElement
+    element : TextElement    
     
     @ViewChild('textContainer')
     textContainer : ElementRef
@@ -49,6 +49,7 @@ export class NewTextElementComponent  {
     
     defaultTextColor = TextElement.defaultTextColor
     defaultBackgroundColor = Element.defaultBackgroundColor
+    selected: boolean
 
     constructor(
         public elementRef: ElementRef, 
@@ -58,6 +59,7 @@ export class NewTextElementComponent  {
         private stateService: StepSelector
     ){
         this.differ = differs.find({}).create(null);
+        this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }
 
     ngDoCheck(){
@@ -122,10 +124,6 @@ export class NewTextElementComponent  {
         this.element.positionX = dimensions.left
         this.element.positionY = dimensions.top
     }
-    
-    onElementClicked(){
-        this.elementSelector.changeElement(this.element);
-    } 
     
     refreshFont(font: Font){
         if(!font || !font.id) return

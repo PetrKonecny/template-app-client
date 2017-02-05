@@ -43,7 +43,6 @@ import { SaveTemplateModal } from './save-template.modal'
             </div>
         </md-sidenav-container>
     `,
-    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector, TextSelector],
     styles: [`.leftPanel {
             position: relative;
             float: left;
@@ -64,6 +63,7 @@ export class NewTemplateComponent implements OnInit {
     @Input()
     template: Template;
     displaySelectWindow: boolean;
+    
     
     constructor(
         private templateService: TemplateInstanceStore,

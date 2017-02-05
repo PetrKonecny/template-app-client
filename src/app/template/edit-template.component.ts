@@ -2,14 +2,19 @@ import { Component, OnInit} from '@angular/core';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { Template} from './template';
 import {ActivatedRoute} from '@angular/router';
+import { ElementSelector } from '../element/element-selector';
+import { ImageSelector } from '../image/image-selector';
+import { StepSelector } from '../step-selector'
+import { PageSelector} from '../page/page-selector'
+import { RulerSelector } from '../guide/ruler-selector'
+import { TextSelector } from '../editor/text-selector'
 
 @Component({
     selector: 'template-edit',
     template: `
-        <h2>Edit Template</h2>
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    providers: []
+    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector, TextSelector]
 })
 
 export class TemplateEditComponent implements OnInit  {
@@ -21,7 +26,8 @@ export class TemplateEditComponent implements OnInit  {
 
     constructor(
         private route: ActivatedRoute,
-        private templateService: TemplateInstanceStore 
+        private templateService: TemplateInstanceStore,
+        private pageSelector: PageSelector 
     ){ }
     
     
@@ -33,6 +39,9 @@ export class TemplateEditComponent implements OnInit  {
             this.templateService.template.subscribe( template => {           
                 this.template = template;
                 this.templateService.createContentsForTemplate();
+                if(this.template.pages && this.template.pages[0]){
+                    this.pageSelector.selectPage(this.template.pages[0])
+                }
             });
         });
     }

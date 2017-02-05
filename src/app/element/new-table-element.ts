@@ -23,8 +23,6 @@ export class NewTableElement {
         this.indexRowCopy(rows)
         let selectionStart = this.translateToCopyPosition(this.selectionStart,rows)
         let currentSelection = this.translateToCopyPosition(cell.position,rows)
-        console.log(rows)
-        console.log(cell.position,currentSelection)
         TableElement.clearSelectedCells(this.component.element)
         let corners = this.getCornersFromSelection([selectionStart,currentSelection])        
         let selectedRect = this.selectRect(corners.topLeft, corners.bottomRight,rows)

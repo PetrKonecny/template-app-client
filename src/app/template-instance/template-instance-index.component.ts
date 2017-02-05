@@ -8,7 +8,6 @@ import { Observable }     from 'rxjs/Observable';
 @Component({
     selector: 'template-instance-index',
     template: `
-        <h2>My Template Instances</h2>
         <template-instance-list [templateInstances] = "templateInstances" (onDeleteClicked) = "onDeleteClicked($event)"></template-instance-list>
     `,
     providers: [TemplateInstanceService]

@@ -7,7 +7,6 @@ import { Observable }     from 'rxjs/Observable';
 @Component({
     selector: 'template-index',
     template: `
-        <h2>My Templates</h2>
         <template-list [templates] = "templates" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>\n\
         <a [routerLink] = "['/templates/new']">New template</a>
     `,

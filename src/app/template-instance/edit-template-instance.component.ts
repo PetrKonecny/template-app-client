@@ -7,7 +7,6 @@ import { Template} from '../template/template';
 @Component({
     selector: 'template-edit',
     template: `
-        <h2>Edit Template Instance</h2>
         <create-new-template-instance [templateInstance] = "templateInstance" [template] = "template"></create-new-template-instance>
     `,
     providers: []
