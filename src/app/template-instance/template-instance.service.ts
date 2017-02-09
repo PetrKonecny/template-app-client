@@ -19,20 +19,20 @@ export class TemplateInstanceService {
     private templateInstancesUrl = this.config.getConfig('api-url')+'/templateInstance';  // URL to web api
  
     getTemplateInstances(): Observable<TemplateInstance[]> {
-        return this.http.get(this.templateInstancesUrl)
+        return this.http.get(this.templateInstancesUrl, { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }
     
     getTemplateInstance(id: number): Observable<TemplateInstance> {
-        return this.http.get(this.templateInstancesUrl+"/"+id)
+        return this.http.get(this.templateInstancesUrl+"/"+id, { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }
     
     addTemplateInstance(templateInstance: TemplateInstance) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
+        let options = new RequestOptions({ headers: headers, withCredentials: true });
         return this.http.post(this.templateInstancesUrl, JSON.stringify(templateInstance, this.replacer), options)
                     .map(this.extractData)
                     .catch(this.handleError);
@@ -41,14 +41,14 @@ export class TemplateInstanceService {
     updateTemplateInstance(templateInstance: TemplateInstance) {
         console.log(templateInstance);
         let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
+        let options = new RequestOptions({ headers: headers,  withCredentials: true});
         return this.http.put(this.templateInstancesUrl+"/"+templateInstance.id, JSON.stringify(templateInstance, this.replacer), options)
                     .map(this.extractData)
                     .catch(this.handleError);
     }
     
     removeTemplateInstance(id: number): Observable<TemplateInstance> {
-        return this.http.delete(this.templateInstancesUrl+"/"+id)
+        return this.http.delete(this.templateInstancesUrl+"/"+id, { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }

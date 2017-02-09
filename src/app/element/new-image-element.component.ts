@@ -3,11 +3,12 @@ import { ImageElement } from './image-element'
 import { NewPageRemote } from '../page/new-page.remote'
 import { ElementDimensions } from '../resizable.directive'
 import { ElementSelector } from './element-selector'
+import { AppConfig } from '../app.config'
 
 @Component({
     selector: 'create-new-image-element',
     template: `
-        <img draggable2 resizable [class.selected]="selected" (resize) ="resize($event)" (move) ="move($event)" [propagate]="false" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [width]="element.width" [height]="element.height" src="http://localhost:8080/img/{{element.image.image_key}}.{{element.image.extension}}">          
+        <img draggable2 resizable [class.selected]="selected" (resize) ="resize($event)" (move) ="move($event)" [propagate]="false" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [width]="element.width" [height]="element.height" src="{{config.getConfig('api-url')}}/img/{{element.image.image_key}}.{{element.image.extension}}">          
     `,
     styles: [
         `img{
@@ -26,7 +27,7 @@ export class NewImageElementComponent {
     element : ImageElement
     selected: boolean
      
-    constructor(private image: ElementRef, private newPage: NewPageRemote, private elementSelector: ElementSelector){
+    constructor(private image: ElementRef, private newPage: NewPageRemote, private elementSelector: ElementSelector, private config: AppConfig){
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }
     

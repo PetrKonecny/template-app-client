@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TableElement } from './table-element'
 import { ElementSelector } from './element-selector'
+import { NewTableElement } from './new-table-element'
 
 @Component({
     selector: 'display-table-element',
@@ -34,12 +35,17 @@ import { ElementSelector } from './element-selector'
             border: 1px solid black;
         }`
     ],
+    providers: [NewTableElement]
 })
 
        
-export class DisplayTableElementComponent {
+export class DisplayTableElementComponent implements OnInit {
     
     @Input()
     element : TableElement
+
+    ngOnInit(){
+        this.element.clientState = 1
+    }
   
 }

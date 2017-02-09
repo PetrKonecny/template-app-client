@@ -138,7 +138,10 @@ export class TemplateInstanceStore {
             content = new TextContent();           
         }       
         if (element.type == 'image_element'){
-            content = new ImageContent();
+            content = null
+        }
+        if (element.type == 'frame_element'){
+            content = new ImageContent()
         }
         if (element.type == 'table_element'){
             var tableContent = new TableContent()

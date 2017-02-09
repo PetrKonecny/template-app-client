@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, ViewChild, HostListener, EventEmitter, ElementRef, DoCheck, KeyValueDiffers} from '@angular/core';
 import { ImageContent } from './image-content'
+import { AppConfig } from '../app.config'
 
 @Component({
     selector: 'display-content-img-drag',
     template:  `   
         <div #frame (move) ="move($event)" [style.left.px]="content.left" [style.top.px]="content.top" class="content">
-            <img #image [width]="content.width" class="image" [height]="content.height"  class="image" src="http://localhost:8080/img/{{content.image.image_key}}.{{content.image.extension}}">\n\          
+            <img #image [width]="content.width" class="image" [height]="content.height"  class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">\n\          
         </div>
     `,
     styles:[`
@@ -87,7 +88,7 @@ export class DisplayContentImgDragComponent implements  DoCheck {
         this.mousemove.emit(event);
     }
 
-    constructor() {
+    constructor(private config: AppConfig) {
         this.mousedrag = this.mousedown.map((event: MouseEvent) => {
             this.startElement = this.getStats();
             return {

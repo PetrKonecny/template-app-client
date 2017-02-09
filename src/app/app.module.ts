@@ -66,6 +66,9 @@ import { SaveTemplateModal } from './template/save-template.modal'
 import { TemplateInstanceStore } from './template-instance/template-instance.store';
 import { TemplateInstanceService } from './template-instance/template-instance.service';
 import { TemplateService } from './template/template.service';
+import { DisplayImageElementComponent} from './element/display-image-element.component'
+import { DisplayTextElementComponent} from './element/display-text-element.component'
+import { DisplayFrameElementComponent} from './element/display-frame-element.component'
 
 const routes: Routes = [
     { path: 'templates/new', component: TemplateCreateComponent, canActivate: [UserGuard]},
@@ -88,7 +91,7 @@ const routes: Routes = [
         TextSelectorComponent, FontListComponent, DisplayFontComponent, NewTableElementComponent, Draggable, NewElementComponent, DisplayGuideComponent, DisplayRulerComponent,
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
-        ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal
+        ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent
         
     ],
     // modules

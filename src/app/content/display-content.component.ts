@@ -2,6 +2,7 @@ import { Component, Input, ViewChild, ElementRef, DoCheck, KeyValueDiffer, KeyVa
 import { Content} from './content';
 import { TextContent } from './text-content'
 import {StepSelector, StateChangeRespond} from '../step-selector'
+import { AppConfig } from '../app.config'
 
 @Component({
     selector: 'display-content',
@@ -13,8 +14,8 @@ import {StepSelector, StateChangeRespond} from '../step-selector'
         >
         </simple-tiny>
         <div *ngIf="content.type === 'image_content'" #frame [style.left.px]="content.left" [style.top.px]="content.top" class="content image">
-            <img *ngIf="content.image && content.width && content.height" #image [width]="content.width" [height]="content.height" class="image" src="http://localhost:8080/img/{{content.image.image_key}}.{{content.image.extension}}">\n\
-            <img *ngIf="content.image &&!content.width && !content.height" #image class="image" src="http://localhost:8080/img/{{content.image.image_key}}.{{content.image.extension}}">
+            <img *ngIf="content.image && content.width && content.height" #image [width]="content.width" [height]="content.height" class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">\n\
+            <img *ngIf="content.image &&!content.width && !content.height" #image class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">
         </div>
     `,
     styles:[`
@@ -78,7 +79,8 @@ export class DisplayContentComponent implements DoCheck, StateChangeRespond {
 
     constructor(
         private differs: KeyValueDiffers,
-        private stateService: StepSelector
+        private stateService: StepSelector,
+        private config: AppConfig
     ){
         this.differ = differs.find({}).create(null);
     }

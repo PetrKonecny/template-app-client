@@ -18,20 +18,20 @@ export class TemplateService {
     private _templatesUrl = this.config.getConfig('api-url')+'/template';  // URL to web api
 
     getTemplates(): Observable<Template[]> {
-        return this.http.get(this._templatesUrl)
+        return this.http.get(this._templatesUrl, { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }
     
     getTemplate(id: number): Observable<Template> {
-        return this.http.get(this._templatesUrl+"/"+id)
+        return this.http.get(this._templatesUrl+"/"+id, { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }
     
     addTemplate(template: Template) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
+        let options = new RequestOptions({ headers: headers, withCredentials: true  });
         return this.http.post(this._templatesUrl, JSON.stringify(template,this.replacer), options)
                     .map(this.extractData)
                     .catch(this.handleError);
@@ -40,14 +40,14 @@ export class TemplateService {
     updateTemplate(template: Template) {
         
         let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
+        let options = new RequestOptions({ headers: headers, withCredentials: true  });
         return this.http.put(this._templatesUrl+"/"+template.id, JSON.stringify(template,this.replacer), options)
                     .map(this.extractData)
                     .catch(this.handleError);
     }
     
     removeTemplate(id: number): Observable<Template> {
-        return this.http.delete(this._templatesUrl+"/"+id)
+        return this.http.delete(this._templatesUrl+"/"+id, { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }

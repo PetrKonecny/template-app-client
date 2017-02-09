@@ -63,6 +63,9 @@ export class NewPageComponent implements OnInit, DoCheck, StateChangeRespond {
         element.positionX = x
         element.positionY = y
         element.image = image
+        if(!this.page.elements){
+            this.page.elements = new Array
+        }
         this.page.elements.push(element)
     }
 
