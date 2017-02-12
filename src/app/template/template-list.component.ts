@@ -1,5 +1,6 @@
 import { Component,Input, Output, EventEmitter} from '@angular/core';
 import { Template} from './template';
+import { User } from '../user/user'
 import { Router } from '@angular/router'
 import { TemplateInstance} from '../template-instance/template-instance';
  
@@ -8,7 +9,8 @@ import { TemplateInstance} from '../template-instance/template-instance';
     template: `
         <md-nav-list>
             <md-list-item *ngFor="let template of templates">
-                <a md-line href="...">{{ template.name }}</a>
+                <span md-line>{{ template.name }}</span>
+                <md-chip-list md-line><md-chip *ngFor="let tag of template.tagged">{{tag.tag_name}}</md-chip></md-chip-list>
                 <a md-button [routerLink] = "['/templates', template.id, 'edit']">Edit</a>
                 <a md-button [routerLink] = "['/templates', template.id, 'instance']">New </a>\n\
                 <a md-button href="javascript:void(0)"(click)="onDelete(template)">Delete</a>            
@@ -24,6 +26,9 @@ export class TemplateListComponent {
     
     @Input()
     templates : Template[] 
+
+    @Input()
+    user: User
     
     @Output() 
     onDeleteClicked = new EventEmitter<TemplateInstance>();

@@ -7,6 +7,6 @@ export class Template {
   name: string;
   pages: Page[];
   user: User
-  tags: Tag[]
+  tagged: Tag[]
   public: boolean
 }

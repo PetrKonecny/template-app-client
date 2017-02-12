@@ -21,7 +21,7 @@ import { TemplateInstanceStore } from '../template-instance/template-instance.st
                 	</md-input-container>
                     </div>
                     <div>
-                     <tag-input [ngModel]="template.tags" [identifyBy]="'id'" [displayBy]="'name'" formControlName="tags">
+                     <tag-input [(ngModel)]="template.tagged" [identifyBy]="'id'" [displayBy]="'tag_name'" formControlName="tags">
                       </tag-input>
                     </div>
                     <br>

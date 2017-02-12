@@ -31,7 +31,7 @@ export class UserLoginComponent {
     constructor(public fb: FormBuilder, private userService: UserService, private userStore: UserStore) {}
 
     doLogin(event) {
-        this.userStore.authUser(this.loginForm.value)
+        //this.userStore.authUser(this.loginForm.value)
     }
     
 }

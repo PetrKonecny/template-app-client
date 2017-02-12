@@ -11,13 +11,12 @@ export class UserStore {
     public user: Observable<User> = this._user.asObservable();
 
     constructor(private userService: UserService){
-    }
+        this.userService.getUser().subscribe(user => this._user.next(user))
+    }  
 
-    authUser(user: User){
-		this.userService.loginUser(user).subscribe(user => this._user.next(user), error=> window.alert('wrong login or password'))
+    logoutUser(){
+        this._user.next(null)
+        this.userService.logoutUser()
     }
-
-    loggedIn(){
-    	return this._user.value && this._user.value.token && this._user.value.token.length > 0
-    }
+    
 }

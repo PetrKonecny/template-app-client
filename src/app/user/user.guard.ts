@@ -10,10 +10,10 @@ export class UserGuard implements CanActivate {
 
   canActivate() {
     // If user is not logged in we'll send them to the homepage 
-    if (!this.userStore.loggedIn()) {
+    /*if (!this.userStore.loggedIn()) {
       //this.router.navigate(['/login']);
       return true;
-    }
+    }*/
     return true;
   }
 

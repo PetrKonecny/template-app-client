@@ -69,8 +69,15 @@ import { TemplateService } from './template/template.service';
 import { DisplayImageElementComponent} from './element/display-image-element.component'
 import { DisplayTextElementComponent} from './element/display-text-element.component'
 import { DisplayFrameElementComponent} from './element/display-frame-element.component'
+import { UserListComponent } from './user/user-list.component'
+import { UserIndexComponent } from './user/user-index.component'
+import { UserTemplatesComponent } from './template/user-templates.component'
+import { UserTemplateInstancesComponent } from './template-instance/user-template-instances.component'
 
 const routes: Routes = [
+    { path: 'users', component: UserIndexComponent},
+    { path: 'users/:id/templates', component: UserTemplatesComponent},
+    { path: 'users/:id/template-instances', component: UserTemplateInstancesComponent},
     { path: 'templates/new', component: TemplateCreateComponent, canActivate: [UserGuard]},
     { path: 'templates', component: TemplateIndexComponent, canActivate: [UserGuard]},
     { path: 'templates/:id/edit', component: TemplateEditComponent, canActivate: [UserGuard]},
@@ -91,7 +98,8 @@ const routes: Routes = [
         TextSelectorComponent, FontListComponent, DisplayFontComponent, NewTableElementComponent, Draggable, NewElementComponent, DisplayGuideComponent, DisplayRulerComponent,
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
-        ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent
+        ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
+        UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent
         
     ],
     // modules

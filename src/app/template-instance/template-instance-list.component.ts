@@ -1,17 +1,18 @@
 import { Component,Input, Output, EventEmitter} from '@angular/core';
 import { TemplateInstance} from './template-instance';
+import { AppConfig }from '../app.config'
 
 @Component({
     selector: 'template-instance-list',
     template: `
-        <ul class="heroes">
-            <li *ngFor="let templateInstance of templateInstances">
-                <span class="badge">{{templateInstance.id}}</span> {{templateInstance.name}}
-                <a [routerLink] = "['/template-instances', templateInstance.id]">Open</a>\n\
-                <a href="http://localhost:8080/templateInstance/{{templateInstance.id}}/pdf">Open as pdf</a>\n\
-                <a href="javascript:void(0)"(click)="onDelete(templateInstance)">Delete</a>
-            </li>
-        </ul>
+        <md-nav-list>
+            <md-list-item *ngFor="let templateInstance of templateInstances">
+                <a md-line href="...">{{ templateInstance.name }}</a>
+                <a md-button [routerLink] = "['/templateInstances', templateInstance.id, 'open']">Open</a>
+                <a md-button href="{{config.getConfig('api-url')}}/templateInstance/{{templateInstance.id}}/pdf">PDF</a>\n\
+                <a md-button href="javascript:void(0)"(click)="onDelete(templateInstance)">Delete</a>            
+            </md-list-item>
+        </md-nav-list>
     `
 })
 
@@ -24,6 +25,10 @@ export class TemplateInstanceListComponent {
     
     @Output() 
     onDeleteClicked = new EventEmitter<TemplateInstance>();
+
+    constructor(private config: AppConfig){
+
+    }
 
     
     onDelete(templateInstance: TemplateInstance){

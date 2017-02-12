@@ -8,7 +8,7 @@ import { Observable }     from 'rxjs/Observable';
     selector: 'template-index',
     template: `
         <template-list [templates] = "templates" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>\n\
-        <a [routerLink] = "['/templates/new']">New template</a>
+        <button md-fab [routerLink] = "['/templates/new']"><md-icon>add</md-icon></button>
     `,
     providers: []
 })

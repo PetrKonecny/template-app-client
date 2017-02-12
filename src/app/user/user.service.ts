@@ -10,27 +10,45 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/toPromise';
 import {BehaviorSubject} from 'rxjs/Rx';
+import { AppConfig } from '../app.config';
+import {Template} from '../template/template'
+import {TemplateInstance} from '../template-instance/template-instance'
 
 @Injectable()
 export class UserService {
-    constructor(private http: Http) { }
 
-    private _user: BehaviorSubject<User> = new BehaviorSubject(null)
-    public user: Observable<User> = this._user.asObservable();
+    constructor(private http: Http, private config: AppConfig) { }
 
-    loginUser(user: any): Observable<User> {
-    	if(user.email == "user1@mail.com" && user.password == "user1"){
-			this._user.next({id:null,token:"afafafafafafa"})
-    	}else if(user.email == "user2@mail.com" && user.password == "user2"){
-			this._user.next({id:null,token:"fafafafafafaf"})
-    	}else{
-    		return Observable.throw('Server error')
-    	}
-        return this.user
+    private _usersUrl = this.config.getConfig('api-url')+'/user';  // URL to web api
+
+    getUser(): Observable<User> {
+        return this.http.get(this._usersUrl, { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
     }    
 
+    getUsers(): Observable<User[]> {
+        return this.http.get(this._usersUrl, { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
     logoutUser(){
-    	this._user.next(null)
+    	return this.http.get(this._usersUrl+'/logout', { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    getUserTemplates(userId: number): Observable<Template[]> {
+        return this.http.get(this._usersUrl+'/'+userId+'/templates', { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    getUserTemplateInstances(userId: number): Observable<TemplateInstance[]> {
+        return this.http.get(this._usersUrl+'/'+userId+'/template-instances', { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
     }
     
     private extractData(res: Response) {
