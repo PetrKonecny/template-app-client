@@ -1,8 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
-html,body {
-    margin:0;
-    height: 100%;
-    overflow-y: hidden;
+app-root{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+image-index{
+	height: 100%;
+	position: relative;
+	overflow: auto;
 }
 
 @import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';

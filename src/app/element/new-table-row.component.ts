@@ -6,7 +6,6 @@ import { NewTableElement } from './new-table-element'
 @Component({
     selector: 'tr',
     template: `
-
                 <template [ngIf]="element.clientState == 0">
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
                         [attr.colspan]=cell.colspan 

@@ -73,6 +73,9 @@ import { UserListComponent } from './user/user-list.component'
 import { UserIndexComponent } from './user/user-index.component'
 import { UserTemplatesComponent } from './template/user-templates.component'
 import { UserTemplateInstancesComponent } from './template-instance/user-template-instances.component'
+import { TemplateSearchComponent } from './template/template-search.component';
+import { ImageUploadComponent } from './image/image-upload.component'
+import { FileUploadModule } from 'ng2-file-upload/file-upload/file-upload.module';
 
 const routes: Routes = [
     { path: 'users', component: UserIndexComponent},
@@ -81,10 +84,12 @@ const routes: Routes = [
     { path: 'templates/new', component: TemplateCreateComponent, canActivate: [UserGuard]},
     { path: 'templates', component: TemplateIndexComponent, canActivate: [UserGuard]},
     { path: 'templates/:id/edit', component: TemplateEditComponent, canActivate: [UserGuard]},
+    { path: 'templates/search', component: TemplateSearchComponent, canActivate: [UserGuard]},
     { path: 'templates/:id/instance', component: TemplateInstanceCreateComponent, canActivate: [UserGuard] }, 
     { path: 'template-instances', component: TemplateInstanceIndexComponent, canActivate: [UserGuard] },
     { path: 'template-instances/:id', component: TemplateInstanceEditComponent, canActivate: [UserGuard] },
     { path: 'images', component: ImageIndexComponent, canActivate: [UserGuard] },
+    { path: 'images/upload', component: ImageUploadComponent, canActivate: [UserGuard] },
     { path: 'fonts', component: FontIndexComponent, canActivate: [UserGuard] },
     { path: 'login', component: UserLoginComponent },
     { path: '**', redirectTo: '/templates', pathMatch: 'full' },
@@ -99,7 +104,7 @@ const routes: Routes = [
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
-        UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent
+        UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent
         
     ],
     // modules
@@ -112,7 +117,8 @@ const routes: Routes = [
         Ng2UploaderModule,
         MaterialModule.forRoot() ,
         Ng2DropdownModule,
-        TagInputModule       
+        TagInputModule,
+        FileUploadModule       
     ],
     // providers
     providers: [

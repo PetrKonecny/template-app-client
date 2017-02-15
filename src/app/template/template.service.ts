@@ -22,6 +22,12 @@ export class TemplateService {
             .map(this.extractData)
             .catch(this.handleError);
     }
+
+    searchTemplates(query: string): Observable<Template[]> {
+        return this.http.get(this._templatesUrl+'/search?query='+query, { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
     
     getTemplate(id: number): Observable<Template> {
         return this.http.get(this._templatesUrl+"/"+id, { withCredentials: true })
