@@ -10,14 +10,15 @@ import {BasicStep, CompositeStep, StepSelector, StateChangeRespond} from '../ste
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable2 resizable [class.selected]="selected" (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container [style.background-color] = "element.background_color ? element.background_color : defaultBackgroundColor" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
+        <div draggable2 resizable [class.selected]="selected" (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" #container [style.background] = "element.background_color ? element.background_color : 'none'" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
         </div>
     `,
     styles:[`
         .inner {
             position: absolute;
-            overflow: hidden;         
+            overflow: hidden;   
+            border: 1px dashed grey;      
         }
         .button{
             z-index: 1000;

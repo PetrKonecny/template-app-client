@@ -38,5 +38,9 @@ h1,h2,h3 {
 }
 
 .selected {
-	border: 2px dashed blue;
+	border: 2px dashed blue !important;
+}
+
+.toolbar{
+    font-size: 14px;
 }

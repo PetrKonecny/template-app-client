@@ -13,7 +13,7 @@ import {TextSelector} from '../editor/text-selector'
 @Component({
     selector: 'element-select',
     template: ` 
-                <span *ngIf="element"> 
+                <span class="toolbar" *ngIf="element"> 
                 <button md-icon-button (click)="deleteElement()"><md-icon>delete</md-icon></button>
                 <button md-button [mdMenuTriggerFor]="menu">Position</button>
                 <my-md-menu #menu="mdMenu">
@@ -30,13 +30,10 @@ import {TextSelector} from '../editor/text-selector'
                     <input mdInput [(ngModel)]="element.positionY"   (keyup)="0" placeholder="Y">
                     </md-input-container>
                 </my-md-menu>
-                <button style="background: none; border:none;" [colorPicker]="getBgColor()"  (colorPickerChange)="changeBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getBgColor()">format_color_fill</md-icon></button></button>
+                Background: <md-checkbox #backgroundCheckbox [checked]="element.background_color" (change)="toggleElementBackground(backgroundCheckbox.checked)"></md-checkbox>
+                <button *ngIf="element.background_color" style="background: none; border:none;" [colorPicker]="getBgColor()"  (colorPickerChange)="changeBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getBgColor()">format_color_fill</md-icon></button></button>
                 <text-select *ngIf="element.type == 'text_element' && element.content.editor"></text-select>
-                <span *ngIf="element.type == 'table_element'"> 
-                    <button md-button *ngIf="element.clientState != 2" (click)="editTable()">Edit table</button>
-                    <button md-button *ngIf="element.clientState != 0" (click)="moveTable()">Move or resize table</button>
-                    <button md-button *ngIf="element.clientState != 1" (click)="filloutTable()">Fillout table</button>
-                    <button md-button *ngIf="element.clientState != 3" (click)="editCells()">Edit cells</button>
+                <span *ngIf="element.type == 'table_element'">                
                     <cell-edit-toolbar *ngIf="element.clientState == 3 && element.selectedCells?.length > 0">                        
                     </cell-edit-toolbar>
                     <div *ngIf="element.clientState == 2"  >
@@ -77,6 +74,10 @@ export class ElementSelectorComponent  {
 
     changeBackgroundColor(color: string){
         this.elementSelector.changeBackgroundColor(color)
+    }
+
+    toggleElementBackground(value: boolean){
+        this.elementSelector.toggleElementBackground(value)
     }
 
     editTable(){

@@ -4,13 +4,13 @@ import { RowContent } from '../content/table-content'
 import { NewTableElement } from './new-table-element'
 
 @Component({
-    selector: 'tr',
+    selector: '[myTr]',
     template: `
                 <template [ngIf]="element.clientState == 0">
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
                         [attr.colspan]=cell.colspan 
                         [attr.rowspan]=cell.rowspan 
-                        [style.background-color]="cell.background_color ? cell.background_color : defaultBackgroundColor"
+                        [style.background]="cell.background_color ? cell.background_color : 'none'"
                         [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
                         [style.width.px]="cell.width" 
                         [style.text-align]="element.rows[y].cells[x].text_align"  
@@ -29,7 +29,7 @@ import { NewTableElement } from './new-table-element'
                         [attr.colspan]=cell.colspan 
                         [attr.rowspan]=cell.rowspan (mousedown)="onMousedown(x)" 
                         [style.width.px]="cell.width" resizable (resize)="resize($event)" 
-                        [style.background-color]="cell.background_color ? cell.background_color : defaultBackgroundColor"
+                        [style.background]="cell.background_color ? cell.background_color : 'none'"
                         [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
                         [style.text-align]="element.rows[y].cells[x].text_align" 
                         [class.italic]="element.rows[y].cells[x].italic"  
@@ -48,7 +48,7 @@ import { NewTableElement } from './new-table-element'
                         [attr.rowspan]=cell.rowspan 
                         (mousedown)="onMousedownSelect($event,cell)" 
                         (mouseover)="onMouseover($event,cell)" 
-                        [style.background-color]="cell.background_color ? cell.background_color : defaultBackgroundColor"
+                        [style.background]="getCellBGColor(cell)"
                         [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
                         [style.width.px]="cell.width"  
                         [style.border-style]="cell.border_style" 
@@ -66,7 +66,7 @@ import { NewTableElement } from './new-table-element'
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
                         [attr.colspan]=cell.colspan 
                         [attr.rowspan]=cell.rowspan 
-                        [style.background-color]="cell.background_color ? cell.background_color : defaultBackgroundColor"
+                        [style.background]="cell.background_color ? cell.background_color : 'none'"
                         [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
                         [style.width.px]="cell.width" 
                         [style.border-style]="cell.border_style" 
@@ -122,7 +122,7 @@ import { NewTableElement } from './new-table-element'
        
 export class NewTableRowComponent implements OnInit{
     
-    @Input()
+    @Input('myTr')
     element: TableElement;
     
     @Input()
@@ -185,6 +185,23 @@ export class NewTableRowComponent implements OnInit{
     getSelectedBorderWidth(cell: Cell){
         let width: number = +cell.border_width
         return width + 1
+    }
+
+    getCellBGColor(cell){
+        if(cell.selected){
+            if(cell.background_color){
+                return this.shadeHEXColor(cell.background_color, 0.5)
+            } else{
+                return this.shadeHEXColor(Cell.defaultBackgroundColor, 0.5)
+            }
+        }
+        else if(cell.background_color){
+            return cell.background_color
+        }
+        else{
+            return Cell.defaultBackgroundColor
+        }
+
     }
     
     onMousedownSelect(event: MouseEvent,cell: Cell){

@@ -8,12 +8,18 @@ import { NewTableElement } from './new-table-element'
 @Component({
     selector: 'create-new-table-element',
     template: `
+        <div *ngIf="selected" style="position: absolute;" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY - 40">
+        <button md-raised-button  md-icon-button [color]="element.clientState == 0? 'accent' : 'background'" (click)="element.clientState = 0"><md-icon>zoom_out_map</md-icon></button>
+        <button md-raised-button  md-icon-button [color]="element.clientState == 1? 'accent' : 'background'"  (click)="element.clientState = 1">Ab</button>
+        <button md-raised-button  md-icon-button [color]="element.clientState == 2? 'accent' : 'background'"  (click)="element.clientState = 2"><md-icon>vertical_align_center</md-icon></button>
+        <button md-raised-button md-icon-button [color]="element.clientState == 3? 'accent' : 'background'"  (click)="element.clientState = 3"><md-icon>border_all</md-icon></button>
+        </div>
         <table *ngIf="element.clientState == 0" [class.selected]="selected" draggable2 resizable (resize)="resize($event)" (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
-            <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i" [style.height.px]="row.height" [content]="element.content.rows[i]" class="locked"></tr>
+            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i" [style.height.px]="row.height" [content]="element.content.rows[i]" class="locked"></tr>
         </table>
         <table *ngIf="element.clientState > 0" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
-            <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height"></tr>
-        </table>     
+            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height"></tr>
+        </table>
         `,
     styles:[`
         .inner {

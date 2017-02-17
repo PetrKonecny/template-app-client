@@ -49,7 +49,6 @@ export class PageSelector {
         let content = new TextContent()
         content.text = "<p></p>"
         element.content = content
-        element.background_color = TextElement.defaultBackgroundColor
         let array = new Array().concat(page.elements)
         array.push(element)
         page.elements = array

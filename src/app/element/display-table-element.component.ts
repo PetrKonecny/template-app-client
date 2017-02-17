@@ -7,7 +7,7 @@ import { NewTableElement } from './new-table-element'
     selector: 'display-table-element',
     template: `     
         <table class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
-            <tr *ngFor="let row of element.rows; let i = index" [element]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height"></tr>
+            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height"></tr>
         </table>     
         `,
     styles:[`

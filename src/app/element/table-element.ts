@@ -86,7 +86,7 @@ export class Cell{
     selected: boolean
     static defaultTextColor: string = "#000"
     text_color: string
-    static defaultBackgroundColor: string = "#ccc"
+    static defaultBackgroundColor: string = "#f5f5f5"
     background_color: string
     border_style: string
     static defaultBorderColor: string = "#000"

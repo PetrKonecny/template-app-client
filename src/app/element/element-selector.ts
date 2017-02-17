@@ -166,6 +166,15 @@ export class ElementSelector {
     changeBackgroundColor(color: string){
         this._element.value.background_color = color
     }
+
+    toggleElementBackground(value: boolean){
+        if(value){
+            this._element.value.background_color = Element.defaultBackgroundColor
+        }else{
+            this._element.value.background_color = null
+        }
+
+    }
         
     changeSelectedCellsBackgroundColor(color: string){
         var element = <TableElement> this._element.value
