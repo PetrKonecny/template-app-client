@@ -12,8 +12,9 @@ import {TextSelector} from '../editor/text-selector'
 
 @Component({
     selector: 'cell-edit-toolbar',
-    template: `                
-                <button style="background: none; border:none;" [colorPicker]="getCellBgColor()"  [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getCellBgColor()">format_color_fill</md-icon></button></button>
+    template: `                     
+                Background: <md-checkbox [checked]="getSelectedCellsBackground()" #cellBackgroundCheckbox (change)="toggleCellBackground(cellBackgroundCheckbox.checked)"></md-checkbox>
+                <button *ngIf="getSelectedCellsBackground()" style="background: none; border:none;" [colorPicker]="getCellBgColor()"  [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getCellBgColor()">format_color_fill</md-icon></button></button>
                 <font-selector></font-selector>
                     <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="Format text">A</button>
                     <button mdTooltip="Cell text color"  style="background: none; border:none;" [colorPicker]="getCellTextColor()"  [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsTextColor($event)"><button md-icon-button><md-icon [style.color]="getCellTextColor()">format_color_text</md-icon></button></button>                
@@ -88,6 +89,14 @@ export class CellEditToolbar {
         console.log(size)
         this.elementSelector.changeFontSize(size)
     }
+
+    getSelectedCellsBackground(){
+        if(this.element.selectedCells){
+           return this.element.selectedCells.filter(cell => cell.background_color).length > 0 
+       }else{
+           return false
+       }
+    }
     
     
     changeSelectedCellsFontSize(size: number){
@@ -97,6 +106,11 @@ export class CellEditToolbar {
     changeSelectedCellsBold(){
         this.elementSelector.changeSelectedCellsBold()
     }
+
+    toggleCellBackground(value: boolean){
+        this.elementSelector.toggleCellBackground(value)
+    }
+
     changeSelectedCellsItalic(){
         this.elementSelector.changeSelectedCellsItalic()
     }

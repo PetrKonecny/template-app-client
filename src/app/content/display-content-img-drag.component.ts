@@ -4,7 +4,7 @@ import { AppConfig } from '../app.config'
 
 @Component({
     selector: 'display-content-img-drag',
-    template:  `   
+    template:  `
         <div #frame (move) ="move($event)" [style.left.px]="content.left" [style.top.px]="content.top" class="content">
             <img #image [width]="content.width" class="image" [height]="content.height"  class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">\n\          
         </div>
@@ -15,10 +15,10 @@ import { AppConfig } from '../app.config'
         }
         .content {
             min-height: 20px;
-            position: absolute;
         }
         .image{
             pointer-events: none;
+            opacity: 0.5;
         }        
     `]
 })
@@ -27,6 +27,7 @@ export class DisplayContentImgDragComponent implements  DoCheck {
 
     @Input()
     content: ImageContent;
+    element: ImageContent = this.content;
     
     @ViewChild('frame')
     frame: ElementRef;
@@ -41,8 +42,16 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     
     ngDoCheck(){
         if((!this.content.width || !this.content.height) && this.image ){
-            this.content.width = this.image.nativeElement.naturalWidth
-            this.content.height = this.image.nativeElement.naturalHeight
+            let width = this.image.nativeElement.naturalWidth
+            let height = this.image.nativeElement.naturalHeight
+            let ratio = width/height
+            if(width > 1000 || height > 1000){
+                width = 1000 * ratio
+                height = 1000
+            }
+
+            this.content.width = width
+            this.content.height = height
         }
     }
     

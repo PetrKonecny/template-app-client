@@ -16,7 +16,9 @@ import { NewPageRemote } from '../page/new-page.remote'
             <button *ngIf="element.content && element.content.image && draggable" style="top: 60px" class="button" (click)="onAdjustButtonClick()" class="button">Adjust image</button>
         </div>
         <div #frame *ngIf="!draggable" [class.selected]="selected" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
-            <display-content-img-drag [content] = "element.content"></display-content-img-drag>
+            <image-handle>
+                <display-content-img-drag #handleContent [content] = "element.content"></display-content-img-drag>
+            </image-handle>
             <button *ngIf="element.content.image" style="top: 40px" class="button"  (click)="onPlusButtonClick()" >Zoom in</button>
             <button *ngIf="element.content.image" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>
             <button *ngIf="element.content && element.content.image" (click)="onDoneAdjustButtonClick()" class="button">Done adjusting</button>
@@ -24,7 +26,6 @@ import { NewPageRemote } from '../page/new-page.remote'
     `,
     styles:[`
         .inner {
-            position: absolute;
             overflow: hidden;         
         }
         .button{
@@ -64,7 +65,12 @@ export class NewFrameElementComponent {
     onDrop(event){
         console.log('drop1')
         let data = event.dataTransfer.getData("text");
-        let image = JSON.parse(data)
+        let image 
+        try{
+            image = JSON.parse(data)
+        }catch(e){
+            return 
+        }
         let content = <ImageContent>this.element.content
         content.image = image
         event.stopPropagation();

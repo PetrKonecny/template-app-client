@@ -53,7 +53,7 @@ import { NewTableElement } from './new-table-element'
                         [style.width.px]="cell.width"  
                         [style.border-style]="cell.border_style" 
                         [style.border-color]="cell.border_color ? cell.border_color : defaultBorderColor " 
-                        [style.border-width.px]="cell.selected ? getSelectedBorderWidth(cell) : cell.border_width" 
+                        [style.border-width.px]="cell.border_width" 
                         [style.text-align]="element.rows[y].cells[x].text_align"  
                         [class.italic]="element.rows[y].cells[x].italic" 
                         [class.bold]="element.rows[y].cells[x].bold" 
@@ -192,14 +192,14 @@ export class NewTableRowComponent implements OnInit{
             if(cell.background_color){
                 return this.shadeHEXColor(cell.background_color, 0.5)
             } else{
-                return this.shadeHEXColor(Cell.defaultBackgroundColor, 0.5)
+                return "#ffd740";
             }
         }
         else if(cell.background_color){
             return cell.background_color
         }
         else{
-            return Cell.defaultBackgroundColor
+            return 'none'
         }
 
     }

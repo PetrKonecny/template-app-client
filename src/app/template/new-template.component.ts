@@ -53,7 +53,6 @@ import { SaveTemplateModal } from './save-template.modal'
             position: relative;
             overflow-y: scroll;
             height: 95%;
-            margin-left: 300px;
         }       
     `]
 })

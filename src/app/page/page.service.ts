@@ -130,7 +130,8 @@ export class PageService {
         element.changing = true 
         if (dimensions.width){
             element.width += dimensions.width
-        } else if (dimensions.height){
+        }
+        if (dimensions.height){
             element.height += dimensions.height
         }
     }
@@ -149,7 +150,14 @@ export class PageService {
         let emptyFunc = function (guideBreak: Break) {}
         let releaseFuncVert = () => { element.width += this.bufferVertical.value }
         let releaseFuncHor = () => { element.height += this.bufferHorizontal.value }
-        if (dimensions.height){
+        if(dimensions.width && dimensions.height){
+            var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal,emptyFunc, edge2FuncHorizontal, releaseFuncHor, guides)
+            var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical, emptyFunc, edge2FuncVertical, releaseFuncVert,guides)
+            if(!verticalBreak && !horizontalBreak){
+                element.width += dimensions.width
+                element.height += dimensions.height
+            }
+        } else if (dimensions.height){
             var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal,emptyFunc, edge2FuncHorizontal, releaseFuncHor, guides)
             if(!horizontalBreak){
                 element.height += dimensions.height
@@ -159,7 +167,7 @@ export class PageService {
             if(!verticalBreak){
                 element.width += dimensions.width
             }
-        }
+        } 
                 
         //this.finalStep = this.stepSelector.makeDimensions(element, this.startState.width, element.width, this.startState.height, element.height)    
     }

@@ -23,9 +23,6 @@ import { NewTableElement } from './new-table-element'
         `,
     styles:[`
         .inner {
-            position: absolute;
-            overflow: hidden;         
-            background-color: rgba(0, 0, 0, 0.25);
         }
         .locked {
             pointer-events: none;

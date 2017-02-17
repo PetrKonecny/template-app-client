@@ -26,6 +26,9 @@ import {ImageElement} from '../element/image-element'
             background-color: white;
             width: 210mm;
             height: 297mm;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 30px;
         }       
     `],
     providers: [NewPageRemote]
@@ -53,7 +56,12 @@ export class NewPageComponent implements OnInit, DoCheck, StateChangeRespond {
     onDrop(event){
         console.log('drop2')
         let data = event.dataTransfer.getData("text");
-        let image = JSON.parse(data)
+        let image
+        try{
+            image = JSON.parse(data)
+        }catch(e){
+            return;
+        }
         let page = this.page
         let element = new ImageElement()
         let x = event.clientX - this.ref.nativeElement.getBoundingClientRect().left

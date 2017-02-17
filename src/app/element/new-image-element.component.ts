@@ -12,7 +12,6 @@ import { AppConfig } from '../app.config'
     `,
     styles: [
         `img{
-            position: absolute;
         }
 
 

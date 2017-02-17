@@ -30,8 +30,10 @@ import {TextSelector} from '../editor/text-selector'
                     <input mdInput [(ngModel)]="element.positionY"   (keyup)="0" placeholder="Y">
                     </md-input-container>
                 </my-md-menu>
-                Background: <md-checkbox #backgroundCheckbox [checked]="element.background_color" (change)="toggleElementBackground(backgroundCheckbox.checked)"></md-checkbox>
-                <button *ngIf="element.background_color" style="background: none; border:none;" [colorPicker]="getBgColor()"  (colorPickerChange)="changeBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getBgColor()">format_color_fill</md-icon></button></button>
+                <span *ngIf="element.type != 'table_element'">
+                    Background: <md-checkbox #backgroundCheckbox [checked]="element.background_color" (change)="toggleElementBackground(backgroundCheckbox.checked)"></md-checkbox>
+                    <button *ngIf="element.background_color" style="background: none; border:none;" [colorPicker]="getBgColor()"  (colorPickerChange)="changeBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getBgColor()">format_color_fill</md-icon></button></button>
+                </span>
                 <text-select *ngIf="element.type == 'text_element' && element.content.editor"></text-select>
                 <span *ngIf="element.type == 'table_element'">                
                     <cell-edit-toolbar *ngIf="element.clientState == 3 && element.selectedCells?.length > 0">                        

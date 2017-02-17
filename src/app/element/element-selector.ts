@@ -169,9 +169,18 @@ export class ElementSelector {
 
     toggleElementBackground(value: boolean){
         if(value){
-            this._element.value.background_color = Element.defaultBackgroundColor
+           this.changeBackgroundColor(Element.defaultBackgroundColor)
         }else{
-            this._element.value.background_color = null
+           this.changeBackgroundColor(null)
+        }
+
+    }
+
+    toggleCellBackground(value: boolean){
+        if(value){
+            this.changeSelectedCellsBackgroundColor(Cell.defaultBackgroundColor)
+        }else{
+            this.changeSelectedCellsBackgroundColor(null)
         }
 
     }

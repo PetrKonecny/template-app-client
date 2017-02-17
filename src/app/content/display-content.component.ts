@@ -13,7 +13,7 @@ import { AppConfig } from '../app.config'
             clasś="content text"
         >
         </simple-tiny>
-        <div *ngIf="content.type === 'image_content'" #frame [style.left.px]="content.left" [style.top.px]="content.top" class="content image">
+        <div *ngIf="content.type === 'image_content'" #frame [style.margin-left.px]="content.left" [style.margin-top.px]="content.top" class="content image">
             <img *ngIf="content.image && content.width && content.height" #image [width]="content.width" [height]="content.height" class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">\n\
             <img *ngIf="content.image &&!content.width && !content.height" #image class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">
         </div>
@@ -23,7 +23,6 @@ import { AppConfig } from '../app.config'
             background-color: white;
         }
         .content {
-            position: absolute;         
         }
         .image{
             pointer-events: none;

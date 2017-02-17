@@ -61,10 +61,10 @@ export class Draggable2 implements OnInit {
         this.mousedrag = this.mousedown.map((event: MouseEvent) => {
             var border
             if (this.borderCheck){
-                border = this.detectBorderPosition({left: event.offsetX, top: event.offsetY})
+                //border = this.detectBorderPosition({left: event.offsetX, top: event.offsetY})
             }
             if(border){
-                this.enabled = false;
+                //this.enabled = false;
             }
             this.position = { left: event.clientX, top: event.clientY}
             return {

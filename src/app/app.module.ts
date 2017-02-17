@@ -76,6 +76,8 @@ import { UserTemplateInstancesComponent } from './template-instance/user-templat
 import { TemplateSearchComponent } from './template/template-search.component';
 import { ImageUploadComponent } from './image/image-upload.component'
 import { FileUploadModule } from 'ng2-file-upload/file-upload/file-upload.module';
+import { ElementHandleComponent } from './element/element-handle.component'
+import { ImageHandleComponent } from './content/image-handle.component'
 
 const routes: Routes = [
     { path: 'users', component: UserIndexComponent},
@@ -104,7 +106,7 @@ const routes: Routes = [
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
-        UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent
+        UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent
         
     ],
     // modules
