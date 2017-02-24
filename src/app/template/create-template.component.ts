@@ -21,7 +21,6 @@ export class TemplateCreateComponent implements OnInit, AfterViewInit  {
     errorMessage: string;
     template : Template;
 
-
     constructor(
         private templateService: TemplateInstanceStore, private pageSelector: PageSelector 
     ){ }
@@ -29,7 +28,7 @@ export class TemplateCreateComponent implements OnInit, AfterViewInit  {
     
     ngOnInit(){
         this.templateService.cleanStore();
-        this.templateService.template.subscribe( template => {
+        this.templateService.template.first().subscribe( template => {
             this.template = template
             this.templateService.createContentsForTemplate()
             this.templateService.filloutNewTemplate()

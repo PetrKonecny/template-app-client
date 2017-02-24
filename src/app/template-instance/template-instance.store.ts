@@ -13,33 +13,66 @@ import {Page} from '../page/page'
 import {TableElement} from '../element/table-element'
 import {TableContent, RowContent, CellContent} from '../content/table-content'
 import {Guide} from '../guide/guide'
+/*
+Stores template and template instance (document) that is currently being worked on.
+provides methods that work with the saved template or template instance
+This calss should be provided by root as the tmeplate and template instance is shared through 
+different routes in some cases 
+*/
 
 @Injectable()
 export class TemplateInstanceStore {
+    //Constructor injects relevant http services automatically
     constructor(private templateInstanceService: TemplateInstanceService, private templateService: TemplateService) { }
     
+    /*Observable Behaviorubject contains TemplateInstance that is loaded in the store
+    should not be manipulated outside of this class
+    */ 
     private _templateInstance: BehaviorSubject<TemplateInstance> = new BehaviorSubject(new TemplateInstance);
+    /*Observable reference to the template instance Subject
+    subscribtion to this returns currently loaded TemplateInstance
+    */
     public templateInstance: Observable<TemplateInstance> = this._templateInstance.asObservable();
     
     private _template: BehaviorSubject<Template> = new BehaviorSubject(new Template);
     public template: Observable<Template> = this._template.asObservable();
     
     private cleanLocked: boolean = false;
+
+    /*Loads template instance to the store with corresponding template
+    the subscription to http services is canceled after geting first valid result (method First())
+    */
+    getTemplateInstanceWithTemplate(id: number){
+        this.templateInstanceService.getTemplateInstance(id)
+        .map(res => {return {templateInstance: res}})
+        .flatMap(res => this.templateService.getTemplate(res.templateInstance.template_id).map(template => {return {template: template, templateInstance: res.templateInstance}}))
+        .first(res => {return res.template.id>0 && res.templateInstance.id>0})
+        .subscribe(res =>{
+            this._templateInstance.next(res.templateInstance)
+            this._template.next(res.template)
+            this._templateInstance.value.template_id = res.template.id;
+        })
+
+    }
     
     getTemplateInstance(id: number){
-        this.templateInstanceService.getTemplateInstance(id).subscribe((res) => {
+        this.templateInstanceService.getTemplateInstance(id).first().subscribe((res) => {
             this._templateInstance.next(res);
             this.getTemplate(res.template_id);
         });
     }
     
     getTemplate(id: number){
-        this.templateService.getTemplate(id).subscribe(data => { 
+        this.templateService.getTemplate(id).first().subscribe(data => { 
             this._template.next(data);
             this._templateInstance.value.template_id = data.id;
         });
     }
     
+    /* Sends stored template to the update/add http service depending on it's id
+    (instances saved in the backend have IDs while those just created in the app
+    and not yet saved in backend don't)
+    */
     saveTemplate(){
         if(this._template.value.id > 0){
             this.templateService.updateTemplate(this._template.value).subscribe(
@@ -52,6 +85,10 @@ export class TemplateInstanceStore {
         }
     }
     
+    /* Sends stored template instance to the update/add http service depending on it's id
+    (instances saved in the backend have IDs while those just created in the app
+     and not yet saved in backend don't)
+    */
     saveTemplateInstance(){
         if(this._templateInstance.value.id > 0){
             this.templateInstanceService.updateTemplateInstance(this._templateInstance.value).subscribe(
@@ -64,6 +101,8 @@ export class TemplateInstanceStore {
         }
     }
     
+    /* Adds elements from the stored template to the TemplateInstance
+    */
     copyContentsFromTemplate(){
         if(!this._template.value.pages) {
             return
@@ -85,6 +124,9 @@ export class TemplateInstanceStore {
         }
     }
     
+    /* Adds corresponding content from stored Template Instance to each element of stored Template 
+       Validates if the stored template has any pages
+    */
     getContentsFromTemplateInstance(){
         if(this._template.value.pages == null) {
             return
@@ -127,9 +169,15 @@ export class TemplateInstanceStore {
         this._templateInstance.value.contents.push(this.createNewContentForElement(element));
     }
 
-    filloutNewTemplate(){
+    /*
+
+    */
+    filloutNewTemplate(){    
+        if(this._template.value && this._template.value.pages && this._template.value.pages.length){
+            return 
+        } 
         this._template.value.pages = new Array<Page>()
-        this._template.value.pages.push(new Page)
+        this._template.value.pages.push(new Page)      
     }
     
     createNewContentForElement(element: Element){
@@ -195,6 +243,7 @@ export class TemplateInstanceStore {
     }
     
     cleanStore(){
+        console.log('cleaning')
         if (this.cleanLocked){
             this.cleanLocked = false;
         }else{

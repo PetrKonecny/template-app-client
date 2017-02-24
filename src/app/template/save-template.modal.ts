@@ -8,7 +8,7 @@ import {MdDialogRef} from '@angular/material'
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 
 @Component({
-    selector: 'template-index',
+    selector: 'template-save-modal',
     template: `
         <form [formGroup]="saveForm" (ngSubmit)="onSaveButtonClicked()">
         		<h2 md-dialog-title>SAVE TEMPLATE</h2>

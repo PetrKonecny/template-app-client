@@ -10,7 +10,7 @@ import {ActivatedRoute} from '@angular/router';
 @Component({
     selector: 'user-templates',
     template: `
-        <template-list [templates] = "templates" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>
+        <template-table [templates] = "templates" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></template-table>
     `,
     providers: []
 })
@@ -19,6 +19,7 @@ export class UserTemplatesComponent implements OnInit {
     
     errorMessage: string;
     templates : Template[];
+    loading = true;
 
     constructor(
         private templateService: TemplateService, private userService: UserService, private route: ActivatedRoute
@@ -28,7 +29,13 @@ export class UserTemplatesComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = +params['id']; // (+) converts string 'id' to a number
             this.userService.getUserTemplates(id).subscribe(
-                templates=>this.templates = templates,
+                templates=>{
+                    this.templates = []
+                    for(let i=0;i<20;i++){
+                        this.templates = this.templates.concat(templates)
+                    }
+                    this.loading = false
+                },
                 error => this.errorMessage = <any>error
             )
         })

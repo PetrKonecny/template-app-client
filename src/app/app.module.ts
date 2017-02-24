@@ -78,14 +78,29 @@ import { ImageUploadComponent } from './image/image-upload.component'
 import { FileUploadModule } from 'ng2-file-upload/file-upload/file-upload.module';
 import { ElementHandleComponent } from './element/element-handle.component'
 import { ImageHandleComponent } from './content/image-handle.component'
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+
+import {TemplateEditForm} from './template/template-edit-form.component'
+import {AdminIndexComponent} from './admin/admin-index.component'
+import {AdminTemplatesComponent} from './admin/admin-templates.component'
+import {AdminUsersComponent} from './admin/admin-users.component'
+import {AdminTemplateInstancesComponent} from './admin/admin-template-instances.component'
+import {UserTableComponent} from './admin/user-table.component'
+import {TemplateInstanceTableComponent} from './admin/template-instance-table.component'
+import { TemplateTableComponent } from './admin/template-table.component'
 
 const routes: Routes = [
+    { path: 'admin', component: AdminIndexComponent},
+    { path: 'admin/templates', component: AdminTemplatesComponent },
+    { path: 'admin/template-instances', component: AdminTemplateInstancesComponent },
+    { path: 'admin/users', component: AdminUsersComponent },
     { path: 'users', component: UserIndexComponent},
     { path: 'users/:id/templates', component: UserTemplatesComponent},
     { path: 'users/:id/template-instances', component: UserTemplateInstancesComponent},
     { path: 'templates/new', component: TemplateCreateComponent, canActivate: [UserGuard]},
     { path: 'templates', component: TemplateIndexComponent, canActivate: [UserGuard]},
     { path: 'templates/:id/edit', component: TemplateEditComponent, canActivate: [UserGuard]},
+    { path: 'templates/:id/form-edit', component: TemplateEditForm, canActivate: [UserGuard]},
     { path: 'templates/search', component: TemplateSearchComponent, canActivate: [UserGuard]},
     { path: 'templates/:id/instance', component: TemplateInstanceCreateComponent, canActivate: [UserGuard] }, 
     { path: 'template-instances', component: TemplateInstanceIndexComponent, canActivate: [UserGuard] },
@@ -106,7 +121,8 @@ const routes: Routes = [
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
-        UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent
+        UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
+        TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent
         
     ],
     // modules
@@ -120,7 +136,8 @@ const routes: Routes = [
         MaterialModule.forRoot() ,
         Ng2DropdownModule,
         TagInputModule,
-        FileUploadModule       
+        FileUploadModule,
+        NgxDatatableModule       
     ],
     // providers
     providers: [

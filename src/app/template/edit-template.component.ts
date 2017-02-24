@@ -32,17 +32,20 @@ export class TemplateEditComponent implements OnInit  {
     
     
     ngOnInit(){
-        this.sub = this.route.params.subscribe(params => {
-            let id = +params['id']; // (+) converts string 'id' to a number
-            this.templateService.cleanStore();
-            this.templateService.getTemplate(id);
-            this.templateService.template.subscribe( template => {           
-                this.template = template;
-                this.templateService.createContentsForTemplate();
-                if(this.template.pages && this.template.pages[0]){
-                    this.pageSelector.selectPage(this.template.pages[0])
-                }
-            });
-        });
-    }
+        this.route.params.map(params=>{
+            this.templateService.cleanStore()
+            this.templateService.getTemplate(params['id'])
+       })
+       .flatMap(
+           ()=>this.templateService.template
+       )
+       .first(template => template.id > 0)
+       .subscribe(template => {
+           this.template = template
+           this.templateService.createContentsForTemplate();
+           if(this.template.pages && this.template.pages[0]){
+               this.pageSelector.selectPage(this.template.pages[0])
+           }
+        })
+   }
 }
