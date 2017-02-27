@@ -85,21 +85,16 @@ export class PageSelector {
         page.elements.push(element);        
     }
     
-    createNewTableElement(){
+    createNewTableElement(width: number, height: number, columnWidth: number, rowHeight: number){
     	let page = this._page.value
         if (page.elements == null) {
             page.elements = new Array<Element>();
         }
         var element = new TableElement();
-        element.width = 100
-        element.height = 100
         element.positionX = 0
         element.positionY = 0
-        TableElement.addRows(element,5,5)
-        var content = new TableContent()
-        content.addRows(5,5)
-        element.content = content
-        this.stepSelector.makeStep(new ArrayStepPush(element, page.elements))
+        console.log(width,height)
+        TableElement.addRows(element, height, width, rowHeight, columnWidth, 0)
         page.elements.push(element)
     }
     

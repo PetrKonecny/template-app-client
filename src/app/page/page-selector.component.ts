@@ -18,6 +18,7 @@ import {FrameElement} from '../element/frame-element'
 import {ImageSelector} from '../image/image-selector'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {ImageSelectorComponent} from '../image/image-selector.component'
+import {CreateTableModal} from '../element/create-table-element.modal'
 
 @Component({
     selector: 'page-select',
@@ -25,7 +26,6 @@ import {ImageSelectorComponent} from '../image/image-selector.component'
                 <span *ngIf="page">\n\
                     <br>
                     <button (click)="createNewTextElement()">Add text element</button>
-                    <button (click)="onAddImageButtonClick()">Add image element</button>\n\
                     <button (click)="createNewFrameElement()">Add frame element</button>
                     <button (click)="createNewTableElement()">Add table element</button>\n\
                     <button (click)="createNewRulerX()">Add vertical ruler</button>
@@ -70,7 +70,12 @@ export class PageSelectorComponent {
     }
         
     createNewTableElement(){
-        this.pageSelector.createNewTableElement()
+        let dialogRef = this.dialog.open(CreateTableModal, {disableClose: false})
+        dialogRef.afterClosed().subscribe(val =>{
+            if(val && val.rows && val.columns && val.rowHeight && val.columnWidth){
+                this.pageSelector.createNewTableElement(val.columns,val.rows,val.columnWidth,val.rowHeight)
+            }
+        })
     }
     
     createNewRulerX(){

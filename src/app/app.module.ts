@@ -88,6 +88,7 @@ import {AdminTemplateInstancesComponent} from './admin/admin-template-instances.
 import {UserTableComponent} from './admin/user-table.component'
 import {TemplateInstanceTableComponent} from './admin/template-instance-table.component'
 import { TemplateTableComponent } from './admin/template-table.component'
+import {CreateTableModal} from './element/create-table-element.modal'
 
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
@@ -122,7 +123,7 @@ const routes: Routes = [
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
-        TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent
+        TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal
         
     ],
     // modules
@@ -146,7 +147,7 @@ const routes: Routes = [
     bootstrap: [
         AppComponent
     ],
-    entryComponents: [ImageSelectorComponent, SaveTemplateModal]
+    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal]
 })
 
 export class AppModule { }  

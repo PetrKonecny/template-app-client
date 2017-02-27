@@ -4,13 +4,23 @@ export class TableContent extends Content {
     type: string = 'table_content'
     rows: Array<RowContent>
     
-    addRows(count: number, length: number){
-        if(!this.rows) this.rows = new Array()
+    static addRows(content: TableContent,  length: number, count: number = 1,  position: number = 0){
+        if(!content.rows) content.rows = new Array()
         for(var i = 0; i<count; i++){
             var row = new RowContent()
-            row.addCells(length)
-            this.rows.push(row)
+            RowContent.addCells(row,length)
+            console.log(length)
+            content.rows.splice(position, 0, row)
         }
+        console.log(content.rows)
+    }
+
+    static addColumns(content: TableContent, count: number = 1, position: number = 0){
+        if(!content.rows) content.rows = new Array()
+        content.rows.forEach(row =>{
+            RowContent.addCells(row,count,position)
+        })
+
     }
     
     
@@ -40,10 +50,10 @@ export class TableContent extends Content {
 export class RowContent{
     cells: Array<CellContent>
     
-    addCells (count: number){
-        if (!this.cells) this.cells = new Array()
+    static addCells (content: RowContent, count: number, position: number = 0){
+        if (!content.cells) content.cells = new Array()
         for(var i = 0; i<count; i++){
-            this.cells.push(new CellContent())
+            content.cells.splice(position,0,new CellContent())
         }
     }
 } 

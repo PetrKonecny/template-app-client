@@ -9,7 +9,7 @@ import { NewPageRemote } from '../page/new-page.remote'
 @Component({
     selector: 'create-new-frame-element',
     template: `
-        <div #frame *ngIf="draggable"  (drop)="onDrop($event)" (dragover)="onDragOver()" [class.selected]="selected" draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
+        <div #frame *ngIf="draggable"  (drop)="onDrop($event)" (dragover)="onDragOver($event)" [class.selected]="selected" draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
             <display-content *ngIf="element.content" [content] = "element.content"></display-content>
             <button *ngIf="element.content && !element.content.image" style="top: 20px" class="button" (click)="onAddButtonClick()" >Add image</button>
             <button *ngIf="element.content && element.content.image" style="top: 40px" class="button" (click)="onDeleteButtonClick()" class="button">Delete image</button>
@@ -57,8 +57,8 @@ export class NewFrameElementComponent {
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }
 
-    onDragOver(){
-        console.log('dragover')
+    onDragOver(event){
+        event.stopPropagation();
         return false
     }
 

@@ -8,16 +8,59 @@ import { NewTableElement } from './new-table-element'
 @Component({
     selector: 'create-new-table-element',
     template: `
-        <div *ngIf="selected" style="position: absolute;" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY - 40">
+        <div *ngIf="selected" style="position: absolute" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY - 40">
         <button md-raised-button  md-icon-button [color]="element.clientState == 0? 'accent' : 'background'" (click)="element.clientState = 0"><md-icon>zoom_out_map</md-icon></button>
         <button md-raised-button  md-icon-button [color]="element.clientState == 1? 'accent' : 'background'"  (click)="element.clientState = 1">Ab</button>
         <button md-raised-button  md-icon-button [color]="element.clientState == 2? 'accent' : 'background'"  (click)="element.clientState = 2"><md-icon>vertical_align_center</md-icon></button>
-        <button md-raised-button md-icon-button [color]="element.clientState == 3? 'accent' : 'background'"  (click)="element.clientState = 3"><md-icon>border_all</md-icon></button>
+        <span *ngIf="element.clientState ==2">
+            <button md-icon-button [mdMenuTriggerFor]="resizeTableMenu"><md-icon>more_vert</md-icon></button>
+            <md-menu #resizeTableMenu="mdMenu">
+              <button md-menu-item (click)="addColumnLeft()" [disabled]="!element.selectedCells?.length == 1">
+                <span>Add column to the left</span>
+              </button>
+              <button md-menu-item (click)="addColumnRight()" [disabled]="!element.selectedCells?.length == 1">
+                <span>Add column to the right</span>
+              </button>
+              <button md-menu-item (click)="addRowBelow()" [disabled]="!element.selectedCells?.length == 1">
+                <span>Add row below</span>
+              </button>
+              <button md-menu-item (click)="addRowAbove()" [disabled]="!element.selectedCells?.length == 1">
+                <span>Add row above</span>
+              </button>
+              <button md-menu-item (click)="deleteColumn()" [disabled]="!element.selectedCells?.length == 1">
+                <span>Delete column</span>
+              </button>
+              <button md-menu-item (click)="deleteRow()" [disabled]="!element.selectedCells?.length == 1">
+                <span>Delete row</span>
+              </button>
+              <button md-menu-item>
+                <span>Distribute rows</span>
+              </button>
+              <button md-menu-item>
+                <span>Distribute columns</span>
+              </button>              
+            </md-menu>
+        </span>
+        <button md-raised-button  md-icon-button [color]="element.clientState == 3? 'accent' : 'background'"  (click)="element.clientState = 3"><md-icon>border_all</md-icon></button>
+        <span *ngIf="element.clientState ==3">
+            <button md-icon-button [mdMenuTriggerFor]="editCellsMenu"><md-icon>more_vert</md-icon></button>
+            <md-menu #editCellsMenu="mdMenu">
+              <button md-menu-item [disabled]="element.selectedCells?.length <= 1">
+                <span>Merge cells</span>
+              </button>
+              <button md-menu-item [disabled]="!element.selectedCells?.length == 1">
+                <span>Clear selection</span>
+              </button>                       
+            </md-menu>
+        </span>      
         </div>
-        <table *ngIf="element.clientState == 0" [class.selected]="selected" draggable2 resizable (resize)="resize($event)" (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <table *ngIf="element.clientState == 0" [class.selected]="selected" draggable2 (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i" [style.height.px]="row.height" [content]="element.content.rows[i]" class="locked"></tr>
         </table>
-        <table *ngIf="element.clientState > 0" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
+        <table *ngIf="element.clientState == 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
+            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height - 4"></tr>
+        </table>
+        <table *ngIf="element.clientState > 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height"></tr>
         </table>
         `,
@@ -33,6 +76,7 @@ import { NewTableElement } from './new-table-element'
             margin-right: 10px;
         }
         table {
+            position: absolute;
             table-layout: fixed;
         }
         table, td {
@@ -54,16 +98,34 @@ export class NewTableElementComponent implements OnInit{
     selected: boolean
     
     move(dimensions: ElementDimensions){
+        console.log(dimensions)
         this.newPage.move(this.element,dimensions)
     }
     
     resize(dimensions: ElementDimensions){
         this.newPage.resizeTableElement(this.element,dimensions)      
     }
+
+    ngDoCheck(){
+        this.element.height = this.getTableHeight()
+        this.element.width = this.getTableWidth()
+    }
     
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
         this.counter = 0
+    }
+
+    getTableHeight(){
+        let total = 0
+        this.element.rows.forEach(row => total += row.height)
+        return total
+    }
+
+    getTableWidth(){
+        let total = 0
+        this.element.rows.forEach(row => total += row.cells[0].width)
+        return total
     }
     
     @HostListener('document:mousedown', ['$event'])
@@ -77,6 +139,42 @@ export class NewTableElementComponent implements OnInit{
     
     onElementClicked(){
         this.elementSelector.changeElement(this.element)
+    }
+
+    addRowAbove(){
+        if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
+            TableElement.addRowAbove(this.element, this.element.selectedCells[0])
+        }
+    }
+
+    addRowBelow(){
+        if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
+            TableElement.addRowBelow(this.element, this.element.selectedCells[0])
+        }
+    }
+
+    addColumnRight(){
+        if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
+            TableElement.addColumnRight(this.element, this.element.selectedCells[0])
+        }
+    }
+
+    addColumnLeft(){
+        if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
+            TableElement.addColumnLeft(this.element, this.element.selectedCells[0])
+        }
+    }
+
+    deleteColumn(){
+        if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
+            TableElement.deleteColumn(this.element, this.element.selectedCells[0])
+        }       
+    }
+
+    deleteRow(){
+        if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
+            TableElement.deleteRow(this.element, this.element.selectedCells[0])
+        }
     }
   
     fillFromDOM(){

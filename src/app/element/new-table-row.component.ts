@@ -27,9 +27,10 @@ import { NewTableElement } from './new-table-element'
                 <template [ngIf]="element.clientState == 2">
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
                         [attr.colspan]=cell.colspan 
-                        [attr.rowspan]=cell.rowspan (mousedown)="onMousedown(x)" 
+                        [attr.rowspan]=cell.rowspan 
+                        (mousedown)="onMousedownEdit(x, cell)" 
                         [style.width.px]="cell.width" resizable (resize)="resize($event)" 
-                        [style.background]="cell.background_color ? cell.background_color : 'none'"
+                        [style.background]="getCellBGColor(cell)"
                         [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
                         [style.text-align]="element.rows[y].cells[x].text_align" 
                         [class.italic]="element.rows[y].cells[x].italic"  
@@ -67,7 +68,7 @@ import { NewTableElement } from './new-table-element'
                         [attr.colspan]=cell.colspan 
                         [attr.rowspan]=cell.rowspan 
                         [style.background]="cell.background_color ? cell.background_color : 'none'"
-                        [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
+                        [style.color]="cell.text_color ? cell.text_color : defaultTextColor"
                         [style.width.px]="cell.width" 
                         [style.border-style]="cell.border_style" 
                         [style.border-color]="cell.border_color ? cell.border_color : defaultBorderColor " 
@@ -168,7 +169,7 @@ export class NewTableRowComponent implements OnInit{
         }
     }
     
-    resize(dimensions: any){
+    resize(dimensions: any, cell: Cell){
         if(dimensions.width){
             for (var row of this.element.rows){
                 row.cells[this.x].width += dimensions.width
@@ -178,7 +179,9 @@ export class NewTableRowComponent implements OnInit{
         }
     }
     
-    onMousedown(x: number){
+    onMousedownEdit(x: number, cell: Cell){
+        TableElement.clearSelectedCells(this.element)
+        TableElement.selectCell(this.element, cell)
         this.x = x
     }
     
