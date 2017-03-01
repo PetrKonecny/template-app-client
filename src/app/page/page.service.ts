@@ -210,7 +210,7 @@ export class PageService {
         if (this.counter > TableElement.default_row_height){
             var row = new RowContent;
             content.rows.push(row)
-            row.addCells(element.rows[0].cells.length)
+            RowContent.addCells(row,element.rows[0].cells.length)
             TableElement.addRows(element,1, element.rows[0].cells.length)
             this.rowsChanged(element)               
         } else if (this.counter < -TableElement.default_row_height){

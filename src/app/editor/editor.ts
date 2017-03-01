@@ -8,5 +8,9 @@ export class Editor {
     constructor(){
         this.id = Math.random().toString(36).substring(7);
     }
+
+    static setText(editor: Editor, text: string){
+    	editor.editor.setContent(text)
+    }
     
 }

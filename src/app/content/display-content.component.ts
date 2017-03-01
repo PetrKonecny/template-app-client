@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, ElementRef, DoCheck, KeyValueDiffer, KeyValueDiffers} from '@angular/core';
 import { Content} from './content';
-import { TextContent } from './text-content'
+import { TextContent, TextContentRedoer } from './text-content'
 import {StepSelector, StateChangeRespond} from '../step-selector'
 import { AppConfig } from '../app.config'
 
@@ -44,7 +44,7 @@ import { AppConfig } from '../app.config'
     `],
 })
 
-export class DisplayContentComponent implements DoCheck, StateChangeRespond {
+export class DisplayContentComponent {
     @Input()
     content: Content;
     @ViewChild('textBox')
@@ -61,28 +61,19 @@ export class DisplayContentComponent implements DoCheck, StateChangeRespond {
     
     keyupHandlerFunction(text: string){
         let content =<TextContent> this.content
-        content.text = text
+        this.textContentRedoer.changeText(content, text)
     }
 
     getSubject(){
         return this.content
     }
 
-    ngDoCheck(){
-        var changes = this.differ.diff(this.content);
-        if(changes) {
-            this.stateService.respond(changes,this)           
-        }
-        
-    }
-
     constructor(
         private differs: KeyValueDiffers,
         private stateService: StepSelector,
-        private config: AppConfig
-    ){
-        this.differ = differs.find({}).create(null);
-    }
+        private config: AppConfig,
+        private textContentRedoer: TextContentRedoer
+    ){}
     
     saveContent(){
         /*if(this.content.type == 'text_content'){

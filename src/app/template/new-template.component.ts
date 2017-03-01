@@ -10,6 +10,7 @@ import { PageSelector} from '../page/page-selector'
 import { RulerSelector } from '../guide/ruler-selector'
 import { TextSelector } from '../editor/text-selector'
 import { SaveTemplateModal } from './save-template.modal'
+import { UndoRedoService } from '../undo-redo.service'
 
 @Component({
     selector: 'create-new-template',
@@ -67,8 +68,8 @@ export class NewTemplateComponent implements OnInit {
     constructor(
         private templateService: TemplateInstanceStore,
         private imageSelector: ImageSelector,
-        private stepSelector: StepSelector,
-        public dialog: MdDialog
+        public dialog: MdDialog,
+        private undoService: UndoRedoService
     ){ }
     
     ngOnInit(){
@@ -101,7 +102,7 @@ export class NewTemplateComponent implements OnInit {
 
    
     undo(){
-        this.stepSelector.undo()
+        this.undoService.undo()
     }
 
 }

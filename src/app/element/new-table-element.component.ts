@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core';
-import { TableElement} from './table-element'
+import { TableElement, TableElementRedoer} from './table-element'
 import { ElementDimensions} from '../resizable.directive'
 import { ElementSelector } from './element-selector'
 import { NewPageRemote } from '../page/new-page.remote'
@@ -45,10 +45,10 @@ import { NewTableElement } from './new-table-element'
         <span *ngIf="element.clientState ==3">
             <button md-icon-button [mdMenuTriggerFor]="editCellsMenu"><md-icon>more_vert</md-icon></button>
             <md-menu #editCellsMenu="mdMenu">
-              <button md-menu-item [disabled]="element.selectedCells?.length <= 1">
+              <button md-menu-item (click)="mergeCells()" [disabled]="element.selectedCells?.length <= 1">
                 <span>Merge cells</span>
               </button>
-              <button md-menu-item [disabled]="!element.selectedCells?.length == 1">
+              <button md-menu-item (click)="clearSelection()" [disabled]="!element.selectedCells?.length == 1">
                 <span>Clear selection</span>
               </button>                       
             </md-menu>
@@ -132,7 +132,7 @@ export class NewTableElementComponent implements OnInit{
     onDocMousedown(event) {
     }
     
-    constructor (private elementSelector: ElementSelector, private newPage: NewPageRemote, private newTableElement: NewTableElement){
+    constructor (private elementSelector: ElementSelector, private newPage: NewPageRemote, private newTableElement: NewTableElement, private redoer: TableElementRedoer){
         this.newTableElement.component = this
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }
@@ -143,43 +143,52 @@ export class NewTableElementComponent implements OnInit{
 
     addRowAbove(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            TableElement.addRowAbove(this.element, this.element.selectedCells[0])
+            this.redoer.addRowAbove(this.element, this.element.selectedCells[0])
         }
     }
 
     addRowBelow(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            TableElement.addRowBelow(this.element, this.element.selectedCells[0])
+            this.redoer.addRowBelow(this.element, this.element.selectedCells[0])
         }
     }
 
     addColumnRight(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            TableElement.addColumnRight(this.element, this.element.selectedCells[0])
+            this.redoer.addColumnRight(this.element, this.element.selectedCells[0])
         }
     }
 
     addColumnLeft(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            TableElement.addColumnLeft(this.element, this.element.selectedCells[0])
+            this.redoer.addColumnLeft(this.element, this.element.selectedCells[0])
         }
     }
 
     deleteColumn(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            TableElement.deleteColumn(this.element, this.element.selectedCells[0])
+            this.redoer.deleteColumn(this.element, this.element.selectedCells[0])
         }       
     }
 
     deleteRow(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            TableElement.deleteRow(this.element, this.element.selectedCells[0])
+            this.redoer.deleteRow(this.element, this.element.selectedCells[0])
         }
     }
-  
-    fillFromDOM(){
-    }    
-    
+
+    mergeCells(){
+        if(this.element.selectedCells.length && this.element.selectedCells.length > 1){
+            this.redoer.mergeSCells(this.element)
+        }
+    }
+
+    clearSelection(){
+        if(this.element.selectedCells.length){
+            TableElement.clearSelectedCells(this.element)
+        }
+    }
+
     ngOnInit(){
         this.element.clientState = 0
     }

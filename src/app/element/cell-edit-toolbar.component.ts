@@ -28,8 +28,6 @@ import {TextSelector} from '../editor/text-selector'
                         <button md-icon-button (click)="changeSelectedCellsTextAlignVert('bottom')"><md-icon>vertical_align_bottom</md-icon></button>
                         <button md-icon-button (click)="changeSelectedCellsTextAlignVert('middle')"><md-icon>vertical_align_middle</md-icon></button>
                     </my-md-menu>
-                <button md-icon-button mdTooltip="Clear selection" (click)="clearSelection()"><md-icon>clear</md-icon></button>
-                <button md-icon-button *ngIf="element.selectionWidth > 1 || element.selectionHeight > 1" (click)="mergeCells()" mdTooltip="Merge selected cells">M</button>
                 <button md-icon-button mdTooltip="Border format" [mdMenuTriggerFor]="borderMenu">B</button>
                 <my-md-menu #borderMenu="mdMenu">
                     <button md-icon-button (click)="changeSelectedCellsBorderStyle('none')"><md-icon>border_clear</md-icon></button>

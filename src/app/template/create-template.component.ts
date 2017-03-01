@@ -7,13 +7,16 @@ import { StepSelector } from '../step-selector'
 import { PageSelector} from '../page/page-selector'
 import { RulerSelector } from '../guide/ruler-selector'
 import { TextSelector } from '../editor/text-selector'
+import { UndoRedoService } from '../undo-redo.service'
+import { TableElementRedoer } from '../element/table-element'
+import { TextContentRedoer } from '../content/text-content'
 
 @Component({
     selector: 'template-create',
     template: `
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector, TextSelector]
+    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementRedoer, TextContentRedoer]
 })
 
 export class TemplateCreateComponent implements OnInit, AfterViewInit  {

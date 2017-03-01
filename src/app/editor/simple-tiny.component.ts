@@ -35,45 +35,15 @@ declare var tinymce: any;
             user-select: none;
         }`],
 })
-export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit, DoCheck {
+export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit  {
     @Input() content: TextContent;
     @Output() onEditorKeyup = new EventEmitter<any>();
-    ignoreChange: boolean
-    differ: KeyValueDiffer;  
-
-    constructor(private differs: KeyValueDiffers){
-        this.differ = differs.find({}).create(null);
-    }
 
     ngOnInit(){
         this.content.editor = new Editor()
     }
-
-    ngDoCheck(){
-        var changes = this.differ.diff(this.content);
-        if(changes){
-            /*console.log("editor change")
-            if(this.ignoreChange){
-                this.ignoreChange = false
-                return 
-            } */    
-            changes.forEachItem(
-            item =>{
-                if(item.key == 'text'){
-                    if(!this.ignoreChange){
-                        if(this.content.editor && this.content.editor.editor){
-                            this.content.editor.editor.setContent(item.currentValue)
-                        }
-                    }else{
-                        this.ignoreChange = false
-                    }
-                }
-            })
-        }
-    }
   
     ngAfterViewInit() {
-        console.log(this.content.editor.id)
         tinymce.init({
             selector: '#'+this.content.editor.id,
             menubar:false,
@@ -86,7 +56,6 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit, Do
                 this.content.editor.editor = editor
                 editor.on('change', () => {
                     const content = editor.getContent();
-                    this.ignoreChange = true 
                     this.onEditorKeyup.emit(content);
                 });
                 editor.on('NodeChange', (e) => {

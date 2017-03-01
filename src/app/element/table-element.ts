@@ -1,8 +1,323 @@
 import {Font} from '../font/font';
 import {Element} from './element'
-import {TableContent} from '../content/table-content'
-
+import {TableContent, RowContent, CellContent} from '../content/table-content'
 export enum ClientState {moveResize,fillOut,editTable,editCells}
+import {UndoRedoService, Command} from '../undo-redo.service'
+import {Injectable} from '@angular/core';
+
+/* Extending this command should allow rollback funcionality for
+most table commands, however it is not the most optimal solution
+when performance is a concern (for example with larger tables) custon unExecute method 
+should be implemented instead
+*/
+@Injectable()
+export class TableElementRedoer{
+
+    constructor(private service: UndoRedoService){}
+
+
+    addRowAbove(element: TableElement, cell: Cell){
+        this.service.execute(new AddRowAbove(element,cell))
+    }
+
+    addRowBelow(element: TableElement, cell: Cell){
+        this.service.execute(new AddRowBelow(element,cell))
+    }
+
+    addColumnLeft(element: TableElement, cell: Cell){
+        this.service.execute(new AddColumnLeft(element,cell))
+    }
+
+    addColumnRight(element: TableElement, cell: Cell){
+        this.service.execute(new AddColumnRight(element,cell))
+    }
+
+    deleteRow(element: TableElement, cell: Cell){
+        this.service.execute(new DeleteRow(element,cell))
+    }
+
+    deleteColumn(element: TableElement, cell: Cell){
+        this.service.execute(new DeleteColumn(element,cell))
+    }
+
+    mergeSCells(element: TableElement){
+        this.service.execute(new mergeSCells(element))
+    }
+
+    changeSCellsBold(element: TableElement){
+        this.service.execute(new changeSCellsBold(element))
+    }
+
+    changeSCellsItalic(element: TableElement){
+        this.service.execute(new changeSCellsItalic(element))
+    }
+
+    changeSCellsBorderW(element: TableElement, width: number){
+        this.service.execute(new changeSCellsParam(element,"border_width",width))
+    }
+
+    changeSCellsBorderStyle(element: TableElement, style: string){
+        this.service.execute(new changeSCellsParam(element,"border_style",style))
+    }
+
+    changeSCellsBorderColor(element: TableElement, color: string){
+        this.service.execute(new changeSCellsParam(element,"border_color",color))
+    }
+
+    changeSCellsBackgroundColor(element: TableElement, color: string){
+        this.service.execute(new changeSCellsParam(element,"background_color",color))
+    }
+
+    toggleSCellsBackground(element: TableElement, value: boolean){
+        if(value){
+            this.service.execute(new changeSCellsParam(element,"background_color",Element.defaultBackgroundColor))
+        }else{
+            this.service.execute(new changeSCellsParam(element,"background_color",null))
+        }
+    }
+
+    changeSCellsTextAlign(element: TableElement, align: string){
+        this.service.execute(new changeSCellsParam(element,"text_align",align))
+    }
+
+    changeSCellsTextAlignVert(element: TableElement, align: string){
+        this.service.execute(new changeSCellsParam(element,"vertical_align",align))
+    }
+
+    changeSCellsFontSize(element: TableElement, size: number){
+        this.service.execute(new changeSCellsParam(element,"font_size",size))
+    }
+
+    changeSCellsTextColor(element: TableElement, color: string){
+        this.service.execute(new changeSCellsParam(element,"text_color",color))
+    }
+}
+
+
+export class DefaultTableCommand implements Command{
+
+    constructor(public element: TableElement){}
+    rowString: string
+    contentString: string
+
+    execute(){
+        this.rowString = JSON.stringify(this.element.rows)
+        let content = <TableContent> this.element.content
+        this.contentString = JSON.stringify(content.rows)
+    }
+
+    unExecute(){
+        this.element.rows = JSON.parse(this.rowString)
+        let content = <TableContent> this.element.content
+        content.rows = JSON.parse(this.contentString)
+    }
+
+}
+
+/*Executing this command adds new row with content in cells to the
+given element above the given cell
+*/
+export class AddRowAbove extends DefaultTableCommand{
+
+    constructor(public element: TableElement, private cell: Cell){
+        super(element)
+    }
+
+    execute(){
+        super.execute()
+        let position = TableElement.getCellPosition(this.element,this.cell)
+        let length = TableElement.getRowCellWidth(this.element.rows[position.y])
+        TableElement.addRows(this.element,undefined,length,undefined, undefined, position.y )
+    }   
+}
+
+/*Executing this command adds new row with content in cells to the 
+given element below the given cell
+*/
+export class AddRowBelow extends DefaultTableCommand{
+
+    constructor(public element: TableElement, private cell: Cell){
+        super(element)
+    }
+
+    execute(){
+        super.execute()
+        let position = TableElement.getCellPosition(this.element,this.cell)
+        let length = TableElement.getRowCellWidth(this.element.rows[position.y])
+        let y = this.cell.rowspan? this.cell.rowspan : 1
+        TableElement.addRows(this.element,undefined,length,undefined, undefined, position.y + y)
+    }
+
+}
+
+/*Executing this command adds new row with content in cells to the 
+given element left of the the given cell
+*/
+export class AddColumnLeft extends DefaultTableCommand{
+
+    constructor(public element: TableElement, private cell: Cell){
+        super(element)
+    }
+
+    execute(){
+        super.execute()
+        let position = TableElement.getCellPosition(this.element,this.cell)
+        let length = TableElement.getRowCellWidth(this.element.rows[position.y])
+        TableElement.addColumns(this.element,undefined,undefined, undefined,position.x)
+    }
+
+}
+
+/*Executing this command adds new row with content in cells to the 
+given element right of the the given cell
+*/
+export class AddColumnRight extends DefaultTableCommand{
+    
+    constructor(public element: TableElement, private cell: Cell){
+        super(element)
+    }
+
+    execute(){
+        super.execute()
+        let position = TableElement.getCellPosition(this.element,this.cell)
+        let length = TableElement.getRowCellWidth(this.element.rows[position.y])
+        let x = this.cell.colspan? this.cell.colspan : 1
+        TableElement.addColumns(this.element,undefined,undefined, undefined,position.x + x)
+    }
+
+}
+
+/*Executing this command deletes the row that contains the given cell from
+the given element
+*/
+export class DeleteRow extends DefaultTableCommand{
+    constructor(public element: TableElement, private cell: Cell){
+        super(element)
+    }
+
+    execute(){
+        super.execute()
+        let position = TableElement.getCellPosition(this.element,this.cell)
+        let content = <TableContent> this.element.content
+        this.element.rows.splice(position.y,1)[0]
+        content.rows.splice(position.y,1)[0]
+    }
+}
+
+/*Executing this command deletes the column that contains the given cell from
+the given element
+*/
+export class DeleteColumn extends DefaultTableCommand{
+    constructor(public element: TableElement, private cell: Cell){
+        super(element)
+    }
+
+
+    execute(){
+        super.execute()
+        let position = TableElement.getCellPosition(this.element,this.cell)
+        let content = <TableContent> this.element.content
+        this.element.rows.forEach(row =>{
+            row.cells.splice(position.x,1)
+        })
+        content.rows.forEach(row =>{
+            row.cells.splice(position.x,1)
+        })
+    }   
+}
+
+export class mergeSCells extends DefaultTableCommand{
+    
+    execute(){
+        super.execute()
+        this.rowString = JSON.stringify(this.element.rows)
+        let content = <TableContent> this.element.content
+        this.contentString = JSON.stringify(content.rows)
+        let element = this.element
+        var firstCell = TableElement.getTopLeftCorner(element,element.selectedCells)
+        firstCell.selected = false
+        firstCell.colspan = element.selectionWidth
+        firstCell.rowspan = element.selectionHeight
+        element.selectedCells.splice(element.selectedCells.indexOf(firstCell),1)
+        element.rows.forEach(row=>{
+            for (let i = row.cells.length; i> -1; i--){
+                element.selectedCells.forEach(cell =>{
+                    if (cell == row.cells[i]){
+                        row.cells.splice(i,1)
+                    }
+                })
+            }
+        })
+        TableElement.clearSelectedCells(this.element)            
+    }
+
+    unExecute(){
+        super.unExecute()
+        TableElement.clearSelectedCells(this.element)            
+    }
+}
+
+export class changeSCellsBold extends DefaultTableCommand{
+
+    execute(){
+        super.execute()
+        let bold = true
+        var element = this.element
+        if(element.selectedCells.every(cell=>cell.bold)){
+            bold = false
+        }
+        element.selectedCells.forEach((cell) => {
+            cell.bold = bold
+        })
+
+    }
+
+    unExecute(){
+        super.unExecute()
+        TableElement.clearSelectedCells(this.element)            
+    }
+
+}
+
+export class changeSCellsItalic extends DefaultTableCommand{
+
+    execute(){
+        super.execute()
+        let italic = true
+        var element = this.element
+        if(element.selectedCells.every(cell=>cell.italic)){
+            italic = false
+        }
+        element.selectedCells.forEach((cell) => {
+            cell.italic = italic
+        })
+    }
+
+    unExecute(){
+        super.unExecute()
+        TableElement.clearSelectedCells(this.element)            
+    }
+
+}
+
+export class changeSCellsParam extends DefaultTableCommand {
+    constructor(public element: TableElement, private paramName: string, private paramValue){
+        super(element)
+    }
+
+    execute(){
+        super.execute()
+        this.element.selectedCells.forEach((cell) => {
+            cell[this.paramName] = this.paramValue
+        })
+    }
+
+    unExecute(){
+        super.unExecute()
+        TableElement.clearSelectedCells(this.element)            
+    }
+
+}
 
 export class TableElement extends Element {
     font_size: number;
@@ -55,49 +370,21 @@ export class TableElement extends Element {
         return total
     }
 
-    static deleteRow(element: TableElement, cell: Cell){
-        let position = TableElement.getCellPosition(element,cell)
+    static deleteRow(element: TableElement, position: number){
         let content = <TableContent> element.content
-        element.rows.splice(position.y,1)
-        content.rows.splice(position.y,1)
+        element.rows.splice(position,1)
+        content.rows.splice(position,1)
     }
 
-    static deleteColumn(element: TableElement, cell: Cell){
-        let position = TableElement.getCellPosition(element,cell)
+    static deleteColumn(element: TableElement, position: number){
         let content = <TableContent> element.content
         element.rows.forEach(row =>{
-            row.cells.splice(position.x,1)
+            row.cells.splice(position,1)
         })
         content.rows.forEach(row =>{
-            row.cells.splice(position.x,1)
+            row.cells.splice(position,1)
         })
 
-    }
-
-    static addRowAbove(element: TableElement, cell: Cell){
-        let position = TableElement.getCellPosition(element,cell)
-        let length = TableElement.getRowCellWidth(element.rows[position.y])
-        TableElement.addRows(element,undefined,length,undefined, undefined,position.y)
-    }
-
-    static addColumnLeft(element: TableElement, cell: Cell){
-        let position = TableElement.getCellPosition(element,cell)
-        let length = TableElement.getRowCellWidth(element.rows[position.y])
-        TableElement.addColumns(element,undefined,undefined, undefined,position.x)
-    }
-
-    static addColumnRight(element: TableElement, cell: Cell){
-        let position = TableElement.getCellPosition(element,cell)
-        let length = TableElement.getRowCellWidth(element.rows[position.y])
-        let x = cell.colspan? cell.colspan : 1
-        TableElement.addColumns(element,undefined,undefined, undefined,position.x + x)
-    }
-
-    static addRowBelow(element: TableElement, cell: Cell){
-        let position = TableElement.getCellPosition(element,cell)
-        let length = TableElement.getRowCellWidth(element.rows[position.y])
-        let y = cell.rowspan? cell.rowspan : 1
-        TableElement.addRows(element,undefined,length,undefined, undefined,position.y + y)
     }
 
     static getCellPosition(element: TableElement, cell: Cell){
@@ -145,7 +432,18 @@ export class TableElement extends Element {
         element.rows.forEach((row)=> row.cells.forEach((cell) => cell.selected = false))
         element.selectedCells = new Array
     }
-    
+
+    static getTopLeftCorner(element: TableElement, selectedCells: Array<Cell>){
+        let minCell: Cell = selectedCells[0]
+        selectedCells.forEach(cell => { 
+            if (minCell.position.x >= cell.position.x) { 
+                if (minCell.position.y > cell.position.y){
+                    minCell = cell
+                }
+            } 
+        })
+        return minCell
+    } 
 }
 
 
