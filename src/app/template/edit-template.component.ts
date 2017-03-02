@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, HostListener} from '@angular/core';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { Template} from './template';
 import {ActivatedRoute} from '@angular/router';
@@ -8,13 +8,18 @@ import { StepSelector } from '../step-selector'
 import { PageSelector} from '../page/page-selector'
 import { RulerSelector } from '../guide/ruler-selector'
 import { TextSelector } from '../editor/text-selector'
+import { UndoRedoService } from '../undo-redo.service'
+import { TableElementRedoer } from '../element/table-element'
+import { TextContentRedoer } from '../content/text-content'
+import { ImageContentRedoer } from '../content/image-content'
+import { ElementRedoer } from '../element/element'
 
 @Component({
     selector: 'template-edit',
     template: `
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector, TextSelector]
+    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementRedoer, TextContentRedoer, ImageContentRedoer, ElementRedoer]
 })
 
 export class TemplateEditComponent implements OnInit  {
@@ -27,9 +32,14 @@ export class TemplateEditComponent implements OnInit  {
     constructor(
         private route: ActivatedRoute,
         private templateService: TemplateInstanceStore,
-        private pageSelector: PageSelector 
+        private pageSelector: PageSelector,
+        private undoRedoService: UndoRedoService 
     ){ }
     
+    @HostListener('document:mouseup', ['$event'])
+    onMouseup(event) {
+       this.undoRedoService.saveBuffer()
+    }
     
     ngOnInit(){
         this.route.params.map(params=>{

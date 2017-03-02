@@ -4,6 +4,7 @@ import { ElementDimensions} from '../resizable.directive'
 import { ElementSelector } from './element-selector'
 import { NewPageRemote } from '../page/new-page.remote'
 import { NewTableElement } from './new-table-element'
+import { ElementRedoer} from './element';
 
 @Component({
     selector: 'create-new-table-element',
@@ -98,9 +99,11 @@ export class NewTableElementComponent implements OnInit{
     selected: boolean
     
     move(dimensions: ElementDimensions){
-        console.log(dimensions)
-        this.newPage.move(this.element,dimensions)
-    }
+        let d = this.newPage.move(this.element,dimensions)
+        if(d){
+            this.elementRedoer.startMovingElement(this.element,d)
+        }   
+     }
     
     resize(dimensions: ElementDimensions){
         this.newPage.resizeTableElement(this.element,dimensions)      
@@ -132,7 +135,13 @@ export class NewTableElementComponent implements OnInit{
     onDocMousedown(event) {
     }
     
-    constructor (private elementSelector: ElementSelector, private newPage: NewPageRemote, private newTableElement: NewTableElement, private redoer: TableElementRedoer){
+    constructor (
+        private elementSelector: ElementSelector, 
+        private newPage: NewPageRemote, 
+        private newTableElement: NewTableElement, 
+        private redoer: TableElementRedoer,  
+        private elementRedoer: ElementRedoer
+    ){
         this.newTableElement.component = this
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }

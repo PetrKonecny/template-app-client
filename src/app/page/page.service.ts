@@ -49,7 +49,7 @@ export class PageService {
         element.positionY += dimensions.top
     }
     
-    move(element: Element, dimensions: ElementDimensions, page: Page, guides: Guide[]){
+    move(element: Element, dimensions: ElementDimensions, page: Page, guides: Guide[]): ElementDimensions{
         element.changing = true 
         if (this.element != element){
             this.element = element
@@ -60,19 +60,24 @@ export class PageService {
         let edge1FuncHorizontal = function(guideBreak: Break){element["positionY"] = guideBreak["positionY"]}
         let edge2FuncVertical = function(guideBreak: Break){element["positionX"] = guideBreak["positionX"] - element["width"]}
         let edge1FuncVertical = function(guideBreak: Break){element["positionX"] = guideBreak["positionX"]}
-        let releaseFuncVert = () => { element.positionX += this.bufferVertical.value }
-        let releaseFuncHor = () => { element.positionY += this.bufferHorizontal.value }
+        let releaseFuncVert = () => { dimensions.left += this.bufferVertical.value }
+        let releaseFuncHor = () => { dimensions.top += this.bufferHorizontal.value }
         var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.top, 'positionY', 'height', this.bufferHorizontal, edge1FuncHorizontal, edge2FuncHorizontal, releaseFuncHor,guides)
         var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.left, 'positionX', 'width', this.bufferVertical,edge1FuncVertical,edge2FuncVertical,releaseFuncVert,guides)
         
         if (!verticalBreak && horizontalBreak) {
-            element.positionX += dimensions.left
+            //element.positionX += dimensions.left
+            return {left: dimensions.left, top: 0, width:null, height: null, border: null}
         }else if(verticalBreak && !horizontalBreak){
-            element.positionY += dimensions.top
+            //element.positionY += dimensions.top
+            return {top: dimensions.top, left: 0, width: null, height: null, border: null}
         }else if(!horizontalBreak && !verticalBreak){
-            element.positionY += dimensions.top
-            element.positionX += dimensions.left
-        }  
+            return {left: dimensions.left, top: dimensions.top, width: null, height: null, border: null}
+            /*element.positionY += dimensions.top
+            element.positionX += dimensions.left*/
+        }else{
+            return {left: 0, top: 0, width: null, height: null, border: null}
+        }
               
         //this.finalStep = this.stepSelector.makePosition(element, this.startState.positionX, element.positionX, this.startState.positionY, element.positionY)    
     }
@@ -101,7 +106,8 @@ export class PageService {
                     guides.splice(guides.indexOf(guideBreak.guide),1)
                     guideBreak.guide = null
                     guideBreak.active = false
-                    buffer.value = 0                    
+                    buffer.value = 0
+                    return false                    
                 }
                 return true
             }
@@ -136,7 +142,7 @@ export class PageService {
         }
     }
     
-    resize(element: Element,dimensions: ElementDimensions, page: Page, guides: Guide[]){
+    resize(element: Element,dimensions: ElementDimensions, page: Page, guides: Guide[]): ElementDimensions{
         element.changing = true 
         if (!this.startState){
             this.startState = { width: element.width, height: element.height}
@@ -154,18 +160,21 @@ export class PageService {
             var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal,emptyFunc, edge2FuncHorizontal, releaseFuncHor, guides)
             var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical, emptyFunc, edge2FuncVertical, releaseFuncVert,guides)
             if(!verticalBreak && !horizontalBreak){
-                element.width += dimensions.width
-                element.height += dimensions.height
+                return {width: dimensions.width,height: dimensions.height,top: null, left: null, border: null}
+                //element.width += dimensions.width
+                //element.height += dimensions.height
             }
         } else if (dimensions.height){
             var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions.height, 'positionY', 'height', this.bufferHorizontal,emptyFunc, edge2FuncHorizontal, releaseFuncHor, guides)
             if(!horizontalBreak){
-                element.height += dimensions.height
+                return {width:null,height:dimensions.height,top: null, left: null, border: null} 
+                //element.height += dimensions.height
             }
         } else if (dimensions.width){
             var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions.width, 'positionX', 'width', this.bufferVertical, emptyFunc, edge2FuncVertical, releaseFuncVert,guides)
             if(!verticalBreak){
-                element.width += dimensions.width
+                return {width: dimensions.width,height: null,top: null, left: null, border: null}
+                //element.width += dimensions.width
             }
         } 
                 

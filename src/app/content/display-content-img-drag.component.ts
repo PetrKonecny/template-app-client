@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, ViewChild, HostListener, EventEmitter, ElementRef, DoCheck, KeyValueDiffers} from '@angular/core';
-import { ImageContent } from './image-content'
+import { ImageContent, ImageContentRedoer } from './image-content'
 import { AppConfig } from '../app.config'
 
 @Component({
     selector: 'display-content-img-drag',
     template:  `
-        <div #frame (move) ="move($event)" [style.left.px]="content.left" [style.top.px]="content.top" class="content">
+        <div draggable2 #frame (move) ="move($event)" [style.left.px]="content.left" [style.top.px]="content.top" class="content">
             <img #image [width]="content.width" class="image" [height]="content.height"  class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">\n\          
         </div>
     `,
@@ -36,8 +36,7 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     image: ElementRef;
        
     move(dimensions: ElementDimensions){
-        this.content.left = dimensions.left
-        this.content.top = dimensions.top
+        this.redoer.startMovingImage(this.content,dimensions)
     }
     
     ngDoCheck(){
@@ -55,16 +54,9 @@ export class DisplayContentImgDragComponent implements  DoCheck {
         }
     }
     
-    applyInputChanges(change: any){
-        if(change.key == 'image'){
-            if (!this.content.width){
-                console.log(this.image)
-            }
-        }
-    }
     
     // part of code from draggable directive 
-    
+    /*
     startElement: ElementDimensions;
     mousedrag;
     mouseup = new EventEmitter();
@@ -76,12 +68,13 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     @HostListener('document:mouseup', ['$event'])
     onMouseup(event) {
         this.mouseup.emit(event);
+        console.log('mouseup')
+        this.redoer.finishMovingImage()
 
     }
 
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
-        console.log(this.frame);
         this.mousedown.emit(event);
         return false; // Call preventDefault() on the event
     }
@@ -95,9 +88,10 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     @HostListener('document:mousemove', ['$event'])
     onMousemove(event) {
         this.mousemove.emit(event);
-    }
+    }*/
 
-    constructor(private config: AppConfig) {
+    constructor(private config: AppConfig, private redoer: ImageContentRedoer) {
+        /*
         this.mousedrag = this.mousedown.map((event: MouseEvent) => {
             this.startElement = this.getStats();
             return {
@@ -111,9 +105,10 @@ export class DisplayContentImgDragComponent implements  DoCheck {
                     left: pos.clientX - imageOffset.left
                 }
             })
-                .takeUntil(this.mouseup));
+                .takeUntil(this.mouseup));*/
     }
 
+/*
     ngOnInit() {
         this.mousedrag.subscribe({
             next: pos => {
@@ -161,7 +156,7 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     
     getStats() {
         return { height: this.getHeight(), width: this.getWidth(), top: this.getTop(), left: this.getLeft()};
-    }
+    }*/
 }
 
 

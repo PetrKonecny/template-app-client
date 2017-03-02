@@ -2,6 +2,7 @@ import { Component, Input, KeyValueDiffer, KeyValueDiffers, DoCheck, HostListene
 import { Element } from './element'
 import {StepSelector, StateChangeRespond} from '../step-selector'
 import { ElementSelector } from './element-selector'
+import {UndoRedoService} from '../undo-redo.service'
 
 @Component({
     selector: 'create-new-element',
@@ -23,12 +24,10 @@ import { ElementSelector } from './element-selector'
 })
 
        
-export class NewElementComponent implements DoCheck, StateChangeRespond{
+export class NewElementComponent {
     
     @Input()
     element : Element
-    continuousChangeRunning : boolean = false
-    differ: KeyValueDiffer;
     selected: boolean = false
 
     @HostListener('mousedown',['$event'])
@@ -36,33 +35,10 @@ export class NewElementComponent implements DoCheck, StateChangeRespond{
         this.elementSelector.changeElement(this.element)
     } 
 
-    @HostListener('document:mouseup', ['$event'])
-    onDocMouseUp(event) {
-        if(this.element){
-            this.element.changing = false
-        }
-    }
-
-     constructor(
-        private differs: KeyValueDiffers,
-        private stateService: StepSelector,
+    constructor(
+        private undoRedoService: UndoRedoService,
         private elementSelector: ElementSelector
     ){
-        this.differ = differs.find({}).create(null);
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }
-
-    getSubject(){
-        return this.element
-    }
-
-    ngDoCheck(){
-        var changes = this.differ.diff(this.element);
-        if(changes) {
-            this.stateService.respond(changes,this)           
-        }
-        
-    }
-
-      
 }

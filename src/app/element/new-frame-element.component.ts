@@ -2,9 +2,10 @@ import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@a
 import { FrameElement } from './frame-element'
 import { ElementSelector} from '../element/element-selector'
 import { ImageSelector } from '../image/image-selector';
-import { ImageContent } from '../content/image-content';
+import { ImageContent, ImageContentRedoer } from '../content/image-content';
 import { ElementDimensions} from '../resizable.directive'
 import { NewPageRemote } from '../page/new-page.remote'
+import { ElementRedoer} from './element';
 
 @Component({
     selector: 'create-new-frame-element',
@@ -52,6 +53,8 @@ export class NewFrameElementComponent {
         private imageSelector: ImageSelector,
         private newPage: NewPageRemote,
         private differs: KeyValueDiffers,
+        private contentRedoer: ImageContentRedoer,
+        private elementRedoer: ElementRedoer
     ){
         this.differ = differs.find({}).create(null);
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
@@ -72,7 +75,7 @@ export class NewFrameElementComponent {
             return 
         }
         let content = <ImageContent>this.element.content
-        content.image = image
+        this.contentRedoer.SetImage(<ImageContent>content,image)
         event.stopPropagation();
     }
     
@@ -81,7 +84,10 @@ export class NewFrameElementComponent {
     }
     
     move(dimensions: ElementDimensions){
-        this.newPage.move(this.element,dimensions)
+        let d = this.newPage.move(this.element,dimensions)
+        if(d){
+            this.elementRedoer.startMovingElement(this.element,d)
+        }    
     }
     
     outOfBounds(dimensions: ElementDimensions){

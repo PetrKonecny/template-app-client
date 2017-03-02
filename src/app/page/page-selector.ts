@@ -64,8 +64,10 @@ export class PageSelector {
         element.height = 100;
         element.positionX = 0;
         element.positionY = 0;
-        element.content = new ImageContent();
-        this.stepSelector.makeStep(new ArrayStepPush(element, page.elements))
+        let content = new ImageContent();
+        content.left = 0;
+        content.top = 0;
+        element.content = content
         page.elements.push(element);
     }    
     
@@ -81,7 +83,6 @@ export class PageSelector {
         element.positionX = 0;
         element.positionY = 0;
         element.image = image
-        this.stepSelector.makeStep(new ArrayStepPush(element, page.elements))
         page.elements.push(element);        
     }
     

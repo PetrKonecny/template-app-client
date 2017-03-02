@@ -1,5 +1,6 @@
-import { Component,ContentChild, AfterContentInit} from '@angular/core';
+import { Component,ContentChild, AfterContentInit, HostListener} from '@angular/core';
 import {NewPageRemote} from '../page/new-page.remote'
+import { ImageContent, ImageContentRedoer } from './image-content'
 
 @Component({
     selector: 'image-handle',
@@ -31,15 +32,7 @@ export class ImageHandleComponent implements AfterContentInit {
     @ContentChild('handleContent')
     handleContent: any
 
-    resizeSimple(dimensions){
-        let content = this.handleContent.content
-        if (dimensions.width){
-            content.width += dimensions.width
-        }
-        if (dimensions.height){
-            content.height += dimensions.height
-        }
-    }
+    constructor(private redoer: ImageContentRedoer){}
 
     
     ngAfterContentInit(){
@@ -47,24 +40,20 @@ export class ImageHandleComponent implements AfterContentInit {
     }
 
     onMoveVertical(dimensions){
-        dimensions.width = dimensions.left
-        this.resizeSimple(dimensions)
+        this.redoer.startResizingImage(this.handleContent.content,{width:dimensions.left})
     }
 
     onMoveHorizontal(dimensions){
-        dimensions.height = dimensions.top
-        this.resizeSimple(dimensions)        
+
+        this.redoer.startResizingImage(this.handleContent.content,{height: dimensions.top})
     }
 
     onMoveDiagonal(dimensions){
         let ratio = this.handleContent.content.width / this.handleContent.content.height
-        dimensions.width = dimensions.top * ratio
-        dimensions.height = dimensions.top
-        this.resizeSimple(dimensions)
+        this.redoer.startResizingImage(this.handleContent.content,{width:dimensions.top * ratio, height: dimensions.top})
     }
 
     onMove(dimensions){
-        console.log(dimensions)
     }
 
 

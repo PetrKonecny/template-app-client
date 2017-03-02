@@ -21,7 +21,7 @@ export class NewPageRemote {
     }
     
     move(element: Element, dimensions: ElementDimensions){
-        this.service.move(element,dimensions,this.component.page, this.component.guides)
+        return this.service.move(element,dimensions,this.component.page, this.component.guides)
     }   
     
     resizeSimple(element: Element, dimensions: ElementDimensions){
@@ -29,7 +29,7 @@ export class NewPageRemote {
     }
     
     resize(element: Element,dimensions: ElementDimensions){
-       this.service.resize(element,dimensions,this.component.page,this.component.guides)
+       return this.service.resize(element,dimensions,this.component.page,this.component.guides)
     }
           
     resizeTableElement(element: TableElement, dimensions: ElementDimensions){
