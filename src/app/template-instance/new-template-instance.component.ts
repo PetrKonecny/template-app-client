@@ -5,7 +5,6 @@ import { TemplateInstanceStore } from './template-instance.store';
 import { ImageSelector } from '../image/image-selector';
 import {  Router} from '@angular/router'
 import { TextSelector } from '../editor/text-selector'
-import { StepSelector } from '../step-selector'
 import { ElementSelector } from '../element/element-selector';
 import {TextContent} from '../content/text-content'
 import { Element } from '../element/element';
@@ -32,7 +31,7 @@ import { Element } from '../element/element';
             </div>
         </md-sidenav-container>
     `,
-    providers: [ImageSelector, StepSelector, TextSelector, ElementSelector]
+    providers: [ImageSelector, TextSelector, ElementSelector]
 })
 
 export class NewTemplateInstanceComponent implements OnInit {

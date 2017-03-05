@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core';
-import { TableElement, TableElementRedoer} from './table-element'
+import { TableElement, TableElementCommands } from './table-element'
 import { ElementDimensions} from '../resizable.directive'
 import { ElementSelector } from './element-selector'
 import { NewPageRemote } from '../page/new-page.remote'
 import { NewTableElement } from './new-table-element'
-import { ElementRedoer} from './element';
+import { ElementCommands} from './element';
 
 @Component({
     selector: 'create-new-table-element',
@@ -101,7 +101,7 @@ export class NewTableElementComponent implements OnInit{
     move(dimensions: ElementDimensions){
         let d = this.newPage.move(this.element,dimensions)
         if(d){
-            this.elementRedoer.startMovingElement(this.element,d)
+            this.elementCommands.startMovingElement(this.element,d)
         }   
      }
     
@@ -139,8 +139,8 @@ export class NewTableElementComponent implements OnInit{
         private elementSelector: ElementSelector, 
         private newPage: NewPageRemote, 
         private newTableElement: NewTableElement, 
-        private redoer: TableElementRedoer,  
-        private elementRedoer: ElementRedoer
+        private tableElementCommands: TableElementCommands,  
+        private elementCommands: ElementCommands
     ){
         this.newTableElement.component = this
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
@@ -152,43 +152,43 @@ export class NewTableElementComponent implements OnInit{
 
     addRowAbove(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.redoer.addRowAbove(this.element, this.element.selectedCells[0])
+            this.tableElementCommands.addRowAbove(this.element, this.element.selectedCells[0])
         }
     }
 
     addRowBelow(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.redoer.addRowBelow(this.element, this.element.selectedCells[0])
+            this.tableElementCommands.addRowBelow(this.element, this.element.selectedCells[0])
         }
     }
 
     addColumnRight(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.redoer.addColumnRight(this.element, this.element.selectedCells[0])
+            this.tableElementCommands.addColumnRight(this.element, this.element.selectedCells[0])
         }
     }
 
     addColumnLeft(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.redoer.addColumnLeft(this.element, this.element.selectedCells[0])
+            this.tableElementCommands.addColumnLeft(this.element, this.element.selectedCells[0])
         }
     }
 
     deleteColumn(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.redoer.deleteColumn(this.element, this.element.selectedCells[0])
+            this.tableElementCommands.deleteColumn(this.element, this.element.selectedCells[0])
         }       
     }
 
     deleteRow(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.redoer.deleteRow(this.element, this.element.selectedCells[0])
+            this.tableElementCommands.deleteRow(this.element, this.element.selectedCells[0])
         }
     }
 
     mergeCells(){
         if(this.element.selectedCells.length && this.element.selectedCells.length > 1){
-            this.redoer.mergeSCells(this.element)
+            this.tableElementCommands.mergeSCells(this.element)
         }
     }
 

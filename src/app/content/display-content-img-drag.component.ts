@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, HostListener, EventEmitter, ElementRef, DoCheck, KeyValueDiffers} from '@angular/core';
-import { ImageContent, ImageContentRedoer } from './image-content'
+import { ImageContent, ImageContentCommands } from './image-content'
 import { AppConfig } from '../app.config'
 
 @Component({
@@ -36,7 +36,7 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     image: ElementRef;
        
     move(dimensions: ElementDimensions){
-        this.redoer.startMovingImage(this.content,dimensions)
+        this.commands.startMovingImage(this.content,dimensions)
     }
     
     ngDoCheck(){
@@ -90,7 +90,7 @@ export class DisplayContentImgDragComponent implements  DoCheck {
         this.mousemove.emit(event);
     }*/
 
-    constructor(private config: AppConfig, private redoer: ImageContentRedoer) {
+    constructor(private config: AppConfig, private commands: ImageContentCommands) {
         /*
         this.mousedrag = this.mousedown.map((event: MouseEvent) => {
             this.startElement = this.getStats();

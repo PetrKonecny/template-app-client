@@ -9,7 +9,7 @@ import {TextSelector} from './text-selector'
 @Component({
     selector: 'text-select',
     template: ` <span *ngIf="editor">
-                    <font-selector [fontLabel]="editor.editorCurFont" [fontSizeLabel]="editor.editorCurFontSize"></font-selector>
+                    <font-selector [fontLabel]="editor.editorCurFont.substring(0,5)" [fontSizeLabel]="editor.editorCurFontSize"></font-selector>
                     <button style="background: none; border:none;" [colorPicker]="editor.editorCurColor" (mousedown)="$event.preventDefault()" (colorPickerChange)="curColor =$event" (cpToggleChange)="onCpToggleChange($event)"><button md-icon-button><md-icon [style.color]="editor.editorCurColor">format_color_text</md-icon></button></button>
                     <button md-icon-button (click)="changeEditorTextAlign('JustifyLeft')"><md-icon>format_align_left</md-icon></button>
                     <button md-icon-button (click)="changeEditorTextAlign('JustifyRight')"><md-icon>format_align_right</md-icon></button>

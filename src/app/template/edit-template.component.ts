@@ -4,22 +4,22 @@ import { Template} from './template';
 import {ActivatedRoute} from '@angular/router';
 import { ElementSelector } from '../element/element-selector';
 import { ImageSelector } from '../image/image-selector';
-import { StepSelector } from '../step-selector'
 import { PageSelector} from '../page/page-selector'
 import { RulerSelector } from '../guide/ruler-selector'
 import { TextSelector } from '../editor/text-selector'
 import { UndoRedoService } from '../undo-redo.service'
-import { TableElementRedoer } from '../element/table-element'
-import { TextContentRedoer } from '../content/text-content'
-import { ImageContentRedoer } from '../content/image-content'
-import { ElementRedoer } from '../element/element'
+import { TableElementCommands } from '../element/table-element'
+import { TextContentCommands } from '../content/text-content'
+import { ImageContentCommands } from '../content/image-content'
+import { ElementCommands } from '../element/element'
+import { PageCommands } from '../page/page'
 
 @Component({
     selector: 'template-edit',
     template: `
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    providers: [ElementSelector, ImageSelector, StepSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementRedoer, TextContentRedoer, ImageContentRedoer, ElementRedoer]
+    providers: [ElementSelector, ImageSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands]
 })
 
 export class TemplateEditComponent implements OnInit  {

@@ -5,7 +5,6 @@ import { TableElement } from '../element/table-element'
 import { TableContent, CellContent, RowContent } from '../content/table-content'
 import { ElementDimensions, Border} from '../resizable.directive'
 import { Guide } from '../guide/guide'
-import { BasicStep, StepSelector } from '../step-selector'
 import { Page } from './page'
 
  
@@ -44,13 +43,11 @@ export class PageService {
     }
     
     moveSimple(element: Element, dimensions: ElementDimensions){
-        element.changing = true 
         element.positionX += dimensions.left
         element.positionY += dimensions.top
     }
     
     move(element: Element, dimensions: ElementDimensions, page: Page, guides: Guide[]): ElementDimensions{
-        element.changing = true 
         if (this.element != element){
             this.element = element
             //this.startState = { positionX: element.positionX, positionY: element.positionY}
@@ -133,7 +130,6 @@ export class PageService {
     }
     
     resizeSimple(element: Element, dimensions: ElementDimensions){
-        element.changing = true 
         if (dimensions.width){
             element.width += dimensions.width
         }
@@ -143,7 +139,6 @@ export class PageService {
     }
     
     resize(element: Element,dimensions: ElementDimensions, page: Page, guides: Guide[]): ElementDimensions{
-        element.changing = true 
         if (!this.startState){
             this.startState = { width: element.width, height: element.height}
             this.initGuides(element,page)
@@ -232,7 +227,6 @@ export class PageService {
     }
         
     resizeTableElement(element: TableElement, dimensions: ElementDimensions){
-        element.changing = true 
         if (!this.startState){
             this.startState = JSON.parse(JSON.stringify(element.rows))
         }
@@ -246,7 +240,6 @@ export class PageService {
     
     private rowsChanged(element: TableElement){
         this.counter = 0
-        this.finalStep = new BasicStep(element,"rows",this.startState,JSON.parse(JSON.stringify(element.rows)))
     }
        
 }

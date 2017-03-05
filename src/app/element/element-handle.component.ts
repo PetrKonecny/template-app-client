@@ -1,6 +1,6 @@
 import { Component,ContentChild, ElementRef, AfterContentInit} from '@angular/core';
 import {NewPageRemote} from '../page/new-page.remote'
-import { Element, ElementRedoer} from './element';
+import { Element, ElementCommands} from './element';
 
 @Component({
     selector: 'element-handle',
@@ -35,7 +35,7 @@ export class ElementHandleComponent implements AfterContentInit {
     handleContent: any
     element: any
 
-    constructor (private newPage: NewPageRemote, private redoer: ElementRedoer){}
+    constructor (private newPage: NewPageRemote, private commands: ElementCommands){}
     
     ngAfterContentInit(){
         this.element = this.handleContent.element
@@ -44,24 +44,22 @@ export class ElementHandleComponent implements AfterContentInit {
     onMoveVertical(dimensions){
         let d = this.newPage.resize(this.handleContent.element,{width: dimensions.left,height: dimensions.top, top: null, left: null, border: null})
         if(d){
-            this.redoer.startResizingElement(this.handleContent.element,{width:d.width})
+            this.commands.startResizingElement(this.handleContent.element,{width:d.width})
         }
     }
 
     onMoveHorizontal(dimensions){
         let d = this.newPage.resize(this.handleContent.element,{width: dimensions.left,height: dimensions.top, top: null, left: null, border: null})
         if(d){
-            this.redoer.startResizingElement(this.handleContent.element,{height: d.height})
+            this.commands.startResizingElement(this.handleContent.element,{height: d.height})
         }
     }
 
     onMoveDiagonal(dimensions){
-        console.log(dimensions)
         let d = this.newPage.resize(this.handleContent.element,{width: dimensions.left,height: dimensions.top, top: null, left: null, border: null})
-        console.log(d)
         if(d){
             let ratio = this.handleContent.element.width / this.handleContent.element.height
-            this.redoer.startResizingElement(this.handleContent.element,{width:d.height * ratio, height: d.height})
+            this.commands.startResizingElement(this.handleContent.element,{width:d.height * ratio, height: d.height})
         }
     }
 

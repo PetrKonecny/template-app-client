@@ -5,7 +5,7 @@ import {UndoRedoService, Command} from '../undo-redo.service'
 import {Injectable} from '@angular/core';
 
 @Injectable()
-export class TextContentRedoer{
+export class TextContentCommands{
 
 	constructor(private service: UndoRedoService){}
 

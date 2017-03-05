@@ -1,7 +1,6 @@
 import { Component, Input, ViewChild, ElementRef, DoCheck, KeyValueDiffer, KeyValueDiffers} from '@angular/core';
 import { Content} from './content';
-import { TextContent, TextContentRedoer } from './text-content'
-import {StepSelector, StateChangeRespond} from '../step-selector'
+import { TextContent, TextContentCommands } from './text-content'
 import { AppConfig } from '../app.config'
 
 @Component({
@@ -55,13 +54,10 @@ export class DisplayContentComponent {
     
     @ViewChild('frame')
     frame: ElementRef; 
-
-    continuousChangeRunning : boolean = false
-    differ: KeyValueDiffer;  
     
     keyupHandlerFunction(text: string){
         let content =<TextContent> this.content
-        this.textContentRedoer.changeText(content, text)
+        this.commands.changeText(content, text)
     }
 
     getSubject(){
@@ -69,10 +65,8 @@ export class DisplayContentComponent {
     }
 
     constructor(
-        private differs: KeyValueDiffers,
-        private stateService: StepSelector,
         private config: AppConfig,
-        private textContentRedoer: TextContentRedoer
+        private commands: TextContentCommands
     ){}
     
     saveContent(){

@@ -5,7 +5,6 @@ import { Page} from '../page/page';
 import { ElementSelector } from '../element/element-selector';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { ImageSelector } from '../image/image-selector';
-import { StepSelector } from '../step-selector'
 import { PageSelector} from '../page/page-selector'
 import { RulerSelector } from '../guide/ruler-selector'
 import { TextSelector } from '../editor/text-selector'
@@ -20,8 +19,8 @@ import { UndoRedoService } from '../undo-redo.service'
                 <button md-icon-button *ngIf="!sidenav.opened" (click)="sidenav.toggle()"><md-icon>add</md-icon></button>
                 <button md-icon-button *ngIf="sidenav.opened" (click)="sidenav.toggle()"><md-icon>close</md-icon></button>
                 <button md-icon-button (click)="saveTemplate()"><md-icon>save</md-icon></button>
-                <button md-icon-button (click)="undo()"><md-icon>undo</md-icon></button>
-                <button md-icon-button><md-icon>redo</md-icon></button>
+                <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()"><md-icon>undo</md-icon></button>
+                <button md-icon-button [disabled]="!undoService.getRedos().length" ><md-icon>redo</md-icon></button>
                 <element-select></element-select>
             </md-toolbar>
             <md-sidenav mode ="side" #sidenav style="width: 20%;">

@@ -21,6 +21,15 @@ export class UndoRedoService{
 	private redos: Command[] = new Array
 	private buffer: BufferCommand[]
 
+	getUndos(){
+		return this.undos
+	}
+
+	getRedos(){
+		return this.redos
+	}
+
+
 	undo(){
 		let command = this.undos.pop()
 		command.unExecute()

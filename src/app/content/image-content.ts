@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {UndoRedoService, Command, BufferCommand} from '../undo-redo.service'
 
 @Injectable()
-export class ImageContentRedoer{
+export class ImageContentCommands{
 
 	constructor(private service: UndoRedoService){}
 

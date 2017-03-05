@@ -3,8 +3,7 @@ import {Element} from './element'
 import {Font} from '../font/font'
 import {TextElement} from './text-element'
 import {TemplateInstanceStore} from '../template-instance/template-instance.store'
-import {TableElement, ClientState, Cell, TableElementRedoer} from './table-element'
-import {StepSelector, ArrayStepSplice, BasicStep, CompositeStep} from '../step-selector'
+import {TableElement, ClientState, Cell, TableElementCommands} from './table-element'
 import {BehaviorSubject, Observable} from 'rxjs/Rx'
 
 @Injectable()
@@ -14,7 +13,7 @@ export class ElementSelector {
     public element: Observable<Element> = this._element.asObservable();  
     
     constructor(
-        private templateInstanceStore: TemplateInstanceStore, private stepSelector: StepSelector, private tableRedoer: TableElementRedoer
+        private templateInstanceStore: TemplateInstanceStore, private commands: TableElementCommands
     ){}
   
     public changeElement(element: Element){
@@ -104,64 +103,64 @@ export class ElementSelector {
 
     changeSelectedCellsFontSize(size: number){
         var element = <TableElement>this._element.value
-        this.tableRedoer.changeSCellsFontSize(element,size)
+        this.commands.changeSCellsFontSize(element,size)
     }
     
     changeSelectedCellsBold(){
         var element = <TableElement>this._element.value
-        this.tableRedoer.changeSCellsBold(element)
+        this.commands.changeSCellsBold(element)
         
     }
     
     changeSelectedCellsItalic(){
         var element = <TableElement>this._element.value
-        this.tableRedoer.changeSCellsItalic(element)
+        this.commands.changeSCellsItalic(element)
     }
     
     changeSelectedCellsTextAlign(align: string){
         var element = <TableElement>this._element.value
-        this.tableRedoer.changeSCellsTextAlign(element,align)
+        this.commands.changeSCellsTextAlign(element,align)
     }
     
     changeSelectedCellsTextAlignVert(align: string){
         var element = <TableElement>this._element.value
-        this.tableRedoer.changeSCellsTextAlignVert(element,align)
+        this.commands.changeSCellsTextAlignVert(element,align)
     }
 
     
     toggleCellBackground(value: boolean){
         var element = <TableElement> this._element.value
-        this.tableRedoer.toggleSCellsBackground(element,value)
+        this.commands.toggleSCellsBackground(element,value)
     }
         
     changeSelectedCellsBackgroundColor(color: string){
         var element = <TableElement> this._element.value
-        this.tableRedoer.changeSCellsBackgroundColor(element,color)
+        this.commands.changeSCellsBackgroundColor(element,color)
     }
     
     changeSelectedCellsTextColor(color: string){
         var element = <TableElement> this._element.value
-        this.tableRedoer.changeSCellsTextColor(element,color)
+        this.commands.changeSCellsTextColor(element,color)
     }
     
     changeSelectedCellsBorderStyle(style: string){
         var element = <TableElement> this._element.value
-        this.tableRedoer.changeSCellsBorderStyle(element,style)
+        this.commands.changeSCellsBorderStyle(element,style)
     }
     
     changeSelectedCellsBorderColor(color: string){
         var element = <TableElement> this._element.value
-        this.tableRedoer.changeSCellsBorderColor(element,color)
+        this.commands.changeSCellsBorderColor(element,color)
     }
     
     changeSelectedCellsBorderWidth(width: number){
         var element = <TableElement> this._element.value
-        this.tableRedoer.changeSCellsBorderW(element,width)
+        this.commands.changeSCellsBorderW(element,width)
     }
     
     mergeCells(){
         var element = <TableElement> this._element.value
-        this.tableRedoer.mergeSCells(element)
+        this.commands.mergeSCells(element)
     }
     
     clearSelection(){

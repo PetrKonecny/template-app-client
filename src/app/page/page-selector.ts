@@ -7,15 +7,14 @@ import {TextContent} from '../content/text-content'
 import {ImageContent} from '../content/image-content'
 import {TableContent} from '../content/table-content'
 import {ImageElement} from '../element/image-element'
-import {ArrayStepPush} from '../step-selector'
 import {TextElement} from '../element/text-element'
-import {StepSelector} from '../step-selector'
 import {TableElement} from '../element/table-element'
 import {TemplateInstanceStore} from '../template-instance/template-instance.store'
 import {Guide} from '../guide/guide'
 import {FrameElement} from '../element/frame-element'
 import {ImageSelector} from '../image/image-selector'
 import {BehaviorSubject, Observable} from 'rxjs/Rx'
+import {PageCommands} from './page'
 
 @Injectable()
 export class PageSelector {
@@ -24,7 +23,7 @@ export class PageSelector {
 	private _page: BehaviorSubject<Page> = new BehaviorSubject(null);
     public page: Observable<Page> = this._page.asObservable();    
 
-    constructor(private stepSelector: StepSelector,  private templateInstanceStore: TemplateInstanceStore, private elementSelector: ElementSelector){}
+    constructor(private commands: PageCommands,  private templateInstanceStore: TemplateInstanceStore, private elementSelector: ElementSelector){}
     
     selectPage(page: Page){
     	if(!page) {return}
@@ -49,9 +48,8 @@ export class PageSelector {
         let content = new TextContent()
         content.text = "<p></p>"
         element.content = content
-        let array = new Array().concat(page.elements)
-        array.push(element)
-        page.elements = array
+        this.commands.addElement(this._page.value, element)
+       
     }
     
     createNewFrameElement(){
@@ -68,7 +66,8 @@ export class PageSelector {
         content.left = 0;
         content.top = 0;
         element.content = content
-        page.elements.push(element);
+        this.commands.addElement(this._page.value, element)
+   
     }    
     
     createNewImageElement(image: Image){
@@ -82,8 +81,7 @@ export class PageSelector {
         element.height = 100;
         element.positionX = 0;
         element.positionY = 0;
-        element.image = image
-        page.elements.push(element);        
+        this.commands.addElement(this._page.value, element)
     }
     
     createNewTableElement(width: number, height: number, columnWidth: number, rowHeight: number){
@@ -96,7 +94,7 @@ export class PageSelector {
         element.positionY = 0
         console.log(width,height)
         TableElement.addRows(element, height, width, rowHeight, columnWidth, 0)
-        page.elements.push(element)
+        this.commands.addElement(this._page.value, element)
     }
     
     createNewRulerX(){

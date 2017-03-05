@@ -1,6 +1,5 @@
 import { Component, Input, KeyValueDiffer, KeyValueDiffers, DoCheck, HostListener } from '@angular/core';
 import { Element } from './element'
-import {StepSelector, StateChangeRespond} from '../step-selector'
 import { ElementSelector } from './element-selector'
 import {UndoRedoService} from '../undo-redo.service'
 

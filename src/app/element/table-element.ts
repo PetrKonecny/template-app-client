@@ -11,7 +11,7 @@ when performance is a concern (for example with larger tables) custon unExecute 
 should be implemented instead
 */
 @Injectable()
-export class TableElementRedoer{
+export class TableElementCommands{
 
     constructor(private service: UndoRedoService){}
 

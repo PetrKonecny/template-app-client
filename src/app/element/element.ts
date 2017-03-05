@@ -1,10 +1,9 @@
 import {Content} from '../content/content';
-import {StateSubject} from '../step-selector'
 import {Injectable} from '@angular/core';
 import {UndoRedoService, Command, BufferCommand} from '../undo-redo.service'
 
 @Injectable()
-export class ElementRedoer{
+export class ElementCommands{
 
     constructor(private service: UndoRedoService){}
 
@@ -82,7 +81,7 @@ export class ChangeElementDimensions implements BufferCommand{
 
 
 
-export class Element implements StateSubject {
+export class Element  {
     id: number;
     width: number;
     height: number;
@@ -92,8 +91,6 @@ export class Element implements StateSubject {
     type: string;
     content: Content;
     draggable: boolean = true;
-    changing = false;
-    redoing = false;
     static defaultBackgroundColor: string = "#ccc"
     static notRecordedParams: Array<string> = ['draggable','changing','redoing', 'clientState']
     background_color: string

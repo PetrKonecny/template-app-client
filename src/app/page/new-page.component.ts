@@ -4,7 +4,6 @@ import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
 import {PageSelector} from '../page/page-selector'
 import {NewPageRemote} from './new-page.remote'
-import {StateChangeRespond, StepSelector} from '../step-selector'
 import {ImageElement} from '../element/image-element'
 
 @Component({
@@ -34,8 +33,16 @@ import {ImageElement} from '../element/image-element'
     providers: [NewPageRemote]
 })
 
-export class NewPageComponent implements OnInit, DoCheck, StateChangeRespond {
-    
+export class NewPageComponent implements OnInit {
+
+
+    guides: Array<Guide>
+
+    @Input()
+    page: Page  
+ 
+    selected: boolean = false
+        
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
         this.newPageRemote.onMouseDown()
@@ -50,8 +57,6 @@ export class NewPageComponent implements OnInit, DoCheck, StateChangeRespond {
     onDragOver(){
         return false
     }
-
-    selected: boolean = false
 
     onDrop(event){
         console.log('drop2')
@@ -77,25 +82,9 @@ export class NewPageComponent implements OnInit, DoCheck, StateChangeRespond {
         this.page.elements.push(element)
     }
 
-    guides: Array<Guide>
-        differ: KeyValueDiffer;
-
-    @Input()
-    page: Page  
-
-    continuousChangeRunning: boolean  = false
-    
-    ngDoCheck(){
-        var changes = this.differ.diff(this.page);
-        if(changes) {
-            this.stateService.respond(changes,this)           
-        }        
-    }
-
-    constructor(private newPageRemote: NewPageRemote, private pageSelector: PageSelector,  private differs: KeyValueDiffers, private stateService: StepSelector, private ref: ElementRef) {
+    constructor(private newPageRemote: NewPageRemote, private pageSelector: PageSelector,  private ref: ElementRef) {
         this.newPageRemote.component = this
         this.guides = new Array
-        this.differ = differs.find({}).create(null);
         this.pageSelector.page.subscribe(page => {if(this.page == page){this.selected = true}else{this.selected = false}})
     }
 

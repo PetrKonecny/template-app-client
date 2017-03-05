@@ -4,7 +4,7 @@ import { NewPageRemote } from '../page/new-page.remote'
 import { ElementDimensions } from '../resizable.directive'
 import { ElementSelector } from './element-selector'
 import { AppConfig } from '../app.config'
-import { Element, ElementRedoer} from './element';
+import { Element, ElementCommands} from './element';
 
 @Component({
     selector: 'create-new-image-element',
@@ -27,7 +27,7 @@ export class NewImageElementComponent {
     element : ImageElement
     selected: boolean
      
-    constructor(private image: ElementRef, private newPage: NewPageRemote, private elementSelector: ElementSelector, private config: AppConfig, private redoer: ElementRedoer){
+    constructor(private image: ElementRef, private newPage: NewPageRemote, private elementSelector: ElementSelector, private config: AppConfig, private commands: ElementCommands){
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }
     
@@ -49,7 +49,7 @@ export class NewImageElementComponent {
     move(dimensions: ElementDimensions){
        let d = this.newPage.move(this.element,dimensions)
         if(d){
-            this.redoer.startMovingElement(this.element,d)
+            this.commands.startMovingElement(this.element,d)
         }
     }
       

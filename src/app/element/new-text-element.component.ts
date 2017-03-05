@@ -1,11 +1,10 @@
 import { Component, ElementRef, Input, ViewChild, AfterViewInit, DoCheck, KeyValueDiffers, KeyValueDiffer, HostListener} from '@angular/core';
-import { Element, ElementRedoer} from './element';
+import { Element, ElementCommands} from './element';
 import { ElementSelector } from './element-selector'
 import { TextElement} from './text-element'
 import { Font} from '../font/font'
 import { ElementDimensions } from '../resizable.directive'
 import { NewPageRemote } from '../page/new-page.remote'
-import {BasicStep, CompositeStep, StepSelector, StateChangeRespond} from '../step-selector'
 
 @Component({
     selector: 'create-new-text-element',
@@ -46,8 +45,7 @@ export class NewTextElementComponent  {
         public elementRef: ElementRef, 
         private elementSelector: ElementSelector,
         private newPage: NewPageRemote,
-        private stateService: StepSelector,
-        private redoer: ElementRedoer
+        private commands: ElementCommands
     ){
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }
@@ -55,7 +53,7 @@ export class NewTextElementComponent  {
     move(dimensions: ElementDimensions){
         let d = this.newPage.move(this.element,dimensions)
         if(d){
-            this.redoer.startMovingElement(this.element,d)
+            this.commands.startMovingElement(this.element,d)
         }
     }
     
