@@ -1,4 +1,5 @@
 import {Directive, HostListener, EventEmitter, Output, ElementRef, OnInit, Input} from '@angular/core';
+import {AppComponentRef} from './app.ref'
 
 @Directive({
     selector: '[draggable2]'
@@ -11,7 +12,7 @@ export class Draggable2 implements OnInit {
     running: boolean = false;
     mouseup = new EventEmitter();
     mousedown = new EventEmitter();
-    mousemove = new EventEmitter();
+    mousemove
     mouseover = new EventEmitter();
     position: any = {left: 0, top: 0}
 
@@ -43,21 +44,15 @@ export class Draggable2 implements OnInit {
         return this.propagate
     }
 
+    /*
     @HostListener('mousemove', ['$event'])
     onMouseover(event: MouseEvent) {
         if (this.enabled && !this.running) {
             this.mouseover.emit(event);
         }
-    }
+    }*/
 
-    @HostListener('document:mousemove', ['$event'])
-    onMousemove(event) {
-        if (this.enabled){
-            this.mousemove.emit(event);
-        }
-    }
-
-    constructor(public element: ElementRef) {
+    constructor(public element: ElementRef, private ref: AppComponentRef) {
         this.mousedrag = this.mousedown.map((event: MouseEvent) => {
             var border
             if (this.borderCheck){
@@ -73,6 +68,7 @@ export class Draggable2 implements OnInit {
             };
         })
         .flatMap(imageOffset => this.mousemove.map((pos: MouseEvent) => {
+            pos.preventDefault()
             return {
                 top: pos.clientY,
                 left: pos.clientX
@@ -82,6 +78,7 @@ export class Draggable2 implements OnInit {
     }
 
     ngOnInit() {
+        this.mousemove = this.ref.mouseMove
         this.mousedrag.subscribe({
             next: pos => {
                 var dimensions: ElementDimensions = new ElementDimensions();

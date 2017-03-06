@@ -74,7 +74,6 @@ export class ChangeImageContentDimensions implements BufferCommand{
 			this.content.left += dimensions.left
 		}
 		if(dimensions.top != null){
-			console.log(dimensions.top)
 			this.content.top +=  dimensions.top
 		}
 		if(dimensions.width != null){

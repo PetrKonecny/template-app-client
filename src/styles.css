@@ -60,6 +60,8 @@ body{
 
 .md-tab-label{min-width:0px !important;}
 
+.md-sidenav-content{overflow: hidden !important;}
+
 .ng2-dropdown-button{min-width:0px !important; width: auto !important;}
 
 .ng2-dropdown-container{display: inline-block;}

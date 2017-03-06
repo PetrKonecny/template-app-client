@@ -1,4 +1,4 @@
-import { Component, OnInit  }       from '@angular/core';
+import { Component, OnInit, AfterViewChecked  }       from '@angular/core';
 import { TemplateInstanceService } from './template-instance/template-instance.service';
 import { TemplateService } from './template/template.service';
 import { TemplateInstanceStore } from './template-instance/template-instance.store';
@@ -12,6 +12,7 @@ import {UserGuard} from './user/user.guard'
 import {AppConfig} from './app.config'
 import {ActivatedRoute} from '@angular/router';
 import {Location } from '@angular/common';
+import {AppComponentRef} from './app.ref'
 
 
 /**
@@ -21,6 +22,7 @@ import {Location } from '@angular/common';
 @Component({
     selector: 'app-root',
     template: `
+    <span (mousemove)="test($event)" style="height: 95%">
     <md-toolbar *ngIf="adminRoute" color="warn">
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/users" routerLinkActive="active">USERS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/templates" routerLinkActive="active">TEMPLATES</a>
@@ -42,15 +44,26 @@ import {Location } from '@angular/common';
         <a md-button *ngIf="guard.canActivate()" (click)="onLogoutClicked()">Logout</a>
     </md-toolbar>
         <router-outlet></router-outlet>
+    <span>
     `,
-    providers: [TemplateInstanceService,TemplateInstanceStore,TemplateService,Draggable ]
+    providers: [TemplateInstanceService,TemplateInstanceStore,TemplateService,Draggable,AppComponentRef ]
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewChecked {
 
     adminRoute = false;
 
-    constructor(private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, private guard: UserGuard, private config: AppConfig, private route: ActivatedRoute){
+    constructor(private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, private guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
+    private ref: AppComponentRef){
+
+    }
+
+    test($event){
+        $event.stopPropagation()
+        this.ref.nextMouseMove($event)        
+    }
+
+    ngAfterViewChecked(){
     }
 
     onLogoutClicked(){

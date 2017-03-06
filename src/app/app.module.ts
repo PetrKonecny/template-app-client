@@ -90,6 +90,8 @@ import {TemplateInstanceTableComponent} from './admin/template-instance-table.co
 import { TemplateTableComponent } from './admin/template-table.component'
 import {CreateTableModal} from './element/create-table-element.modal'
 
+import {OutSideEventHandlerDirective} from './outside-event-handler.directive'
+
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
     { path: 'admin/templates', component: AdminTemplatesComponent },
@@ -123,7 +125,7 @@ const routes: Routes = [
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
-        TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal
+        TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal, OutSideEventHandlerDirective
         
     ],
     // modules
