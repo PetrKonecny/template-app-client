@@ -17,7 +17,6 @@ export class ElementSelector {
     ){}
   
     public changeElement(element: Element){
-        if(!element){return}
         this._element.next(element)
     }
     

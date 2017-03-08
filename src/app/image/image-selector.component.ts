@@ -3,15 +3,14 @@ import { ImageService } from './image.service';
 import { Image} from './image';
 import { ImageSelector} from './image-selector';
 import {AppConfig} from '../app.config'
+import { ImageUploadComponent } from './image-upload.component'
+import { MdDialog } from '@angular/material'
 
 @Component({
     selector: 'image-select',
     template: `
             <md-toolbar color="secondary">
-            <input type="file" 
-               ngFileSelect [options]="options"
-               (onUpload)="handleUpload($event)"
-            >
+            <button md-icon-button md-raised-button (click)="openUploadModal()"><md-icon>add</md-icon></button>
             </md-toolbar>
             <image-list [images] = images (onImageClicked) = "onImageClicked($event)"></image-list> `,
     providers: [ImageService]
@@ -24,7 +23,7 @@ export class ImageSelectorComponent implements OnInit{
 
      
     constructor(private imageSelector: ImageSelector,
-    private imageService: ImageService, private appConfig: AppConfig){}
+    private imageService: ImageService, private appConfig: AppConfig, public dialog: MdDialog ){}
     
     closeSelector(){
         this.imageSelector.closeSelectorWindow();
@@ -46,17 +45,15 @@ export class ImageSelectorComponent implements OnInit{
         );
     }
     
-    uploadFile: any;
-    options: Object = {
-        url: this.appConfig.getConfig('api-url')+'/image'
-    };
-
-    handleUpload(data): void {
-      console.log(data);
-      if (data && data.done) {
-          console.log('done');
-          this.getImages();
-      }
+   openUploadModal() {
+        let dialogRef = this.dialog.open(ImageUploadComponent, {
+          height: '90%',
+          width: '60%',
+        });
+        dialogRef.afterClosed().subscribe(closed =>{
+          console.log('closed')
+          this.imageService.getImages().repeat()
+        })        
     }
     
 }

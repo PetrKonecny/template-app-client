@@ -10,19 +10,25 @@ import { ElementCommands} from './element';
 @Component({
     selector: 'create-new-frame-element',
     template: `
+        <span *ngIf="selected && element?.content?.image" style="position: absolute; margin-top: -40px; z-index: 1000">
+            <button md-raised-button (click)="onDoneAdjustButtonClick()"  [color]="draggable ? 'accent' : 'background'" md-icon-button mdTooltip="adjust frame"><md-icon>zoom_out_map</md-icon></button>
+            <button md-raised-button (click)="onAdjustButtonClick()"  [color]="!draggable ? 'accent' : 'background'"  md-icon-button mdTooltip="adjust image"><md-icon>photo_size_select_large</md-icon></button>
+            <span *ngIf="!draggable">
+                <button md-icon-button [mdMenuTriggerFor]="adjustImageMenu"><md-icon>more_vert</md-icon></button>
+                <md-menu #adjustImageMenu="mdMenu">
+                  <button md-menu-item (click)="onDeleteButtonClick()">
+                    <span>Delete image</span>
+                  </button>                         
+                </md-menu>
+            </span>
+        </span>
         <div #frame *ngIf="draggable"  (drop)="onDrop($event)" (dragover)="onDragOver($event)" [class.selected]="selected" draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
-            <display-content *ngIf="element.content" [content] = "element.content"></display-content>
-            <button *ngIf="element.content && !element.content.image" style="top: 20px" class="button" (click)="onAddButtonClick()" >Add image</button>
-            <button *ngIf="element.content && element.content.image" style="top: 40px" class="button" (click)="onDeleteButtonClick()" class="button">Delete image</button>
-            <button *ngIf="element.content && element.content.image && draggable" style="top: 60px" class="button" (click)="onAdjustButtonClick()" class="button">Adjust image</button>
+            <display-content *ngIf="element.content" [content] = "element.content"></display-content>       
         </div>
-        <div #frame *ngIf="!draggable" [class.selected]="selected" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
+        <div #frame *ngIf="!draggable && element?.content?.image" [class.selected]="selected" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
             <image-handle>
                 <display-content-img-drag #handleContent [content] = "element.content"></display-content-img-drag>
-            </image-handle>
-            <button *ngIf="element.content.image" style="top: 40px" class="button"  (click)="onPlusButtonClick()" >Zoom in</button>
-            <button *ngIf="element.content.image" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>
-            <button *ngIf="element.content && element.content.image" (click)="onDoneAdjustButtonClick()" class="button">Done adjusting</button>
+            </image-handle>           
         </div>
     `,
     styles:[`
@@ -44,19 +50,17 @@ export class NewFrameElementComponent {
     element : FrameElement
     
     draggable: boolean = true;
-    differ: KeyValueDiffer;
     selected: boolean
+    hideHandles: boolean
         
     constructor(
         public elementRef: ElementRef, 
         private elementSelector: ElementSelector,
         private imageSelector: ImageSelector,
         private newPage: NewPageRemote,
-        private differs: KeyValueDiffers,
         private contentCommands: ImageContentCommands,
         private elementCommands: ElementCommands
     ){
-        this.differ = differs.find({}).create(null);
         this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
     }
 
@@ -105,6 +109,8 @@ export class NewFrameElementComponent {
     
     onDeleteButtonClick(){
         (<ImageContent>this.element.content).image = null;
+        this.draggable = true
+        this.hideHandles = false
     }
     
     onPlusButtonClick(){
@@ -120,10 +126,12 @@ export class NewFrameElementComponent {
     }
     
     onDoneAdjustButtonClick(){
+        this.hideHandles = false
         this.draggable = true;
     }
     
     onAdjustButtonClick(){
+        this.hideHandles = true
         this.draggable = false;
     }
        

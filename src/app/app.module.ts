@@ -29,7 +29,7 @@ import { Resizable } from './resizable.directive'
 import { ImageListComponent} from './image/image-list.component';
 import { Ng2UploaderModule} from 'ng2-uploader';
 import { FontSelectorComponent} from './font/font-selector.component';
-import { ColorPickerDirective, ColorPickerService} from 'angular2-color-picker'
+import { ColorPickerModule} from 'angular2-color-picker'
 import { TextSelectorComponent} from './editor/text-selector.component'
 import { FontListComponent} from './font/font-list.component';
 import { DisplayFontComponent } from './font/display-font.component' 
@@ -119,7 +119,7 @@ const routes: Routes = [
     // directives, components, and pipes
     declarations: [
         AppComponent, NewTemplateInstanceComponent, NewTemplateComponent,SimpleTinyComponent,DisplayContentComponent,DisplayContentImgDragComponent,DisplayTableElementComponent,DisplayElementComponent,
-        Draggable2,  NewTextElementComponent, NewFrameElementComponent, NewImageElementComponent, DisplayTableRowComponent, Resizable, ImageListComponent, FontSelectorComponent, ColorPickerDirective,
+        Draggable2,  NewTextElementComponent, NewFrameElementComponent, NewImageElementComponent, DisplayTableRowComponent, Resizable, ImageListComponent, FontSelectorComponent,
         TextSelectorComponent, FontListComponent, DisplayFontComponent, NewTableElementComponent, Draggable, NewElementComponent, DisplayGuideComponent, DisplayRulerComponent,
         NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
@@ -140,11 +140,12 @@ const routes: Routes = [
         Ng2DropdownModule,
         TagInputModule,
         FileUploadModule,
-        NgxDatatableModule       
+        NgxDatatableModule,
+        ColorPickerModule,       
     ],
     // providers
     providers: [
-        ColorPickerService, UserService, UserGuard, UserStore, PageService, ImageSelector, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }         
+        UserService, UserGuard, UserStore, PageService, ImageSelector, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }         
     ],
     bootstrap: [
         AppComponent

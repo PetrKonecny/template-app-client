@@ -9,7 +9,7 @@ import { Element, ElementCommands} from './element';
             [style.height.px]="element?.height"
             [style.margin-top.px]="element?.positionY"
             [style.margin-left.px]="element?.positionX">
-            <span *ngIf="handleContent?.selected">
+            <span *ngIf="handleContent?.selected && !handleContent?.hideHandles">
             <a draggable2 (move)="onMoveDiagonal($event)" style="left: 0; top: 0;"></a>
             <a draggable2 (move)="onMoveDiagonal($event)" style="top: 0; left: 100%;"></a>
             <a draggable2 (move)="onMoveDiagonal($event)" style="left: 0; top:100%;"></a>

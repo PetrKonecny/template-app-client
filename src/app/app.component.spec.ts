@@ -2,13 +2,41 @@
 
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { AppModule } from './app.module'
+import {APP_BASE_HREF} from '@angular/common';
+import {AppConfig} from './app.config'
+import { APP_INITIALIZER } from '@angular/core';
+import { Observable } from "rxjs/Observable";
+import {FontStore} from './font/font.store'
+
 
 describe('AppComponent', () => {
   beforeEach(() => {
+    let appConfigStub = {
+      getConfig(key: any){
+        return 'http://localhost:8080'
+      },
+      load(){
+        return new Promise(resolve=> {return})
+      }
+    }
+
+    let fonteStoreStub = {
+      getFonts(){
+        return Observable.create(observer=>{
+          observer.next([{name: 'font1'},{name: 'font2'}])
+        }) 
+      }
+    }
+
+    let userServiceStup = {
+      logoutUser(){}
+    }
+
+
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
+      imports: [AppModule],
+      providers: [{provide: APP_BASE_HREF, useValue: '/'},{provide: AppConfig, useValue: appConfigStub}, {provide: FontStore, useValue: fonteStoreStub}]
     });
     TestBed.compileComponents();
   });
@@ -17,18 +45,5 @@ describe('AppComponent', () => {
     let fixture = TestBed.createComponent(AppComponent);
     let app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
-  }));
-
-  it(`should have as title 'app works!'`, async(() => {
-    let fixture = TestBed.createComponent(AppComponent);
-    let app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app works!');
-  }));
-
-  it('should render title in a h1 tag', async(() => {
-    let fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    let compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('app works!');
   }));
 });
