@@ -98,6 +98,7 @@ export class PageService {
             if(!guideBreak.active){
                 var edge2 = element[paramPosition] + dimensions[paramVector]  + element[paramDimension] <= guideBreak[paramPosition] + 10 && element[paramPosition]  + dimensions[paramVector] + element[paramDimension] > guideBreak[paramPosition] - 10
                 var edge1 = element[paramPosition] + dimensions[paramVector] > guideBreak[paramPosition] -10 && element[paramPosition] + dimensions[paramVector] < guideBreak[paramPosition] + 10
+                console.log(element[paramPosition] , dimensions[paramVector] , guideBreak[paramPosition])
                 if (edge1 || edge2){
                     var guide = new Guide()
                     guide[paramPosition] = guideBreak[paramPosition]
@@ -141,6 +142,8 @@ export class PageService {
             }
             case Border.bottom :{
                 return guideBreak.positionY != element.positionY
+            }default{
+                return true
             }
         }
     }
@@ -154,42 +157,38 @@ export class PageService {
         }
     }
     
-    resize(element: Element,dimensions: ElementDimensions, page: Page, guides: Guide[]): ElementDimensions{
-        if (!this.startState){
-            this.startState = { width: element.width, height: element.height}
-            this.initGuides(element,page)
-            this.verticals = this.verticals.filter(guideBreak => this.filterOpositeBorder(guideBreak, dimensions, element))
-            this.horizontals = this.horizontals.filter(guideBreak => this.filterOpositeBorder(guideBreak, dimensions, element))
+    resize(element: Element,dimensions, page: Page, guides: Guide[], border?: Border): ElementDimensions{
+        if(!element || !dimensions || !page || !guides){
+            throw new TypeError("params must be defined")
         }
+
+        if (this.element != element){
+            this.element = element
+            this.init()
+            if(page.elements || page.rulers){
+                this.initGuides(element, page)
+            }
+        }
+
+        this.verticals = this.verticals.filter(guideBreak => this.filterOpositeBorder(guideBreak, dimensions, element))
+        this.horizontals = this.horizontals.filter(guideBreak => this.filterOpositeBorder(guideBreak, dimensions, element))
         
         let edge2FuncHorizontal = function(guideBreak: Break) { element.height = guideBreak.positionY - element.positionY}
         let edge2FuncVertical = function(guideBreak: Break) { element.width = guideBreak.positionX - element.positionX}
         let emptyFunc = function (guideBreak: Break) {}
         let releaseFuncVert = (guideBreak: Break) => { element.width += guideBreak.buffer.value }
         let releaseFuncHor = (guideBreak: Break) => { element.height += guideBreak.buffer.value }
-        if(dimensions.width && dimensions.height){
-            var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions, 'height', 'positionY', 'height',emptyFunc, edge2FuncHorizontal, releaseFuncHor, guides)
-            var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions, 'width', 'positionX', 'width', emptyFunc, edge2FuncVertical, releaseFuncVert,guides)
-            if(!verticalBreak && !horizontalBreak){
-                return {width: dimensions.width,height: dimensions.height,top: null, left: null, border: null}
-                //element.width += dimensions.width
-                //element.height += dimensions.height
-            }
-        } else if (dimensions.height){
-            var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions, 'height', 'positionY', 'height',emptyFunc, edge2FuncHorizontal, releaseFuncHor, guides)
-            if(!horizontalBreak){
-                return {width:null,height:dimensions.height,top: null, left: null, border: null} 
-                //element.height += dimensions.height
-            }
-        } else if (dimensions.width){
-            var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions, 'width', 'positionX', 'width', emptyFunc, edge2FuncVertical, releaseFuncVert,guides)
-            if(!verticalBreak){
-                return {width: dimensions.width,height: null,top: null, left: null, border: null}
-                //element.width += dimensions.width
-            }
-        } 
-                
-        //this.finalStep = this.stepSelector.makeDimensions(element, this.startState.width, element.width, this.startState.height, element.height)    
+        var horizontalBreak = this.resolveBreaks(this.horizontals, element, dimensions, 'height', 'positionY', 'height',emptyFunc, edge2FuncHorizontal, releaseFuncHor, guides)
+        var verticalBreak = this.resolveBreaks(this.verticals, element, dimensions, 'width', 'positionX', 'width', emptyFunc, edge2FuncVertical, releaseFuncVert,guides)
+        if(border == Border.left){
+            dimensions.left = dimensions.width
+            dimensions.width = -1*dimensions.width
+        }
+        if(border == Border.left){
+            dimensions.top = dimensions.height
+            dimensions.height = -1*dimensions.height
+        }
+        return dimensions       
     }
     
     save(){
