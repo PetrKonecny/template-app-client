@@ -2,6 +2,9 @@ import {Content} from '../content/content';
 import {Injectable} from '@angular/core';
 import {UndoRedoService, Command, BufferCommand} from '../undo-redo.service'
 
+export enum Border { left, right, bottom, top };
+
+
 @Injectable()
 export class ElementCommands{
 

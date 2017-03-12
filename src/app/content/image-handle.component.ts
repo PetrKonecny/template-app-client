@@ -9,14 +9,14 @@ import { ImageContent, ImageContentCommands } from './image-content'
             [style.height.px]="handleContent?.content?.height"
             [style.margin-top.px]="handleContent?.content?.top"
             [style.margin-left.px]="handleContent?.content?.left">
-            <a draggable2 (move)="onMoveDiagonal($event)" style="left: 0; top: 0;"></a>
-            <a draggable2 (move)="onMoveDiagonal($event)" style="top: 0; left: 100%;"></a>
-            <a draggable2 (move)="onMoveDiagonal($event)" style="left: 0; top:100%;"></a>
-            <a draggable2 (move)="onMoveDiagonal($event)" style="left: 100%; top: 100%;"></a>
-            <a draggable2 (move)="onMoveHorizontal($event)" style="top: 0; left: 50%;"></a>
-            <a draggable2 (move)="onMoveVertical($event)" style="left: 0; top: 50%;" ></a>
-            <a draggable2 (move)="onMoveHorizontal($event)" style="left:50%; top: 100%;"></a>
-            <a draggable2 (move)="onMoveVertical($event)" style="left: 100%; top: 50%;"></a>
+            <a draggable2 (move)="leftTop($event)" style="left: 0; top: 0;"></a>
+            <a draggable2 (move)="rightTop($event)" style="top: 0; left: 100%;"></a>
+            <a draggable2 (move)="leftBottom($event)" style="left: 0; top:100%;"></a>
+            <a draggable2 (move)="rightBottom($event)" style="left: 100%; top: 100%;"></a>
+            <a draggable2 (move)="top($event)" style="top: 0; left: 50%;"></a>
+            <a draggable2 (move)="left($event)" style="left: 0; top: 50%;" ></a>
+            <a draggable2 (move)="bottom($event)" style="left:50%; top: 100%;"></a>
+            <a draggable2 (move)="right($event)" style="left: 100%; top: 50%;"></a>
             <ng-content></ng-content>
             </div>
         `,
@@ -31,31 +31,45 @@ export class ImageHandleComponent implements AfterContentInit {
 
     @ContentChild('handleContent')
     handleContent: any
+    content: any
 
     constructor(private commands: ImageContentCommands){}
 
     
     ngAfterContentInit(){
-        console.log(this.handleContent)
+        this.content = this.handleContent.content
     }
 
-    onMoveVertical(dimensions){
-        this.commands.startResizingImage(this.handleContent.content,{width:dimensions.left})
+    leftTop(dimensions){
+        this.commands.startResizingImage(this.content,{width:-1*dimensions.left, height: -1*dimensions.top, left: dimensions.left, top: dimensions.top})
     }
 
-    onMoveHorizontal(dimensions){
-
-        this.commands.startResizingImage(this.handleContent.content,{height: dimensions.top})
+    top(dimensions){
+        this.commands.startResizingImage(this.content,{height: -1*dimensions.top,  top: dimensions.top})
     }
 
-    onMoveDiagonal(dimensions){
-        let ratio = this.handleContent.content.width / this.handleContent.content.height
-        this.commands.startResizingImage(this.handleContent.content,{width:dimensions.top * ratio, height: dimensions.top})
+    rightTop(dimensions){
+        this.commands.startResizingImage(this.content,{width: dimensions.left, height: -1*dimensions.top, top: dimensions.top})
     }
 
-    onMove(dimensions){
+    right(dimensions){
+        this.commands.startResizingImage(this.content,{width: dimensions.left})
     }
 
+   rightBottom(dimensions){
+        this.commands.startResizingImage(this.content,{width: dimensions.left, height: dimensions.top})
+   }
 
+   bottom(dimensions){
+        this.commands.startResizingImage(this.content,{height: dimensions.top})
+   }
+
+   leftBottom(dimensions){
+        this.commands.startResizingImage(this.content,{width:-1*dimensions.left, height: dimensions.top, left: dimensions.left})
+   }
+
+   left(dimensions){
+       this.commands.startResizingImage(this.content,{width:-1*dimensions.left, left: dimensions.left})
+   }
      
 }

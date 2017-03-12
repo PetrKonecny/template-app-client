@@ -10,14 +10,14 @@ import { Element, ElementCommands} from './element';
             [style.margin-top.px]="element?.positionY"
             [style.margin-left.px]="element?.positionX">
             <span *ngIf="handleContent?.selected && !handleContent?.hideHandles">
-            <a draggable2 (move)="onMoveDiagonal($event)" style="left: 0; top: 0;"></a>
-            <a draggable2 (move)="onMoveDiagonal($event)" style="top: 0; left: 100%;"></a>
-            <a draggable2 (move)="onMoveDiagonal($event)" style="left: 0; top:100%;"></a>
-            <a draggable2 (move)="onMoveDiagonal($event)" style="left: 100%; top: 100%;"></a>
-            <a draggable2 (move)="onMoveHorizontal($event)" style="top: 0; left: 50%;"></a>
-            <a draggable2 (move)="onMoveVertical($event)" style="left: 0; top: 50%;" ></a>
-            <a draggable2 (move)="onMoveHorizontal($event)" style="left:50%; top: 100%;"></a>
-            <a draggable2 (move)="onMoveVertical($event)" style="left: 100%; top: 50%;"></a>
+            <a draggable2 (move)="leftTop($event)" style="left: 0; top: 0;"></a>
+            <a draggable2 (move)="rightTop($event)" style="top: 0; left: 100%;"></a>
+            <a draggable2 (move)="leftBottom($event)" style="left: 0; top:100%;"></a>
+            <a draggable2 (move)="rightBottom($event)" style="left: 100%; top: 100%;"></a>
+            <a draggable2 (move)="top($event)" style="top: 0; left: 50%;"></a>
+            <a draggable2 (move)="left($event)" style="left: 0; top: 50%;" ></a>
+            <a draggable2 (move)="bottom($event)" style="left:50%; top: 100%;"></a>
+            <a draggable2 (move)="right($event)" style="left: 100%; top: 50%;"></a>
             </span>
             <ng-content></ng-content>
             </div>
@@ -41,27 +41,82 @@ export class ElementHandleComponent implements AfterContentInit {
         this.element = this.handleContent.element
     }
 
-    onMoveVertical(dimensions){
-        let d = this.newPage.resize(this.handleContent.element,{width: dimensions.left,height: dimensions.top, top: null, left: null, border: null})
+
+    leftTop(dimensions){
+        let d = this.newPage.resize(this.element,{width: dimensions.left,height: dimensions.top},{reverseWidth: true,reverseHeight: true,filterThesePositions:[
+            {x:this.element.positionX+this.element.width},
+            {y:this.element.positionY+this.element.height}
+        ]})
+        if(d){
+            this.commands.startResizingElement(this.handleContent.element,d)
+        }
+    }
+
+    top(dimensions){
+        let d = this.newPage.resize(this.element,{width: dimensions.left,height: dimensions.top},{reverseHeight: true,filterThesePositions:[
+            {y:this.element.positionY+this.element.height}
+        ]})
+        if(d){
+            this.commands.startResizingElement(this.handleContent.element,{height:d.height, top: d.top})
+        }
+    }
+
+    rightTop(dimensions){
+        let d = this.newPage.resize(this.element,{width: dimensions.left,height: dimensions.top},{reverseHeight: true,filterThesePositions:[
+            {x:this.element.positionX},
+            {y:this.element.positionY+this.element.height}
+        ]})
+        if(d){
+            this.commands.startResizingElement(this.handleContent.element,d)
+        }        
+    }
+
+    right(dimensions){
+        let d = this.newPage.resize(this.element,{width: dimensions.left,height: dimensions.top},{filterThesePositions:[
+            {x:this.element.positionX},
+        ]})
         if(d){
             this.commands.startResizingElement(this.handleContent.element,{width:d.width})
         }
     }
 
-    onMoveHorizontal(dimensions){
-        let d = this.newPage.resize(this.handleContent.element,{width: dimensions.left,height: dimensions.top, top: null, left: null, border: null})
+   rightBottom(dimensions){
+        let d = this.newPage.resize(this.element,{width: dimensions.left,height: dimensions.top},{filterThesePositions:[
+            {x:this.element.positionX},
+            {y:this.element.positionY}
+        ]})
         if(d){
-            this.commands.startResizingElement(this.handleContent.element,{height: d.height})
+            this.commands.startResizingElement(this.handleContent.element,d)
         }
-    }
+   }
 
-    onMoveDiagonal(dimensions){
-        let d = this.newPage.resize(this.handleContent.element,{width: dimensions.left,height: dimensions.top, top: null, left: null, border: null})
+   bottom(dimensions){
+       let d = this.newPage.resize(this.element,{width: dimensions.left,height: dimensions.top},{filterThesePositions:[
+            {y:this.element.positionY}
+        ]})
         if(d){
-            let ratio = this.handleContent.element.width / this.handleContent.element.height
-            this.commands.startResizingElement(this.handleContent.element,{width:d.height * ratio, height: d.height})
+            this.commands.startResizingElement(this.handleContent.element,{height:d.height})
         }
-    }
+   }
+
+   leftBottom(dimensions){
+      let d = this.newPage.resize(this.element,{width: dimensions.left,height: dimensions.top},{reverseWidth: true,filterThesePositions:[
+            {x:this.element.positionX + this.element.width},
+            {y:this.element.positionY}
+        ]})
+        if(d){
+            this.commands.startResizingElement(this.handleContent.element,d)
+        } 
+   }
+
+   left(dimensions){
+       let d = this.newPage.resize(this.element,{width: dimensions.left,height: dimensions.top},{reverseWidth: true,filterThesePositions:[
+            {x:this.element.positionX + this.element.width},
+        ]})
+        if(d){
+            this.commands.startResizingElement(this.handleContent.element,{width:d.width, left: d.left})
+        } 
+   }
 
     onMove(dimensions){
         console.log(dimensions)

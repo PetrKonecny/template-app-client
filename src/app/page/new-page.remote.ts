@@ -28,8 +28,8 @@ export class NewPageRemote {
         this.service.resizeSimple(element,dimensions)
     }
     
-    resize(element: Element,dimensions: ElementDimensions){
-       return this.service.resize(element,dimensions,this.component.page,this.component.guides)
+    resize(element: Element,dimensions, options?){
+       return this.service.resize(element,dimensions,this.component.page,this.component.guides,options)
     }
           
     resizeTableElement(element: TableElement, dimensions: ElementDimensions){

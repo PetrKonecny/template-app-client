@@ -183,7 +183,7 @@ describe('Page service move test', () => {
  }
 })
 
-describe('Page service resize test', () => {
+fdescribe('Page service resize test', () => {
   let service: PageService
   let element: Element
   let page: Page
@@ -278,18 +278,10 @@ describe('Page service resize test', () => {
   	expect(guides.length).toEqual(2)	
   })
 
-  it('should filter out oposite border and not interact with it, if a border is given',()=>{
-  	addNewElement(50,1000,50,50)
-  	let transform = service.resize(element,{width:15,height:0},page,guides,Border.right)
-  	expect(guides.length).toEqual(0)
-  	expect(transform.width).toEqual(15)
-
-  })
-
   it('should resize and shift element instead of shrinking when given negative vaule if a left border is given',()=>{
   	element.positionX = 100
   	element.positionY = 100
-  	let transform = service.resize(element,{width:-50,height:0},page,guides,Border.left)
+  	let transform = service.resize(element,{width:-50,height:0},page,guides,{reverseWidth: true})
   	expect(transform.left).toEqual(-50)
   	expect(transform.width).toEqual(50)
   })
@@ -297,15 +289,25 @@ describe('Page service resize test', () => {
   it('should resize and shift element instead of expanding when given positive value if a left border is given',()=>{
   	element.positionX = 100
   	element.positionY = 100
-  	let transform = service.resize(element,{width:50,height:0},page,guides,Border.left)
+  	let transform = service.resize(element,{width:50,height:0},page,guides,{reverseWidth: true})
   	expect(transform.left).toEqual(50)
   	expect(transform.width).toEqual(-50)
+  })
+
+  it('should resize and shift element instead of normal behaviour when given left border',()=>{
+    element.positionX = 100
+    element.positionY = 100
+    let transform = service.resize(element,{width:-50,height:-50},page,guides,{reverseWidth: true, reverseHeight: true})
+    expect(transform.left).toEqual(-50)
+    expect(transform.top).toEqual(-50)
+    expect(transform.width).toEqual(50)
+    expect(transform.height).toEqual(50)
   })
 
   it('should stick even if resizing from left border',()=>{
   	let element2 = addNewElement(100,1000,50,50)
   	page.elements.push(element)
-  	let transform = service.resize(element2,{width:-55,height:0},page,guides,Border.left)
+  	let transform = service.resize(element2,{width:-55,height:0},page,guides,{reverseWidth: true})
   	expect(transform.left).toEqual(-50)
   	expect(transform.width).toEqual(50)
   })
@@ -313,17 +315,24 @@ describe('Page service resize test', () => {
   it('should break on the proper side if resizing from sticky left border',()=>{
   	let element2 = addNewElement(100,1000,50,50)
   	page.elements.push(element)
-  	let transform = service.resize(element2,{width:-55,height:0},page,guides,Border.left)
+  	let transform = service.resize(element2,{width:-55,height:0},page,guides,{reverseWidth: true})
   	element.width = transform.width
   	element.positionX = transform.left
   	//this should stick
-  	transform = service.resize(element2,{width:-15,height:0},page,guides,Border.left)
+  	transform = service.resize(element2,{width:-15,height:0},page,guides,{reverseWidth: true})
   	expect(transform.left+1).toEqual(1)
   	expect(transform.width+1).toEqual(1)
   	//this should not
-  	transform = service.resize(element2,{width:-30,height:0},page,guides,Border.left)
+  	transform = service.resize(element2,{width:-30,height:0},page,guides,{reverseWidth: true})
   	expect(transform.left).toEqual(-45)
   	expect(transform.width).toEqual(45)
+  })
+
+  it('should filter given edges',()=>{
+    let element2 = addNewElement(1000,1000,50,50)
+    let transform = service.resize(element,{width:155,height:155},page,guides,{filterThesePositions:[{x:1000}, {y:1000}]})
+    expect(service.verticals.length).toEqual(0)
+    expect(service.horizontals.length).toEqual(0)
   })
 
  function addNewElement(x,y,width,height){
