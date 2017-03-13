@@ -8,18 +8,40 @@ import { NewPageRemote } from '../page/new-page.remote'
 
 @Component({
     selector: 'display-frame-element',
-    template: `      
+    template: `
         <div [class.selected]="selected" class= "inner" (drop)="onDrop($event)" (dragover)="onDragOver()" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
-            <display-content-img-drag *ngIf="element.content && element.content.image" [content] = "element.content"></display-content-img-drag>
-            <button *ngIf="element.content && element.content.image && selected" style="top: 40px" class="button"  (click)="onPlusButtonClick()" >Zoom in</button>
-            <button *ngIf="element.content && element.content.image && selected" style="top: 60px" class="button"  (click)="onMinusButtonClick()" >Zoom out</button>
-            <button *ngIf="element.content && element.content.image && selected" (click)="onDeleteButtonClick()" class="button">Delete image</button>
+            <span *ngIf="selected && element?.content?.image" style="position: absolute; top: -40px; z-index: 1000">
+                <button md-raised-button *ngIf="!draggable" (click)="onDoneAdjustButtonClick()"  md-icon-button mdTooltip="adjust frame"><md-icon>done</md-icon></button>
+                <button md-raised-button *ngIf="draggable" (click)="onAdjustButtonClick()" md-icon-button mdTooltip="adjust image"><md-icon>photo_size_select_large</md-icon></button>
+                <span *ngIf="!draggable">
+                    <button md-icon-button [mdMenuTriggerFor]="adjustImageMenu"><md-icon>more_vert</md-icon></button>
+                    <md-menu #adjustImageMenu="mdMenu">
+                      <button md-menu-item (click)="onDeleteButtonClick()">
+                        <span>Delete image</span>
+                      </button>                         
+                    </md-menu>
+                </span>
+            </span>
+            <div class="content"> 
+                <display-content *ngIf="draggable && element.content" [content] = "element.content"></display-content>
+            </div>
+            <image-handle *ngIf="!draggable && element.content && element.content.image">
+                <display-content-img-drag #handleContent [content] = "element.content"></display-content-img-drag>
+            </image-handle>
         </div>
     `,
     styles:[`
+        .content {
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
         .inner {
             position: absolute;
-            overflow: hidden;         
+            border: 1px dashed gray;
         }
         .button{
             z-index: 1000;
@@ -36,7 +58,10 @@ export class DisplayFrameElementComponent {
     element : FrameElement
     
     selected: boolean
-        
+    
+    draggable = true;    
+
+
     constructor(
         private elementSelector: ElementSelector,
     ){
@@ -56,19 +81,15 @@ export class DisplayFrameElementComponent {
     }
 
     onDeleteButtonClick(){
+        this.draggable = true;
         (<ImageContent>this.element.content).image = null;
     }
-    
-    onPlusButtonClick(){
-        var content = <ImageContent>this.element.content
-        content.width = content.width * 1.1;
-        content.height = content.height * 1.1;    
+
+    onDoneAdjustButtonClick(){
+        this.draggable = true;
     }
     
-    onMinusButtonClick(){
-        var content = <ImageContent>this.element.content
-        content.width = content.width * 0.9;
-        content.height = content.height * 0.9;     
-    }
-       
+    onAdjustButtonClick(){
+        this.draggable = false;
+    }    
 }

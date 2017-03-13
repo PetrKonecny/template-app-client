@@ -31,7 +31,24 @@ import { Element } from '../element/element';
             </div>
         </md-sidenav-container>
     `,
-    providers: [ImageSelector, TextSelector, ElementSelector]
+    providers: [ImageSelector, TextSelector, ElementSelector],
+     styles: [`.leftPanel {
+            position: relative;
+            float: left;
+            margin-top: 10px;
+            width: 300px;
+        }
+        .pages{
+            position: relative;
+            overflow-y: scroll;
+            height: 95%;
+        }       
+        .buttons{
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+    `]
 })
 
 export class NewTemplateInstanceComponent implements OnInit {

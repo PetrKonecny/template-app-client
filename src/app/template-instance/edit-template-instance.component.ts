@@ -1,16 +1,27 @@
 import { Component, OnInit} from '@angular/core';
-import { TemplateInstanceStore } from './template-instance.store';
 import { TemplateInstance} from './template-instance';
 import { Router, ActivatedRoute} from '@angular/router'
-import { Template} from '../template/template';
 import { Observable } from 'rxjs/Rx'
+import { TemplateInstanceStore } from '../template-instance/template-instance.store';
+import { Template, TemplateCommands} from '../template/template';
+import { ElementSelector } from '../element/element-selector';
+import { ImageSelector } from '../image/image-selector';
+import { PageSelector} from '../page/page-selector'
+import { RulerSelector } from '../guide/ruler-selector'
+import { TextSelector } from '../editor/text-selector'
+import { UndoRedoService } from '../undo-redo.service'
+import { TableElementCommands } from '../element/table-element'
+import { TextContentCommands } from '../content/text-content'
+import { ImageContentCommands } from '../content/image-content'
+import { ElementCommands } from '../element/element'
+import { PageCommands } from '../page/page'
 
 @Component({
     selector: 'template-edit',
     template: `
         <create-new-template-instance [templateInstance] = "templateInstance" [template] = "template"></create-new-template-instance>
     `,
-    providers: []
+    providers: [ElementSelector, ImageSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
 })
 
 export class TemplateInstanceEditComponent implements OnInit  {

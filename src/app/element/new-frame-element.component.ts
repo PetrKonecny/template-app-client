@@ -33,7 +33,8 @@ import { ElementCommands} from './element';
     `,
     styles:[`
         .inner {
-            overflow: hidden;         
+            overflow: hidden;
+            border: 1px dashed gray;         
         }
         .button{
             z-index: 1000;
