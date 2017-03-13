@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, ViewChildren, QueryList} from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, QueryList, AfterViewInit} from '@angular/core';
 import { MdDialog } from '@angular/material'
-import { Template} from './template';
+import { Template, TemplateCommands} from './template';
 import { Page} from '../page/page';
 import { ElementSelector } from '../element/element-selector';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
@@ -10,6 +10,8 @@ import { RulerSelector } from '../guide/ruler-selector'
 import { TextSelector } from '../editor/text-selector'
 import { SaveTemplateModal } from './save-template.modal'
 import { UndoRedoService } from '../undo-redo.service'
+import { PageService } from '../page/page.service'
+import { PageFactory } from '../page/page.factory'
 
 @Component({
     selector: 'create-new-template',
@@ -32,14 +34,17 @@ import { UndoRedoService } from '../undo-redo.service'
                     <md-tab label = "Images">
                         <image-select></image-select>
                     </md-tab>
-                    <md-tab label = "Pages">
-                        <button md-raised-button (click)="createNewPage()">Add page</button>
-                        <br> TO-DO: Different page types here
-                    </md-tab>
                 </md-tab-group>
             </md-sidenav>       
             <div class="pages">
-            <create-new-page *ngFor="let page of template.pages" [page]="page"></create-new-page>
+            <span *ngFor="let page of template.pages" >
+                <div class = "buttons" [style.width.mm] = "pageService.getPageWidth(page)">
+                    <button md-raised-button md-icon-button mdTooltip="smazat stranu" (click)="onClickDelete(page)" [disabled]="template.pages.length < 2"><md-icon>delete</md-icon></button>
+                    <button md-raised-button md-icon-button  mdTooltip="nová strana nad" (click)="onClickAddAbove(page)"><md-icon>keyboard_arrow_up</md-icon></button>
+                    <button md-raised-button md-icon-button mdTooltip="nová strana pod" (click)="onClickAddBelow(page)"><md-icon>keyboard_arrow_down</md-icon></button>
+                </div> 
+                <create-new-page [page]="page"></create-new-page>
+            </span>
             </div>
         </md-sidenav-container>
     `,
@@ -54,10 +59,15 @@ import { UndoRedoService } from '../undo-redo.service'
             overflow-y: scroll;
             height: 95%;
         }       
+        .buttons{
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
     `]
 })
 
-export class NewTemplateComponent implements OnInit {
+export class NewTemplateComponent implements OnInit, AfterViewInit {
 
     @Input()
     template: Template;
@@ -68,11 +78,17 @@ export class NewTemplateComponent implements OnInit {
         private templateService: TemplateInstanceStore,
         private imageSelector: ImageSelector,
         public dialog: MdDialog,
-        private undoService: UndoRedoService
+        private undoService: UndoRedoService,
+        private pageService: PageService,
+        private pageFactory: PageFactory,
+        private pageSelector: PageSelector,
+        private templateCommands: TemplateCommands
     ){ }
     
     ngOnInit(){
         this.imageSelector.selectorWindowOpened.subscribe(opened => this.displaySelectWindow = opened);
+        this.templateService.filloutNewTemplate()
+        this.pageFactory.setHeight(297).setWidth(210)
     }
     
     saveTemplate() {
@@ -89,19 +105,25 @@ export class NewTemplateComponent implements OnInit {
         )
         dialogRef.componentInstance.template = this.template
     }
- 
-    createNewPage() {
-        if (this.template.pages == null) {
-            this.template.pages = new Array<Page>();
-        }
-        let page = new Page()
-        page.elements = new Array
-        this.template.pages.push(page);
+
+    onClickAddAbove(page: Page){
+        this.templateCommands.addPageAbove(this.template,page,this.pageFactory)
     }
 
+    onClickAddBelow(page: Page){
+        this.templateCommands.addPageBelow(this.template,page,this.pageFactory)
+    }
+
+    onClickDelete(page: Page){
+        this.templateCommands.deletePage(this.template,page)
+    }
    
     undo(){
         this.undoService.undo()
+    }
+
+    ngAfterViewInit(){
+        //this.pageSelector.selectPage(this.template.pages[0])
     }
 
 }

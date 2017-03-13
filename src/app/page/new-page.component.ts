@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, OnInit,KeyValueDiffers, KeyValueDiffer, DoCheck, ElementRef} from '@angular/core';
+import { Component, Input, HostListener, OnInit, ElementRef, ViewChild, AfterViewInit, AfterViewChecked} from '@angular/core';
 import { Page} from './page';
 import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
@@ -8,8 +8,8 @@ import {ImageElement} from '../element/image-element'
 
 @Component({
     selector: 'create-new-page',
-    template: `
-          <div class ="page" [class.selected]="selected" (drop)="onDrop($event)" (dragover)="onDragOver()"  (click)="onPageClicked()">
+    template: `            
+          <div class ="page" #pageRef [style.width.mm]="getPageWidth()" [style.height.mm]="getPageHeight()" [class.selected]="selected" (drop)="onDrop($event)" (dragover)="onDragOver()"  (click)="onPageClicked()">             
             <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>
             <display-guide *ngFor="let guide of guides" [guide] = "guide" ></display-guide>
             <display-ruler *ngFor="let guide of page.rulers" [guide] = "guide" ></display-ruler>
@@ -23,43 +23,53 @@ import {ImageElement} from '../element/image-element'
         .page {
             position: relative;
             background-color: white;
-            width: 210mm;
-            height: 297mm;
             margin-left: auto;
             margin-right: auto;
-            margin-top: 30px;
+            margin-top: 5px;
         }       
     `],
     providers: [NewPageRemote]
 })
 
-export class NewPageComponent implements OnInit {
+export class NewPageComponent implements AfterViewInit {
 
 
     guides: Array<Guide>
 
     @Input()
     page: Page  
+
+    @ViewChild('pageRef')
+    pageElementRef: ElementRef
  
     selected: boolean = false
-        
-    @HostListener('mousedown', ['$event'])
-    onMousedown(event) {
-        this.newPageRemote.onMouseDown()
-    }
-    
+     
     @HostListener('mouseup', ['$event'])
     onMouseup(event) {
         this.guides = new Array
-        this.newPageRemote.onMouseUp()
     }
 
     onDragOver(){
         return false
     }
 
+    getPageWidth(){
+        if(this.page.width){
+            return this.page.width
+        }else{
+            return Page.defaultWidth
+        }
+    }
+
+    getPageHeight(){
+        if(this.page.height){
+            return this.page.height
+        }else{
+            return Page.defaultHeight
+        }
+    }
+
     onDrop(event){
-        console.log('drop2')
         let data = event.dataTransfer.getData("text");
         let image
         try{
@@ -69,8 +79,8 @@ export class NewPageComponent implements OnInit {
         }
         let page = this.page
         let element = new ImageElement()
-        let x = event.clientX - this.ref.nativeElement.getBoundingClientRect().left
-        let y = event.clientY - this.ref.nativeElement.getBoundingClientRect().top
+        let x = event.clientX - this.pageElementRef.nativeElement.getBoundingClientRect().left
+        let y = event.clientY - this.pageElementRef.nativeElement.getBoundingClientRect().top
         element.width = 100
         element.height = 100
         element.positionX = x
@@ -87,19 +97,23 @@ export class NewPageComponent implements OnInit {
         this.guides = new Array
         this.pageSelector.page.subscribe(page => {if(this.page == page){this.selected = true}else{this.selected = false}})
     }
-
-    getSubject(){
-        return this.page
-    }
     
-    ngOnInit(){
-        this.page.rulers = new Array
-        var ruler = new Guide
-        ruler.positionX = 20
-        this.page.rulers.push(ruler)
-        var ruler2 = new Guide
-        ruler2.positionY = 20
-        this.page.rulers.push(ruler2)
+    ngAfterViewInit(){
+        setTimeout(_ => {
+            this.page.rulers = new Array
+            let ruler = new Guide
+            ruler.positionX = 10
+            let ruler2 = new Guide
+            ruler2.positionY = 10
+            let ruler3 = new Guide
+            let ruler4 = new Guide
+            ruler3.positionX = +this.pageElementRef.nativeElement.clientWidth -10
+            ruler4.positionY = +this.pageElementRef.nativeElement.clientHeight -10
+            this.page.rulers.push(ruler4)
+            this.page.rulers.push(ruler3)
+            this.page.rulers.push(ruler2)
+            this.page.rulers.push(ruler)
+        });        
     }
     
     onPageClicked(){

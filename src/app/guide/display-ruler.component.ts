@@ -6,8 +6,8 @@ import { RulerSelector } from './ruler-selector'
 @Component({
     selector: 'display-ruler',
     template: `
-        <div *ngIf="guide.positionX" draggable2 [propagate]="false" [borderCheck]="false" (move)="move($event)" class="vertical" [style.left.px]="guide.positionX" ></div>
-        <div *ngIf="guide.positionY" draggable2 [propagate]="false" [borderCheck]="false" (move)="move($event)" [style.top.px]="guide.positionY" class="horizontal"></div>
+        <div *ngIf="guide.positionX != null" draggable2 [propagate]="false" [borderCheck]="false" (move)="move($event)" class="vertical" [style.left.px]="guide.positionX" ></div>
+        <div *ngIf="guide.positionY != null" draggable2 [propagate]="false" [borderCheck]="false" (move)="move($event)" [style.top.px]="guide.positionY" class="horizontal"></div>
     `,
     styles: [` 
             .vertical{

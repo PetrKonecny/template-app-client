@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, HostListener} from '@angular/core';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
-import { Template} from './template';
+import { Template, TemplateCommands} from './template';
 import { ElementSelector } from '../element/element-selector';
 import { ImageSelector } from '../image/image-selector';
 import { PageSelector} from '../page/page-selector'
@@ -13,13 +13,12 @@ import { ImageContentCommands } from '../content/image-content'
 import { ElementCommands } from '../element/element'
 import { PageCommands } from '../page/page'
 
-
 @Component({
     selector: 'template-create',
     template: `
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    providers: [ElementSelector, ImageSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands]
+    providers: [ElementSelector, ImageSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
 })
 
 export class TemplateCreateComponent implements OnInit, AfterViewInit  {
@@ -42,7 +41,6 @@ export class TemplateCreateComponent implements OnInit, AfterViewInit  {
         this.templateService.template.first().subscribe( template => {
             this.template = template
             this.templateService.createContentsForTemplate()
-            this.templateService.filloutNewTemplate()
         });
     }
 

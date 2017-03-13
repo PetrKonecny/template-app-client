@@ -11,15 +11,18 @@ import {TextSelector} from './text-selector'
     template: ` <span *ngIf="editor">
                     <font-selector [fontLabel]="editor.editorCurFont.substring(0,5)" [fontSizeLabel]="editor.editorCurFontSize"></font-selector>
                     <button style="background: none; border:none;" [colorPicker]="editor.editorCurColor" (mousedown)="$event.preventDefault()" (colorPickerChange)="curColor =$event" (cpToggleChange)="onCpToggleChange($event)"><button md-icon-button><md-icon [style.color]="editor.editorCurColor">format_color_text</md-icon></button></button>
-                    <button md-icon-button (click)="changeEditorTextAlign('JustifyLeft')"><md-icon>format_align_left</md-icon></button>
-                    <button md-icon-button (click)="changeEditorTextAlign('JustifyRight')"><md-icon>format_align_right</md-icon></button>
-                    <button md-icon-button (click)="changeEditorTextAlign('JustifyCenter')"><md-icon>format_align_center</md-icon></button>
-                    <button md-icon-button (click)="changeEditorTextAlign('JustifyFull')"><md-icon>format_align_justify</md-icon></button>
-                    <button md-icon-button (click)="changeEditorTextBold()"><md-icon>format_bold</md-icon></button>
-                    <button md-icon-button (click)="changeEditorTextItalic()"><md-icon>format_italic</md-icon></button>
-                    <button md-icon-button (click)="changeEditorFormatBlock('h1')">H1</button>
-                    <button md-icon-button (click)="changeEditorFormatBlock('h2')">H2</button>
-                    <button md-icon-button (click)="changeEditorFormatBlock('p')">P</button>
+                    <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="Format text">F</button>
+                    <my-md-menu #textMenu="mdMenu">
+                        <button md-icon-button (click)="changeEditorTextAlign('JustifyLeft')" mdTooltip="zarovnat doleva"><md-icon>format_align_left</md-icon></button>
+                        <button md-icon-button (click)="changeEditorTextAlign('JustifyRight')" mdTooltip="zarovnat doprava"><md-icon>format_align_right</md-icon></button>
+                        <button md-icon-button (click)="changeEditorTextAlign('JustifyCenter')" mdTooltip="zarovnat na střed"><md-icon>format_align_center</md-icon></button>
+                        <button md-icon-button (click)="changeEditorTextAlign('JustifyFull')" mdTooltip="zarovnat do bloku"><md-icon>format_align_justify</md-icon></button>
+                        <button md-icon-button (click)="changeEditorTextBold()" mdTooltip="tučné"><md-icon>format_bold</md-icon></button>
+                        <button md-icon-button (click)="changeEditorTextItalic()" mdTooltip="kurzíva"><md-icon>format_italic</md-icon></button>
+                        <button md-icon-button (click)="changeEditorFormatBlock('h1')" mdTooltip="nadpis 1">H1</button>
+                        <button md-icon-button (click)="changeEditorFormatBlock('h2')" mdTooltip="nadpis 2">H2</button>
+                        <button md-icon-button (click)="changeEditorFormatBlock('p')" mdTooltip="odstavec">P</button>
+                    </my-md-menu>
                 </span>
              `,
     providers: [FontSelector]

@@ -106,7 +106,6 @@ export class NewTableElementComponent implements OnInit{
      }
     
     resize(dimensions: ElementDimensions){
-        this.newPage.resizeTableElement(this.element,dimensions)      
     }
 
     ngDoCheck(){

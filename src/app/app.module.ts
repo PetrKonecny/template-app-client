@@ -92,6 +92,8 @@ import {CreateTableModal} from './element/create-table-element.modal'
 
 import {OutSideEventHandlerDirective} from './outside-event-handler.directive'
 
+import {PageFactory} from './page/page.factory'
+
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
     { path: 'admin/templates', component: AdminTemplatesComponent },
@@ -145,7 +147,7 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        UserService, UserGuard, UserStore, PageService, ImageSelector, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }         
+        UserService, UserGuard, UserStore, PageService, ImageSelector, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
     ],
     bootstrap: [
         AppComponent

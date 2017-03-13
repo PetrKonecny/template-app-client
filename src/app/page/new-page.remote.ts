@@ -16,30 +16,14 @@ export class NewPageRemote {
 
     constructor(private service: PageService){}
       
-    moveSimple(element: Element, dimensions: ElementDimensions){
-        this.service.moveSimple(element,dimensions)
-    }
     
     move(element: Element, dimensions: ElementDimensions){
         return this.service.move(element,dimensions,this.component.page, this.component.guides)
     }   
     
-    resizeSimple(element: Element, dimensions: ElementDimensions){
-        this.service.resizeSimple(element,dimensions)
-    }
-    
     resize(element: Element,dimensions, options?){
        return this.service.resize(element,dimensions,this.component.page,this.component.guides,options)
     }
-          
-    resizeTableElement(element: TableElement, dimensions: ElementDimensions){
-       this.service.resizeTableElement(element,dimensions)
-    }
-
-    onMouseUp(){}
+   
     
-    onMouseDown(){
-        this.service.resetState
-    }
-       
 }

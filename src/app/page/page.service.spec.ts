@@ -183,7 +183,7 @@ describe('Page service move test', () => {
  }
 })
 
-fdescribe('Page service resize test', () => {
+describe('Page service resize test', () => {
   let service: PageService
   let element: Element
   let page: Page

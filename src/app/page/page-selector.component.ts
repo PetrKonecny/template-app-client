@@ -22,16 +22,15 @@ import {CreateTableModal} from '../element/create-table-element.modal'
     selector: 'page-select',
     template: `
                 <span *ngIf="page">\n\
-                    <br>
-                    <button (click)="createNewTextElement()">Add text element</button>
-                    <button (click)="createNewFrameElement()">Add frame element</button>
-                    <button (click)="createNewTableElement()">Add table element</button>\n\
-                    <button (click)="createNewRulerX()">Add vertical ruler</button>
-                    <button (click)="createNewRulerY()">Add horizontal ruler</button>
-                    <button (click)="onDeleteClicked()">Delete page</button>
+                    <md-grid-list cols="2">                    
+                        <md-grid-tile (click)="createNewTextElement()">text</md-grid-tile>
+                        <md-grid-tile (click)="createNewFrameElement()">rámeček</md-grid-tile>
+                        <md-grid-tile (click)="createNewTableElement()">tabulka</md-grid-tile>\n\
+                    </md-grid-list>
                 </span>
              `,
-    providers: []
+    providers: [],
+    styles: [`md-grid-tile {background: whitesmoke;}`]
 })
 
 export class PageSelectorComponent {

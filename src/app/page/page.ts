@@ -49,6 +49,9 @@ export class Page  {
   id: number;
   elements: Element[];
   rulers: Guide[];
-  size: number;
+  static defaultWidth = 210
+  static defaultHeight = 297
+  width: number;
+  height: number;
   pageNumber: number;  
 }

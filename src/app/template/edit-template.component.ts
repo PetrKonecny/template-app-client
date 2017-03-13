@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener} from '@angular/core';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
-import { Template} from './template';
+import { Template, TemplateCommands} from './template';
 import {ActivatedRoute} from '@angular/router';
 import { ElementSelector } from '../element/element-selector';
 import { ImageSelector } from '../image/image-selector';
@@ -19,7 +19,7 @@ import { PageCommands } from '../page/page'
     template: `
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    providers: [ElementSelector, ImageSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands]
+    providers: [ElementSelector, ImageSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
 })
 
 export class TemplateEditComponent implements OnInit  {

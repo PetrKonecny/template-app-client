@@ -173,6 +173,14 @@ export class PageService {
         }
         return dimensions       
     }
+
+    getPageWidth(page: Page){
+        if(page.width){
+            return page.width
+        }else{
+            return Page.defaultWidth
+        }
+    }
       
 }
 

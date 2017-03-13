@@ -15,7 +15,7 @@ import {TextSelector} from '../editor/text-selector'
     template: ` 
                 <span class="toolbar" *ngIf="element"> 
                 <button md-icon-button (click)="deleteElement()"><md-icon>delete</md-icon></button>
-                <button md-button [mdMenuTriggerFor]="menu">Position</button>
+                <button md-button [mdMenuTriggerFor]="menu">XYZ</button>
                 <my-md-menu #menu="mdMenu">
                     <md-input-container>
                         <input mdInput [(ngModel)]="element.width"  (keyup)="0" placeholder="width">
