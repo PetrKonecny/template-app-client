@@ -94,6 +94,8 @@ import {OutSideEventHandlerDirective} from './outside-event-handler.directive'
 
 import {PageFactory} from './page/page.factory'
 
+import {CreateTemplateModal} from './template/create-template.modal'
+
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
     { path: 'admin/templates', component: AdminTemplatesComponent },
@@ -128,7 +130,7 @@ const routes: Routes = [
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal, OutSideEventHandlerDirective
-        
+        ,CreateTemplateModal
     ],
     // modules
     imports: [
@@ -152,7 +154,7 @@ const routes: Routes = [
     bootstrap: [
         AppComponent
     ],
-    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal]
+    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal, CreateTemplateModal]
 })
 
 export class AppModule { }  

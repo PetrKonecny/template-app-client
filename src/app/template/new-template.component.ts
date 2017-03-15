@@ -67,7 +67,7 @@ import { PageFactory } from '../page/page.factory'
     `]
 })
 
-export class NewTemplateComponent implements OnInit, AfterViewInit {
+export class NewTemplateComponent implements OnInit {
 
     @Input()
     template: Template;
@@ -86,9 +86,7 @@ export class NewTemplateComponent implements OnInit, AfterViewInit {
     ){ }
     
     ngOnInit(){
-        this.imageSelector.selectorWindowOpened.subscribe(opened => this.displaySelectWindow = opened);
-        this.templateService.filloutNewTemplate()
-        this.pageFactory.setHeight(297).setWidth(210)
+        this.imageSelector.selectorWindowOpened.subscribe(opened => this.displaySelectWindow = opened);      
     }
     
     saveTemplate() {
@@ -121,9 +119,4 @@ export class NewTemplateComponent implements OnInit, AfterViewInit {
     undo(){
         this.undoService.undo()
     }
-
-    ngAfterViewInit(){
-        //this.pageSelector.selectPage(this.template.pages[0])
-    }
-
 }

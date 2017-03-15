@@ -10,9 +10,15 @@ export class AppComponentRef {
     private _mouseMove: Subject<any> = new Subject();
     public mouseMove: Observable<any> = this._mouseMove.asObservable();  
 
+    private _shiftPress: Subject<boolean> = new Subject();
+    public shiftPRess: Observable<boolean> = this._shiftPress.asObservable();  
 
     nextMouseMove(move){
     	this._mouseMove.next(move)
+    }
+
+    nextShiftPress(press: boolean){
+    	this._shiftPress.next(press)
     }
     
 

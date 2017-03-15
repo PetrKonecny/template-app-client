@@ -1,6 +1,7 @@
-import { Component,ContentChild, ElementRef, AfterContentInit} from '@angular/core';
+import { Component,ContentChild, ElementRef, AfterContentInit, HostListener} from '@angular/core';
 import {NewPageRemote} from '../page/new-page.remote'
 import { Element, ElementCommands} from './element';
+import {AppComponentRef} from '../app.ref'
 
 @Component({
     selector: 'element-handle',
@@ -34,8 +35,11 @@ export class ElementHandleComponent implements AfterContentInit {
     @ContentChild('handleContent')
     handleContent: any
     element: any
+    shift = false
 
-    constructor (private newPage: NewPageRemote, private commands: ElementCommands){}
+    constructor (private newPage: NewPageRemote, private commands: ElementCommands, private ref: AppComponentRef){
+        this.ref.shiftPRess.subscribe(press => this.shift = press)
+    }
     
     ngAfterContentInit(){
         this.element = this.handleContent.element
@@ -48,7 +52,12 @@ export class ElementHandleComponent implements AfterContentInit {
             {y:this.element.positionY+this.element.height}
         ]})
         if(d){
-            this.commands.startResizingElement(this.handleContent.element,d)
+            if(this.shift){
+                let ratio = this.element.width / this.element.height
+                this.commands.startResizingElement(this.element,{left: d.top*ratio,top: d.top, width: d.height*ratio, height: d.height})
+            }else{     
+                this.commands.startResizingElement(this.element,d)
+            }
         }
     }
 
@@ -67,7 +76,12 @@ export class ElementHandleComponent implements AfterContentInit {
             {y:this.element.positionY+this.element.height}
         ]})
         if(d){
-            this.commands.startResizingElement(this.handleContent.element,d)
+            if(this.shift){
+                let ratio = this.element.width / this.element.height
+                this.commands.startResizingElement(this.element,{top: d.top, width: d.height*ratio, height: d.height})
+            }else{     
+                this.commands.startResizingElement(this.element,d)
+            }        
         }        
     }
 
@@ -86,7 +100,12 @@ export class ElementHandleComponent implements AfterContentInit {
             {y:this.element.positionY}
         ]})
         if(d){
-            this.commands.startResizingElement(this.handleContent.element,d)
+            if(this.shift){
+                let ratio = this.element.width / this.element.height
+                this.commands.startResizingElement(this.element,{width: d.height*ratio, height: d.height})
+            }else{     
+                this.commands.startResizingElement(this.element,d)
+            }
         }
    }
 
@@ -105,7 +124,12 @@ export class ElementHandleComponent implements AfterContentInit {
             {y:this.element.positionY}
         ]})
         if(d){
-            this.commands.startResizingElement(this.handleContent.element,d)
+            if(this.shift){
+                let ratio = this.element.height / this.element.width
+                this.commands.startResizingElement(this.element,{left: d.left, width: d.width, height: d.width * ratio})
+            }else{     
+                this.commands.startResizingElement(this.element,d)
+            }
         } 
    }
 

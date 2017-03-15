@@ -12,6 +12,8 @@ import { TextContentCommands } from '../content/text-content'
 import { ImageContentCommands } from '../content/image-content'
 import { ElementCommands } from '../element/element'
 import { PageCommands } from '../page/page'
+import {ActivatedRoute} from '@angular/router';
+import {PageFactory} from '../page/page.factory'
 
 @Component({
     selector: 'template-create',
@@ -21,13 +23,13 @@ import { PageCommands } from '../page/page'
     providers: [ElementSelector, ImageSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
 })
 
-export class TemplateCreateComponent implements OnInit, AfterViewInit  {
+export class TemplateCreateComponent implements AfterViewInit, OnInit  {
     
     errorMessage: string;
     template : Template;
 
     constructor(
-        private templateService: TemplateInstanceStore, private pageSelector: PageSelector, private undoRedoService: UndoRedoService
+        private templateService: TemplateInstanceStore, private pageSelector: PageSelector, private undoRedoService: UndoRedoService, private route: ActivatedRoute, private factory: PageFactory
     ){ }
 
     @HostListener('document:mouseup', ['$event'])
@@ -41,7 +43,20 @@ export class TemplateCreateComponent implements OnInit, AfterViewInit  {
         this.templateService.template.first().subscribe( template => {
             this.template = template
             this.templateService.createContentsForTemplate()
-        });
+        })
+
+        this.route.params.subscribe(params=>{
+            let width = +params['width']
+            let height = +params['height']
+            if(width && height && width > 100 && width < 2000 && height > 100 && height < 2000){
+                this.factory.setWidth(width).setHeight(height)                
+            }
+            if(!this.template.pages || this.template.pages.length < 1){
+                    this.template.pages = []
+                    this.template.pages.push(this.factory.build())
+            }
+        })
+
     }
 
     ngAfterViewInit(){

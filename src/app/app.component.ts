@@ -22,7 +22,7 @@ import {AppComponentRef} from './app.ref'
 @Component({
     selector: 'app-root',
     template: `
-    <span (mousemove)="test($event)" style="height: 95%">
+    <span (mousemove)="test($event)" (document:keyup.shift)="onShiftUp()" (document:keydown.shift)="onShiftDown()" style="height: 95%">
     <md-toolbar *ngIf="adminRoute" color="warn">
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/users" routerLinkActive="active">USERS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/templates" routerLinkActive="active">TEMPLATES</a>
@@ -61,6 +61,14 @@ export class AppComponent implements OnInit, AfterViewChecked {
     test($event){
         $event.stopPropagation()
         this.ref.nextMouseMove($event)        
+    }
+
+    onShiftUp(){
+        this.ref.nextShiftPress(false)
+    }
+
+    onShiftDown(){
+        this.ref.nextShiftPress(true)
     }
 
     ngAfterViewChecked(){

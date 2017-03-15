@@ -4,6 +4,9 @@ import { TemplateService } from './template.service';
 import { Template} from './template';
 import { Observable }     from 'rxjs/Observable';
 import { Router } from '@angular/router'
+import {MdDialog, MdDialogRef} from '@angular/material'
+import {CreateTemplateModal} from './create-template.modal'
+import {Page} from '../page/page'
 
 @Component({
     selector: 'template-index',
@@ -13,7 +16,7 @@ import { Router } from '@angular/router'
             <button md-button>SEARCH</button>
         </form>
         <template-list [templates] = "templates" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>\n\
-        <button md-fab [routerLink] = "['/templates/new']"><md-icon>add</md-icon></button>
+        <button md-fab (click)="onAddTemplateClicked()"><md-icon>add</md-icon></button>
     `,
     providers: []
 })
@@ -24,7 +27,7 @@ export class TemplateIndexComponent implements OnInit  {
     templates : Template[];
 
     constructor(
-        private templateService: TemplateService, private router: Router 
+        private templateService: TemplateService, private router: Router, public dialog: MdDialog 
     ){ }
     
     
@@ -51,5 +54,41 @@ export class TemplateIndexComponent implements OnInit  {
                                error =>  this.errorMessage = <any>error
         );
     }
-     
+
+    onAddTemplateClicked(){
+        let dialogRef = this.dialog.open(CreateTemplateModal, { height: 'auto', width: '30%',disableClose: false})
+        dialogRef.afterClosed().subscribe(val =>{
+            if(!val){
+                return 
+            }
+            let width
+            let height
+            switch(val.type){
+                case('A3'): 
+                    height = Page.presetDimensions.A3.height
+                    width = Page.presetDimensions.A3.width
+                    break
+                case('A4'):
+                    height = Page.presetDimensions.A4.height
+                    width = Page.presetDimensions.A4.width
+                    break
+                case('A5'):
+                    height = Page.presetDimensions.A5.height
+                    width = Page.presetDimensions.A5.width
+                    console.log(width,height)
+                    break
+                case('custom'):
+                    height = val.height
+                    width = val.width
+                    break
+            }
+            if(val.type !== 'custom' && val.orientation == 1){
+                    let temp = width
+                    width = height
+                    height = temp
+            }
+            console.log(width,height)
+            this.router.navigate(['/templates/new', {width:width,height:height}])
+        })
+    }     
 }

@@ -4,16 +4,16 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class PageFactory{
 
-	width: number
-	height: number
+	width: number = Page.defaultWidth
+	height: number = Page.defaultHeight
 
 	setWidth(width: number){
 		this.width = width
 		return this
 	}
 
-	setHeight(width: number){
-		this.width = width
+	setHeight(height: number){
+		this.height = height
 		return this
 	}
 
