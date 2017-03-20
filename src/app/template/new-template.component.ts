@@ -23,7 +23,7 @@ import { PageFactory } from '../page/page.factory'
                 <button md-icon-button (click)="saveTemplate()"><md-icon>save</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()"><md-icon>undo</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getRedos().length" ><md-icon>redo</md-icon></button>
-                <element-select></element-select>
+                <element-select style="width: 100%;"></element-select>
             </md-toolbar>
             <md-sidenav mode ="side" #sidenav style="width: 20%;">
                 <md-tab-group>
@@ -39,9 +39,9 @@ import { PageFactory } from '../page/page.factory'
             <div class="pages">
             <span *ngFor="let page of template.pages" >
                 <div class = "buttons" [style.width.mm] = "pageService.getPageWidth(page)">
-                    <button md-raised-button md-icon-button mdTooltip="smazat stranu" (click)="onClickDelete(page)" [disabled]="template.pages.length < 2"><md-icon>delete</md-icon></button>
-                    <button md-raised-button md-icon-button  mdTooltip="nová strana nad" (click)="onClickAddAbove(page)"><md-icon>keyboard_arrow_up</md-icon></button>
-                    <button md-raised-button md-icon-button mdTooltip="nová strana pod" (click)="onClickAddBelow(page)"><md-icon>keyboard_arrow_down</md-icon></button>
+                    <button md-icon-button mdTooltip="smazat stranu" (click)="onClickDelete(page)" [disabled]="template.pages.length < 2"><md-icon>delete</md-icon></button>
+                    <button md-icon-button  mdTooltip="nová strana nad" (click)="onClickAddAbove(page)"><md-icon>keyboard_arrow_up</md-icon></button>
+                    <button md-icon-button mdTooltip="nová strana pod" (click)="onClickAddBelow(page)"><md-icon>keyboard_arrow_down</md-icon></button>
                 </div> 
                 <create-new-page [page]="page"></create-new-page>
             </span>
@@ -63,6 +63,8 @@ import { PageFactory } from '../page/page.factory'
             margin-left: auto;
             margin-right: auto;
             position: relative;
+            display: flex;
+            flex-direction: row-reverse;
         }
     `]
 })

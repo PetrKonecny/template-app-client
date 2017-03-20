@@ -43,16 +43,25 @@ export class UndoRedoService{
 	}
 
 	execute(command: Command){
-		command.execute()
+		try{
+			command.execute()
+		}catch(e){
+			return
+		}
 		this.redos = []
 		this.undos.push(command)
-}
+	}
 
 	addToBufferAndExecute(command: BufferCommand){
 		if(!this.buffer){
 			this.buffer = new Array
 		}
-		command.execute()
+		try{
+			command.execute()
+		}catch(e){
+			this.buffer = []
+			return
+		}
 		this.buffer.push(command)
 	}
 
@@ -63,6 +72,9 @@ export class UndoRedoService{
 			if(this.buffer.length > 1 && first.constructor == last.constructor) {
 				last.setStoredState(first.getStoredState())
 				this.undos.push(last)
+				this.redos = []
+			}else if(this.buffer.length == 1){
+				this.undos.push(this.buffer[0])
 				this.redos = []
 			}
 			this.buffer = null

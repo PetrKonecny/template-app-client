@@ -13,7 +13,7 @@ import {TextSelector} from '../editor/text-selector'
 @Component({
     selector: 'cell-edit-toolbar',
     template: `                     
-                Background: <md-checkbox [checked]="getSelectedCellsBackground()" #cellBackgroundCheckbox (change)="toggleCellBackground(cellBackgroundCheckbox.checked)"></md-checkbox>
+                <md-checkbox [checked]="getSelectedCellsBackground()" #cellBackgroundCheckbox (change)="toggleCellBackground(cellBackgroundCheckbox.checked)" mdTooltip="zobrazit/skrýt pozadí buňek"></md-checkbox>
                 <button *ngIf="getSelectedCellsBackground()" style="background: none; border:none;" [colorPicker]="getCellBgColor()"  [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getCellBgColor()">format_color_fill</md-icon></button></button>
                 <font-selector></font-selector>
                     <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="Format text">A</button>

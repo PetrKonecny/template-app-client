@@ -1,5 +1,5 @@
 import { Component, Input, HostListener, OnInit, ElementRef, ViewChild, AfterViewInit, AfterViewChecked} from '@angular/core';
-import { Page} from './page';
+import { Page, PageCommands} from './page';
 import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
 import {PageSelector} from '../page/page-selector'
@@ -89,10 +89,10 @@ export class NewPageComponent implements AfterViewInit {
         if(!this.page.elements){
             this.page.elements = new Array
         }
-        this.page.elements.push(element)
+        this.commands.addElement(this.page,element)
     }
 
-    constructor(private newPageRemote: NewPageRemote, private pageSelector: PageSelector,  private ref: ElementRef) {
+    constructor(private newPageRemote: NewPageRemote, private pageSelector: PageSelector,  private ref: ElementRef, private commands: PageCommands) {
         this.newPageRemote.component = this
         this.guides = new Array
         this.pageSelector.page.subscribe(page => {if(this.page == page){this.selected = true}else{this.selected = false}})

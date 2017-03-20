@@ -16,6 +16,14 @@ export class PageCommands{
     	this.service.execute(new RemoveElement(page,element))
     }
 
+    bringElementForward(page: Page, element: Element){
+      this.service.execute(new BringElementForward(page,element))
+    }
+
+    pushElementBack(page: Page, element: Element){
+      this.service.execute(new PushElementBack(page,element))
+    }
+
 }
 
 export class AddElement implements Command{
@@ -27,7 +35,7 @@ export class AddElement implements Command{
 	}
 
 	unExecute(){
-		this.page.elements = this.page.elements.filter(element=> this.element !== element)
+		this.page.elements.splice(this.page.elements.indexOf(this.element),1)
 	}	
 }
 
@@ -43,6 +51,42 @@ export class RemoveElement implements Command{
 		this.page.elements.push(this.element)
 	}
 
+}
+
+export class BringElementForward implements Command{
+
+  constructor(private page: Page, private element: Element){}
+
+  oldIndex
+  execute(){
+    this.oldIndex = this.page.elements.indexOf(this.element)
+    if(this.oldIndex == this.page.elements.length - 1){
+      throw new Error("element is already at last position")
+    }
+    this.page.elements.splice(this.oldIndex, 0, this.page.elements.splice(this.oldIndex + 1, 1)[0]);
+  }
+
+  unExecute(){
+    this.page.elements.splice(this.oldIndex+1, 0, this.page.elements.splice(this.oldIndex, 1)[0]);
+  }
+}
+
+export class PushElementBack implements Command{
+
+  constructor(private page: Page, private element: Element){}
+
+  oldIndex
+  execute(){
+    if(this.oldIndex == 0){
+        throw new Error("element is already at first position")
+    }
+    this.oldIndex = this.page.elements.indexOf(this.element)
+    this.page.elements.splice(this.oldIndex, 0, this.page.elements.splice(this.oldIndex + -1, 1)[0]);
+  }
+
+  unExecute(){
+    this.page.elements.splice(this.oldIndex-1, 0, this.page.elements.splice(this.oldIndex, 1)[0]);
+  }
 }
 
 export class Page  {

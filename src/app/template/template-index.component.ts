@@ -75,7 +75,6 @@ export class TemplateIndexComponent implements OnInit  {
                 case('A5'):
                     height = Page.presetDimensions.A5.height
                     width = Page.presetDimensions.A5.width
-                    console.log(width,height)
                     break
                 case('custom'):
                     height = val.height
@@ -87,7 +86,6 @@ export class TemplateIndexComponent implements OnInit  {
                     width = height
                     height = temp
             }
-            console.log(width,height)
             this.router.navigate(['/templates/new', {width:width,height:height}])
         })
     }     

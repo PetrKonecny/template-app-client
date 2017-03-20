@@ -4,6 +4,7 @@ import {HttpModule} from "@angular/http";
 import {FormsModule, ReactiveFormsModule } from "@angular/forms";  
 import {MaterialModule} from '@angular/material'
 import "rxjs/Rx";
+import 'hammerjs';
 import { RouterModule, Routes } from '@angular/router';
 import { TemplateIndexComponent} from './template/template-index.component';
 import { TemplateCreateComponent } from './template/create-template.component';

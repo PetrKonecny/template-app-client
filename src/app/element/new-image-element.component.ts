@@ -9,7 +9,7 @@ import { Element, ElementCommands} from './element';
 @Component({
     selector: 'create-new-image-element',
     template: `
-        <img draggable2 resizable [class.selected]="selected" (resize) ="resize($event)" (move) ="move($event)" [propagate]="false" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [width]="element.width" [height]="element.height" src="{{config.getConfig('api-url')}}/img/{{element.image.image_key}}.{{element.image.extension}}">          
+        <img draggable2 resizable [style.opacity]="+element.opacity/100" [class.selected]="selected" (resize) ="resize($event)" (move) ="move($event)" [propagate]="false" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [width]="element.width" [height]="element.height" src="{{config.getConfig('api-url')}}/img/{{element.image.image_key}}.{{element.image.extension}}">          
     `,
     styles: [
         `img{

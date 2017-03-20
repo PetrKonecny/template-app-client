@@ -18,6 +18,10 @@ export class ElementCommands{
         this.service.addToBufferAndExecute(new ChangeElementDimensions(element,dimensions))
     }
 
+    startChangingOpacity(element: Element, value){
+        this.service.addToBufferAndExecute(new ChangeElementOpacity(element,value))
+    }
+
     finishMovingElement(){
         this.service.saveBuffer()
     }
@@ -82,6 +86,30 @@ export class ChangeElementDimensions implements BufferCommand{
     }
 }
 
+export class ChangeElementOpacity implements BufferCommand{
+ 
+ constructor(private element: Element, private value){}
+
+    oldValue
+    execute(){
+        this.oldValue = this.element.opacity ? this.element.opacity : 100
+        this.element.opacity = this.value
+    }
+
+    unExecute(){
+        this.element.opacity = this.oldValue
+    }
+
+    getStoredState(){
+        return this.oldValue
+    }
+
+    setStoredState(value){
+        this.oldValue = value
+    }
+
+}
+
 
 
 export class Element  {
@@ -92,6 +120,7 @@ export class Element  {
     positionY: number;
     rotation: number;
     type: string;
+    opacity: number;
     content: Content;
     draggable: boolean = true;
     static defaultBackgroundColor: string = "#ccc"
