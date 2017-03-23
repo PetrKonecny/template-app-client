@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, HostListener} from '@angular/core';
+import { Component, Input, OnInit, HostListener} from '@angular/core'
 import { TableElement, TableElementCommands } from './table-element'
 import { ElementDimensions} from '../resizable.directive'
-import { ElementSelector } from './element-selector'
 import { NewPageRemote } from '../page/new-page.remote'
 import { NewTableElement } from './new-table-element'
-import { ElementCommands} from './element';
+import { ElementCommands} from './element'
+import { ElementStore } from '../element/element.store'
 
 @Component({
     selector: 'create-new-table-element',
@@ -135,18 +135,17 @@ export class NewTableElementComponent implements OnInit{
     }
     
     constructor (
-        private elementSelector: ElementSelector, 
         private newPage: NewPageRemote, 
         private newTableElement: NewTableElement, 
         private tableElementCommands: TableElementCommands,  
-        private elementCommands: ElementCommands
+        private elementCommands: ElementCommands,
+        private elementStore: ElementStore,
     ){
         this.newTableElement.component = this
-        this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
+        this.elementStore.element.subscribe(element =>this.selected = this.element == element)
     }
     
     onElementClicked(){
-        this.elementSelector.changeElement(this.element)
     }
 
     addRowAbove(){

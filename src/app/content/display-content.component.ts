@@ -13,8 +13,9 @@ import { AppConfig } from '../app.config'
         >
         </simple-tiny>
         <div *ngIf="content.type === 'image_content'" #frame [style.margin-left.px]="content.left" [style.margin-top.px]="content.top" class="content image">
-            <img *ngIf="content.image && content.width && content.height" #image [width]="content.width" [height]="content.height" class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">\n\
-            <img *ngIf="content.image &&!content.width && !content.height" #image class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">
+            <md-spinner *ngIf="loading"></md-spinner>
+            <img *ngIf="content.image && content.width && content.height" (load)="onLoad()" [hidden]="loading" #image [width]="content.width" [height]="content.height" class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">\n\
+            <img *ngIf="content.image &&!content.width && !content.height" (load)="onLoad()" [hidden]="loading" #image class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">
         </div>
     `,
     styles:[`
@@ -54,10 +55,16 @@ export class DisplayContentComponent {
     
     @ViewChild('frame')
     frame: ElementRef; 
+
+    loading = true
     
     keyupHandlerFunction(text: string){
         let content =<TextContent> this.content
         this.commands.changeText(content, text)
+    }
+
+    onLoad(){
+        this.loading = false
     }
 
     getSubject(){

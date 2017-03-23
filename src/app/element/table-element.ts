@@ -91,6 +91,10 @@ export class TableElementCommands{
     changeSCellsTextColor(element: TableElement, color: string){
         this.service.execute(new changeSCellsParam(element,"text_color",color))
     }
+
+    ChangeSCellsFont(element: TableElement, font: Font){
+        this.service.execute(new ChangeSCellsFont(element,font))
+    }
 }
 
 
@@ -316,7 +320,24 @@ export class changeSCellsParam extends DefaultTableCommand {
         super.unExecute()
         TableElement.clearSelectedCells(this.element)            
     }
+}
 
+export class ChangeSCellsFont extends DefaultTableCommand {
+
+    constructor(public element: TableElement, private font: Font){
+        super(element)
+    }
+
+    execute(){
+        this.element.selectedCells.forEach((cell) => {
+            cell.font = this.font
+        })
+    }
+
+    unExecute(){
+        super.unExecute()
+        TableElement.clearSelectedCells(this.element)            
+    }
 }
 
 export class TableElement extends Element {

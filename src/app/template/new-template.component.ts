@@ -2,16 +2,12 @@ import { Component, OnInit, Input, ViewChildren, QueryList, AfterViewInit} from 
 import { MdDialog } from '@angular/material'
 import { Template, TemplateCommands} from './template';
 import { Page} from '../page/page';
-import { ElementSelector } from '../element/element-selector';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
-import { ImageSelector } from '../image/image-selector';
-import { PageSelector} from '../page/page-selector'
-import { RulerSelector } from '../guide/ruler-selector'
-import { TextSelector } from '../editor/text-selector'
 import { SaveTemplateModal } from './save-template.modal'
 import { UndoRedoService } from '../undo-redo.service'
 import { PageService } from '../page/page.service'
 import { PageFactory } from '../page/page.factory'
+import { TemplateStore } from '../template/template.store'
 
 @Component({
     selector: 'create-new-template',
@@ -66,7 +62,7 @@ import { PageFactory } from '../page/page.factory'
             display: flex;
             flex-direction: row-reverse;
         }
-    `]
+    `],
 })
 
 export class NewTemplateComponent implements OnInit {
@@ -77,18 +73,15 @@ export class NewTemplateComponent implements OnInit {
     
     
     constructor(
-        private templateService: TemplateInstanceStore,
-        private imageSelector: ImageSelector,
+        private templateStore: TemplateStore,
         public dialog: MdDialog,
         private undoService: UndoRedoService,
         private pageService: PageService,
         private pageFactory: PageFactory,
-        private pageSelector: PageSelector,
         private templateCommands: TemplateCommands
     ){ }
     
     ngOnInit(){
-        this.imageSelector.selectorWindowOpened.subscribe(opened => this.displaySelectWindow = opened);      
     }
     
     saveTemplate() {
@@ -99,7 +92,7 @@ export class NewTemplateComponent implements OnInit {
         dialogRef.afterClosed().subscribe(value => 
             {
                 if(value == 'save'){
-                    this.templateService.saveTemplate()
+                    this.templateStore.saveTemplate()
                 }
             }
         )

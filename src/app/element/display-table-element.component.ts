@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TableElement } from './table-element'
-import { ElementSelector } from './element-selector'
 import { NewTableElement } from './new-table-element'
 
 @Component({

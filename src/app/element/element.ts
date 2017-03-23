@@ -29,6 +29,18 @@ export class ElementCommands{
     finishResizingElement(){
         this.service.saveBuffer()
     }
+
+    changeBackgroundColor(element: Element, value){
+        this.service.execute(new ChangeBackgroundColor(element,value))
+    }
+
+    toggleElementBackground(element: Element, value){
+        if(value){
+           this.changeBackgroundColor(element,Element.defaultBackgroundColor)
+        }else{
+           this.changeBackgroundColor(element,null)
+        }
+    }
 }
 
 
@@ -110,6 +122,22 @@ export class ChangeElementOpacity implements BufferCommand{
 
 }
 
+export class ChangeBackgroundColor implements Command{
+
+    constructor(private element: Element, private value){}
+
+    oldValue
+
+    execute(){
+        this.oldValue = this.element.background_color ? this.element.background_color : Element.defaultBackgroundColor
+        this.element.background_color = this.value
+    }
+
+    unExecute(){
+        this.element.background_color = this.oldValue
+    }
+
+}
 
 
 export class Element  {

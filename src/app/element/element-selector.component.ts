@@ -2,15 +2,17 @@ import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { ImageService } from '../image/image.service';
 import { Element, ElementCommands } from './element';
 import { TextElement } from './text-element';
-import { ElementSelector} from './element-selector';
 import {FontSelector} from '../font/font-selector';
 import {FontService} from '../font/font.service';
 import {ClientState, TableElement, Cell} from './table-element'
 import {Font} from '../font/font'
 import {TextContent} from '../content/text-content'
-import {TextSelector} from '../editor/text-selector'
 import {PageCommands} from '../page/page'
 import {TemplateInstanceStore} from '../template-instance/template-instance.store'
+import { TemplateHelper} from '../template/template.helper'
+import { TemplateStore } from '../template/template.store'
+import { Template } from '../template/template'
+import { ElementStore } from '../element/element.store'
 
 @Component({
     selector: 'element-select',
@@ -76,17 +78,13 @@ import {TemplateInstanceStore} from '../template-instance/template-instance.stor
 export class ElementSelectorComponent  {
     
     element: Element
-
+    template: Template
     first: boolean
     last: boolean 
 
-    constructor(private elementSelector: ElementSelector, private textSelector: TextSelector, private commands: ElementCommands, private pageCommands: PageCommands, private templateInstanceStore: TemplateInstanceStore){
-        this.elementSelector.element.subscribe(element=> {
-            this.element = element
-            if(this.element && this.element.content && this.element.content.type == 'text_content' && (<TextContent>this.element.content).editor){
-                this.textSelector.changeEditor((<TextContent>this.element.content).editor)
-            }
-        })
+    constructor(private elementStore: ElementStore,  private commands: ElementCommands, private pageCommands: PageCommands, private templateStore: TemplateStore){
+        this.elementStore.element.subscribe(element=> this.element = element)
+        this.templateStore.template.subscribe(template => this.template = template)
     }
 
     private getBgColor(){
@@ -99,31 +97,17 @@ export class ElementSelectorComponent  {
     }
 
     deleteElement(){
-        this.elementSelector.deleteElement();
+        let page = TemplateHelper.getPageFromTemplateForElement(this.element, this.template)
+        this.pageCommands.RemoveElement(page,this.element)
+        this.elementStore.changeElement(null)
     }
 
     changeBackgroundColor(color: string){
-        this.elementSelector.changeBackgroundColor(color)
+        this.commands.changeBackgroundColor(this.element,color)
     }
 
     toggleElementBackground(value: boolean){
-        this.elementSelector.toggleElementBackground(value)
-    }
-
-    editTable(){
-        this.elementSelector.setElementClientState(ClientState.editTable)
-    }
-    
-    moveTable(){
-        this.elementSelector.setElementClientState(ClientState.moveResize)
-    }
-    
-    filloutTable(){
-        this.elementSelector.setElementClientState(ClientState.fillOut)
-    }
-    
-    editCells(){
-        this.elementSelector.setElementClientState(ClientState.editCells)
+        this.commands.toggleElementBackground(this.element,value)
     }
 
     onSliderChange(event){
@@ -131,23 +115,22 @@ export class ElementSelectorComponent  {
     }
 
     onBringForward(){
-        this.pageCommands.bringElementForward(this.templateInstanceStore.getPageForElement(this.element),this.element)
+        this.pageCommands.bringElementForward(TemplateHelper.getPageFromTemplateForElement(this.element, this.template),this.element)
         this.checkArrangement()
     }
 
     onPushBack(){
-        this.pageCommands.pushElementBack(this.templateInstanceStore.getPageForElement(this.element),this.element)
+        this.pageCommands.pushElementBack(TemplateHelper.getPageFromTemplateForElement(this.element, this.template),this.element)
         this.checkArrangement()
     }
 
     isElementLast(){
-        let page = this.templateInstanceStore.getPageForElement(this.element)
+        let page = TemplateHelper.getPageFromTemplateForElement(this.element, this.template)
         return page.elements.indexOf(this.element) == page.elements.length - 1
     }
 
     isElementFirst(){
-        console.log('wasting time')
-        let page = this.templateInstanceStore.getPageForElement(this.element)
+        let page = TemplateHelper.getPageFromTemplateForElement(this.element, this.template)
         return page.elements.indexOf(this.element) == 0
     }
 

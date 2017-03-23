@@ -1,10 +1,10 @@
 import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@angular/core';
 import { FrameElement } from './frame-element'
-import { ElementSelector} from '../element/element-selector'
 import { ImageSelector } from '../image/image-selector';
 import { ImageContent } from '../content/image-content';
 import { ElementDimensions} from '../resizable.directive'
 import { NewPageRemote } from '../page/new-page.remote'
+import { ElementStore } from '../element/element.store'
 
 @Component({
     selector: 'display-frame-element',
@@ -63,9 +63,9 @@ export class DisplayFrameElementComponent {
 
 
     constructor(
-        private elementSelector: ElementSelector,
+        private elementStore: ElementStore,
     ){
-        this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
+        this.elementStore.element.subscribe(element =>this.selected = this.element == element)
     }
 
     onDragOver(){

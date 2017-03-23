@@ -46,7 +46,6 @@ export class AddPageBelowPage implements Command {
 	constructor(private template: Template,private page: Page, private factory: PageFactory){}
 
 	execute(){
-		console.log(this.template.pages.indexOf(this.page)+1)
 		this.template.pages.splice(this.template.pages.indexOf(this.page)+1,0, this.factory.build())
 	}
 

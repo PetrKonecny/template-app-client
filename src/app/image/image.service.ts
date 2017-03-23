@@ -28,7 +28,11 @@ export class ImageService {
             .map(this.extractData)
             .catch(this.handleError);
     }
-    
+
+    getImageFileFull(id: number, extension: string): Observable<Image> {
+        return this.http.get(this.config.getConfig('api-url')+'/img'+"/"+id+'.'+extension)
+            .catch(this.handleError);
+    }    
     addImage(image: Image) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });

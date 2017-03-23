@@ -5,7 +5,6 @@ import { TemplateInstance} from './template-instance';
 import { ActivatedRoute} from '@angular/router'
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { Template, TemplateCommands} from '../template/template';
-import { ElementSelector } from '../element/element-selector';
 import { ImageSelector } from '../image/image-selector';
 import { PageSelector} from '../page/page-selector'
 import { RulerSelector } from '../guide/ruler-selector'
@@ -16,13 +15,15 @@ import { TextContentCommands } from '../content/text-content'
 import { ImageContentCommands } from '../content/image-content'
 import { ElementCommands } from '../element/element'
 import { PageCommands } from '../page/page'
+import { TemplateStore } from '../template/template.store'
+import { TemplateInstanceHelper} from './template-instance.helper'
 
 @Component({
     selector: 'template-create',
     template: `
         <create-new-template-instance [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
     `,
-    providers: [ElementSelector, ImageSelector, PageSelector, RulerSelector, TextSelector, UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
+    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
 })
 
 export class TemplateInstanceCreateComponent implements OnInit  {
@@ -33,23 +34,26 @@ export class TemplateInstanceCreateComponent implements OnInit  {
 
     constructor(
         private route: ActivatedRoute,
-        private templateInstanceStore: TemplateInstanceStore 
+        private templateInstanceStore: TemplateInstanceStore,
+        private templateStore: TemplateStore 
     ){ }
     
     ngOnInit(){
+        this.templateInstanceStore.cleanStore()
+        this.templateStore.cleanStore()   
         this.route.params
         .map(params => {
             let id = +params['id']; // (+) converts string 'id' to a number
-            this.templateInstanceStore.getTemplate(id);
-        }).flatMap(() => this.templateInstanceStore.template)
+            this.templateStore.getTemplate(id);
+        }).flatMap(() => this.templateStore.template)
         .map(res => {return {template: res}})
         .flatMap((res) => this.templateInstanceStore.templateInstance.map(templateInstance => {return{template: res.template, templateInstance: templateInstance}}))
         .first(res => res.template.id > 0)
         .subscribe(res => {
                 this.template = res.template
                 this.templateInstance = res.templateInstance                 
-                this.templateInstanceStore.copyContentsFromTemplate();
-                this.templateInstanceStore.getContentsFromTemplateInstance();
+                TemplateInstanceHelper.copyContentsFromTemplate(res.templateInstance, res.template);
+                TemplateInstanceHelper.getContentsFromTemplateInstance(res.templateInstance,res.template);
                 }
         )
     }

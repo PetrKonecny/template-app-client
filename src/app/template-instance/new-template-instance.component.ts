@@ -1,13 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { TemplateInstance} from './template-instance';
-import { Template} from '../template/template';
-import { TemplateInstanceStore } from './template-instance.store';
-import { ImageSelector } from '../image/image-selector';
+import { Component, OnInit, Input } from '@angular/core'
+import { TemplateInstance} from './template-instance'
+import { Template} from '../template/template'
+import { TemplateInstanceStore } from './template-instance.store'
+import { ImageSelector } from '../image/image-selector'
 import {  Router} from '@angular/router'
 import { TextSelector } from '../editor/text-selector'
-import { ElementSelector } from '../element/element-selector';
 import {TextContent} from '../content/text-content'
-import { Element } from '../element/element';
+import { Element } from '../element/element'
+import { TemplateHelper} from '../template/template.helper'
+import { TemplateStore } from '../template/template.store'
+import { ElementStore } from '../element/element.store'
+import { PageStore } from '../page/page.store'
 
 @Component({
     selector: 'create-new-template-instance',
@@ -31,7 +34,7 @@ import { Element } from '../element/element';
             </div>
         </md-sidenav-container>
     `,
-    providers: [ImageSelector, TextSelector, ElementSelector],
+    providers: [ElementStore, PageStore],
      styles: [`.leftPanel {
             position: relative;
             float: left;
@@ -51,7 +54,7 @@ import { Element } from '../element/element';
     `]
 })
 
-export class NewTemplateInstanceComponent implements OnInit {
+export class NewTemplateInstanceComponent {
     
     displaySelectWindow: boolean;
     @Input()
@@ -63,22 +66,14 @@ export class NewTemplateInstanceComponent implements OnInit {
     
     constructor(
         private templateInstanceStore: TemplateInstanceStore,
-        private imageSelector: ImageSelector,
+        private elementStore: ElementStore,
         private router: Router,
-        private elementSelector: ElementSelector,
-        private textSelector: TextSelector
+        private templateStore: TemplateStore
     ){ 
         
-        this.elementSelector.element.subscribe(element=> {
+        this.elementStore.element.subscribe(element=> {
             this.element = element
-            if(this.element && this.element.content && this.element.content.type == 'text_content' && (<TextContent>this.element.content).editor){
-                this.textSelector.changeEditor((<TextContent>this.element.content).editor)
-            }
         })
-    }
-    
-    ngOnInit(){
-        this.imageSelector.selectorWindowOpened.subscribe(opened => this.displaySelectWindow = opened);
     }
       
     saveTemplateInstance() {
@@ -86,8 +81,8 @@ export class NewTemplateInstanceComponent implements OnInit {
     }
     
     openAsTemplate(){
-        this.templateInstanceStore.removeIdFromTemplate()
-        this.templateInstanceStore.ignoreNextClean();
+        TemplateHelper.removeIdsFromTemplate(this.template)
+        this.templateStore.ignoreNextClean();
         this.router.navigate(['/templates','new'])
     }
 }

@@ -1,15 +1,15 @@
 import { Component, OnInit , Input, OnChanges} from '@angular/core';
 import { ImageService } from '../image/image.service';
-import {FontSelector} from '../font/font-selector';
 import {FontService} from '../font/font.service';
 import {Editor} from './editor'
 import {Font} from '../font/font'
-import {TextSelector} from './text-selector'
+import { ElementStore } from '../element/element.store'
+import {TextContent} from '../content/text-content'
 
 @Component({
     selector: 'text-select',
     template: ` <span *ngIf="editor">
-                    <font-selector [fontLabel]="editor.editorCurFont.substring(0,5)" [fontSizeLabel]="editor.editorCurFontSize"></font-selector>
+                    <font-selector (onFontSelected)="changeEditorFont($event)" (onFontSizeSelected)="changeEditorFontSize($event)" [fontLabel]="editor.editorCurFont.substring(0,5)" [fontSizeLabel]="editor.editorCurFontSize"></font-selector>
                     <button style="background: none; border:none;" [colorPicker]="editor.editorCurColor" (mousedown)="$event.preventDefault()" (colorPickerChange)="curColor =$event" (cpToggleChange)="onCpToggleChange($event)"><button md-icon-button><md-icon [style.color]="editor.editorCurColor">format_color_text</md-icon></button></button>
                     <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="Format text">F</button>
                     <my-md-menu #textMenu="mdMenu">
@@ -25,7 +25,6 @@ import {TextSelector} from './text-selector'
                     </my-md-menu>
                 </span>
              `,
-    providers: [FontSelector]
 })
 
 export class TextSelectorComponent {
@@ -36,10 +35,15 @@ export class TextSelectorComponent {
     curColor: string
     
     
-    constructor(private textSelector: TextSelector, private fontSelector: FontSelector){
-        this.textSelector.editor.subscribe(editor => this.editor = editor)
-        this.fontSelector.font.subscribe(font => this.textSelector.changeEditorFont(font))
-        this.fontSelector.fontSize.subscribe(fontSize => this.textSelector.changeEditorFontSize(fontSize))
+    constructor(private elementStore: ElementStore){
+        this.elementStore.element.subscribe(element => {
+            if(element  && element.content && element.content.type == 'text_content'){
+                let content = <TextContent> element.content
+                if(content.editor){
+                    this.editor = content.editor
+                }
+            }
+        })
     }
       
     onCpToggleChange(toggle: boolean){
@@ -48,35 +52,38 @@ export class TextSelectorComponent {
         }
     }
     
-    onChangeFontButtonClick(){
-        this.fontSelector.openSelectorWindow()
-        let sub = this.fontSelector.selectorWindowOpened.take(1).subscribe() 
-        this.fontSelector.font.takeWhile(font => !sub.closed).subscribe((font) => this.textSelector.changeEditorFont(font))
-    }
-    
-    changeEditorFontSize(size: number){
-      
+   changeEditorFontSize(size: number){
+        this.editor.editor.execCommand('fontSize',false,size+"px")       
     }
     
     changeEditorTextBold(){
-        this.textSelector.changeEditorTextBold()   
+        this.editor.editor.execCommand("Bold")     
     }
     
     changeEditorTextItalic(){
-        this.textSelector.changeEditorTextItalic()    
+        this.editor.editor.execCommand("Italic")     
     }
     
     changeEditorFormatBlock(block: string){
-        this.textSelector.changeEditorFormatBlock(block)
+        this.editor.editor.execCommand('FormatBlock', false , block)
     }
     
+    changeEditorFont(font: Font){
+        let fontName = ""
+        if(font.id){
+            fontName = "font" + font.id
+        }else if (font.name){
+            fontName = font.name
+        }
+        this.editor.editor.execCommand('FontName',false,fontName)       
+    }
     
     changeEditorTextAlign(align: string){
-       this.textSelector.changeEditorTextAlign(align)
+        this.editor.editor.execCommand(align)
     }
      
     changeEditorTextColor(color: string){
-        this.textSelector.changeEditorTextColor(color)
+        this.editor.editor.execCommand('ForeColor', false, color);
     }
     
 }

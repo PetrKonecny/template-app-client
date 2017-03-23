@@ -16,7 +16,10 @@ import {FrameElement} from '../element/frame-element'
 import {ImageSelector} from '../image/image-selector'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {ImageSelectorComponent} from '../image/image-selector.component'
-import {CreateTableModal} from '../element/create-table-element.modal'
+import {CreateTableModal} from '../element/create-table-element.modal' 
+import {PageCommands} from './page'
+import {TextElementFactory, FrameElementFactory, TableElementFactory} from '../element/element.factory'
+import {PageStore} from '../page/page.store'
 
 @Component({
     selector: 'page-select',
@@ -39,53 +42,32 @@ export class PageSelectorComponent {
     imagesOpened: boolean
     dialogRef: MdDialogRef<ImageSelectorComponent>
 
-    constructor(private pageSelector: PageSelector,  private imageSelector: ImageSelector,  public dialog: MdDialog){
-        this.pageSelector.page.subscribe(page => this.page = page)   
-    }
-
-    openDialog() {
-        this.dialogRef = this.dialog.open(ImageSelectorComponent, {
-          disableClose: false,
-          width: "80%",
-          height: "80%"
-        });       
+    constructor(private pageStore: PageStore,
+                public dialog: MdDialog, 
+                private commands: PageCommands,){
+        this.pageStore.page.subscribe(page => this.page = page)   
     }
     
     createNewTextElement(){
-        this.pageSelector.createNewTextElement()
+        let factory = new TextElementFactory
+        this.commands.addElement(this.page, factory.build())
     }
     
     createNewFrameElement(){
-        this.pageSelector.createNewFrameElement()
+        let factory = new FrameElementFactory
+        this.commands.addElement(this.page, factory.build())
     }
-    
-    onAddImageButtonClick(){
-        this.imageSelector.openSelectorWindow()
-        this.openDialog()
-        let sub = this.imageSelector.selectorWindowOpened.take(1).subscribe() 
-        this.imageSelector.image.takeWhile(image => !sub.closed).subscribe((image) => this.pageSelector.createNewImageElement(image))
-    }
-        
+           
     createNewTableElement(){
         let dialogRef = this.dialog.open(CreateTableModal, {disableClose: false})
         dialogRef.afterClosed().subscribe(val =>{
             if(val && val.rows && val.columns && val.rowHeight && val.columnWidth){
-                this.pageSelector.createNewTableElement(val.columns,val.rows,val.columnWidth,val.rowHeight)
-            }
+                let factory = new TableElementFactory
+                factory.setColumnCount(val.columns)
+                factory.setRowCount(val.rows)
+                factory.setColumnWidth(val.columnWidth)
+                factory.setRowHeight(val.rowHeight)
+                this.commands.addElement(this.page, factory.build())}
         })
-    }
-    
-    createNewRulerX(){
-        this.pageSelector.createNewRulerX()
-    }
-    
-    createNewRulerY(){
-        this.pageSelector.createNewRulerY()
-    }
-    
-    onDeleteClicked(){
-        this.pageSelector.deletePage()
-    }
- 
-    
+    }    
 }

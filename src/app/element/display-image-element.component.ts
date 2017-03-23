@@ -2,7 +2,6 @@ import { Component, Input, ElementRef } from '@angular/core';
 import { ImageElement } from './image-element'
 import { NewPageRemote } from '../page/new-page.remote'
 import { ElementDimensions } from '../resizable.directive'
-import { ElementSelector } from './element-selector'
 import { AppConfig } from '../app.config'
 
 @Component({

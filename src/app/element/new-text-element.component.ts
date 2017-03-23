@@ -1,15 +1,15 @@
 import { Component, ElementRef, Input, ViewChild, AfterViewInit, DoCheck, KeyValueDiffers, KeyValueDiffer, HostListener} from '@angular/core';
 import { Element, ElementCommands} from './element';
-import { ElementSelector } from './element-selector'
 import { TextElement} from './text-element'
 import { Font} from '../font/font'
 import { ElementDimensions } from '../resizable.directive'
 import { NewPageRemote } from '../page/new-page.remote'
+import { ElementStore } from '../element/element.store'
 
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable2 [class.selected]="selected" [style.opacity]="+element.opacity/100" (move) ="move($event)" #container [style.background] = "element.background_color ? element.background_color : 'none'" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >\            
+        <div draggable2 [class.selected]="selected" [style.opacity]="element.opacity ? element.opacity/100 : 1" (move) ="move($event)" #container [style.background] = "element.background_color ? element.background_color : 'none'" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >\            
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
         </div>
     `,
@@ -43,11 +43,11 @@ export class NewTextElementComponent  {
 
     constructor(
         public elementRef: ElementRef, 
-        private elementSelector: ElementSelector,
+        private elementStore: ElementStore,
         private newPage: NewPageRemote,
         private commands: ElementCommands
     ){
-        this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
+        this.elementStore.element.subscribe(element =>this.selected = this.element == element)
     }
     
     move(dimensions: ElementDimensions){

@@ -1,7 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { ImageService } from './image.service';
 import { Image} from './image';
-import { ImageSelector} from './image-selector';
 import {AppConfig} from '../app.config'
 import { ImageUploadComponent } from './image-upload.component'
 import { MdDialog } from '@angular/material'
@@ -22,22 +21,13 @@ export class ImageSelectorComponent implements OnInit{
     images : Image[];
 
      
-    constructor(private imageSelector: ImageSelector,
+    constructor(
     private imageService: ImageService, private appConfig: AppConfig, public dialog: MdDialog ){}
-    
-    closeSelector(){
-        this.imageSelector.closeSelectorWindow();
-    }
        
     ngOnInit(){
         this.getImages();
     }
-    
-    onImageClicked(image: Image){
-        this.imageSelector.changeImage(image);
-        this.imageSelector.closeSelectorWindow();
-    }
-
+   
     getImages(){
         this.imageService.getImages().subscribe(
                                images => this.images = images,
@@ -51,7 +41,6 @@ export class ImageSelectorComponent implements OnInit{
           width: '60%',
         });
         dialogRef.afterClosed().subscribe(closed =>{
-          console.log('closed')
           this.imageService.getImages().repeat()
         })        
     }

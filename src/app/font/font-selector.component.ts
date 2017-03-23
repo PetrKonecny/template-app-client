@@ -1,6 +1,5 @@
 import { Component, OnInit, Injectable, Output, EventEmitter, Input} from '@angular/core';
 import {Font} from './font'
-import {FontSelector} from './font-selector'
 import {FontStore} from './font.store'
 
 @Component({
@@ -37,22 +36,25 @@ export class FontSelectorComponent implements OnInit {
     fontLabel: string = "Change Font"
     @Input()
     fontSizeLabel: string = "Font Size"
+    @Output()
+    onFontSizeSelected = new EventEmitter
+    @Output()
+    onFontSelected = new EventEmitter
 
     fontSizes=[10,20,30,40,50]
    
-    constructor(private fontSelector: FontSelector,  private fontStore: FontStore){}
+    constructor(private fontStore: FontStore){}
      
     ngOnInit(){
         this.fontStore.fonts.subscribe(fonts => this.fonts = fonts.concat(this.fontStore.getDefaultFonts()));
     }
     
     onFontClicked(font: Font){
-        this.fontSelector.selectFont(font)
-        this.fontSelector.closeSelectorWindow()
+        this.onFontSelected.emit(font)
     }
 
     onFontSizeClicked(size: number){
-        this.fontSelector.changeFontSize(size)
+        this.onFontSizeSelected.emit(size)
     }
   
 }

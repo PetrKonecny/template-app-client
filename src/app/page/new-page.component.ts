@@ -2,9 +2,10 @@ import { Component, Input, HostListener, OnInit, ElementRef, ViewChild, AfterVie
 import { Page, PageCommands} from './page';
 import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
-import {PageSelector} from '../page/page-selector'
 import {NewPageRemote} from './new-page.remote'
 import {ImageElement} from '../element/image-element'
+import {PageStore} from '../page/page.store'
+import {ImageElementFactory} from '../element/element.factory'
 
 @Component({
     selector: 'create-new-page',
@@ -77,25 +78,17 @@ export class NewPageComponent implements AfterViewInit {
         }catch(e){
             return;
         }
-        let page = this.page
-        let element = new ImageElement()
         let x = event.clientX - this.pageElementRef.nativeElement.getBoundingClientRect().left
         let y = event.clientY - this.pageElementRef.nativeElement.getBoundingClientRect().top
-        element.width = 100
-        element.height = 100
-        element.positionX = x
-        element.positionY = y
-        element.image = image
-        if(!this.page.elements){
-            this.page.elements = new Array
-        }
-        this.commands.addElement(this.page,element)
+        let factory = new ImageElementFactory()
+        factory.setPositionX(x).setPositionY(y).setImage(image)
+        this.commands.addElement(this.page,factory.build())
     }
 
-    constructor(private newPageRemote: NewPageRemote, private pageSelector: PageSelector,  private ref: ElementRef, private commands: PageCommands) {
+    constructor(private newPageRemote: NewPageRemote, private pageStore: PageStore,  private ref: ElementRef, private commands: PageCommands) {
         this.newPageRemote.component = this
         this.guides = new Array
-        this.pageSelector.page.subscribe(page => {if(this.page == page){this.selected = true}else{this.selected = false}})
+        this.pageStore.page.subscribe(page => {if(this.page == page){this.selected = true}else{this.selected = false}})
     }
     
     ngAfterViewInit(){
@@ -117,7 +110,7 @@ export class NewPageComponent implements AfterViewInit {
     }
     
     onPageClicked(){
-        this.pageSelector.selectPage(this.page)
+        this.pageStore.selectPage(this.page)
     }
 
 }

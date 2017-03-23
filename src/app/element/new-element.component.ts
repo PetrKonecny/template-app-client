@@ -1,7 +1,7 @@
 import { Component, Input, KeyValueDiffer, KeyValueDiffers, DoCheck, HostListener } from '@angular/core';
-import { Element } from './element'
-import { ElementSelector } from './element-selector'
+import { Element, ElementCommands} from './element';
 import {UndoRedoService} from '../undo-redo.service'
+import { ElementStore } from '../element/element.store'
 
 @Component({
     selector: 'create-new-element',
@@ -31,13 +31,14 @@ export class NewElementComponent {
 
     @HostListener('mousedown',['$event'])
     onMousedown(){
-        this.elementSelector.changeElement(this.element)
+        this.elementStore.changeElement(this.element)
     } 
 
     constructor(
         private undoRedoService: UndoRedoService,
-        private elementSelector: ElementSelector
+        private elementStore: ElementStore,
+        private commands: ElementCommands,
     ){
-        this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
+        this.elementStore.element.subscribe(element =>this.selected = this.element == element)
     }
 }

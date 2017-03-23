@@ -1,11 +1,10 @@
 import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@angular/core';
 import { FrameElement } from './frame-element'
-import { ElementSelector} from '../element/element-selector'
-import { ImageSelector } from '../image/image-selector';
 import { ImageContent, ImageContentCommands } from '../content/image-content';
 import { ElementDimensions} from '../resizable.directive'
 import { NewPageRemote } from '../page/new-page.remote'
 import { ElementCommands} from './element';
+import { ElementStore } from '../element/element.store'
 
 @Component({
     selector: 'create-new-frame-element',
@@ -56,13 +55,12 @@ export class NewFrameElementComponent {
         
     constructor(
         public elementRef: ElementRef, 
-        private elementSelector: ElementSelector,
-        private imageSelector: ImageSelector,
         private newPage: NewPageRemote,
         private contentCommands: ImageContentCommands,
-        private elementCommands: ElementCommands
+        private elementCommands: ElementCommands,
+        private elementStore: ElementStore,
     ){
-        this.elementSelector.element.subscribe(element =>this.selected = this.element == element)
+        this.elementStore.element.subscribe(element =>this.selected = this.element == element)
     }
 
     onDragOver(event){
@@ -71,7 +69,6 @@ export class NewFrameElementComponent {
     }
 
     onDrop(event){
-        console.log('drop1')
         let data = event.dataTransfer.getData("text");
         let image 
         try{
@@ -100,12 +97,6 @@ export class NewFrameElementComponent {
         this.element.height = dimensions.height
         this.element.positionX = dimensions.left
         this.element.positionY = dimensions.top
-    }
-    
-    onAddButtonClick(){
-        this.imageSelector.openSelectorWindow();
-        let sub = this.imageSelector.selectorWindowOpened.take(1).subscribe() 
-        this.imageSelector.image.takeWhile(image => !sub.closed).subscribe((image) => (<ImageContent>this.element.content).image = image)
     }
     
     onDeleteButtonClick(){

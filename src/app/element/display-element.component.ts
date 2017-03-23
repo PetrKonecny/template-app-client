@@ -4,8 +4,8 @@ import { Image } from '../image/image';
 import { ImageSelector } from '../image/image-selector';
 import { ImageContent } from '../content/image-content';
 import { TextElement} from './text-element'
-import { ElementSelector } from '../element/element-selector';
 import { TableElement } from './table-element'
+import { ElementStore } from '../element/element.store'
 
 @Component({
     selector: 'display-element',
@@ -22,13 +22,13 @@ export class DisplayElementComponent {
     @Input()
     element: Element;
 
-    constructor( private elementSelector: ElementSelector){
+    constructor( private elementStore: ElementStore){
 
     }
 
     @HostListener('mousedown',['$event'])
     onMousedown(){
-        this.elementSelector.changeElement(this.element)
+        this.elementStore.changeElement(this.element)
     } 
     
 }

@@ -54,7 +54,6 @@ import {UserService} from './user/user.service'
 import {UserStore} from './user/user.store'
 import {UserLoginComponent} from './user/user-login.component'
 import {PageService} from './page/page.service'
-import {ImageSelector } from './image/image-selector'
 import { MyMdMenu } from './element/my-md-menu'
 import { Ng2DropdownModule } from 'ng2-material-dropdown';
 import {FontService} from './font/font.service'
@@ -96,6 +95,9 @@ import {OutSideEventHandlerDirective} from './outside-event-handler.directive'
 import {PageFactory} from './page/page.factory'
 
 import {CreateTemplateModal} from './template/create-template.modal'
+
+import { ImageService } from './image/image.service'
+
 
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
@@ -150,7 +152,7 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        UserService, UserGuard, UserStore, PageService, ImageSelector, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
+        ImageService, UserService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
     ],
     bootstrap: [
         AppComponent

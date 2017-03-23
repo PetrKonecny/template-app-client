@@ -13,7 +13,7 @@ import {AppConfig} from './app.config'
 import {ActivatedRoute} from '@angular/router';
 import {Location } from '@angular/common';
 import {AppComponentRef} from './app.ref'
-
+import { TemplateStore } from './template/template.store'
 
 /**
 *@description 
@@ -46,7 +46,7 @@ import {AppComponentRef} from './app.ref'
         <router-outlet></router-outlet>
     <span>
     `,
-    providers: [TemplateInstanceService,TemplateInstanceStore,TemplateService,Draggable,AppComponentRef ]
+    providers: [TemplateInstanceService,TemplateInstanceStore, TemplateStore, TemplateService,Draggable,AppComponentRef ]
 })
 
 export class AppComponent implements OnInit, AfterViewChecked {

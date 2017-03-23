@@ -1,7 +1,6 @@
 import { Component, Input, HostListener} from '@angular/core';
 import { Guide } from './guide'
 import { ElementDimensions } from '../resizable.directive'
-import { RulerSelector } from './ruler-selector'
 
 @Component({
     selector: 'display-ruler',
@@ -33,11 +32,10 @@ export class DisplayRulerComponent {
     @Input()
     guide : Guide
     
-    constructor(private rulerSelector: RulerSelector){}
+    constructor(){}
     
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
-        this.rulerSelector.selectRuler(this.guide)
     }
     
     move(dimensions: ElementDimensions){
