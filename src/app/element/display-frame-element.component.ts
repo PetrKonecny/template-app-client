@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@angular/core';
 import { FrameElement } from './frame-element'
-import { ImageSelector } from '../image/image-selector';
 import { ImageContent } from '../content/image-content';
 import { ElementDimensions} from '../resizable.directive'
 import { NewPageRemote } from '../page/new-page.remote'

@@ -97,7 +97,9 @@ import {PageFactory} from './page/page.factory'
 import {CreateTemplateModal} from './template/create-template.modal'
 
 import { ImageService } from './image/image.service'
+import { ImageComponent} from './image/image.component'
 
+import { UploadComponent } from './uploader.component'
 
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
@@ -133,7 +135,7 @@ const routes: Routes = [
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal, OutSideEventHandlerDirective
-        ,CreateTemplateModal
+        ,CreateTemplateModal, ImageComponent, UploadComponent
     ],
     // modules
     imports: [
@@ -157,7 +159,7 @@ const routes: Routes = [
     bootstrap: [
         AppComponent
     ],
-    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal, CreateTemplateModal]
+    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent]
 })
 
 export class AppModule { }  

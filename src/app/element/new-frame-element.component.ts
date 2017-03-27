@@ -9,7 +9,7 @@ import { ElementStore } from '../element/element.store'
 @Component({
     selector: 'create-new-frame-element',
     template: `
-        <span *ngIf="selected && element?.content?.image" style="position: absolute; margin-top: -40px; z-index: 1000">
+        <span *ngIf="!loading && !error && selected && element?.content?.image" style="position: absolute; margin-top: -40px; z-index: 1000">
             <button md-raised-button (click)="onDoneAdjustButtonClick()"  [color]="draggable ? 'accent' : 'background'" md-icon-button mdTooltip="adjust frame"><md-icon>zoom_out_map</md-icon></button>
             <button md-raised-button (click)="onAdjustButtonClick()"  [color]="!draggable ? 'accent' : 'background'"  md-icon-button mdTooltip="adjust image"><md-icon>photo_size_select_large</md-icon></button>
             <span *ngIf="!draggable">
@@ -21,8 +21,12 @@ import { ElementStore } from '../element/element.store'
                 </md-menu>
             </span>
         </span>
-        <div #frame *ngIf="draggable"  (drop)="onDrop($event)" (dragover)="onDragOver($event)" [class.selected]="selected" draggable2 resizable (resize) ="resize($event)" (move) ="move($event)" (outOfBounds)="outOfBounds($event)" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
-            <display-content *ngIf="element.content" [content] = "element.content"></display-content>       
+        <div *ngIf="loading || error" class="shutter">
+            <md-spinner class="spinner" *ngIf="loading && !error"></md-spinner>
+            <md-icon *ngIf="error">error</md-icon>
+        </div>
+        <div #frame *ngIf="draggable"  (drop)="onDrop($event)" (dragover)="onDragOver($event)" [class.selected]="selected" draggable2 (move) ="move($event)" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
+            <display-content [hidden]="loading||error"  *ngIf="element.content" (loaded)="onLoad($event)"  (loadingError)="onError($event)" [content] = "element.content"></display-content>       
         </div>
         <div #frame *ngIf="!draggable && element?.content?.image" [class.selected]="selected" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
             <image-handle>
@@ -40,6 +44,16 @@ import { ElementStore } from '../element/element.store'
             position: absolute;
             margin-right: 10px;
         }
+        .shutter{
+            position: absolute;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
 
     `]
 })
@@ -52,7 +66,9 @@ export class NewFrameElementComponent {
     draggable: boolean = true;
     selected: boolean
     hideHandles: boolean
-        
+    loading: boolean = false;
+    error: boolean = false;
+
     constructor(
         public elementRef: ElementRef, 
         private newPage: NewPageRemote,
@@ -68,16 +84,29 @@ export class NewFrameElementComponent {
         return false
     }
 
+    onLoad(){
+        this.loading = false
+    }
+
+    onError(){
+        this.error = true
+    }
+
     onDrop(event){
+        this.loading = true
+        this.error = false
         let data = event.dataTransfer.getData("text");
         let image 
         try{
             image = JSON.parse(data)
         }catch(e){
+            this.onError()
             return 
         }
         let content = <ImageContent>this.element.content
-        this.contentCommands.SetImage(<ImageContent>content,image)
+        content.top = 0
+        content.left = 0
+        this.contentCommands.SetImage(<ImageContent>content,image)      
         event.stopPropagation();
     }
     

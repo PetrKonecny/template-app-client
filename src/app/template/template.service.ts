@@ -15,7 +15,7 @@ import { AppConfig } from '../app.config';
 export class TemplateService {
     constructor(private http: Http, private config: AppConfig) { }
     
-    private _templatesUrl = this.config.getConfig('api-url')+'/template';  // URL to web api
+    private _templatesUrl = this.config.getConfig('api-url')+'/teplate';  // URL to web api
 
     getTemplates(): Observable<Template[]> {
         return this.http.get(this._templatesUrl, { withCredentials: true })

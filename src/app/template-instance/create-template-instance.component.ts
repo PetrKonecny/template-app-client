@@ -5,10 +5,6 @@ import { TemplateInstance} from './template-instance';
 import { ActivatedRoute} from '@angular/router'
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { Template, TemplateCommands} from '../template/template';
-import { ImageSelector } from '../image/image-selector';
-import { PageSelector} from '../page/page-selector'
-import { RulerSelector } from '../guide/ruler-selector'
-import { TextSelector } from '../editor/text-selector'
 import { UndoRedoService } from '../undo-redo.service'
 import { TableElementCommands } from '../element/table-element'
 import { TextContentCommands } from '../content/text-content'

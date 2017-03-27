@@ -1,6 +1,9 @@
 import { Component, OnInit, Injectable, Output, EventEmitter, Input} from '@angular/core';
 import {Font} from './font'
 import {FontStore} from './font.store'
+import { MdDialog } from '@angular/material'
+import { UploadComponent } from '../uploader.component'
+import {AppConfig} from '../app.config'
 
 @Component({
     selector: 'font-selector',
@@ -23,6 +26,9 @@ import {FontStore} from './font.store'
                             <ng2-menu-item *ngFor="let font of fonts" [value]="font">
                                 <font-display [font]="font"></font-display>
                             </ng2-menu-item>
+                            <ng2-menu-item>
+                                  <button md-icon-button md-raised-button (click)="openUploadModal()"><md-icon>add</md-icon></button>
+                            </ng2-menu-item>
                         </ng2-dropdown-menu>
                 </ng2-dropdown>
             `,
@@ -43,18 +49,31 @@ export class FontSelectorComponent implements OnInit {
 
     fontSizes=[10,20,30,40,50]
    
-    constructor(private fontStore: FontStore){}
+    constructor(private fontStore: FontStore, public dialog: MdDialog, private config: AppConfig){}
      
     ngOnInit(){
         this.fontStore.fonts.subscribe(fonts => this.fonts = fonts.concat(this.fontStore.getDefaultFonts()));
     }
     
     onFontClicked(font: Font){
-        this.onFontSelected.emit(font)
+        if(font){
+            this.onFontSelected.emit(font)
+        }
     }
 
     onFontSizeClicked(size: number){
         this.onFontSizeSelected.emit(size)
+    }
+
+    openUploadModal() {
+        let dialogRef = this.dialog.open(UploadComponent, {
+          height: '90%',
+          width: '60%',
+        });
+        dialogRef.afterClosed().subscribe(closed =>{
+          this.ngOnInit()
+        })
+        dialogRef.componentInstance.uploadUrl = this.config.getConfig('api-url')+'/font';       
     }
   
 }

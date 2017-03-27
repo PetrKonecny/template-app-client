@@ -1,7 +1,9 @@
-import { Component, Input, ViewChild, ElementRef, DoCheck, KeyValueDiffer, KeyValueDiffers} from '@angular/core';
-import { Content} from './content';
+import { Component, Input, ViewChild, ElementRef, DoCheck, KeyValueDiffer, KeyValueDiffers, EventEmitter, Output} from '@angular/core';
+import { Content } from './content';
 import { TextContent, TextContentCommands } from './text-content'
 import { AppConfig } from '../app.config'
+import { ImageContent } from '../content/image-content'
+import {Image} from '../image/image'
 
 @Component({
     selector: 'display-content',
@@ -12,10 +14,8 @@ import { AppConfig } from '../app.config'
             clasś="content text"
         >
         </simple-tiny>
-        <div *ngIf="content.type === 'image_content'" #frame [style.margin-left.px]="content.left" [style.margin-top.px]="content.top" class="content image">
-            <md-spinner *ngIf="loading"></md-spinner>
-            <img *ngIf="content.image && content.width && content.height" (load)="onLoad()" [hidden]="loading" #image [width]="content.width" [height]="content.height" class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">\n\
-            <img *ngIf="content.image &&!content.width && !content.height" (load)="onLoad()" [hidden]="loading" #image class="image" src="{{config.getConfig('api-url')}}/img/{{content.image.image_key}}.{{content.image.extension}}">
+        <div *ngIf="content.type === 'image_content'" #frame [style.margin-left.px]="content.left" [style.margin-top.px]="content.top" class="content image" [style.width.px]="content.width" [style.height.px]="content.height" >
+            <image *ngIf="content?.image" (loaded)="onLoad($event)" (loadingError)="onError($event)" [image]="content.image"></image>
         </div>
     `,
     styles:[`
@@ -56,6 +56,12 @@ export class DisplayContentComponent {
     @ViewChild('frame')
     frame: ElementRef; 
 
+    @Output()
+    loaded = new EventEmitter
+
+    @Output()
+    loadingError = new EventEmitter
+
     loading = true
     
     keyupHandlerFunction(text: string){
@@ -63,8 +69,15 @@ export class DisplayContentComponent {
         this.commands.changeText(content, text)
     }
 
-    onLoad(){
-        this.loading = false
+    onLoad(image: Image){
+        let content = <ImageContent> this.content
+        content.width = image.originalWidth
+        content.height = image.originalHeight
+        this.loaded.emit(image)
+    }
+
+    onError(){
+        this.loadingError.emit()
     }
 
     getSubject(){

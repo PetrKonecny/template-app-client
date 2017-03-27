@@ -5,5 +5,7 @@ export class Image {
     name: string;
     image_key: number;
     extension: string;
+    originalWidth: number;
+    originalHeight: number;
     user: User  
 }

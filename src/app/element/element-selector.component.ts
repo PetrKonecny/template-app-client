@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { ImageService } from '../image/image.service';
 import { Element, ElementCommands } from './element';
 import { TextElement } from './text-element';
-import {FontSelector} from '../font/font-selector';
 import {FontService} from '../font/font.service';
 import {ClientState, TableElement, Cell} from './table-element'
 import {Font} from '../font/font'

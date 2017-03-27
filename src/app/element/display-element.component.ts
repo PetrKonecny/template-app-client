@@ -1,7 +1,6 @@
 import { Component, Input, ViewChild, ElementRef, AfterViewInit, HostListener} from '@angular/core';
 import { Element} from './element';
 import { Image } from '../image/image';
-import { ImageSelector } from '../image/image-selector';
 import { ImageContent } from '../content/image-content';
 import { TextElement} from './text-element'
 import { TableElement } from './table-element'

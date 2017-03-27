@@ -8,6 +8,7 @@ import { UndoRedoService } from '../undo-redo.service'
 import { PageService } from '../page/page.service'
 import { PageFactory } from '../page/page.factory'
 import { TemplateStore } from '../template/template.store'
+import {MdSnackBar} from '@angular/material';
 
 @Component({
     selector: 'create-new-template',
@@ -62,6 +63,10 @@ import { TemplateStore } from '../template/template.store'
             display: flex;
             flex-direction: row-reverse;
         }
+
+        md-tab-group{
+            height: 100%;
+        }
     `],
 })
 
@@ -78,7 +83,8 @@ export class NewTemplateComponent implements OnInit {
         private undoService: UndoRedoService,
         private pageService: PageService,
         private pageFactory: PageFactory,
-        private templateCommands: TemplateCommands
+        private templateCommands: TemplateCommands,
+        private snackBar: MdSnackBar
     ){ }
     
     ngOnInit(){
@@ -92,7 +98,11 @@ export class NewTemplateComponent implements OnInit {
         dialogRef.afterClosed().subscribe(value => 
             {
                 if(value == 'save'){
-                    this.templateStore.saveTemplate()
+                    this.templateStore.saveTemplate().subscribe(template=>{
+                        this.snackBar.open("Šablona úspěšně uložena",null,{duration: 1500})
+                    },error=>{
+                        this.snackBar.open("Chyba při ukládání šablony",null,{duration: 2500})
+                    })
                 }
             }
         )

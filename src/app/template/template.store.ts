@@ -35,11 +35,11 @@ export class TemplateStore {
     */
     saveTemplate(){
         if(this._template.value.id > 0){
-            this.templateService.updateTemplate(this._template.value).subscribe(
+            return this.templateService.updateTemplate(this._template.value).map(
                 template => this._template.next(template)
             );
         }else{
-            this.templateService.addTemplate(this._template.value).subscribe(
+            return this.templateService.addTemplate(this._template.value).map(
                 template => this._template.next(template)
             );
         }

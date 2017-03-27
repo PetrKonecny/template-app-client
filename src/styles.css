@@ -16,9 +16,10 @@ app-root{
 }
 
 image-index{
-	height: 100%;
-	position: relative;
-	overflow: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
 }
 
 admin-index{
@@ -63,6 +64,10 @@ body{
 .md-menu-panel{overflow: hidden !important;}
 
 .md-sidenav-content{overflow: hidden !important;}
+
+.md-tab-body-wrapper{height: 100% !important;}
+
+.md-tab-body-content{height: 90% !important;}
 
 .ng2-dropdown-button{min-width:0px !important; width: auto !important;}
 

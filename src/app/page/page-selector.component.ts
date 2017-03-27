@@ -1,8 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { Image} from '../image/image';
 import { Element } from '../element/element';
-import { ElementSelector} from '../element/element-selector';
-import {PageSelector} from './page-selector'
 import {Page} from './page'
 import {TextContent} from '../content/text-content'
 import {ImageContent} from '../content/image-content'
@@ -13,7 +11,6 @@ import {TableElement} from '../element/table-element'
 import {TemplateInstanceStore} from '../template-instance/template-instance.store'
 import {Guide} from '../guide/guide'
 import {FrameElement} from '../element/frame-element'
-import {ImageSelector} from '../image/image-selector'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {ImageSelectorComponent} from '../image/image-selector.component'
 import {CreateTableModal} from '../element/create-table-element.modal' 
@@ -24,11 +21,11 @@ import {PageStore} from '../page/page.store'
 @Component({
     selector: 'page-select',
     template: `
-                <span *ngIf="page">\n\
+                <span *ngIf="page">\
                     <md-grid-list cols="2">                    
                         <md-grid-tile (click)="createNewTextElement()">text</md-grid-tile>
                         <md-grid-tile (click)="createNewFrameElement()">rámeček</md-grid-tile>
-                        <md-grid-tile (click)="createNewTableElement()">tabulka</md-grid-tile>\n\
+                        <md-grid-tile (click)="createNewTableElement()">tabulka</md-grid-tile>\
                     </md-grid-list>
                 </span>
              `,

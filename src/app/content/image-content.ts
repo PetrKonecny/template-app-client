@@ -38,7 +38,7 @@ export class SetImage implements Command{
 	constructor(private content: ImageContent, private image: Image){}
 
 	execute(){
-		this.oldImage = this.image
+		this.oldImage = this.content.image
 		this.content.image = this.image
 	}
 

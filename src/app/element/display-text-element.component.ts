@@ -1,10 +1,8 @@
 import { Component, Input, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 import { Element} from './element';
 import { Image } from '../image/image';
-import { ImageSelector } from '../image/image-selector';
 import { ImageContent } from '../content/image-content';
 import { TextElement} from './text-element'
-import { ElementSelector } from '../element/element-selector';
 
 @Component({
     selector: 'display-text-element',
