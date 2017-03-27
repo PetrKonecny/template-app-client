@@ -11,10 +11,16 @@ import { PageCommands } from '../page/page'
 import { TemplateStore } from '../template/template.store'
 import { PageStore } from '../page/page.store'
 import { ElementStore } from '../element/element.store'
+import { TemplateService } from '../template/template.service'
+import { MdSnackBar } from '@angular/material';
 
 @Component({
     selector: 'template-edit',
     template: `
+        <div class="shutter">
+          <md-spinner *ngIf="!template && !error"></md-spinner>
+          <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
+        </div>
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
     providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands, ElementStore, PageStore]
@@ -22,7 +28,7 @@ import { ElementStore } from '../element/element.store'
 
 export class TemplateEditComponent implements OnInit  {
     
-    errorMessage: string;
+    error: string;
     template : Template;
     private sub: any;
 
@@ -31,7 +37,9 @@ export class TemplateEditComponent implements OnInit  {
         private route: ActivatedRoute,
         private templateStore: TemplateStore,
         private pageStore: PageStore,
-        private undoRedoService: UndoRedoService 
+        private undoRedoService: UndoRedoService,
+        private templateService: TemplateService,
+        private snackBar: MdSnackBar
     ){ }
     
     @HostListener('document:mouseup', ['$event'])
@@ -40,19 +48,24 @@ export class TemplateEditComponent implements OnInit  {
     }
     
     ngOnInit(){
-        this.route.params.map(params=>{
-            this.templateStore.cleanStore()
-            this.templateStore.getTemplate(params['id'])
-       })
-       .flatMap(
-           ()=>this.templateStore.template
+        this.templateStore.cleanStore()
+        this.route.params.flatMap(
+           (params)=>this.templateService.getTemplate(params['id'])
        )
        .first(template => template.id > 0)
-       .subscribe(template => {
-           this.template = template
-           if(this.template.pages && this.template.pages[0]){
-               this.pageStore.selectPage(this.template.pages[0])
-           }
-        })
+       .subscribe(
+         template => {
+             this.template = template
+             if(this.template.pages && this.template.pages[0]){
+                 this.pageStore.selectPage(this.template.pages[0])
+             }
+             this.templateStore.loadTemplate(template)
+          },
+          error => {
+            this.error = error
+            this.snackBar.open("Chyba při načítání šablony",null,{duration: 1500})
+          }
+        )
+
    }
 }

@@ -81,7 +81,7 @@ export class NewPageComponent implements AfterViewInit {
         let x = event.clientX - this.pageElementRef.nativeElement.getBoundingClientRect().left
         let y = event.clientY - this.pageElementRef.nativeElement.getBoundingClientRect().top
         let factory = new ImageElementFactory()
-        factory.setPositionX(x).setPositionY(y).setImage(image)
+        factory.setPositionX(x).setPositionY(y).setWidth(null).setHeight(null).setImage(image)
         this.commands.addElement(this.page,factory.build())
     }
 

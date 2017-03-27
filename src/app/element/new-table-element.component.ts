@@ -142,7 +142,7 @@ export class NewTableElementComponent implements OnInit{
         private elementStore: ElementStore,
     ){
         this.newTableElement.component = this
-        this.elementStore.element.subscribe(element =>this.selected = this.element == element)
+        this.elementStore.element.subscribe(element =>this.selected = this.element === element)
     }
     
     onElementClicked(){

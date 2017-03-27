@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@angular/core';
 import { FrameElement } from './frame-element'
-import { ImageContent } from '../content/image-content';
+import { ImageContent, ImageContentCommands } from '../content/image-content';
 import { ElementDimensions} from '../resizable.directive'
 import { NewPageRemote } from '../page/new-page.remote'
 import { ElementStore } from '../element/element.store'
@@ -9,7 +9,7 @@ import { ElementStore } from '../element/element.store'
     selector: 'display-frame-element',
     template: `
         <div [class.selected]="selected" class= "inner" (drop)="onDrop($event)" (dragover)="onDragOver()" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
-            <span *ngIf="selected && element?.content?.image" style="position: absolute; top: -40px; z-index: 1000">
+            <span *ngIf="!loading && !error && selected && element?.content?.image" style="position: absolute; top: -40px; z-index: 1000">
                 <button md-raised-button *ngIf="!draggable" (click)="onDoneAdjustButtonClick()"  md-icon-button mdTooltip="adjust frame"><md-icon>done</md-icon></button>
                 <button md-raised-button *ngIf="draggable" (click)="onAdjustButtonClick()" md-icon-button mdTooltip="adjust image"><md-icon>photo_size_select_large</md-icon></button>
                 <span *ngIf="!draggable">
@@ -21,8 +21,12 @@ import { ElementStore } from '../element/element.store'
                     </md-menu>
                 </span>
             </span>
+            <div *ngIf="loading || error" class="shutter">
+                <md-spinner class="spinner" *ngIf="loading && !error"></md-spinner>
+                <md-icon *ngIf="error">error</md-icon>
+            </div>
             <div class="content"> 
-                <display-content *ngIf="draggable && element.content" [content] = "element.content"></display-content>
+                <display-content [hidden]="loading||error" (loaded)="onLoad($event)"  (loadingError)="onError($event)"  *ngIf="draggable && element.content" [content] = "element.content"></display-content>
             </div>
             <image-handle *ngIf="!draggable && element.content && element.content.image">
                 <display-content-img-drag #handleContent [content] = "element.content"></display-content-img-drag>
@@ -57,12 +61,14 @@ export class DisplayFrameElementComponent {
     element : FrameElement
     
     selected: boolean
-    
+    loading
+    error
+
     draggable = true;    
 
 
     constructor(
-        private elementStore: ElementStore,
+        private elementStore: ElementStore, private contentCommands: ImageContentCommands
     ){
         this.elementStore.element.subscribe(element =>this.selected = this.element == element)
     }
@@ -72,11 +78,29 @@ export class DisplayFrameElementComponent {
     }
 
     onDrop(event){
+       this.loading = true
+        this.error = false
         let data = event.dataTransfer.getData("text");
-        let image = JSON.parse(data)
+        let image 
+        try{
+            image = JSON.parse(data)
+        }catch(e){
+            this.onError()
+            return 
+        }
         let content = <ImageContent>this.element.content
-        content.image = image
+        content.top = 0
+        content.left = 0
+        this.contentCommands.SetImage(<ImageContent>content,image)      
         event.stopPropagation();
+    }
+
+    onLoad(){
+        this.loading = false
+    }
+
+    onError(){
+        this.error = true
     }
 
     onDeleteButtonClick(){

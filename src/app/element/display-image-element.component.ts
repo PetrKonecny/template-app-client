@@ -7,10 +7,12 @@ import { AppConfig } from '../app.config'
 @Component({
     selector: 'display-image-element',
     template: `
-        <img (resize) ="resize($event)" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [width]="element.width" [height]="element.height" src="{{config.getConfig('api-url')}}/img/{{element.image.image_key}}.{{element.image.extension}}">          
+        <div  [style.opacity]="element.opacity ? element.opacity/100 : 1" [class.selected]="selected" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [style.width.px]="element.width" [style.height.px]="element.height">
+            <image *ngIf="element?.image" [image]="element.image"></image>          
+        </div>                 
     `,
     styles: [
-        `img{
+        `div{
             position: absolute;
         }
 

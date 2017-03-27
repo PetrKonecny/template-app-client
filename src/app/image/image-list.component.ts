@@ -25,7 +25,7 @@ import { Image } from './image';
                 display: flex;
                 flex-wrap: wrap;
                 width: 90%;
-            }
+            }           
             `]
 })
 

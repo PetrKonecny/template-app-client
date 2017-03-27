@@ -47,7 +47,7 @@ export class NewTextElementComponent  {
         private newPage: NewPageRemote,
         private commands: ElementCommands
     ){
-        this.elementStore.element.subscribe(element =>this.selected = this.element == element)
+        this.elementStore.element.subscribe(element =>this.selected = this.element === element)
     }
     
     move(dimensions: ElementDimensions){
