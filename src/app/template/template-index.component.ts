@@ -15,16 +15,21 @@ import {Page} from '../page/page'
             <md-input-container><input #search mdInput type="search"></md-input-container>
             <button md-button>SEARCH</button>
         </form>
+        <div class="shutter">
+            <md-spinner *ngIf="loading && !error"></md-spinner>
+            <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
+        </div>
         <template-list [templates] = "templates" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>\n\
-        <button md-fab (click)="onAddTemplateClicked()"><md-icon>add</md-icon></button>
+        <button md-fab class="index-button" (click)="onAddTemplateClicked()"><md-icon>add</md-icon></button>
     `,
     providers: []
 })
 
 export class TemplateIndexComponent implements OnInit  {
     
-    errorMessage: string;
-    templates : Template[];
+    error: string
+    templates : Template[]
+    loading = true
 
     constructor(
         private templateService: TemplateService, private router: Router, public dialog: MdDialog 
@@ -50,8 +55,11 @@ export class TemplateIndexComponent implements OnInit  {
     
     getTemplates(){
         this.templateService.getTemplates().subscribe(
-                               templates => this.templates = templates,
-                               error =>  this.errorMessage = <any>error
+            templates => {
+                this.templates = templates
+                this.loading = false
+            },
+            error =>  this.error = <any>error
         );
     }
 

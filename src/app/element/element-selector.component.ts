@@ -19,7 +19,6 @@ import { ElementStore } from '../element/element.store'
                 <div class="toolbar" style="display: flex;" *ngIf="element"> 
                     <button md-icon-button (click)="deleteElement()"><md-icon>delete</md-icon></button>
                     <div class="toolbarCategory">
-                    <span class="toolbarCategoryHint">obecné</span>
                     <button md-icon-button [mdMenuTriggerFor]="menu" mdTooltip="pozice a šířka">XY</button>
                     <my-md-menu #menu="mdMenu">
                         <md-input-container>
@@ -48,8 +47,14 @@ import { ElementStore } from '../element/element.store'
                     <my-md-menu #opacity="mdMenu">
                         <md-slider style="margin:10px; width: 200px;" [thumbLabel]="true" [value]="this.element.opacity ? this.element.opacity : 100" (input)="onSliderChange($event)"></md-slider>
                     </my-md-menu>                   
-                    <md-checkbox #backgroundCheckbox [checked]="element.background_color" (change)="toggleElementBackground(backgroundCheckbox.checked)" mdTooltip="zobrazit/skrýt pozadí"></md-checkbox>
-                    <button *ngIf="element.background_color" style="background: none; border:none;" [colorPicker]="getBgColor()" mdTooltip="barva pozadí" (colorPickerChange)="changeBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getBgColor()">format_color_fill</md-icon></button></button>
+                    <button md-icon-button mdTooltip="Barva pozadí" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="element.background_color">fiber_manual_record</md-icon></button>
+                    <my-md-menu #backgroundColorMenu>
+                        <div md-menu-item [colorPicker]="element.background_color ? element.background_color : lastColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeBackgroundColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
+                        </div>
+                        <div md-menu-item style="overflow: hidden;">
+                            Zobrazit/skrýt pozadí <md-checkbox #bgCheckbox [checked]="element.background_color" (change)="toggleElementBackground(bgCheckbox.checked)" style="position: relative; z-index: 1000;"></md-checkbox>
+                        </div>
+                    </my-md-menu>
                     </div>
                     <div class="toolbarCategory" *ngIf="element.type == 'text_element' && element.content.editor">
                         <span class="toolbarCategoryHint">text</span>
@@ -64,7 +69,7 @@ import { ElementStore } from '../element/element.store'
     providers: [],
     styles: [`
         .toolbarCategory{
-            position: relative; margin-left: 20px; border-bottom: 1px solid #bdbdbd;
+            position: relative; margin-left: 20px; border-left: 1px solid #bdbdbd; padding-left: 12px;
         }
         .toolbarCategoryHint{
             position: absolute; z-index:1000; top: 42px; font-size: 10px; width: 100%; text-align: center; color: #bdbdbd;
@@ -75,11 +80,12 @@ import { ElementStore } from '../element/element.store'
 })
 
 export class ElementSelectorComponent  {
-    
+        
     element: Element
     template: Template
     first: boolean
-    last: boolean 
+    last: boolean
+    lastColor = Element.defaultBackgroundColor
 
     constructor(private elementStore: ElementStore,  private commands: ElementCommands, private pageCommands: PageCommands, private templateStore: TemplateStore){
         this.elementStore.element.subscribe(element=> this.element = element)
@@ -97,16 +103,24 @@ export class ElementSelectorComponent  {
 
     deleteElement(){
         let page = TemplateHelper.getPageFromTemplateForElement(this.element, this.template)
+        console.log(this.element,this.template, page)
         this.pageCommands.RemoveElement(page,this.element)
         this.elementStore.changeElement(null)
     }
 
     changeBackgroundColor(color: string){
-        this.commands.changeBackgroundColor(this.element,color)
+        this.lastColor = color
+        if(this.element.background_color){
+            this.commands.changeBackgroundColor(this.element, this.lastColor)
+        }
     }
 
     toggleElementBackground(value: boolean){
-        this.commands.toggleElementBackground(this.element,value)
+        if(this.element.background_color){
+            this.commands.changeBackgroundColor(this.element, null)
+        }else{
+            this.commands.changeBackgroundColor(this.element, this.lastColor)
+        }
     }
 
     onSliderChange(event){
@@ -137,7 +151,6 @@ export class ElementSelectorComponent  {
         this.first = this.isElementFirst()
         this.last = this.isElementLast()
     }
-
 
     onKey(){
         

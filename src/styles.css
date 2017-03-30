@@ -63,6 +63,22 @@ user-templates{
     justify-content: center;
 }
 
+.index-button{
+    position: fixed !important;
+    margin: 30px !important;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.hue {
+    width: 142px !important;
+}
+
+.color-picker{
+    border: none !important;
+}
+
 md-grid-tile .shutter {
     position: relative;
             }

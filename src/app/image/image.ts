@@ -7,5 +7,6 @@ export class Image {
     extension: string;
     originalWidth: number;
     originalHeight: number;
-    user: User  
+    user: User
+    selected: boolean  
 }

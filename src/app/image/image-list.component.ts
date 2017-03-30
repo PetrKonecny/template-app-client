@@ -6,7 +6,7 @@ import { Image } from './image';
     template: `
             <md-grid-list cols="3">
                 <md-grid-tile *ngFor="let image of images" (click)="onSelect(image)">
-                    <image [image]="image" [thumb]="true"></image>
+                    <image (click)="onSelect(image)" [image]="image" [thumb]="true"></image>
                 </md-grid-tile>
             </md-grid-list> `,
     styles: [`        
@@ -36,6 +36,7 @@ export class ImageListComponent {
     @Output() onImageClicked = new EventEmitter<Image>();
         
     onSelect(image: Image) {
+        console.log(image)
         this.onImageClicked.emit(image);
     }
 

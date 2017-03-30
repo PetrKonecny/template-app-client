@@ -8,6 +8,10 @@ import { Observable }     from 'rxjs/Observable';
 @Component({
     selector: 'template-instance-index',
     template: `
+        <div class="shutter">
+            <md-spinner *ngIf="loading && !error"></md-spinner>
+            <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
+        </div>
         <template-instance-list [templateInstances] = "templateInstances" (onDeleteClicked) = "onDeleteClicked($event)"></template-instance-list>
     `,
     providers: [TemplateInstanceService]
@@ -15,8 +19,9 @@ import { Observable }     from 'rxjs/Observable';
 
 export class TemplateInstanceIndexComponent implements OnInit  {
     
-    errorMessage: string;
-    templateInstances : TemplateInstance[];
+    error: string
+    loading = true
+    templateInstances : TemplateInstance[]
 
     constructor(
         private templateInstanceService: TemplateInstanceService 
@@ -29,8 +34,11 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     
     getTemplates(){
         this.templateInstanceService.getTemplateInstances().subscribe(
-                               templateInstances => this.templateInstances = templateInstances,
-                               error =>  this.errorMessage = <any>error
+               templateInstances => {
+                   this.templateInstances = templateInstances
+                   this.loading = false
+               },
+               error =>  this.error = error
         );
     }
     

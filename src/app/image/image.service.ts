@@ -40,6 +40,12 @@ export class ImageService {
                     .map(this.extractData)
                     .catch(this.handleError);
     }
+
+    removeImage(id: number): Observable<Image> {
+        return this.http.delete(this._imagesUrl+"/"+id, { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
     
     private extractData(res: Response) {
         if (res.status < 200 || res.status >= 300) {

@@ -37,7 +37,7 @@ export class TemplateHelper {
     static getPageFromTemplateForElement(element: Element,template: Template){
         for (var page of template.pages){
             for (var elmnt of page.elements){
-                if(element == element) {
+                if(elmnt === element) {
                     return page
                 }
             }

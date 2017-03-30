@@ -9,7 +9,7 @@ import { AppConfig } from '../app.config'
                 <md-spinner class="spinner" *ngIf="loading && !error"></md-spinner>
                 <md-icon *ngIf="error">error</md-icon>
             </div>
-            <img #img [hidden]="loading || error" (load)="onLoad()" (error)="onError()" src="{{getSrc()}}"  draggable="true" (dragstart)="onDragStart($event,image)">
+            <img #img [hidden]="loading || error" (load)="onLoad()" (error)="onError()" src="{{getSrc()}}"  [class.selected]="image.selected" draggable="true" (dragstart)="onDragStart($event,image)">
              `,
     providers: [],
     styles: [`img {width: 100%; height: 100%;} `],
@@ -55,7 +55,6 @@ export class ImageComponent implements OnChanges{
         this.loading = false
         this.image.originalHeight = this.img.nativeElement.naturalHeight
         this.image.originalWidth = this.img.nativeElement.naturalWidth
-        console.log(this.image)
         this.loaded.emit(this.image)
     }
 

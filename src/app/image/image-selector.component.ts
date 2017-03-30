@@ -1,8 +1,8 @@
 import { Component, OnInit} from '@angular/core';
 import { ImageService } from './image.service';
 import { Image} from './image';
-import {AppConfig} from '../app.config'
-import { ImageUploadComponent } from './image-upload.component'
+import { AppConfig } from '../app.config'
+import { UploadComponent } from '../uploader.component'
 import { MdDialog } from '@angular/material'
 import { PageStore} from '../page/page.store'
 
@@ -37,7 +37,7 @@ export class ImageSelectorComponent implements OnInit{
 
      
     constructor(
-    private imageService: ImageService, private appConfig: AppConfig, public dialog: MdDialog, pageStore: PageStore){}
+    private imageService: ImageService, private appConfig: AppConfig, public dialog: MdDialog, pageStore: PageStore, private config: AppConfig){}
        
     ngOnInit(){
         this.getImages();
@@ -54,13 +54,14 @@ export class ImageSelectorComponent implements OnInit{
     }
     
    openUploadModal() {
-        let dialogRef = this.dialog.open(ImageUploadComponent, {
+        let dialogRef = this.dialog.open(UploadComponent, {
           height: '90%',
           width: '60%',
         });
-        dialogRef.afterClosed().subscribe(closed =>{
+        dialogRef.componentInstance.uploadUrl = this.config.getConfig('api-url')+'/image'
+        dialogRef.componentInstance.onCompleteAll.subscribe(()=>
           this.getImages()
-        })        
+        )        
     }
     
 }

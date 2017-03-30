@@ -100,6 +100,8 @@ import { ImageService } from './image/image.service'
 import { ImageComponent} from './image/image.component'
 
 import { UploadComponent } from './uploader.component'
+import { ColorPickerComponent } from './color-picker.component'
+
 
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
@@ -135,7 +137,7 @@ const routes: Routes = [
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal, OutSideEventHandlerDirective
-        ,CreateTemplateModal, ImageComponent, UploadComponent
+        ,CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent
     ],
     // modules
     imports: [
@@ -159,7 +161,7 @@ const routes: Routes = [
     bootstrap: [
         AppComponent
     ],
-    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent]
+    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent, ColorPickerComponent]
 })
 
 export class AppModule { }  

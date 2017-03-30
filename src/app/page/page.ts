@@ -43,12 +43,14 @@ export class RemoveElement implements Command{
 
 	constructor(private page: Page, private element: Element){}
 
+  oldIndex
 	execute(){
-		this.page.elements = this.page.elements.filter(element=> this.element !== element)
+    this.oldIndex = this.page.elements.indexOf(this.element)
+		this.page.elements.splice(this.oldIndex,1)
 	}
 
 	unExecute(){
-		this.page.elements.push(this.element)
+    this.page.elements.splice(this.oldIndex,0,this.element)
 	}
 
 }

@@ -31,7 +31,7 @@ export class ElementCommands{
     }
 
     changeBackgroundColor(element: Element, value){
-        this.service.execute(new ChangeBackgroundColor(element,value))
+        this.service.addToBufferAndExecute(new ChangeBackgroundColor(element,value))
     }
 
     toggleElementBackground(element: Element, value){
@@ -122,19 +122,27 @@ export class ChangeElementOpacity implements BufferCommand{
 
 }
 
-export class ChangeBackgroundColor implements Command{
+export class ChangeBackgroundColor implements BufferCommand{
 
     constructor(private element: Element, private value){}
 
     oldValue
 
     execute(){
-        this.oldValue = this.element.background_color ? this.element.background_color : Element.defaultBackgroundColor
+        this.oldValue = this.element.background_color
         this.element.background_color = this.value
     }
 
     unExecute(){
         this.element.background_color = this.oldValue
+    }
+
+    getStoredState(){
+        return this.oldValue
+    }
+
+    setStoredState(value){
+        this.oldValue = value
     }
 
 }

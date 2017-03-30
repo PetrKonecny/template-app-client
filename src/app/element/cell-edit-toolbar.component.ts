@@ -11,35 +11,52 @@ import { ElementStore } from '../element/element.store'
 @Component({
     selector: 'cell-edit-toolbar',
     template: `                     
-                <md-checkbox [checked]="getSelectedCellsBackground()" #cellBackgroundCheckbox (change)="toggleCellBackground(cellBackgroundCheckbox.checked)" mdTooltip="zobrazit/skrýt pozadí buňek"></md-checkbox>
-                <button *ngIf="getSelectedCellsBackground()" style="background: none; border:none;" [colorPicker]="getCellBgColor()"  [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)"><button md-icon-button><md-icon [style.color]="getCellBgColor()">format_color_fill</md-icon></button></button>
+                <button md-icon-button mdTooltip="Barva pozadí vybraných buněk" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="getCellBgColor()">fiber_manual_record</md-icon></button>
+                <my-md-menu #backgroundColorMenu>
+                    <div md-menu-item [colorPicker]="getCellBgColor() ? getCellBgColor() : lastCellBgColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
+                    </div>
+                    <div md-menu-item style="overflow: hidden;">
+                        Zobrazit/skrýt pozadí <md-checkbox #bgCheckbox [checked]="getCellBgColor()" (change)="toggleCellBackground(bgCheckbox.checked)" style="position: relative; z-index: 1000;"></md-checkbox>
+                    </div>
+                </my-md-menu>
                 <font-selector (onFontSelected)="changeSelectedCellsFont($event)"  (onFontSizeSelected)="changeSelectedCellsFontSize($event)"></font-selector>
-                    <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="Format text">A</button>
-                    <button mdTooltip="Cell text color"  style="background: none; border:none;" [colorPicker]="getCellTextColor()"  [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsTextColor($event)"><button md-icon-button><md-icon [style.color]="getCellTextColor()">format_color_text</md-icon></button></button>                
-                    <my-md-menu #textMenu="mdMenu">
-                        <button md-icon-button (click)="changeSelectedCellsTextAlign('left')"><md-icon>format_align_left</md-icon></button>
-                        <button md-icon-button (click)="changeSelectedCellsTextAlign('right')"><md-icon>format_align_right</md-icon></button>
-                        <button md-icon-button (click)="changeSelectedCellsTextAlign('center')"><md-icon>format_align_center</md-icon></button>
-                        <button md-icon-button (click)="changeSelectedCellsBold()"><md-icon>format_bold</md-icon></button>
-                        <button md-icon-button (click)="changeSelectedCellsItalic()"><md-icon>format_italic</md-icon></button>
-                        <button md-icon-button (click)="changeSelectedCellsTextAlignVert('top')"><md-icon>vertical_align_top</md-icon></button>
-                        <button md-icon-button (click)="changeSelectedCellsTextAlignVert('bottom')"><md-icon>vertical_align_bottom</md-icon></button>
-                        <button md-icon-button (click)="changeSelectedCellsTextAlignVert('middle')"><md-icon>vertical_align_middle</md-icon></button>
-                    </my-md-menu>
+                <button md-icon-button mdTooltip="Barva textu" [mdMenuTriggerFor]="textColorMenu"><md-icon  [style.color]="getCellTextColor()">fiber_manual_record</md-icon></button>
+                <my-md-menu #textColorMenu>
+                    <div md-menu-item [colorPicker]="getCellTextColor()" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
+                    </div>                   
+                </my-md-menu>
+                <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="Format text">A</button>
+                <my-md-menu #textMenu="mdMenu">
+                    <button md-icon-button (click)="changeSelectedCellsTextAlign('left')"><md-icon>format_align_left</md-icon></button>
+                    <button md-icon-button (click)="changeSelectedCellsTextAlign('right')"><md-icon>format_align_right</md-icon></button>
+                    <button md-icon-button (click)="changeSelectedCellsTextAlign('center')"><md-icon>format_align_center</md-icon></button>
+                    <button md-icon-button (click)="changeSelectedCellsBold()"><md-icon>format_bold</md-icon></button>
+                    <button md-icon-button (click)="changeSelectedCellsItalic()"><md-icon>format_italic</md-icon></button>
+                    <button md-icon-button (click)="changeSelectedCellsTextAlignVert('top')"><md-icon>vertical_align_top</md-icon></button>
+                    <button md-icon-button (click)="changeSelectedCellsTextAlignVert('bottom')"><md-icon>vertical_align_bottom</md-icon></button>
+                    <button md-icon-button (click)="changeSelectedCellsTextAlignVert('middle')"><md-icon>vertical_align_middle</md-icon></button>
+                </my-md-menu>
                 <button md-icon-button mdTooltip="Border format" [mdMenuTriggerFor]="borderMenu">B</button>
                 <my-md-menu #borderMenu="mdMenu">
-                    <button md-icon-button (click)="changeSelectedCellsBorderStyle('none')"><md-icon>border_clear</md-icon></button>
-                    <button md-button (click)="changeSelectedCellsBorderStyle('solid none')">Top and bottom</button>
-                    <button md-button (click)="changeSelectedCellsBorderStyle('none solid')">Left and right</button>
-                    <button md-button (click)="changeSelectedCellsBorderStyle('solid')">All sides</button>
+                    <button md-menu-item (click)="changeSelectedCellsBorderStyle('none')">Žádný okraj</button>
+                    <button md-menu-item (click)="changeSelectedCellsBorderStyle('solid none')">Nahoře a dole</button>
+                    <button md-menu-item (click)="changeSelectedCellsBorderStyle('none solid')">Vlevo a vpravo</button>
+                    <button md-menu-item (click)="changeSelectedCellsBorderStyle('solid')">Ze všech stran</button>
                 </my-md-menu>
-                <button style="background: none; border:none;" [colorPicker]="getCellBColor()"  [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBorderColor($event)"><button md-icon-button><md-icon [style.color]="getCellBColor()">border_outer</md-icon></button></button>
+                <button md-icon-button mdTooltip="Barva rámečku" [mdMenuTriggerFor]="borderColorMenu"><md-icon  [style.color]="getCellBColor()">fiber_manual_record</md-icon></button>
+                <my-md-menu #borderColorMenu>
+                    <div md-menu-item [colorPicker]="getCellBColor()" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBorderColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
+                    </div>                   
+                </my-md-menu>
              `,
 })
 
 export class CellEditToolbar {
     
     element: TableElement
+    lastCellBgColor = Cell.defaultBackgroundColor
+    lastCellTextColor = Cell.defaultTextColor
+    lastCellBColor = Cell.defaultBorderColor
     
 
     constructor(private elementStore: ElementStore, private commands: TableElementCommands){
@@ -47,12 +64,8 @@ export class CellEditToolbar {
     }
 
     getCellBgColor(){
-        let color = this.element.selectedCells[0].background_color
-        if(color){
-            return color
-        }else{
-            return Cell.defaultBackgroundColor
-        }
+        return this.element.selectedCells[0].background_color
+        
     }
 
     getCellTextColor(){
@@ -60,7 +73,7 @@ export class CellEditToolbar {
         if(color){
             return color
         }else{
-            return Cell.defaultTextColor
+            return this.lastCellTextColor
         }
     }
 
@@ -69,7 +82,7 @@ export class CellEditToolbar {
         if(color){
             return color
         }else{
-            return Cell.defaultBorderColor
+            return this.lastCellBColor
         }
     }
     
@@ -108,14 +121,22 @@ export class CellEditToolbar {
 
     
     toggleCellBackground(value: boolean){
-        this.commands.toggleSCellsBackground(this.element,value)
+        if(this.getCellBgColor()){
+            this.commands.changeSCellsBackgroundColor(this.element, null)
+        }else{
+            this.commands.changeSCellsBackgroundColor(this.element, this.lastCellBgColor)
+        }
     }
         
     changeSelectedCellsBackgroundColor(color: string){
-        this.commands.changeSCellsBackgroundColor(this.element,color)
+        this.lastCellBgColor = color
+        if(this.getCellBgColor() &&  this.getCellBgColor() !== this.lastCellBgColor){
+            this.commands.changeSCellsBackgroundColor(this.element, this.lastCellBgColor)
+        }
     }
     
     changeSelectedCellsTextColor(color: string){
+        this.lastCellTextColor = color
         this.commands.changeSCellsTextColor(this.element,color)
     }
     
@@ -124,6 +145,7 @@ export class CellEditToolbar {
     }
     
     changeSelectedCellsBorderColor(color: string){
+        this.lastCellBColor = color
         this.commands.changeSCellsBorderColor(this.element,color)
     }
     

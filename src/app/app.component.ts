@@ -59,7 +59,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
     }
 
     test($event){
-        $event.stopPropagation()
         this.ref.nextMouseMove($event)        
     }
 

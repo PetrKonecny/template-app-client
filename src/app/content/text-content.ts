@@ -1,7 +1,7 @@
 
 import {Content} from './content';
 import {Editor} from '../editor/editor'
-import {UndoRedoService, Command} from '../undo-redo.service'
+import {UndoRedoService, Command, BufferCommand} from '../undo-redo.service'
 import {Injectable} from '@angular/core';
 
 @Injectable()
@@ -10,12 +10,12 @@ export class TextContentCommands{
 	constructor(private service: UndoRedoService){}
 
 	changeText(content: TextContent, text: string){
-		this.service.execute(new ChangeText(content,text))
+		this.service.addToBufferAndExecute(new ChangeText(content,text))
 	}
 
 }
 
-export class ChangeText implements Command{
+export class ChangeText implements BufferCommand{
 
 	constructor(private content: TextContent, private text: string){}
 	storedText :string
@@ -35,6 +35,15 @@ export class ChangeText implements Command{
 			Editor.setText(this.content.editor,this.storedText)
 		}
 		this.content.text = this.storedText
+	}
+
+	getStoredState(){
+		return {storedText: this.storedText, fresh: this.fresh}
+	}
+
+	setStoredState(state){
+		this.storedText = state.storedText
+		this.fresh = state.fresh
 	}
 
 
