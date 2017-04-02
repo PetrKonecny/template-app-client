@@ -32,7 +32,7 @@ admin-index{
     justify-content: center;
 }
 
-user-templates{
+user-templates {
     height: 100%;
     position: relative;
     overflow: auto;
@@ -104,6 +104,8 @@ body{
 .ng2-tag-input__text-input{padding: 0 !important;}
 
 .ng2-tag-input{padding: 0 !important;}
+
+.ngx-datatable{height: 90% !important; overflow-y: auto !important;} 
 
 h1,h2,h3 {
 	font-family: Roboto,"Helvetica Neue",sans-serif;

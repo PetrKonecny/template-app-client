@@ -28,19 +28,16 @@ import { TemplateStore } from './template/template.store'
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/templates" routerLinkActive="active">TEMPLATES</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/template-instances" routerLinkActive="active">DOCUMENTS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin" routerLinkActive="active">IMAGES</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin" routerLinkActive="active">PAGES</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin" routerLinkActive="active">CONTENTS</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin" routerLinkActive="active">ELEMENTS</a>
-        <a md-button *ngIf="guard.canActivate()"  routerLink="admin" routerLinkActive="active">FONTS</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="/" routerLinkActive="active">APP</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="admin/pages" routerLinkActive="active">PAGES</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="admin/contents" routerLinkActive="active">CONTENTS</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="admin/elements" routerLinkActive="active">ELEMENTS</a>
+        <a md-button *ngIf="guard.canActivate()"  routerLink="admin/fonts" routerLinkActive="active">FONTS</a>
     </md-toolbar>
     <md-toolbar *ngIf="!adminRoute" color="primary">
         <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">TEMPLATES</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">YOUR DOCUMENTS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/images" routerLinkActive="active">IMAGES</a>
-        <a md-button *ngIf="guard.canActivate()"  routerLink="/fonts" routerLinkActive="active">FONTS</a>
         <a md-button *ngIf="!guard.canActivate()" routerLink="/login" routerLinkActive="active">LOGIN</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="/admin" routerLinkActive="active">ADMIN</a>
         <a md-button *ngIf="guard.canActivate()" (click)="onLogoutClicked()">Logout</a>
     </md-toolbar>
         <router-outlet></router-outlet>

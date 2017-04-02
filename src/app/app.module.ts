@@ -87,7 +87,7 @@ import {AdminUsersComponent} from './admin/admin-users.component'
 import {AdminTemplateInstancesComponent} from './admin/admin-template-instances.component'
 import {UserTableComponent} from './admin/user-table.component'
 import {TemplateInstanceTableComponent} from './admin/template-instance-table.component'
-import { TemplateTableComponent } from './admin/template-table.component'
+import {TemplateTableComponent } from './admin/template-table.component'
 import {CreateTableModal} from './element/create-table-element.modal'
 
 import {OutSideEventHandlerDirective} from './outside-event-handler.directive'
@@ -102,12 +102,32 @@ import { ImageComponent} from './image/image.component'
 import { UploadComponent } from './uploader.component'
 import { ColorPickerComponent } from './color-picker.component'
 
+import { PositionForm } from './element/position-form.component'
+
+import {ElementHttpService} from './element/element-http.service'
+import {ElementTableComponent} from './admin/element-table.component'
+import {AdminElementsComponent} from './admin/admin-elements.component'
+
+import {ContentHttpService} from './content/content-http.service'
+import {ContentTableComponent} from './admin/content-table.component'
+import {AdminContentsComponent} from './admin/admin-contents.component'
+
+import {FontTableComponent} from './admin/font-table.component'
+import {AdminFontsComponent} from './admin/admin-fonts.component'
+
+import {PageHttpService} from './page/page-http.service'
+import {PageTableComponent} from './admin/page-table.component'
+import {AdminPagesComponent} from './admin/admin-pages.component'
 
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
     { path: 'admin/templates', component: AdminTemplatesComponent },
     { path: 'admin/template-instances', component: AdminTemplateInstancesComponent },
     { path: 'admin/users', component: AdminUsersComponent },
+    { path: 'admin/elements', component: AdminElementsComponent },
+    { path: 'admin/contents', component: AdminContentsComponent },
+    { path: 'admin/fonts', component: AdminFontsComponent },
+    { path: 'admin/pages', component: AdminPagesComponent },
     { path: 'users', component: UserIndexComponent},
     { path: 'users/:id/templates', component: UserTemplatesComponent},
     { path: 'users/:id/template-instances', component: UserTemplateInstancesComponent},
@@ -121,8 +141,6 @@ const routes: Routes = [
     { path: 'template-instances/:id', component: TemplateInstanceEditComponent, canActivate: [UserGuard] },
     { path: 'images', component: ImageIndexComponent, canActivate: [UserGuard] },
     { path: 'images/upload', component: ImageUploadComponent, canActivate: [UserGuard] },
-    { path: 'fonts', component: FontIndexComponent, canActivate: [UserGuard] },
-    { path: 'login', component: UserLoginComponent },
     { path: '**', redirectTo: '/templates', pathMatch: 'full' },
 ];
 
@@ -137,7 +155,8 @@ const routes: Routes = [
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal, OutSideEventHandlerDirective
-        ,CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent
+        ,CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent
+        ,FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent
     ],
     // modules
     imports: [
@@ -156,7 +175,7 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        ImageService, UserService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
+        ImageService, UserService, ElementHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
     ],
     bootstrap: [
         AppComponent

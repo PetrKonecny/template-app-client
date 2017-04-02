@@ -5,7 +5,7 @@ import {TemplateInstance } from '../template-instance/template-instance'
 @Component({
     selector: 'admin-template-instances',
     template: `
-        <template-instance-table [templateInstances] = "templates" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></template-instance-table>
+        <template-instance-table [templateInstances] = "templateInstances" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></template-instance-table>
     `,
     providers: []
 })
@@ -22,8 +22,8 @@ export class AdminTemplateInstancesComponent implements OnInit {
 
     ngOnInit(){
         this.templateInstanceService.getTemplateInstances().subscribe(
-        templates=>{
-            this.templateInstances = templates
+        templateInstances=>{
+            this.templateInstances = templateInstances
             this.loading = false
         },
         error =>{

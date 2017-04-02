@@ -22,6 +22,10 @@ export class ElementCommands{
         this.service.addToBufferAndExecute(new ChangeElementOpacity(element,value))
     }
 
+    setElementDimensions(element: Element, dimensions){
+        this.service.execute(new SetElementDimensions(element,dimensions))
+    }
+
     finishMovingElement(){
         this.service.saveBuffer()
     }
@@ -40,6 +44,37 @@ export class ElementCommands{
         }else{
            this.changeBackgroundColor(element,null)
         }
+    }
+}
+
+export class SetElementDimensions implements Command{
+
+    constructor(private element: Element, private dimensions){}
+
+    oldDimensions
+
+    private setDimensions(dimensions){
+        if(dimensions.left != null){
+            this.element.positionX = dimensions.left
+        }
+        if(dimensions.top != null){
+            this.element.positionY = dimensions.top
+        }
+        if(dimensions.width != null){
+            this.element.width = dimensions.width
+        }
+        if(dimensions.height != null){
+            this.element.height = dimensions.height
+        } 
+    }
+
+    execute(){
+        this.oldDimensions = {left: this.element.positionX,top: this.element.positionY, width: this.element.width, height: this.element.height}
+        this.setDimensions(this.dimensions)
+    }
+
+    unExecute(){
+        this.setDimensions(this.oldDimensions)
     }
 }
 
