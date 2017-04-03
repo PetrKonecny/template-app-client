@@ -13,10 +13,15 @@ import { ElementCommands } from '../element/element'
 import { PageCommands } from '../page/page'
 import { TemplateStore } from '../template/template.store'
 import { TemplateInstanceHelper} from './template-instance.helper'
+import { MdSnackBar } from '@angular/material';
 
 @Component({
     selector: 'template-create',
     template: `
+        <div class="shutter">
+          <md-spinner *ngIf="(!template || !templateInstance) && !error"></md-spinner>
+          <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
+        </div>
         <create-new-template-instance [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
     `,
     providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
@@ -24,14 +29,15 @@ import { TemplateInstanceHelper} from './template-instance.helper'
 
 export class TemplateInstanceCreateComponent implements OnInit  {
     
-    errorMessage: string;
+    error: string;
     templateInstance : TemplateInstance;
     template : Template;
 
     constructor(
         private route: ActivatedRoute,
         private templateInstanceStore: TemplateInstanceStore,
-        private templateStore: TemplateStore 
+        private templateStore: TemplateStore,
+        private snackBar: MdSnackBar 
     ){ }
     
     ngOnInit(){
@@ -50,6 +56,11 @@ export class TemplateInstanceCreateComponent implements OnInit  {
                 this.templateInstance = res.templateInstance                 
                 TemplateInstanceHelper.copyContentsFromTemplate(res.templateInstance, res.template);
                 TemplateInstanceHelper.getContentsFromTemplateInstance(res.templateInstance,res.template);
+                this.templateInstance.template_id = this.template.id
+                }
+                ,error =>{
+                    this.error = error
+                    this.snackBar.open("Chyba při načítání dokumentu",null,{duration: 1500})
                 }
         )
     }

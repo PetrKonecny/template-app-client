@@ -22,7 +22,7 @@ export class UserService {
     private _usersUrl = this.config.getConfig('api-url')+'/user';  // URL to web api
 
     getUser(): Observable<User> {
-        return this.http.get(this._usersUrl, { withCredentials: true })
+        return this.http.get(this._usersUrl+'/current', { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }    
@@ -34,8 +34,7 @@ export class UserService {
     }
 
     logoutUser(){
-    	return this.http.get(this._usersUrl+'/logout', { withCredentials: true })
-            .map(this.extractData)
+    	return this.http.get(this.config.getConfig('api-url')+'/logout', { withCredentials: true })
             .catch(this.handleError);
     }
 

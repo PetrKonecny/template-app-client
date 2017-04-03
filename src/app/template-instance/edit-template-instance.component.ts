@@ -59,11 +59,12 @@ export class TemplateInstanceEditComponent implements OnInit  {
                 this.templateStore.loadTemplate(res.template)
                 this.templateInstanceStore.loadTemplateInstance(res.templateInstance)
                 TemplateInstanceHelper.copyContentsFromTemplate(res.templateInstance,res.template)
-                TemplateInstanceHelper.getContentsFromTemplateInstance(res.templateInstance, res.template)  
+                TemplateInstanceHelper.getContentsFromTemplateInstance(res.templateInstance, res.template)
+                this.templateInstance.template_id = this.template.id  
             },
             error =>{
                 this.error = error
-                this.snackBar.open("Chyba při načítání šablony",null,{duration: 1500})
+                this.snackBar.open("Chyba při načítání dokumentu",null,{duration: 1500})
             }
         )
     }

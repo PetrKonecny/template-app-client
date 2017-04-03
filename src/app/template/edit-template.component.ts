@@ -13,6 +13,7 @@ import { PageStore } from '../page/page.store'
 import { ElementStore } from '../element/element.store'
 import { TemplateService } from '../template/template.service'
 import { MdSnackBar } from '@angular/material';
+import { PageFactory }from '../page/page.factory'
 
 @Component({
     selector: 'template-edit',
@@ -39,7 +40,8 @@ export class TemplateEditComponent implements OnInit  {
         private pageStore: PageStore,
         private undoRedoService: UndoRedoService,
         private templateService: TemplateService,
-        private snackBar: MdSnackBar
+        private snackBar: MdSnackBar,
+        private factory: PageFactory
     ){ }
     
     @HostListener('document:mouseup', ['$event'])
@@ -58,6 +60,8 @@ export class TemplateEditComponent implements OnInit  {
              this.template = template
              if(this.template.pages && this.template.pages[0]){
                  this.pageStore.selectPage(this.template.pages[0])
+                 this.factory.setHeight(this.template.pages[0].height).setWidth(this.template.pages[0].width)
+
              }
              this.templateStore.loadTemplate(template)
           },

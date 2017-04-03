@@ -37,8 +37,8 @@ import { TemplateStore } from './template/template.store'
         <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">TEMPLATES</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">YOUR DOCUMENTS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/images" routerLinkActive="active">IMAGES</a>
-        <a md-button *ngIf="!guard.canActivate()" routerLink="/login" routerLinkActive="active">LOGIN</a>
-        <a md-button *ngIf="guard.canActivate()" (click)="onLogoutClicked()">Logout</a>
+        <a md-button *ngIf="!guard.canActivate()" href="{{config.getConfig('api-url')}}/user/login">LOGIN</a>
+        <a md-button *ngIf="guard.canActivate()" href="{{config.getConfig('api-url')}}/user/logout">LOGOUT</a>
     </md-toolbar>
         <router-outlet></router-outlet>
     <span>
@@ -71,14 +71,16 @@ export class AppComponent implements OnInit, AfterViewChecked {
     }
 
     onLogoutClicked(){
-        this.userService.logoutUser()
-        this.router.navigate(['/login'])
+        this.userService.logoutUser().subscribe(()=>{this.userStore.loadUser(null)})
     }
 
     ngOnInit(){
         this.router.events.subscribe(event=>{
             this.adminRoute = event.url.includes('admin')
 
+        })
+        this.userService.getUser().subscribe(user=>{
+            this.userStore.loadUser(user)
         })
         this.fontStore.fonts.subscribe(fonts=>{
             fonts.forEach(font => {
