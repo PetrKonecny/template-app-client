@@ -7,7 +7,8 @@ import { AppConfig }from '../app.config'
     template: `
         <md-nav-list>
             <md-list-item *ngFor="let templateInstance of templateInstances">
-                <a md-line href="...">{{ templateInstance.name? templateInstance.name : "Nepojmenovaný dokument" }}</a>
+                <span md-line>{{ templateInstance.name? templateInstance.name : "Nepojmenovaný dokument" }}</span>
+                <md-chip-list md-line><md-chip *ngFor="let tag of templateInstance.tagged">{{tag.tag_name}}</md-chip></md-chip-list>
                 <a md-button [routerLink] = "['/template-instances', templateInstance.id]">Open</a>
                 <a md-button href="{{config.getConfig('api-url')}}/templateInstance/{{templateInstance.id}}/pdf">PDF</a>\n\
                 <a md-button href="javascript:void(0)"(click)="onDelete(templateInstance)">Delete</a>            

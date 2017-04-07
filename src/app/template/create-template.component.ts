@@ -57,6 +57,6 @@ export class TemplateCreateComponent implements AfterViewInit, OnInit  {
     }
 
     ngAfterViewInit(){
-        this.pageStore.selectPage(this.template.pages[0])
+        //this.pageStore.selectPage(this.template.pages[0])
     }
 }

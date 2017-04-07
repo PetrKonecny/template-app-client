@@ -12,7 +12,7 @@ import { TemplateInstance} from '../template-instance/template-instance';
                 <span md-line>{{ template.name }}</span>
                 <md-chip-list md-line><md-chip *ngFor="let tag of template.tagged">{{tag.tag_name}}</md-chip></md-chip-list>
                 <a md-button [routerLink] = "['/templates', template.id, 'edit']">Edit</a>
-                <a md-button [routerLink] = "['/templates', template.id, 'instance']">New </a>\n\
+                <a md-button [routerLink] = "['/templates', template.id, 'instance']">New </a>
                 <a md-button href="javascript:void(0)"(click)="onDelete(template)">Delete</a>            
             </md-list-item>
         </md-nav-list>

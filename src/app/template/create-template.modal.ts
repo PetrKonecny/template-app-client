@@ -4,7 +4,7 @@ import { FormBuilder, Validators, FormControl, FormGroup} from '@angular/forms';
 import {MdDialogRef} from '@angular/material'
 
 @Component({
-    selector: 'create-table-modal',
+    selector: 'create-template-modal',
     template: `
         <form [formGroup]="createForm" (ngSubmit)="onSaveButtonClicked()">
         		<h2 md-dialog-title>VYTVOŘIT ŠABLONU</h2>

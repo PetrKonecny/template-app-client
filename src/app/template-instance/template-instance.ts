@@ -1,6 +1,7 @@
 import {Template} from '../template/template';
 import {Content} from '../content/content';
 import {User} from '../user/user'
+import {Tag} from '../tag/tag'
 
 export class TemplateInstance {
   id: number;
@@ -9,4 +10,5 @@ export class TemplateInstance {
   template_id: number;
   contents: Content[];
   user: User
+  tagged: Tag[]
 }

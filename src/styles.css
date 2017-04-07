@@ -15,7 +15,7 @@ app-root{
     overflow: hidden;
 }
 
-image-index{
+image-index, template-index, template-instance-index{
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -81,7 +81,7 @@ user-templates {
 
 md-grid-tile .shutter {
     position: relative;
-            }
+}
 
 body{
     font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
@@ -117,4 +117,8 @@ h1,h2,h3 {
 
 .toolbar{
     font-size: 14px;
+}
+
+.nothing-found{
+    opacity: 0.2;
 }

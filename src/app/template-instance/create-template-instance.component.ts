@@ -22,7 +22,7 @@ import { MdSnackBar } from '@angular/material';
           <md-spinner *ngIf="(!template || !templateInstance) && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <create-new-template-instance [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
+        <create-new-template-instance *ngIf="template && templateInstance" [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
     `,
     providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
 })
@@ -42,26 +42,32 @@ export class TemplateInstanceCreateComponent implements OnInit  {
     
     ngOnInit(){
         this.templateInstanceStore.cleanStore()
-        this.templateStore.cleanStore()   
+        this.templateStore.cleanStore()
+
+        this.templateStore.template
+        .flatMap((template)=>this.templateInstanceStore.templateInstance.map((templateInstance)=>{return{template: template, templateInstance: templateInstance}}))
+        .first((res)=> res.template.id > 0)
+        .subscribe((res)=>{       
+            this.template = res.template
+            this.templateInstance = res.templateInstance
+            this.templateInstance.template_id = this.template.id
+            TemplateInstanceHelper.copyContentsFromTemplate(this.templateInstance, this.template);
+            TemplateInstanceHelper.getContentsFromTemplateInstance(this.templateInstance,this.template);
+            this.templateInstance.name = this.template.name
+            this.templateInstance.tagged = this.template.tagged
+        })
+
         this.route.params
-        .map(params => {
-            let id = +params['id']; // (+) converts string 'id' to a number
-            this.templateStore.getTemplate(id);
-        }).flatMap(() => this.templateStore.template)
-        .map(res => {return {template: res}})
-        .flatMap((res) => this.templateInstanceStore.templateInstance.map(templateInstance => {return{template: res.template, templateInstance: templateInstance}}))
-        .first(res => res.template.id > 0)
-        .subscribe(res => {
-                this.template = res.template
-                this.templateInstance = res.templateInstance                 
-                TemplateInstanceHelper.copyContentsFromTemplate(res.templateInstance, res.template);
-                TemplateInstanceHelper.getContentsFromTemplateInstance(res.templateInstance,res.template);
-                this.templateInstance.template_id = this.template.id
-                }
-                ,error =>{
-                    this.error = error
-                    this.snackBar.open("Chyba při načítání dokumentu",null,{duration: 1500})
-                }
+        .flatMap((params) => this.templateStore.getTemplate(params['id']))
+        .first()
+        .subscribe(
+            res => {                               
+                
+            }
+            ,error =>{
+                this.error = error
+                this.snackBar.open("Chyba při načítání dokumentu",null,{duration: 1500})
+            }
         )
     }
 }

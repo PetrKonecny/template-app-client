@@ -2,13 +2,16 @@ import { Component, OnInit, Input } from '@angular/core'
 import { TemplateInstance} from './template-instance'
 import { Template} from '../template/template'
 import { TemplateInstanceStore } from './template-instance.store'
-import {  Router} from '@angular/router'
-import {TextContent} from '../content/text-content'
+import { Router} from '@angular/router'
+import { TextContent} from '../content/text-content'
 import { Element } from '../element/element'
 import { TemplateHelper} from '../template/template.helper'
 import { TemplateStore } from '../template/template.store'
 import { ElementStore } from '../element/element.store'
 import { PageStore } from '../page/page.store'
+import { MdSnackBar } from '@angular/material';
+import { MdDialog } from '@angular/material'
+import { SaveTemplateInstanceModal} from '../template-instance/save-template-instance.modal'
 
 @Component({
     selector: 'create-new-template-instance',
@@ -25,7 +28,7 @@ import { PageStore } from '../page/page.store'
                 <text-select *ngIf="element && element.type == 'text_element' && element.content.editor"></text-select>
             </md-toolbar>
             <md-sidenav mode ="side" #sidenav style="width: 20%;">
-                <image-select></image-select>                 
+                <image-select></image-select>
             </md-sidenav>       
             <div class="pages" *ngIf="template">
                 <display-page *ngFor="let page of template.pages" [page]="page"></display-page>
@@ -66,7 +69,9 @@ export class NewTemplateInstanceComponent {
         private templateInstanceStore: TemplateInstanceStore,
         private elementStore: ElementStore,
         private router: Router,
-        private templateStore: TemplateStore
+        private templateStore: TemplateStore,
+        public dialog: MdDialog,
+        private snackBar: MdSnackBar
     ){ 
         
         this.elementStore.element.subscribe(element=> {
@@ -75,7 +80,22 @@ export class NewTemplateInstanceComponent {
     }
       
     saveTemplateInstance() {
-        this.templateInstanceStore.saveTemplateInstance();
+        let dialogRef = this.dialog.open(SaveTemplateInstanceModal, {
+          height: 'auto',
+          width: '30%',
+        });
+        dialogRef.afterClosed().subscribe(value => 
+            {
+                if(value == 'save'){
+                    this.templateInstanceStore.saveTemplateInstance().subscribe(template=>{
+                        this.snackBar.open("Dokument úspěšně uložen",null,{duration: 1500})
+                    },error=>{
+                        this.snackBar.open("Chyba při ukládání dokumentu",null,{duration: 2500})
+                    })
+                }
+            }
+        )
+        dialogRef.componentInstance.templateInstance = this.templateInstance
     }
     
     openAsTemplate(){

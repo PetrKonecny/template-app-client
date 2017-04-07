@@ -29,7 +29,7 @@ import {MdSnackBar} from '@angular/material';
                         <ruler-select></ruler-select>
                     </md-tab>
                     <md-tab label = "Images">
-                        <image-select></image-select>
+                        <album-index-sidenav></album-index-sidenav>
                     </md-tab>
                 </md-tab-group>
             </md-sidenav>       

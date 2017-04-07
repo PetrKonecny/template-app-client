@@ -63,7 +63,6 @@ export class TemplateService {
             throw new Error('Bad response status: ' + res.status);
         }
         let body;
-        console.log(res)
         if (res.text()) {
             body = res.json();
         }

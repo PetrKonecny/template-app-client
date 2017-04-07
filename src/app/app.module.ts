@@ -119,6 +119,18 @@ import {PageHttpService} from './page/page-http.service'
 import {PageTableComponent} from './admin/page-table.component'
 import {AdminPagesComponent} from './admin/admin-pages.component'
 
+import { SaveTemplateInstanceModal} from './template-instance/save-template-instance.modal'
+
+import { AlbumHttpService } from './album/album-http.service'
+import { AlbumIndexComponent } from './album/album-index.component'
+import { AlbumListComponent } from './album/album-list.component'
+import { DisplayAlbumComponent } from './album/display-album.component'
+
+import { DisplayAlbumSidenavComponent } from './image/display-album-sidenav.component'
+import { AlbumIndexSidenavComponent } from './image/album-index-sidenav.component'
+import { SaveAlbumModal } from './album/save-album.modal'
+
+
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
     { path: 'admin/templates', component: AdminTemplatesComponent },
@@ -141,6 +153,8 @@ const routes: Routes = [
     { path: 'template-instances/:id', component: TemplateInstanceEditComponent },
     { path: 'images', component: ImageIndexComponent },
     { path: 'images/upload', component: ImageUploadComponent },
+    { path: 'albums', component: AlbumIndexComponent },
+    { path: 'albums/:id',component: DisplayAlbumComponent },
     { path: '**', redirectTo: '/templates', pathMatch: 'full' },
 ];
 
@@ -156,7 +170,8 @@ const routes: Routes = [
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal, OutSideEventHandlerDirective
         ,CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent
-        ,FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent
+        ,FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumListComponent, DisplayAlbumComponent
+        ,DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal
     ],
     // modules
     imports: [
@@ -175,12 +190,12 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        ImageService, UserService, ElementHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
+        ImageService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
     ],
     bootstrap: [
         AppComponent
     ],
-    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent, ColorPickerComponent]
+    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent, ColorPickerComponent, SaveTemplateInstanceModal, SaveAlbumModal]
 })
 
 export class AppModule { }  

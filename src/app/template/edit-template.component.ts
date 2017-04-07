@@ -51,25 +51,28 @@ export class TemplateEditComponent implements OnInit  {
     
     ngOnInit(){
         this.templateStore.cleanStore()
-        this.route.params.flatMap(
-           (params)=>this.templateService.getTemplate(params['id'])
-       )
-       .first(template => template.id > 0)
-       .subscribe(
-         template => {
-             this.template = template
-             if(this.template.pages && this.template.pages[0]){
+
+        this.templateStore.template
+        .first(template => template.id > 0)
+        .subscribe(template => {
+            this.template = template
+            if(this.template.pages && this.template.pages[0]){
                  this.pageStore.selectPage(this.template.pages[0])
                  this.factory.setHeight(this.template.pages[0].height).setWidth(this.template.pages[0].width)
+            }
+        })
 
-             }
-             this.templateStore.loadTemplate(template)
+       this.route.params
+       .flatMap((params)=>this.templateStore.getTemplate(params['id']))
+       .first()
+       .subscribe(
+          res => {
+             
           },
           error => {
             this.error = error
             this.snackBar.open("Chyba při načítání šablony",null,{duration: 1500})
           }
-        )
-
+       )
    }
 }

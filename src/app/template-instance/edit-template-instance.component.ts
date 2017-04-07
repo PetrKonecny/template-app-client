@@ -47,23 +47,26 @@ export class TemplateInstanceEditComponent implements OnInit  {
       
     ngOnInit(){
         this.templateInstanceStore.cleanStore()
-        this.templateStore.cleanStore()     
+        this.templateStore.cleanStore()  
+    
+        this.templateStore.template
+        .flatMap((template)=>this.templateInstanceStore.templateInstance.map((templateInstance)=>{return{template: template, templateInstance: templateInstance}}))
+        .first((res)=> res.template.id > 0 && res.templateInstance.id > 0)
+        .subscribe((res)=>{         
+            this.template = res.template
+            this.templateInstance = res.templateInstance
+            TemplateInstanceHelper.copyContentsFromTemplate(this.templateInstance, this.template);
+            TemplateInstanceHelper.getContentsFromTemplateInstance(this.templateInstance,this.template);
+        })
+
         this.route.params
-        .flatMap((params) => this.templateInstanceService.getTemplateInstance(params['id']))
-        .flatMap((res) => this.templateService.getTemplate(res.template_id).map((template)=>{ return {template: template, templateInstance: res}}))
-        .first(res => res.template.id > 0 && res.templateInstance.id > 0)
+        .flatMap((params)=>this.templateInstanceStore.getTemplateInstanceWithTemplate(params['id']))
         .subscribe(
-            res => {
-                this.template = res.template
-                this.templateInstance = res.templateInstance
-                this.templateStore.loadTemplate(res.template)
-                this.templateInstanceStore.loadTemplateInstance(res.templateInstance)
-                TemplateInstanceHelper.copyContentsFromTemplate(res.templateInstance,res.template)
-                TemplateInstanceHelper.getContentsFromTemplateInstance(res.templateInstance, res.template)
-                this.templateInstance.template_id = this.template.id  
+            res=>{
             },
-            error =>{
+            error=>{
                 this.error = error
+                console.log(error)
                 this.snackBar.open("Chyba při načítání dokumentu",null,{duration: 1500})
             }
         )

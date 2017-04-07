@@ -40,20 +40,19 @@ export class TemplateInstanceStore {
     the subscription to http services is canceled after geting first valid result (method First())
     */
     getTemplateInstanceWithTemplate(id: number){
-        this.templateInstanceService.getTemplateInstance(id)
+        return this.templateInstanceService.getTemplateInstance(id)
         .map(res => {return {templateInstance: res}})
         .flatMap(res => this.templateService.getTemplate(res.templateInstance.template_id).map(template => {return {template: template, templateInstance: res.templateInstance}}))
         .first(res => {return res.template.id>0 && res.templateInstance.id>0})
-        .subscribe(res =>{
+        .map(res =>{
             this._templateInstance.next(res.templateInstance)
             this.templateStore.loadTemplate(res.template)
-            this._templateInstance.value.template_id = res.template.id;
         })
 
     }
     
     getTemplateInstance(id: number){
-        this.templateInstanceService.getTemplateInstance(id).first().subscribe((res) => {
+        return this.templateInstanceService.getTemplateInstance(id).first().subscribe((res) => {
             this._templateInstance.next(res);
         });
     }
@@ -61,18 +60,17 @@ export class TemplateInstanceStore {
    
     saveTemplateInstance(){
         if(this._templateInstance.value.id > 0){
-            this.templateInstanceService.updateTemplateInstance(this._templateInstance.value).subscribe(
+            return this.templateInstanceService.updateTemplateInstance(this._templateInstance.value).map(
                 templateInstance => this._templateInstance.next(templateInstance)
             );
         }else{
-            this.templateInstanceService.addTemplateInstance(this._templateInstance.value).subscribe(
+            return this.templateInstanceService.addTemplateInstance(this._templateInstance.value).map(
                 templateInstance => this._templateInstance.next(templateInstance)
             );
         }
     }
     
     cleanStore(){
-        console.log('cleaning')
         if (this.cleanLocked){
             this.cleanLocked = false;
         }else{
