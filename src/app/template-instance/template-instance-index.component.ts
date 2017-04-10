@@ -3,6 +3,7 @@ import {TemplateInstanceListComponent} from './template-instance-list.component'
 import { TemplateInstanceService } from './template-instance.service';
 import { TemplateInstance} from './template-instance';
 import { Observable }     from 'rxjs/Observable';
+import { UserStore } from '../user/user.store'
 
 
 @Component({
@@ -24,13 +25,25 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     templateInstances : TemplateInstance[]
 
     constructor(
-        private templateInstanceService: TemplateInstanceService 
+        private templateInstanceService: TemplateInstanceService, private userStore: UserStore
     ){ }
     
     
     ngOnInit(){
-        this.getTemplates();
+        this.userStore.user
+        .first(user=>user.id > 0)
+        .flatMap(user => this.templateInstanceService.getTemplateInstancesForUser(user.id))
+        .subscribe(
+            templateInsts =>{
+                this.templateInstances = templateInsts
+                this.loading = false
+            },error => {
+                this.error = error
+            }
+        )
+
     }
+        
     
     getTemplates(){
         this.templateInstanceService.getTemplateInstances().subscribe(

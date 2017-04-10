@@ -34,11 +34,11 @@ import { TemplateStore } from './template/template.store'
         <a md-button *ngIf="guard.canActivate()"  routerLink="admin/fonts" routerLinkActive="active">FONTS</a>
     </md-toolbar>
     <md-toolbar *ngIf="!adminRoute" color="primary">
-        <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">TEMPLATES</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">YOUR DOCUMENTS</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="/images" routerLinkActive="active">IMAGES</a>
-        <a md-button *ngIf="!guard.canActivate()" href="{{config.getConfig('api-url')}}/user/login">LOGIN</a>
-        <a md-button *ngIf="guard.canActivate()" href="{{config.getConfig('api-url')}}/user/logout">LOGOUT</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">ŠABLONY</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">DOKUMENTY</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="/albums" routerLinkActive="active">OBRÁZKY</a>
+        <a md-button *ngIf="!guard.canActivate()" href="{{config.getConfig('api-url')}}/user/login">PŘIHLÁSIT</a>
+        <a md-button *ngIf="guard.canActivate()" href="{{config.getConfig('api-url')}}/user/logout">ODHLÁSIT</a>
     </md-toolbar>
         <router-outlet></router-outlet>
     <span>
@@ -79,9 +79,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
             this.adminRoute = event.url.includes('admin')
 
         })
-        this.userService.getUser().subscribe(user=>{
-            this.userStore.loadUser(user)
-        })
+        this.userStore.auth().subscribe()
         this.fontStore.fonts.subscribe(fonts=>{
             fonts.forEach(font => {
                 this.appendFontStyle(font)

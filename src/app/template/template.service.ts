@@ -34,6 +34,17 @@ export class TemplateService {
             .map(this.extractData)
             .catch(this.handleError);
     }
+
+    getTemplatesForUser(id: number){
+        return this.http.get(this._templatesUrl+"/user/"+id, { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    getPublicTemplates(){
+        return this.http.get(this._templatesUrl+"/public", { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);    }
     
     addTemplate(template: Template) {
         let headers = new Headers({ 'Content-Type': 'application/json' });

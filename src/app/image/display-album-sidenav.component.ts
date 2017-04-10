@@ -15,7 +15,6 @@ import { AppConfig } from '../app.config'
           <md-spinner *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <button md-fab class="index-button" (click)="openUploadModal()"><md-icon>add</md-icon></button>
         <image-list *ngIf="album && album.images" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>
     `,
     styles:[`

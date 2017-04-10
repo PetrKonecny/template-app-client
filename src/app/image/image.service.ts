@@ -41,9 +41,8 @@ export class ImageService {
                     .catch(this.handleError);
     }
 
-    removeImage(id: number): Observable<Image> {
-        return this.http.delete(this._imagesUrl+"/"+id, { withCredentials: true })
-            .map(this.extractData)
+    removeImage(image: Image): Observable<Image> {
+        return this.http.delete(this._imagesUrl+"/"+image.id, { withCredentials: true })
             .catch(this.handleError);
     }
     

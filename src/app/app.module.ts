@@ -129,6 +129,7 @@ import { DisplayAlbumComponent } from './album/display-album.component'
 import { DisplayAlbumSidenavComponent } from './image/display-album-sidenav.component'
 import { AlbumIndexSidenavComponent } from './image/album-index-sidenav.component'
 import { SaveAlbumModal } from './album/save-album.modal'
+import { SelectAlbumModal } from './album/select-album.modal'
 
 
 const routes: Routes = [
@@ -171,7 +172,7 @@ const routes: Routes = [
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal, OutSideEventHandlerDirective
         ,CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent
         ,FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumListComponent, DisplayAlbumComponent
-        ,DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal
+        ,DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal
     ],
     // modules
     imports: [
@@ -195,7 +196,7 @@ const routes: Routes = [
     bootstrap: [
         AppComponent
     ],
-    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent, ColorPickerComponent, SaveTemplateInstanceModal, SaveAlbumModal]
+    entryComponents: [ImageSelectorComponent, SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent, ColorPickerComponent, SaveTemplateInstanceModal, SaveAlbumModal, SelectAlbumModal]
 })
 
 export class AppModule { }  

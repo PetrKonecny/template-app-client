@@ -45,7 +45,7 @@ import { SaveTemplateInstanceModal} from '../template-instance/save-template-ins
         .pages{
             position: relative;
             overflow-y: scroll;
-            height: 95%;
+            height: 90%;
         }       
         .buttons{
             margin-left: auto;

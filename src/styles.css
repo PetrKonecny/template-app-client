@@ -38,6 +38,9 @@ user-templates {
     overflow: auto;
 }
 
+album-index-sidenav md-grid-list{
+}
+
 @import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
 @import '~@swimlane/ngx-datatable/release/index.css';
 @import '~@swimlane/ngx-datatable/release/themes/material.css';
@@ -83,6 +86,11 @@ md-grid-tile .shutter {
     position: relative;
 }
 
+album-index-sidenav .list-wrapper {
+    overflow-y: auto;
+    height: 100%;
+}
+
 body{
     font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
 }
@@ -95,7 +103,9 @@ body{
 
 .md-tab-body-wrapper{height: 100% !important;}
 
-.md-tab-body-content{height: 90% !important;}
+.md-tab-body-content{
+    height: 90% !important;
+}
 
 .ng2-dropdown-button{min-width:0px !important; width: auto !important;}
 

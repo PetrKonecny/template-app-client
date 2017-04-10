@@ -10,12 +10,21 @@ export class UserStore {
 	private _user: BehaviorSubject<User> = new BehaviorSubject(new User);
     public user: Observable<User> = this._user.asObservable();
 
+    constructor(private service: UserService){}
+
     loadUser(user: User){
         this._user.next(user)
     }
 
-    hasId(){
-    	return this._user.value.id > 0
+    auth(){
+    	return this.service.getCurrentUser().map(user => {
+            this._user.next(user)
+        })
     }
+
+    isLoggedIn(){
+        return this._user.value.id > 0
+    }
+
     
 }

@@ -21,7 +21,7 @@ export class UserService {
 
     private _usersUrl = this.config.getConfig('api-url')+'/user';  // URL to web api
 
-    getUser(): Observable<User> {
+    getCurrentUser(): Observable<User> {
         return this.http.get(this._usersUrl+'/current', { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);

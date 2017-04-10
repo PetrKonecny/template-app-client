@@ -6,14 +6,10 @@ import { UserStore } from './user.store';
 @Injectable()
 export class UserGuard implements CanActivate {
 
-  constructor(private userStore: UserStore, private router: Router) {}
+  constructor(private userStore: UserStore) {}
 
   canActivate() {
-    // If user is not logged in we'll send them to the homepage 
-    if (this.userStore.hasId()) {
-      return true;
-    }
-    return false;
+   	return this.userStore.isLoggedIn()
   }
 
 }

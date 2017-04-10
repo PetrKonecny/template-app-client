@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {Observable}     from 'rxjs/Observable';
 import {Album}     from './album';
+import {Image} from '../image/image'
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/debounceTime';
@@ -29,12 +30,18 @@ export class AlbumHttpService {
             .catch(this.handleError);
     }
 
+    moveImages(images: Image[], album: Album){
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this._albumsUrl+"/"+album.id+"/move",JSON.stringify(images),options)
+        .catch(this.handleError);
+    }
+
     addAlbum(album: Album) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this._albumsUrl, JSON.stringify(album), options)
                     .map(this.extractData)
-                    .catch(this.handleError);
     }
 
     removeAlbum(id: number): Observable<Album> {

@@ -16,8 +16,14 @@ import { SaveAlbumModal } from '../album/save-album.modal'
           <md-spinner *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <md-toolbar *ngIf="selectedAlbum"><button md-icon-button (click)="onBackClicked($event)"><md-icon>arrow_back</md-icon></button><h4>{{selectedAlbum.name ? selectedAlbum.name : 'nepojmenované album'}}</h4></md-toolbar>
-        <button md-fab class="index-button" (click)="onAddClicked()"><md-icon>add</md-icon></button>
+        <md-toolbar>
+            <button *ngIf="selectedAlbum" md-icon-button (click)="onBackClicked($event)"><md-icon>arrow_back</md-icon></button>
+            <h4 *ngIf="selectedAlbum">{{selectedAlbum.name ? selectedAlbum.name : 'nepojmenované album'}}</h4>
+            <h4 *ngIf="!selectedAlbum">Všechna alba</h4>
+            <span style="flex: 1 1 auto"></span>´
+            <button *ngIf="!selectedAlbum" md-icon-button (click)="onAddClicked()" mdTooltip="přidat album"><md-icon>add</md-icon></button>
+            <button *ngIf="selectedAlbum" md-icon-button (click)="onAddClicked()" mdTooltip="nahrát obrázky do alba"><md-icon>add</md-icon></button>
+        </md-toolbar>
         <album-list *ngIf="!selectedAlbum && albums" (onAlbumClicked)="onSelected($event)" [albums] = "albums" [cols]="3"></album-list>
         <display-album-sidenav #albumDetail *ngIf="selectedAlbum" [album]="selectedAlbum"></display-album-sidenav>
     `,
@@ -61,7 +67,7 @@ export class AlbumIndexSidenavComponent implements OnInit  {
         this.selectedAlbum = null
     }
 
-    onAddlicked(){
+    onAddClicked(){
         if(this.selectedAlbum){
             this.openUploadDialog()
         }else{

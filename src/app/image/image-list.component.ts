@@ -7,11 +7,13 @@ import { Image } from './image';
             <div class="shutter">
                 <h3 *ngIf="images && images.length == 0" class="nothing-found">Žádné obrázky k zobrazení</h3>
             </div>
-            <md-grid-list cols="3">
-                <md-grid-tile *ngFor="let image of images" (click)="onSelect(image)">
-                    <image (click)="onSelect(image)" [image]="image" [thumb]="true"></image>            
-                </md-grid-tile>
-            </md-grid-list> `,
+            <div class="list-wrapper">
+                <md-grid-list cols="3">
+                    <md-grid-tile *ngFor="let image of images" (click)="onSelect(image)">
+                        <image (click)="onSelect(image)" [image]="image" [thumb]="true"></image>            
+                    </md-grid-tile>
+                </md-grid-list>
+            </div> `,
     styles: [`        
             .image {
                 margin: 5px;

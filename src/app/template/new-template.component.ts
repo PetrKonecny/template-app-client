@@ -54,7 +54,7 @@ import {MdSnackBar} from '@angular/material';
         .pages{
             position: relative;
             overflow-y: scroll;
-            height: 95%;
+            height: 90%;
         }       
         .buttons{
             margin-left: auto;
