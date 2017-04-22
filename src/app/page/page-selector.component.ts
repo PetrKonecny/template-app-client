@@ -21,11 +21,11 @@ import {PageStore} from '../page/page.store'
 @Component({
     selector: 'page-select',
     template: `
-                <span *ngIf="page">\
+                <span *ngIf="page">
                     <md-grid-list cols="2">                    
                         <md-grid-tile (click)="createNewTextElement()">text</md-grid-tile>
                         <md-grid-tile (click)="createNewFrameElement()">rámeček</md-grid-tile>
-                        <md-grid-tile (click)="createNewTableElement()">tabulka</md-grid-tile>\
+                        <md-grid-tile (click)="createNewTableElement()">tabulka</md-grid-tile>
                     </md-grid-list>
                 </span>
              `,
@@ -56,7 +56,8 @@ export class PageSelectorComponent {
     }
            
     createNewTableElement(){
-        let dialogRef = this.dialog.open(CreateTableModal, {disableClose: false})
+        let dialogRef = this.dialog.open(CreateTableModal, {height: 'auto',
+          width: '30%',})
         dialogRef.afterClosed().subscribe(val =>{
             if(val && val.rows && val.columns && val.rowHeight && val.columnWidth){
                 let factory = new TableElementFactory

@@ -3,7 +3,7 @@ import {BehaviorSubject} from 'rxjs/Rx';
 import {TemplateService} from '../template/template.service'
 import {Template} from '../template/template';
 import {Observable} from 'rxjs/Observable';
-
+import {TemplateHelper} from '../template/template.helper'
 /*
 Stores template and template instance (document) that is currently being worked on.
 provides methods that work with the saved template or template instance
@@ -36,13 +36,9 @@ export class TemplateStore {
     */
     saveTemplate(){
         if(this._template.value.id > 0){
-            return this.templateService.updateTemplate(this._template.value).map(
-                template => this._template.next(template)
-            );
+            return this.templateService.updateTemplate(this._template.value)
         }else{
-            return this.templateService.addTemplate(this._template.value).map(
-                template => this._template.next(template)
-            );
+            return this.templateService.addTemplate(this._template.value).map(template => TemplateHelper.copyIds(this._template.value,template))
         }
     }
     

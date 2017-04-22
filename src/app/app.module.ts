@@ -135,7 +135,9 @@ import { SelectAlbumModal } from './album/select-album.modal'
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
     { path: 'admin/templates', component: AdminTemplatesComponent },
+    { path: 'admin/templates/:id/edit', component: TemplateEditComponent },
     { path: 'admin/template-instances', component: AdminTemplateInstancesComponent },
+    { path: 'admin/template-instances/:id/edit', component: TemplateInstanceEditComponent },
     { path: 'admin/users', component: AdminUsersComponent },
     { path: 'admin/elements', component: AdminElementsComponent },
     { path: 'admin/contents', component: AdminContentsComponent },

@@ -38,6 +38,7 @@ export class NewImageElementComponent {
         if(this.element.width && this.element.height){
             return
         }
+        
         let page = this.newPage.component.page
         let width = image.originalWidth
         let height = image.originalHeight

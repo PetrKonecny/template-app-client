@@ -9,6 +9,7 @@ import { PageService } from '../page/page.service'
 import { PageFactory } from '../page/page.factory'
 import { TemplateStore } from '../template/template.store'
 import {MdSnackBar} from '@angular/material';
+import {CreateTableModal} from '../element/create-table-element.modal' 
 
 @Component({
     selector: 'create-new-template',

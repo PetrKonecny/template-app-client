@@ -10,7 +10,7 @@ import {ContentHttpService} from '../content/content-http.service'
 @Component({
     selector: 'admin-contents',
     template: `
-        <content-table [contents] = "contents" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></content-table>
+        <content-table [rows] = "contents" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></content-table>
     `,
     providers: []
 })

@@ -34,6 +34,17 @@ export class TemplateInstanceHelper {
             }
         }
     }
+
+
+    static copyIds(templateInstance: TemplateInstance, templateInstance2: TemplateInstance){
+        templateInstance.id = templateInstance2.id
+        templateInstance.contents.forEach((content,index) =>{
+            content.id = templateInstance2.contents[index].id
+        })
+        templateInstance.tagged.forEach((tag,index)=>{
+            tag.id = templateInstance2.tagged[index].id
+        })
+    }
     
     /* Adds corresponding content from stored Template Instance to each element of stored Template 
        Validates if the stored template has any pages
@@ -60,6 +71,7 @@ export class TemplateInstanceHelper {
                 if (content.type == 'table_content'){
                     TableContent.fillEmptyCells(<TableContent>content)
                 }
+                console.log(content)
                 return content;
             }        
         }

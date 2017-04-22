@@ -10,7 +10,7 @@ import {ActivatedRoute} from '@angular/router';
 @Component({
     selector: 'user-templates',
     template: `
-        <template-table [templates] = "templates" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></template-table>
+        <template-table [rows] = "templates" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></template-table>
     `,
     providers: []
 })

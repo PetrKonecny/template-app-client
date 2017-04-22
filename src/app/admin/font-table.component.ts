@@ -3,7 +3,8 @@ import { Font} from '../font/font';
 import { User } from '../user/user'
 import { Router } from '@angular/router'
 import { TemplateInstance} from '../template-instance/template-instance';
- 
+import { TableComponent } from '../admin/table.component'
+
 @Component({
     selector: 'font-table',
     template: `
@@ -23,27 +24,16 @@ import { TemplateInstance} from '../template-instance/template-instance';
             [rowHeight]="'auto'"
             [selected]="selected"
             [selectionType]="'multi'"
-            [rows]="fonts"
+            [rows]="rows"
             [columns]="columns">
           </ngx-datatable>
     `,
 })
 
-export class FontTableComponent  {
-        
-    
+export class FontTableComponent extends TableComponent {
+           
     @Input()
-    fonts : Font[] 
-
-    @Input()
-    user: User
-
-    selected = [];
-
-    temp = [];
-
-    @Input()
-    loadingIndicator: boolean = true;
+    rows : Font[] 
 
     columns = [
         { prop: 'id'},
@@ -53,28 +43,5 @@ export class FontTableComponent  {
         { prop: 'updated_at'},
         { prop: 'element_id'},
     ]
-    
-    constructor(private router: Router){}
-    
-    onSelect({ selected }) {
-        this.selected.splice(0, this.selected.length);
-        this.selected.push(...selected);
-    }
 
-    onActivate(event) {
-    }
-
-
-    updateFilter(val: string) {
-        if(!this.temp.length && this.fonts.length){
-          this.temp = [...this.fonts];
-        }
-        // filter our data
-        let temp = this.temp.filter(function(d) {
-          return d.type.toLowerCase().indexOf(val) !== -1 || !val;
-        });
-
-        // update the rows
-        this.fonts = temp;
-    }
 }

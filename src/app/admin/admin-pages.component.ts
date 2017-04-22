@@ -10,7 +10,7 @@ import {PageHttpService} from '../page/page-http.service'
 @Component({
     selector: 'admin-pages',
     template: `
-        <page-table [pages] = "pages" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></page-table>
+        <page-table [rows] = "pages" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></page-table>
     `,
     providers: []
 })

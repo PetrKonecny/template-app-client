@@ -3,7 +3,8 @@ import { Page} from '../page/page';
 import { User } from '../user/user'
 import { Router } from '@angular/router'
 import { TemplateInstance} from '../template-instance/template-instance';
- 
+ import { TableComponent } from '../admin/table.component'
+
 @Component({
     selector: 'page-table',
     template: `
@@ -23,27 +24,17 @@ import { TemplateInstance} from '../template-instance/template-instance';
             [rowHeight]="'auto'"
             [selected]="selected"
             [selectionType]="'multi'"
-            [rows]="pages"
+            [rows]="rows"
             [columns]="columns">
           </ngx-datatable>
     `,
 })
 
-export class PageTableComponent  {
+export class PageTableComponent extends TableComponent {
         
     
     @Input()
-    pages : Page[] 
-
-    @Input()
-    user: User
-
-    selected = [];
-
-    temp = [];
-
-    @Input()
-    loadingIndicator: boolean = true;
+    rows : Page[] 
 
     columns = [
         { prop: 'id'},
@@ -51,27 +42,4 @@ export class PageTableComponent  {
         { prop: 'updated_at'},
     ]
     
-    constructor(private router: Router){}
-    
-    onSelect({ selected }) {
-        this.selected.splice(0, this.selected.length);
-        this.selected.push(...selected);
-    }
-
-    onActivate(event) {
-    }
-
-
-    updateFilter(val: string) {
-        if(!this.temp.length && this.pages.length){
-          this.temp = [...this.pages];
-        }
-        // filter our data
-        let temp = this.temp.filter(function(d) {
-          return d.type.toLowerCase().indexOf(val) !== -1 || !val;
-        });
-
-        // update the rows
-        this.pages = temp;
-    }
 }

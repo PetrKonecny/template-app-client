@@ -15,7 +15,7 @@ app-root{
     overflow: hidden;
 }
 
-image-index, template-index, template-instance-index{
+image-index, template-index, template-instance-index, album-index, display-album{
     height: 100%;
     display: flex;
     flex-direction: column;

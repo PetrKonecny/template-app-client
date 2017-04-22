@@ -1,6 +1,7 @@
 import { Component,ContentChild, AfterContentInit, HostListener} from '@angular/core';
 import {NewPageRemote} from '../page/new-page.remote'
 import { ImageContent, ImageContentCommands } from './image-content'
+import {AppComponentRef} from '../app.ref'
 
 @Component({
     selector: 'image-handle',
@@ -32,8 +33,11 @@ export class ImageHandleComponent implements AfterContentInit {
     @ContentChild('handleContent')
     handleContent: any
     content: any
+    shift: boolean
 
-    constructor(private commands: ImageContentCommands){}
+    constructor(private commands: ImageContentCommands, private ref: AppComponentRef){
+        this.ref.shiftPRess.subscribe(press => this.shift = press)
+    }
 
     
     ngAfterContentInit(){
@@ -41,7 +45,12 @@ export class ImageHandleComponent implements AfterContentInit {
     }
 
     leftTop(dimensions){
-        this.commands.startResizingImage(this.content,{width:-1*dimensions.left, height: -1*dimensions.top, left: dimensions.left, top: dimensions.top})
+        if(this.shift){
+            let ratio = this.content.width / this.content.height
+            this.commands.startResizingImage(this.content,{width:-1*dimensions.top * ratio, height: -1*dimensions.top, left: dimensions.top * ratio, top: dimensions.top})
+        }else{
+            this.commands.startResizingImage(this.content,{width:-1*dimensions.left, height: -1*dimensions.top, left: dimensions.left, top: dimensions.top})
+        }
     }
 
     top(dimensions){
@@ -49,7 +58,12 @@ export class ImageHandleComponent implements AfterContentInit {
     }
 
     rightTop(dimensions){
-        this.commands.startResizingImage(this.content,{width: dimensions.left, height: -1*dimensions.top, top: dimensions.top})
+        if(this.shift){
+            let ratio = this.content.width / this.content.height
+            this.commands.startResizingImage(this.content,{width: -1*dimensions.top*ratio, height: -1*dimensions.top, top: dimensions.top })
+        }else{
+            this.commands.startResizingImage(this.content,{width: dimensions.left, height: -1*dimensions.top, top: dimensions.top})
+        }
     }
 
     right(dimensions){
@@ -57,7 +71,12 @@ export class ImageHandleComponent implements AfterContentInit {
     }
 
    rightBottom(dimensions){
-        this.commands.startResizingImage(this.content,{width: dimensions.left, height: dimensions.top})
+        if(this.shift){
+            let ratio = this.content.width / this.content.height
+            this.commands.startResizingImage(this.content,{width: dimensions.top * ratio, height: dimensions.top})
+        }else{
+            this.commands.startResizingImage(this.content,{width: dimensions.left, height: dimensions.top})
+        }
    }
 
    bottom(dimensions){
@@ -65,7 +84,13 @@ export class ImageHandleComponent implements AfterContentInit {
    }
 
    leftBottom(dimensions){
-        this.commands.startResizingImage(this.content,{width:-1*dimensions.left, height: dimensions.top, left: dimensions.left})
+       if(this.shift){
+            let ratio = this.content.height / this.content.width
+            this.commands.startResizingImage(this.content,{width:-1*dimensions.left, height: -1*dimensions.left * ratio, left: dimensions.left})
+
+       }else{
+            this.commands.startResizingImage(this.content,{width:-1*dimensions.left, height: dimensions.top, left: dimensions.left})
+       }
    }
 
    left(dimensions){

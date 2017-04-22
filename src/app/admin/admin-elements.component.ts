@@ -10,7 +10,7 @@ import {ElementHttpService} from '../element/element-http.service'
 @Component({
     selector: 'admin-elements',
     template: `
-        <element-table [elements] = "elements" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></element-table>
+        <element-table [rows] = "elements" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></element-table>
     `,
     providers: []
 })

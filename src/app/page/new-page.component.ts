@@ -83,6 +83,7 @@ export class NewPageComponent implements AfterViewInit {
         let factory = new ImageElementFactory()
         factory.setPositionX(x).setPositionY(y).setWidth(null).setHeight(null).setImage(image)
         this.commands.addElement(this.page,factory.build())
+        event.preventDefault()
     }
 
     constructor(private newPageRemote: NewPageRemote, private pageStore: PageStore,  private ref: ElementRef, private commands: PageCommands) {

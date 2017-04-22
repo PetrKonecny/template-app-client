@@ -14,7 +14,10 @@ import {TableElement} from '../element/table-element'
 import {TableContent, RowContent, CellContent} from '../content/table-content'
 import {Guide} from '../guide/guide'
 import {TemplateStore} from '../template/template.store'
+import {TemplateInstanceHelper} from '../template-instance/template-instance.helper'
+
 /*
+
 Stores template and template instance (document) that is currently being worked on.
 provides methods that work with the saved template or template instance
 This calss should be provided by root as the tmeplate and template instance is shared through 
@@ -60,13 +63,11 @@ export class TemplateInstanceStore {
    
     saveTemplateInstance(){
         if(this._templateInstance.value.id > 0){
-            return this.templateInstanceService.updateTemplateInstance(this._templateInstance.value).map(
-                templateInstance => this._templateInstance.next(templateInstance)
-            );
+            return this.templateInstanceService.updateTemplateInstance(this._templateInstance.value)
         }else{
             return this.templateInstanceService.addTemplateInstance(this._templateInstance.value).map(
-                templateInstance => this._templateInstance.next(templateInstance)
-            );
+                templateInst => TemplateInstanceHelper.copyIds(this._templateInstance.value,templateInst)
+            )
         }
     }
     

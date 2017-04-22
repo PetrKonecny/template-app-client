@@ -91,12 +91,29 @@ export class DisplayFrameElementComponent {
         let content = <ImageContent>this.element.content
         content.top = 0
         content.left = 0
+        content.width = 0 
+        content.height = 0 
         this.contentCommands.SetImage(<ImageContent>content,image)      
         event.stopPropagation();
     }
 
-    onLoad(){
+    onLoad(image){
+        let content = <ImageContent> this.element.content
         this.loading = false
+        if(content.width && content.height){
+            return
+        } 
+        let width = image.originalWidth
+        let height = image.originalHeight
+        if(height > width){
+            let ratio = image.originalHeight/image.originalWidth  
+            content.width = this.element.width
+            content.height = this.element.width * ratio
+        }else{
+            let ratio = image.originalWidth/image.originalHeight  
+            content.width = this.element.height * ratio
+            content.height = this.element.height          
+        }
     }
 
     onError(){

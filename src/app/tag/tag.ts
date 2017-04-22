@@ -1,4 +1,4 @@
 export class Tag {
-	title: string
+	tag_name: string
 	id: number
 }

@@ -3,7 +3,8 @@ import { Template} from '../template/template';
 import { User } from '../user/user'
 import { Router } from '@angular/router'
 import { TemplateInstance} from '../template-instance/template-instance';
- 
+import { TableComponent } from '../admin/table.component'
+
 @Component({
     selector: 'element-table',
     template: `
@@ -22,27 +23,17 @@ import { TemplateInstance} from '../template-instance/template-instance';
             [rowHeight]="'auto'"
             [selected]="selected"
             [selectionType]="'multi'"
-            [rows]="elements"
+            [rows]="rows"
             [columns]="columns">
           </ngx-datatable>
     `,
 })
 
-export class ElementTableComponent  {
+export class ElementTableComponent  extends TableComponent{
         
     
     @Input()
-    elements : Element[] 
-
-    @Input()
-    user: User
-
-    selected = [];
-
-    temp = [];
-
-    @Input()
-    loadingIndicator: boolean = true;
+    rows : Element[] 
 
     columns = [
         { prop: 'id'},
@@ -52,27 +43,4 @@ export class ElementTableComponent  {
         { prop: 'page_id'},
     ]
     
-    constructor(private router: Router){}
-    
-    onSelect({ selected }) {
-        this.selected.splice(0, this.selected.length);
-        this.selected.push(...selected);
-    }
-
-    onActivate(event) {
-    }
-
-
-    updateFilter(val: string) {
-        if(!this.temp.length && this.elements.length){
-          this.temp = [...this.elements];
-        }
-        // filter our data
-        let temp = this.temp.filter(function(d) {
-          return d.type.toLowerCase().indexOf(val) !== -1 || !val;
-        });
-
-        // update the rows
-        this.elements = temp;
-    }
 }

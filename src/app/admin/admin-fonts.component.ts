@@ -10,7 +10,7 @@ import {FontService} from '../font/font.service'
 @Component({
     selector: 'admin-fonts',
     template: `
-        <font-table [fonts] = "fonts" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></font-table>
+        <font-table [rows] = "fonts" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></font-table>
     `,
     providers: []
 })

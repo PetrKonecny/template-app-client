@@ -28,7 +28,7 @@ import { SaveTemplateInstanceModal} from '../template-instance/save-template-ins
                 <text-select *ngIf="element && element.type == 'text_element' && element.content.editor"></text-select>
             </md-toolbar>
             <md-sidenav mode ="side" #sidenav style="width: 20%;">
-                <image-select></image-select>
+                <album-index-sidenav></album-index-sidenav>
             </md-sidenav>       
             <div class="pages" *ngIf="template">
                 <display-page *ngFor="let page of template.pages" [page]="page"></display-page>

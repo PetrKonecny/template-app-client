@@ -4,6 +4,7 @@ import { TemplateService } from './template.service';
 import { Template} from './template';
 import { Observable }     from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router'
+import {UserStore} from '../user/user.store'
 
 @Component({
     selector: 'template-index',
@@ -12,7 +13,7 @@ import { Router, ActivatedRoute } from '@angular/router'
             <md-input-container><input #search mdInput type="search"></md-input-container>
             <button md-button>SEARCH</button>
         </form>
-        <template-list [templates] = "templates" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>
+        <template-list *ngIf="templates" [templates] = "templates" [user]="userStore.user | async" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>
     `,
     providers: []
 })
@@ -23,7 +24,7 @@ export class TemplateSearchComponent implements OnInit  {
     templates : Template[];
 
     constructor(
-        private templateService: TemplateService, private router: Router, private route: ActivatedRoute
+        private templateService: TemplateService, private router: Router, private route: ActivatedRoute, private userStore: UserStore
     ){ }
     
     

@@ -70,11 +70,6 @@ export class DisplayContentComponent {
     }
 
     onLoad(image: Image){
-        let content = <ImageContent> this.content
-        if(!content.width && !content.height){
-            content.width = image.originalWidth
-            content.height = image.originalHeight
-        }
         this.loaded.emit(image)
     }
 

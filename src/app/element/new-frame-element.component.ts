@@ -5,6 +5,8 @@ import { ElementDimensions} from '../resizable.directive'
 import { NewPageRemote } from '../page/new-page.remote'
 import { ElementCommands} from './element';
 import { ElementStore } from '../element/element.store'
+import {Page} from '../page/page'
+import {Image} from '../image/image'
 
 @Component({
     selector: 'create-new-frame-element',
@@ -85,8 +87,23 @@ export class NewFrameElementComponent implements OnInit{
         return false
     }
 
-    onLoad(){
+    onLoad(image: Image){         
+        let content = <ImageContent> this.element.content
         this.loading = false
+        if(content.width && content.height){
+            return
+        } 
+        let width = image.originalWidth
+        let height = image.originalHeight
+        if(height > width){
+            let ratio = image.originalHeight/image.originalWidth  
+            content.width = this.element.width
+            content.height = this.element.width * ratio
+        }else{
+            let ratio = image.originalWidth/image.originalHeight  
+            content.width = this.element.height * ratio
+            content.height = this.element.height          
+        }
     }
 
     onError(){
@@ -107,8 +124,11 @@ export class NewFrameElementComponent implements OnInit{
         let content = <ImageContent>this.element.content
         content.top = 0
         content.left = 0
+        content.width = 0 
+        content.height = 0
         this.contentCommands.SetImage(<ImageContent>content,image)      
-        event.stopPropagation();
+        event.stopPropagation()
+        event.preventDefault()
     }
     
     resize(dimensions: ElementDimensions){

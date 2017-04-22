@@ -15,6 +15,20 @@ export class TemplateHelper {
         template.pages.push(new Page)      
     }
 
+    static copyIds(template:Template,template2: Template){
+        template.id = template2.id
+        template.pages.forEach((page,index)=> {
+            page.id = template2.pages[index].id
+            page.elements.forEach((element,index2) =>{
+                element.id = template2.pages[index].elements[index2].id
+                element.content.id = template2.pages[index].elements[index2].content.id
+            })
+        })
+        template.tagged.forEach((tag,index)=>{
+            tag.id = template2.tagged[index].id
+        })
+    }
+
 
     static deleteElementFromTemplate(element: Element, template: Template){
         template.pages.forEach((page) => {

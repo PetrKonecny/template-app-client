@@ -47,7 +47,6 @@ export class UserTableComponent  {
 
     columns = [
         { prop: 'id'},
-        { prop: 'name'},
         { prop: 'created_at'},
         { prop: 'updated_at'},
     ]
