@@ -9,10 +9,8 @@ export class TableContent extends Content {
         for(var i = 0; i<count; i++){
             var row = new RowContent()
             RowContent.addCells(row,length)
-            console.log(length)
             content.rows.splice(position, 0, row)
         }
-        console.log(content.rows)
     }
 
     static addColumns(content: TableContent, count: number = 1, position: number = 0){

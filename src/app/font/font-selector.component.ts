@@ -10,17 +10,17 @@ import {AppConfig} from '../app.config'
     template: `
                 <ng2-dropdown (onItemClicked)="onFontSizeClicked($event.value)">
                     <ng2-dropdown-button>
-                        {{fontSizeLabel}}
+                        {{fontSizeLabel ? fontSizeLabel : 'velikost fontu'}}
                     </ng2-dropdown-button>
                     <ng2-dropdown-menu>
                         <ng2-menu-item *ngFor="let fontSize of fontSizes" [value]="fontSize">
                             {{ fontSize }}
-                        </ng2-menu-item>
+                        </ng2-menu-item>                        
                     </ng2-dropdown-menu>
                 </ng2-dropdown>
                 <ng2-dropdown (onItemClicked)="onFontClicked($event.value)">
                     <ng2-dropdown-button>
-                        {{fontLabel}}
+                        {{fontLabel ? fontLabel : 'vybrat font'}}
                     </ng2-dropdown-button>
                         <ng2-dropdown-menu>
                             <ng2-menu-item *ngFor="let font of fonts" [value]="font">
@@ -39,15 +39,15 @@ export class FontSelectorComponent implements OnInit {
     
     private fonts: Font[];
     @Input()
-    fontLabel: string = "Change Font"
+    fontLabel: string
     @Input()
-    fontSizeLabel: string = "Font Size"
+    fontSizeLabel: string
     @Output()
     onFontSizeSelected = new EventEmitter
     @Output()
     onFontSelected = new EventEmitter
 
-    fontSizes=[10,20,30,40,50]
+    fontSizes=[8,9,10,11,12,14,18,24,30,36,48,60,72,96]
    
     constructor(private fontStore: FontStore, public dialog: MdDialog, private config: AppConfig){}
      

@@ -30,7 +30,7 @@ export class NewImageElementComponent {
     element : ImageElement
     selected: boolean
      
-    constructor(private newPage: NewPageRemote, private elementStore: ElementStore, private config: AppConfig, private commands: ElementCommands){
+    constructor(private newPage: NewPageRemote, private elementStore: ElementStore, private commands: ElementCommands){
         this.elementStore.element.subscribe(element =>this.selected = this.element === element)
     }
     

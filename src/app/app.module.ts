@@ -130,7 +130,7 @@ import { DisplayAlbumSidenavComponent } from './image/display-album-sidenav.comp
 import { AlbumIndexSidenavComponent } from './image/album-index-sidenav.component'
 import { SaveAlbumModal } from './album/save-album.modal'
 import { SelectAlbumModal } from './album/select-album.modal'
-
+import { NewTableCellComponent } from './element/new-table-cell.component'
 
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
@@ -174,7 +174,7 @@ const routes: Routes = [
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal, OutSideEventHandlerDirective
         ,CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent
         ,FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumListComponent, DisplayAlbumComponent
-        ,DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal
+        ,DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent
     ],
     // modules
     imports: [
@@ -193,7 +193,7 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        ImageService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
+        ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
     ],
     bootstrap: [
         AppComponent

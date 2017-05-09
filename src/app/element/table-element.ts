@@ -100,7 +100,9 @@ export class TableElementCommands{
 
 export class DefaultTableCommand implements Command{
 
-    constructor(public element: TableElement){}
+    constructor(public element: TableElement){
+
+    }
     rowString: string
     contentString: string
 

@@ -33,7 +33,8 @@ declare var tinymce: any;
             height: 100%;
             overflow:hidden;
             user-select: none;
-        }`],
+        }
+        `],
 })
 export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit  {
     @Input() content: TextContent;

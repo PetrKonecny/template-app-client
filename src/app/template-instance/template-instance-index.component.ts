@@ -13,9 +13,9 @@ import { UserStore } from '../user/user.store'
             <md-spinner *ngIf="loading && !error"></md-spinner>
             <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <template-instance-list [templateInstances] = "templateInstances" (onDeleteClicked) = "onDeleteClicked($event)"></template-instance-list>
+        <template-instance-list class="template-instance-list" *ngIf="templateInstances" [templateInstances] = "templateInstances" (onDeleteClicked) = "onDeleteClicked($event)"></template-instance-list>
     `,
-    providers: [TemplateInstanceService]
+    providers: []
 })
 
 export class TemplateInstanceIndexComponent implements OnInit  {

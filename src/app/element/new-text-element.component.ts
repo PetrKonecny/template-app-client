@@ -9,7 +9,7 @@ import { ElementStore } from '../element/element.store'
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div draggable2 [class.selected]="selected" [style.opacity]="element.opacity ? element.opacity/100 : 1" (move) ="move($event)" #container [style.background] = "element.background_color ? element.background_color : 'none'" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >\            
+        <div class="new-text-element" draggable2 [class.selected]="selected" [style.opacity]="element.opacity ? element.opacity/100 : 1" (move) ="move($event)" #container [style.background] = "element.background_color ? element.background_color : defaultBackgroundColor" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >\            
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
         </div>
     `,
@@ -31,12 +31,6 @@ export class NewTextElementComponent  {
     @Input()
     element : TextElement    
     
-    @ViewChild('textContainer')
-    textContainer : ElementRef
-    
-    @ViewChild('container')
-    container : ElementRef
-          
     defaultTextColor = TextElement.defaultTextColor
     defaultBackgroundColor = Element.defaultBackgroundColor
     selected: boolean
@@ -55,24 +49,5 @@ export class NewTextElementComponent  {
         if(d){
             this.commands.startMovingElement(this.element,d)
         }
-    }
-    
-    refreshFont(font: Font){
-        if(!font || !font.id) return
-        this.textContainer.nativeElement.style.fontFamily = "font"+(<TextElement>this.element).font.id;
-    }
-    
-    changeFontSize(size: number){
-        if(size <= 0) return
-        this.textContainer.nativeElement.style.fontSize = size
-    }    
-    changeTextAlign(align: string){
-        if(!align) return
-        this.textContainer.nativeElement.style.textAlign = align
-    }
-    
-    changeTextAlignVertical(align: string){
-        this.textContainer.nativeElement.style.display = "inline-block"
-        this.textContainer.nativeElement.style.verticalAlign = align
     }
 }

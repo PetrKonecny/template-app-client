@@ -10,12 +10,12 @@ export class TemplateCommands {
 
 	constructor(private service: UndoRedoService){}
 
-	addPageAbove(template: Template, page: Page, factory: PageFactory){
-		this.service.execute(new AddPageAbovePage(template, page, factory))
+	addPageAbove(template: Template, page: Page, page2: Page){
+		this.service.execute(new AddPageAbovePage(template, page, page2))
 	}
 
-	addPageBelow(template: Template, page: Page, factory: PageFactory){
-		this.service.execute(new AddPageBelowPage(template, page, factory))
+	addPageBelow(template: Template, page: Page, page2: Page){
+		this.service.execute(new AddPageBelowPage(template, page, page2))
 	}
 
 	deletePage(template: Template, page: Page){
@@ -28,14 +28,14 @@ export class TemplateCommands {
 
 export class AddPageAbovePage implements Command {
 
-	constructor(private template: Template,private page: Page, private factory: PageFactory){}
+	constructor(private template: Template,private page: Page, private page2: Page){}
 
 	execute(){
-		this.template.pages.splice(this.template.pages.indexOf(this.page),0, this.factory.build())
+		this.template.pages.splice(this.template.pages.indexOf(this.page),0, this.page2)
 	}
 
 	unExecute(){
-		this.template.pages = this.template.pages.filter(page => page !== this.page)
+		this.template.pages = this.template.pages.filter(page => page !== this.page2)
 	}
 
 
@@ -43,14 +43,14 @@ export class AddPageAbovePage implements Command {
 
 export class AddPageBelowPage implements Command {
 
-	constructor(private template: Template,private page: Page, private factory: PageFactory){}
+	constructor(private template: Template,private page: Page, private page2: Page){}
 
 	execute(){
-		this.template.pages.splice(this.template.pages.indexOf(this.page)+1,0, this.factory.build())
+		this.template.pages.splice(this.template.pages.indexOf(this.page)+1,0, this.page2)
 	}
 
 	unExecute(){
-		this.template.pages = this.template.pages.filter(page => page !== this.page)
+		this.template.pages = this.template.pages.filter(page => page !== this.page2)
 	}
 
 }

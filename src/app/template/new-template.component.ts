@@ -111,11 +111,11 @@ export class NewTemplateComponent implements OnInit {
     }
 
     onClickAddAbove(page: Page){
-        this.templateCommands.addPageAbove(this.template,page,this.pageFactory)
+        this.templateCommands.addPageAbove(this.template,page,this.pageFactory.build())
     }
 
     onClickAddBelow(page: Page){
-        this.templateCommands.addPageBelow(this.template,page,this.pageFactory)
+        this.templateCommands.addPageBelow(this.template,page,this.pageFactory.build())
     }
 
     onClickDelete(page: Page){

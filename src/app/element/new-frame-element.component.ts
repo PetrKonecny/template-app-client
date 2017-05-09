@@ -23,8 +23,7 @@ import {Image} from '../image/image'
                 </md-menu>
             </span>
         </span>
-
-        <div #frame *ngIf="draggable"  (drop)="onDrop($event)" (dragover)="onDragOver($event)" [class.selected]="selected" draggable2 (move) ="move($event)" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
+        <div class="inner" #frame *ngIf="draggable"  (drop)="onDrop($event)" (dragover)="onDragOver($event)" [class.selected]="selected" draggable2 (move) ="move($event)" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX">
             <div *ngIf="loading|| error" class="shutter">
                 <md-spinner class="spinner" *ngIf="loading && !error"></md-spinner>
                 <md-icon *ngIf="error">error</md-icon>
@@ -34,7 +33,7 @@ import {Image} from '../image/image'
             </div>       
         </div>
         
-        <div #frame *ngIf="!draggable && element?.content?.image" [class.selected]="selected" class= "inner" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
+        <div #frame *ngIf="!draggable && element?.content?.image" [class.selected]="selected" class= "inner frame-static" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
             <image-handle>
                 <div [style.opacity]="element.opacity ? element.opacity/100 : 1" >
                     <display-content-img-drag  #handleContent [content] = "element.content"></display-content-img-drag>

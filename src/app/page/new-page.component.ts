@@ -50,6 +50,12 @@ export class NewPageComponent implements AfterViewInit {
         this.guides = new Array
     }
 
+    constructor(private newPageRemote: NewPageRemote, private pageStore: PageStore, private commands: PageCommands) {
+        this.newPageRemote.component = this
+        this.guides = new Array
+        this.pageStore.page.subscribe(page => {if(this.page == page){this.selected = true}else{this.selected = false}})
+    }
+
     onDragOver(){
         return false
     }
@@ -85,24 +91,18 @@ export class NewPageComponent implements AfterViewInit {
         this.commands.addElement(this.page,factory.build())
         event.preventDefault()
     }
-
-    constructor(private newPageRemote: NewPageRemote, private pageStore: PageStore,  private ref: ElementRef, private commands: PageCommands) {
-        this.newPageRemote.component = this
-        this.guides = new Array
-        this.pageStore.page.subscribe(page => {if(this.page == page){this.selected = true}else{this.selected = false}})
-    }
     
     ngAfterViewInit(){
         setTimeout(_ => {
             this.page.rulers = new Array
             let ruler = new Guide
-            ruler.positionX = 10
+            ruler.positionX = 0
             let ruler2 = new Guide
-            ruler2.positionY = 10
+            ruler2.positionY = 0
             let ruler3 = new Guide
             let ruler4 = new Guide
-            ruler3.positionX = +this.pageElementRef.nativeElement.clientWidth -10
-            ruler4.positionY = +this.pageElementRef.nativeElement.clientHeight -10
+            ruler3.positionX = +this.pageElementRef.nativeElement.clientWidth -0
+            ruler4.positionY = +this.pageElementRef.nativeElement.clientHeight -0
             this.page.rulers.push(ruler4)
             this.page.rulers.push(ruler3)
             this.page.rulers.push(ruler2)

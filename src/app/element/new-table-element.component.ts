@@ -55,7 +55,7 @@ import { ElementStore } from '../element/element.store'
             </md-menu>
         </span>      
         </div>
-        <table *ngIf="element.clientState == 0" [class.selected]="selected" draggable2 (move)="move($event)" (click)="onElementClicked()" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <table class="table-element-move" *ngIf="element.clientState == 0" [class.selected]="selected" draggable2 (move)="move($event)" (click)="onElementClicked()" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i" [style.height.px]="row.height" [content]="element.content.rows[i]" class="locked"></tr>
         </table>
         <table *ngIf="element.clientState == 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
