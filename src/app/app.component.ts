@@ -27,7 +27,7 @@ import { TemplateStore } from './template/template.store'
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/users" routerLinkActive="active">USERS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/templates" routerLinkActive="active">TEMPLATES</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/template-instances" routerLinkActive="active">DOCUMENTS</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin" routerLinkActive="active">IMAGES</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="admin/albums" routerLinkActive="active">IMAGES</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/pages" routerLinkActive="active">PAGES</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/contents" routerLinkActive="active">CONTENTS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/elements" routerLinkActive="active">ELEMENTS</a>

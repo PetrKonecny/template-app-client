@@ -5,6 +5,7 @@ import { RowContent } from '../content/table-content'
 @Component({
     selector: '[tr]',
     template: `
+        <!--represents each cell, this template should be same as in new-table-row component for client state 1 -->
 
         <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
             [style.width.px]="cell.width"
@@ -62,21 +63,24 @@ import { RowContent } from '../content/table-content'
     `]
 })
 
-       
+//displays rows of tables in document editor pages
 export class DisplayTableRowComponent {
     
     @Input()
+    //table element containing the rows
     element: TableElement;
     
+    //default colors used if none is present
     defaultBackgroundColor: string = Cell.defaultBackgroundColor
     defaultTextColor: string = Cell.defaultTextColor
     defaultBorderColor: string = Cell.defaultBorderColor
     
     @Input()
     y: number;
-    
+
     x: number;
-        
+            
     @Input()
+    //content of the rows
     content: RowContent
 }

@@ -21,7 +21,7 @@ import {CreateTableModal} from '../element/create-table-element.modal'
                 <button md-icon-button (click)="saveTemplate()"><md-icon>save</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()"><md-icon>undo</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getRedos().length" ><md-icon>redo</md-icon></button>
-                <element-select style="width: 100%;"></element-select>
+                <element-toolbar style="width: 100%;"></element-toolbar>
             </md-toolbar>
             <md-sidenav mode ="side" #sidenav style="width: 20%;">
                 <md-tab-group>

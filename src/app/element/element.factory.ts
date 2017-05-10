@@ -6,6 +6,11 @@ import {TextContent} from '../content/text-content'
 import {ImageContent} from '../content/image-content'
 import {TableContent} from '../content/table-content'
 import {Image} from '../image/image'
+
+/*
+Factory classes for every type of element that provide element with valid content 
+
+*/
 export class ElementFactory{
 
 	positionX: number = 0

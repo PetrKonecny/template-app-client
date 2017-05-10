@@ -11,7 +11,7 @@ import { TemplateInstance} from '../template-instance/template-instance';
         <md-toolbar style="position: fixed; z-index:1000;"> 
             <md-input-container><input #search mdInput type="search" placeholder="filter" (keyup)='updateFilter(search.value)'></md-input-container>
             <button  md-button>Upload</button>
-            <button  *ngIf="selected.length" md-button>Delete</button>
+            <button  *ngIf="selected.length" md-button (click)="onDeleteClicked()">Delete</button>
             <button *ngIf="selected.length == 1" md-button>Edit</button>
         </md-toolbar>
          <ngx-datatable

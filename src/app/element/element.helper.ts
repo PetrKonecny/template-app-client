@@ -1,5 +1,9 @@
 import {Element} from '../element/element'
 
+
+/*
+Helper class for element model
+*/
 export class ElementHelper {
 
     static getDimensions(element: Element){

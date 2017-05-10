@@ -1,4 +1,4 @@
-import { Component, Input, KeyValueDiffer, KeyValueDiffers, DoCheck, HostListener } from '@angular/core';
+import { Component, Input, HostListener } from '@angular/core';
 import { Element, ElementCommands} from './element';
 import {UndoRedoService} from '../undo-redo.service'
 import { ElementStore } from '../element/element.store'
@@ -22,7 +22,7 @@ import { ElementStore } from '../element/element.store'
     `]
 })
 
-       
+//Root element for displaying elements in template editor depending on their type and provides basic functionality
 export class NewElementComponent {
     
     @Input()

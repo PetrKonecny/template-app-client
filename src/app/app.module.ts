@@ -45,7 +45,7 @@ import { ImageSelectorComponent } from './image/image-selector.component';
 import { NewPageComponent } from './page/new-page.component';
 import { PageSelectorComponent } from './page/page-selector.component'
 import { RulerSelectorComponent } from './guide/ruler-selector.component'
-import { ElementSelectorComponent} from './element/element-selector.component';
+import { ElementToolbarComponent} from './element/element-toolbar.component';
 import { TemplateListComponent} from './template/template-list.component';
 import {TemplateInstanceListComponent} from './template-instance/template-instance-list.component';
 import { NewImageElementComponent } from './element/new-image-element.component'
@@ -132,6 +132,9 @@ import { SaveAlbumModal } from './album/save-album.modal'
 import { SelectAlbumModal } from './album/select-album.modal'
 import { NewTableCellComponent } from './element/new-table-cell.component'
 
+import {AdminAlbumsComponent} from './admin/admin-albums.component'
+import {AlbumTableComponent} from './admin/album-table.component'
+
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
     { path: 'admin/templates', component: AdminTemplatesComponent },
@@ -143,6 +146,8 @@ const routes: Routes = [
     { path: 'admin/contents', component: AdminContentsComponent },
     { path: 'admin/fonts', component: AdminFontsComponent },
     { path: 'admin/pages', component: AdminPagesComponent },
+    { path: 'admin/albums', component: AdminAlbumsComponent },
+    { path: 'admin/albums/:id', component: DisplayAlbumComponent },
     { path: 'users', component: UserIndexComponent},
     { path: 'users/:id/templates', component: UserTemplatesComponent},
     { path: 'users/:id/template-instances', component: UserTemplateInstancesComponent},
@@ -167,14 +172,14 @@ const routes: Routes = [
         AppComponent, NewTemplateInstanceComponent, NewTemplateComponent,SimpleTinyComponent,DisplayContentComponent,DisplayContentImgDragComponent,DisplayTableElementComponent,DisplayElementComponent,
         Draggable2,  NewTextElementComponent, NewFrameElementComponent, NewImageElementComponent, DisplayTableRowComponent, Resizable, ImageListComponent, FontSelectorComponent,
         TextSelectorComponent, FontListComponent, DisplayFontComponent, NewTableElementComponent, Draggable, NewElementComponent, DisplayGuideComponent, DisplayRulerComponent,
-        NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementSelectorComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
+        NewTableRowComponent, DisplayPageComponent, ImageSelectorComponent, NewPageComponent, ElementToolbarComponent, PageSelectorComponent, RulerSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
         ImageIndexComponent, FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ImageUploadComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal, OutSideEventHandlerDirective
         ,CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent
         ,FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumListComponent, DisplayAlbumComponent
-        ,DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent
+        ,DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent, AdminAlbumsComponent, AlbumTableComponent
     ],
     // modules
     imports: [

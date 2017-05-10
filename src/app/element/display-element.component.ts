@@ -1,9 +1,5 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewInit, HostListener} from '@angular/core';
+import { Component, Input, HostListener} from '@angular/core';
 import { Element} from './element';
-import { Image } from '../image/image';
-import { ImageContent } from '../content/image-content';
-import { TextElement} from './text-element'
-import { TableElement } from './table-element'
 import { ElementStore } from '../element/element.store'
 
 @Component({
@@ -16,6 +12,7 @@ import { ElementStore } from '../element/element.store'
     `,
 })
 
+//root of elements, displays different elements depending on their type and provides some basic functionality for each of them
 export class DisplayElementComponent {
 
     @Input()

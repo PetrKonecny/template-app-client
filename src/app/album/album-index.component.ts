@@ -6,7 +6,8 @@ import  { AppComponentRef } from '../app.ref'
 import { Router } from '@angular/router'
 import { MdSnackBar } from '@angular/material';
 import { SaveAlbumModal } from '../album/save-album.modal'
-
+import {UserStore} from '../user/user.store'
+import { Observable }     from 'rxjs/Observable';
 
 @Component({
     selector: 'album-index',
@@ -27,24 +28,31 @@ export class AlbumIndexComponent implements OnInit  {
     
     error: string;
     albums : Album[];
+    publicAlbums: Album[]
     loading = true
+    currentUser
 
     constructor(
-        private albumService: AlbumHttpService, public dialog: MdDialog, private router: Router, private snackBar: MdSnackBar
+        private userStore: UserStore, private albumService: AlbumHttpService, public dialog: MdDialog, private router: Router, private snackBar: MdSnackBar
     ){ 
     }
     
     
     ngOnInit(){
-        this.albumService.getAlbums().subscribe(
-           albums => {
-               this.albums = albums
-               this.loading = false
-           },
-           error =>  {   
-               this.error = error
-               this.snackBar.open("Chyba při načítání alb",null,{duration: 1500})
-           }
+        this.userStore.user.first(user => user.id > 0)
+        .do((user)=>{this.currentUser = user})
+        .flatMap(user => Observable.forkJoin(this.albumService.getAlbumsForUser(user.id),this.albumService.getPublicAlbums()))
+        .subscribe(res => {
+                this.albums = res[0]
+                this.publicAlbums = res[1]   
+                this.publicAlbums = this.publicAlbums.filter((template)=> {return !this.albums.some(template2 => template.id == template2.id)})
+                this.albums = this.albums.concat(this.publicAlbums)
+                this.loading = false
+            }
+            ,error=>{
+                this.error = error
+                this.loading = false
+            }
         )
     }
 

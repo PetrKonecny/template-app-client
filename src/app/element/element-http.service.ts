@@ -12,6 +12,7 @@ import 'rxjs/add/operator/toPromise';
 import { AppConfig } from '../app.config';
 
 @Injectable()
+//standard REST http service for element model
 export class ElementHttpService {
     constructor(private http: Http, private config: AppConfig) { }
     

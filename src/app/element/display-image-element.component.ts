@@ -1,7 +1,5 @@
 import { Component, Input, ElementRef } from '@angular/core';
 import { ImageElement } from './image-element'
-import { NewPageRemote } from '../page/new-page.remote'
-import { ElementDimensions } from '../resizable.directive'
 import { AppConfig } from '../app.config'
 
 @Component({
@@ -21,7 +19,7 @@ import { AppConfig } from '../app.config'
     ]
 })
 
-       
+//displays image element in document editor pages      
 export class DisplayImageElementComponent {
     
     @Input()
@@ -32,9 +30,10 @@ export class DisplayImageElementComponent {
     }
     
     ngDoCheck(){
+        /*
         if((!this.element.width || !this.element.height) && this.image ){
             this.element.width = this.image.nativeElement.naturalWidth
             this.element.height = this.image.nativeElement.naturalHeight
-        }
+        }*/
     }     
 }

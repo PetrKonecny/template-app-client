@@ -8,6 +8,8 @@ import { ActivatedRoute} from '@angular/router';
 import { UploadComponent } from '../uploader.component'
 import { AppConfig } from '../app.config'
 import { SaveAlbumModal } from '../album/save-album.modal'
+import {UserStore} from '../user/user.store'
+import { Observable }     from 'rxjs/Observable';
 
 @Component({
     selector: 'album-index-sidenav',
@@ -36,14 +38,16 @@ export class AlbumIndexSidenavComponent implements OnInit  {
     
     error: string;
     albums: Album[];
+    publicAlbums: Album[]
     selectedAlbum : Album;
     loading = true
+    currentUser
 
     @ViewChild('albumDetail')
     albumDetail
 
     constructor(
-        private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig
+        private userStore: UserStore, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig
     ){ 
     }
     
@@ -107,16 +111,19 @@ export class AlbumIndexSidenavComponent implements OnInit  {
     }
     
     getAlbums(){
-        this.albumService.getAlbums()
-        .first()
-        .subscribe(
-            albums=> {
-                this.albums = albums
+        this.userStore.user.first(user => user.id > 0)
+        .do((user)=>{this.currentUser = user})
+        .flatMap(user => Observable.forkJoin(this.albumService.getAlbumsForUser(user.id),this.albumService.getPublicAlbums()))
+        .subscribe(res => {
+                this.albums = res[0]
+                this.publicAlbums = res[1]   
+                this.publicAlbums = this.publicAlbums.filter((template)=> {return !this.albums.some(template2 => template.id == template2.id)})
+                this.albums = this.albums.concat(this.publicAlbums)
                 this.loading = false
-            },
-            error=> {
+            }
+            ,error=>{
                 this.error = error
-                this.snackBar.open("Chyba při načítání alb",null,{duration: 1500})
+                this.loading = false
             }
         )
     }

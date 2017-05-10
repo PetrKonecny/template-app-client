@@ -6,11 +6,12 @@ import { Observable }     from 'rxjs/Observable';
 import {User } from '../user/user'
 import {ActivatedRoute} from '@angular/router';
 import {ElementHttpService} from '../element/element-http.service'
+import {MdSnackBar} from '@angular/material'
 
 @Component({
     selector: 'admin-elements',
     template: `
-        <element-table [rows] = "elements" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></element-table>
+        <element-table [rows] = "elements" [loadingIndicator]="loading" (onDelete) = "onDeleteClicked($event)"></element-table>
     `,
     providers: []
 })
@@ -22,8 +23,21 @@ export class AdminElementsComponent implements OnInit {
     loading = true;
 
     constructor(
-        private elementService: ElementHttpService
+        private elementService: ElementHttpService, private snackBar: MdSnackBar
     ){}
+
+    onDeleteClicked(elements: Element[]){
+        elements.forEach(element =>{
+            this.elementService.removeElement(element.id).subscribe(
+                ok => {
+                    this.elements.splice(this.elements.indexOf(element),1)
+                },
+                error => {
+                    this.snackBar.open("Chyba při mazání prvku",null,{duration: 2500})
+                }
+            )
+        })
+    }
 
     ngOnInit(){
         this.elementService.getElements().subscribe(
@@ -36,4 +50,6 @@ export class AdminElementsComponent implements OnInit {
             this.loading = false
         })
     }
+
+
 }

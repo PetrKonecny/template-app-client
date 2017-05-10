@@ -37,7 +37,9 @@ import { NewTableElement } from './new-table-element'
     providers: [NewTableElement]
 })
 
-       
+/*
+Displays tables in document editor pages with client state for filling out tables
+*/
 export class DisplayTableElementComponent implements OnInit {
     
     @Input()

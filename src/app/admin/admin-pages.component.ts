@@ -6,11 +6,12 @@ import { Observable }     from 'rxjs/Observable';
 import {User } from '../user/user'
 import {ActivatedRoute} from '@angular/router';
 import {PageHttpService} from '../page/page-http.service'
+import {MdSnackBar} from '@angular/material'
 
 @Component({
     selector: 'admin-pages',
     template: `
-        <page-table [rows] = "pages" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></page-table>
+        <page-table [rows] = "pages" [loadingIndicator]="loading" (onDelete) = "onDeleteClicked($event)"></page-table>
     `,
     providers: []
 })
@@ -22,8 +23,21 @@ export class AdminPagesComponent implements OnInit {
     loading = true;
 
     constructor(
-        private pageService: PageHttpService
+        private pageService: PageHttpService, private snackBar: MdSnackBar
     ){}
+
+    onDeleteClicked(pages: Page[]){
+        pages.forEach(page =>{
+            this.pageService.removePage(page.id).subscribe(
+                ok => {
+                    this.pages.splice(this.pages.indexOf(page),1)
+                },
+                error => {
+                    this.snackBar.open("Chyba při mazání stránky",null,{duration: 2500})
+                }
+            )
+        })
+    }
 
     ngOnInit(){
         this.pageService.getPages().subscribe(

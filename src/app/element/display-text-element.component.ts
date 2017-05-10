@@ -1,7 +1,5 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { Element} from './element';
-import { Image } from '../image/image';
-import { ImageContent } from '../content/image-content';
 import { TextElement} from './text-element'
 
 @Component({
@@ -18,11 +16,14 @@ import { TextElement} from './text-element'
     `] 
 })
 
+//displays text element in document editor pages
 export class DisplayTextElementComponent {
 
     @Input()
+    //text element to be displayed
     element: TextElement;
 
+    //shorthand to get background color
     private getBgColor(){
         let color = this.element.background_color
         if(color){

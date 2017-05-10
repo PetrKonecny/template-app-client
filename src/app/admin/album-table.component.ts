@@ -1,15 +1,16 @@
-import { Component,Input, Output, EventEmitter, OnChanges} from '@angular/core';
-import { Template} from '../template/template';
+import { Component,Input, Output, EventEmitter, OnChanges} from '@angular/core'
+import { Album } from '../album/album'
 import { User } from '../user/user'
 import { Router } from '@angular/router'
-import { TemplateInstance} from '../template-instance/template-instance';
+import { TemplateInstance} from '../template-instance/template-instance'
 import { TableComponent } from '../admin/table.component'
 
 @Component({
-    selector: 'element-table',
+    selector: 'album-table',
     template: `
         <md-toolbar style="position: fixed; z-index:1000;">
             <md-input-container><input #search mdInput type="search" placeholder="filter" (keyup)='updateFilter(search.value)'></md-input-container>
+            <button  *ngIf="selected.length == 1" (click)="onOpenClicked()" md-button>Open</button>
             <button  *ngIf="selected.length" (click)="onDeleteClicked()" md-button>Delete</button>
         </md-toolbar>
          <ngx-datatable
@@ -22,24 +23,31 @@ import { TableComponent } from '../admin/table.component'
             [rowHeight]="'auto'"
             [selected]="selected"
             [selectionType]="'multi'"
-            [rows]="rows"
+            [rows]="albums"
             [columns]="columns">
           </ngx-datatable>
     `,
 })
 
-export class ElementTableComponent  extends TableComponent{
+export class AlbumTableComponent extends  TableComponent {
         
-    
     @Input()
-    rows : Element[] 
+    albums : Album[]
+
+    @Output()
+    onOpen = new EventEmitter
+
+    onOpenClicked(){
+        this.onOpen.emit(this.selected[0])
+    } 
 
     columns = [
         { prop: 'id'},
-        { prop: 'type'},
+        { prop: 'name'},
+        { prop: 'public'},
         { prop: 'created_at'},
         { prop: 'updated_at'},
-        { prop: 'page_id'},
+        { prop: 'user_id'},
     ]
-    
+   
 }

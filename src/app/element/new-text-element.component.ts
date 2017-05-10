@@ -9,14 +9,14 @@ import { ElementStore } from '../element/element.store'
 @Component({
     selector: 'create-new-text-element',
     template: `
-        <div class="new-text-element" draggable2 [class.selected]="selected" [style.opacity]="element.opacity ? element.opacity/100 : 1" (move) ="move($event)" #container [style.background] = "element.background_color ? element.background_color : defaultBackgroundColor" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >\            
+        <div class="new-text-element" draggable2 [class.selected]="selected" [style.opacity]="element.opacity ? element.opacity/100 : 1" (move) ="move($event)" #container [style.background] = "element.background_color ? element.background_color : 'none'" [style.color]="element.text_color ? element.text_color : defaultTextColor" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" class= "inner" >\            
             <span #textContainer ><display-content *ngIf="element.content" [content] = "element.content"></display-content></span>
         </div>
     `,
     styles:[`
         .inner {
             overflow: hidden;   
-            border: 1px dashed grey;      
+            border: 2px dashed grey;      
         }
         .button{
             z-index: 1000;

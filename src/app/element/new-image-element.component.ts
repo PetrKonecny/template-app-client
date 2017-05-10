@@ -23,18 +23,31 @@ import {Page} from '../page/page'
     ]
 })
 
-       
+//displays image elements in template editor and resizes them on load to fit the page       
 export class NewImageElementComponent {
     
     @Input()
+    //element to be displayed
     element : ImageElement
+    //true if element is selected false otherwise
     selected: boolean
-     
+
+    /**
+    @param newPage - injects reference to new page for moving the element
+    @param elementStore - injects reference to the store containing selected element
+    @param commands - injects element commands to provide operations on the element
+    **/ 
     constructor(private newPage: NewPageRemote, private elementStore: ElementStore, private commands: ElementCommands){
         this.elementStore.element.subscribe(element =>this.selected = this.element === element)
     }
+
     
+    /** method that is called when image is done loading
+    resizes new image element to not be significantly bigger than the page
+    **/
     onLoad(image: Image){
+
+        //this means we are loading already saved image that should not be resized
         if(this.element.width && this.element.height){
             return
         }
@@ -58,10 +71,13 @@ export class NewImageElementComponent {
         this.element.height = height
     }
     
+
+    //called if element is clicked, changes element in the store
     onElementClicked(){
         this.elementStore.changeElement(this.element);
     } 
     
+    //called as an output of draggable directive
     move(dimensions: ElementDimensions){
        let d = this.newPage.move(this.element,dimensions)
         if(d){

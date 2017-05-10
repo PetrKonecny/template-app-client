@@ -6,6 +6,9 @@ import { NewTableElement } from './new-table-element'
 @Component({
     selector: '[myTr]',
     template: `
+
+                <!-- template for row when moving element -->
+
                 <template [ngIf]="element.clientState == 0">
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
                         [attr.colspan]=cell.colspan 
@@ -24,6 +27,9 @@ import { NewTableElement } from './new-table-element'
                         [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
                     >{{content.cells[x].text}}</td> 
                 </template>
+
+                <!-- template for row when editing table structure -->
+
                 <template [ngIf]="element.clientState == 2">
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
                         [attr.colspan]=cell.colspan 
@@ -43,6 +49,9 @@ import { NewTableElement } from './new-table-element'
                         [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
                     >{{content.cells[x].text}}</td> 
                 </template>
+
+                <!-- template for row when changing cell parameters -->
+
                 <template [ngIf]="element.clientState == 3">
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
                         [attr.colspan]=cell.colspan 
@@ -63,6 +72,9 @@ import { NewTableElement } from './new-table-element'
                         [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
                     >{{content.cells[x].text}}</td> 
                 </template>
+
+                <!-- template for row when filling out the table -->
+
                 <template [ngIf]="element.clientState == 1">
                     <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
                         [attr.colspan]=cell.colspan 
@@ -120,26 +132,34 @@ import { NewTableElement } from './new-table-element'
     `]
 })
 
-       
+//displays table row in template editor        
 export class NewTableRowComponent implements OnInit{
     
     @Input('myTr')
+    //element that contains row that should be displayed
     element: TableElement;
     
+    //pcoordinate ofthe row that should be displayed
     @Input()
     y: number;
-    
+
     x: number;
-    
+        
+    //true if cells are being selected false otherwise
     selecting: boolean
     
+    //default colors for the cells
     defaultBackgroundColor: string = Cell.defaultBackgroundColor
     defaultTextColor: string = Cell.defaultTextColor
     defaultBorderColor: string = Cell.defaultBorderColor
     
     @Input()
+    //content that contains content for this row
     content: RowContent
     
+    /***
+    @param tableElement - reference to the table element used for selectiong
+    */
     constructor(private tableElement: NewTableElement){}
     
     @HostListener('document:mouseup', ['$event'])
@@ -152,23 +172,18 @@ export class NewTableRowComponent implements OnInit{
         this.selecting = true
     }
     
+    /** called when mouse is over the cell 
+    @param event - mouse event fired on mouse over the cell
+    @param cell - cell that was moused over
+    **/
     onMouseover(event: MouseEvent, cell: Cell) {
         let x = this.element.rows[this.y].cells.indexOf(cell)
-        /*
-        if (this.selecting){
-            if (!this.element.selectedCells) {
-                this.element.selectedCells = new Array()
-            }
-            var cell = this.element.rows[this.y].cells[this.x]
-            if (!cell.selected){
-                TableElement.selectCell(this.element,cell)
-            }
-        }*/
         if (this.selecting){
             this.tableElement.continueSelection(cell,x,this.y)
         }
     }
     
+    //THIS SHOULD BE DONE BY COMMAND
     resize(dimensions: any, cell: Cell){
         if(dimensions.width){
             for (var row of this.element.rows){
@@ -179,17 +194,23 @@ export class NewTableRowComponent implements OnInit{
         }
     }
     
+    /**calls mousedown in editing mode
+    @param x - x coordinate of the cell
+    @param cell - cell that was selected
+    **/
     onMousedownEdit(x: number, cell: Cell){
         TableElement.clearSelectedCells(this.element)
         TableElement.selectCell(this.element, cell)
         this.x = x
     }
     
+    //gets appearance of selected cells border width
     getSelectedBorderWidth(cell: Cell){
         let width: number = +cell.border_width
         return width + 1
     }
 
+    //gets different cell background color if cell is selected or not
     getCellBGColor(cell){
         if(cell.selected){
             if(cell.background_color){
@@ -207,17 +228,20 @@ export class NewTableRowComponent implements OnInit{
 
     }
     
+    //calls when selecting cells
     onMousedownSelect(event: MouseEvent,cell: Cell){
         let x = this.element.rows[this.y].cells.indexOf(cell)
         this.tableElement.startSelection(this.element.rows[this.y].cells[x],x,this.y)
         event.preventDefault()
     }
     
+    //helper function to shade color to appear as selected
     shadeRGBColor(color, percent) {
         var f=color.split(","),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=parseInt(f[0].slice(4)),G=parseInt(f[1]),B=parseInt(f[2]);
         return "rgb("+(Math.round((t-R)*p)+R)+","+(Math.round((t-G)*p)+G)+","+(Math.round((t-B)*p)+B)+")";
     }
     
+    //helper function to shade color to appear as selected
     shadeHEXColor(color, percent) {   
         var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
         return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);

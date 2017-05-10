@@ -6,39 +6,74 @@ export enum Border { left, right, bottom, top };
 
 
 @Injectable()
+//groups all element commands and injects undo redo service for convinience
 export class ElementCommands{
 
     constructor(private service: UndoRedoService){}
 
+    /**starts moving element, saveBuffer() on UndoRedoService 
+    should be called after move is finished
+    @param element - element that should be moved
+    @param dimensions - dimensions it should be moved by
+    **/
     startMovingElement(element: Element, dimensions){
         this.service.addToBufferAndExecute(new ChangeElementDimensions(element,dimensions))
     }
 
+    /**starts resizing element, saveBuffer() on UndoRedoService
+    should be called after resize is finished
+    @param element - element that should be moved
+    @param dimensions - dimensions it should be resized by
+    **/
     startResizingElement(element: Element, dimensions){
         this.service.addToBufferAndExecute(new ChangeElementDimensions(element,dimensions))
     }
 
+    /**starts changing element opacity, saveBuffer() on UndoRedoService
+    should be called after change is finished
+    @param element - element that should be changed
+    @param value - value that should be set as opacity
+    **/
     startChangingOpacity(element: Element, value){
         this.service.addToBufferAndExecute(new ChangeElementOpacity(element,value))
     }
 
+    /**sets element dimensions 
+    @param element - element to be changed
+    @param dimensions - dimensions that sohuld be set on element 
+    **/
     setElementDimensions(element: Element, dimensions){
         this.service.execute(new SetElementDimensions(element,dimensions))
     }
 
+    //convinience method to save buffer
     finishMovingElement(){
         this.service.saveBuffer()
     }
 
+    //convinience method to save buffer
     finishResizingElement(){
         this.service.saveBuffer()
     }
 
-    changeBackgroundColor(element: Element, value){
+    //convinience method to save buffer
+    finishChangingOpacity(){
+        this.service.saveBuffer()
+    }
+
+    /**changes background color of the element
+    @param element - element to be changed
+    @param value - css value to be changed 
+    **/
+    changeBackgroundColor(element: Element, value: string){
         this.service.addToBufferAndExecute(new ChangeBackgroundColor(element,value))
     }
 
-    toggleElementBackground(element: Element, value){
+    /**turns off or on element background display
+    @param element - element to be changed
+    @param value - boolean walue whether it should be on or off 
+    **/
+    toggleElementBackground(element: Element, value: boolean){
         if(value){
            this.changeBackgroundColor(element,Element.defaultBackgroundColor)
         }else{
@@ -47,6 +82,9 @@ export class ElementCommands{
     }
 }
 
+/*
+sets element dimensions to value given 
+*/
 export class SetElementDimensions implements Command{
 
     constructor(private element: Element, private dimensions){}
@@ -78,7 +116,9 @@ export class SetElementDimensions implements Command{
     }
 }
 
-
+/*
+adds or substracts the given values from element dimensions
+*/
 export class ChangeElementDimensions implements BufferCommand{
 
     constructor(private element: Element, private dimensions){}
@@ -133,6 +173,9 @@ export class ChangeElementDimensions implements BufferCommand{
     }
 }
 
+/*
+changes element opacity to the given value
+*/
 export class ChangeElementOpacity implements BufferCommand{
  
  constructor(private element: Element, private value){}
@@ -157,6 +200,9 @@ export class ChangeElementOpacity implements BufferCommand{
 
 }
 
+/*
+changes element background color to the given value
+*/
 export class ChangeBackgroundColor implements BufferCommand{
 
     constructor(private element: Element, private value){}
@@ -182,7 +228,7 @@ export class ChangeBackgroundColor implements BufferCommand{
 
 }
 
-
+//element model
 export class Element  {
     id: number;
     width: number;

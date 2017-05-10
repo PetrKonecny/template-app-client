@@ -44,7 +44,7 @@ import {Image} from '../image/image'
     styles:[`
         .inner {
             overflow: hidden;
-            border: 1px dashed gray;         
+            border: 2px dashed gray;         
         }
         .button{
             z-index: 1000;

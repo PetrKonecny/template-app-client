@@ -19,27 +19,39 @@ export class AlbumHttpService {
     private _albumsUrl =  this.config.getConfig('api-url')+'/album';  // URL to web api
 
     getAlbums(): Observable<Album[]> {
-        return this.http.get(this._albumsUrl)
+        return this.http.get(this._albumsUrl, { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    getPublicAlbums(): Observable<Album[]> {
+        return this.http.get(this._albumsUrl+'/public',{ withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    getAlbumsForUser(id: number): Observable<Album[]> {
+        return this.http.get(this._albumsUrl+'/user/'+id,{ withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }
     
     getAlbum(id: number): Observable<Album> {
-        return this.http.get(this._albumsUrl+"/"+id)
+        return this.http.get(this._albumsUrl+"/"+id,{ withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }
 
     moveImages(images: Image[], album: Album){
         let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
+        let options = new RequestOptions({ headers: headers ,  withCredentials: true});
         return this.http.post(this._albumsUrl+"/"+album.id+"/move",JSON.stringify(images),options)
         .catch(this.handleError);
     }
 
     addAlbum(album: Album) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
+        let options = new RequestOptions({ headers: headers , withCredentials: true});
         return this.http.post(this._albumsUrl, JSON.stringify(album), options)
                     .map(this.extractData)
     }

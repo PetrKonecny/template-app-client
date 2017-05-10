@@ -46,7 +46,7 @@ export class TemplateIndexComponent implements OnInit  {
     //user currently using the app
     currentUser : User
 
-    /*
+    /**
     @param 'templateService' - injects template service to make http calls to API
     @param 'router'- injects router to enable navigation from class
     @param 'dialog' - injects dialog to enable displaying dialogs
@@ -77,7 +77,7 @@ export class TemplateIndexComponent implements OnInit  {
         )
     }
 
-    /*
+    /**
     Called after search button is clicked, navigates to search page
     @param 'query' - string to search
     */
@@ -85,7 +85,7 @@ export class TemplateIndexComponent implements OnInit  {
         this.router.navigate(['/templates/search', {query:query}]);
     }
     
-    /*
+    /**
     Celled after delete button on the template is clicked, calls http service to remove
     the template
     @param 'template' - template to remove
@@ -95,7 +95,7 @@ export class TemplateIndexComponent implements OnInit  {
     }
     
 
-    /*
+    /**
     Called after template is sucessfully removed, removes template from template list
     @param 'template' - template to remove
     */

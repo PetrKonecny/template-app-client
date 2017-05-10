@@ -10,8 +10,6 @@ import { TableComponent } from '../admin/table.component'
     template: `
         <md-toolbar style="position: fixed; z-index:1000;">
             <md-input-container><input #search mdInput type="search" placeholder="filter" (keyup)='updateFilter(search.value)'></md-input-container>
-            <button  *ngIf="selected.length" md-button>Delete</button>
-            <button *ngIf="selected.length == 1" md-button>Edit</button>
         </md-toolbar>
          <ngx-datatable
              class="material"

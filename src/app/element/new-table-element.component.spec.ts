@@ -48,18 +48,17 @@ describe('new table component', () => {
       {provide : ElementCommands, useValue:elementCommandsStub},
       {provide : TableElementCommands, useValue:elementCommandsStub},
       {provide: NewTableElement, useValue: tableElementReferenceStub}
-    ], // declare the test component
-      imports: [MaterialModule] // declare the test component
+    ], 
+      imports: [MaterialModule] 
     });
 
     fixture = TestBed.createComponent(NewTableElementComponent);
 
-    comp = fixture.componentInstance; // BannerComponent test instance
+    comp = fixture.componentInstance; 
     let element = new TableElementFactory().build();
     element.positionX = 50;
     element.positionY = 100;
     comp.element = element;
-    // query for the title <h1> by CSS element selector
     fixture.detectChanges();
     de = fixture.debugElement.query(By.css('.table-element-move'));
     el = de.nativeElement;
@@ -73,10 +72,3 @@ describe('new table component', () => {
     expect(de.nativeElement.style.top).toEqual('100px');
   });
 });
-
-
-/*
-Copyright 2017 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at http://angular.io/license
-*/

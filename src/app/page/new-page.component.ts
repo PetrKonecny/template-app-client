@@ -96,13 +96,13 @@ export class NewPageComponent implements AfterViewInit {
         setTimeout(_ => {
             this.page.rulers = new Array
             let ruler = new Guide
-            ruler.positionX = 0
+            ruler.positionX = 1
             let ruler2 = new Guide
-            ruler2.positionY = 0
+            ruler2.positionY = 1
             let ruler3 = new Guide
             let ruler4 = new Guide
-            ruler3.positionX = +this.pageElementRef.nativeElement.clientWidth -0
-            ruler4.positionY = +this.pageElementRef.nativeElement.clientHeight -0
+            ruler3.positionX = +this.pageElementRef.nativeElement.clientWidth -1
+            ruler4.positionY = +this.pageElementRef.nativeElement.clientHeight -1
             this.page.rulers.push(ruler4)
             this.page.rulers.push(ruler3)
             this.page.rulers.push(ruler2)

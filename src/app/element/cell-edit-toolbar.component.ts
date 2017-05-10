@@ -1,16 +1,13 @@
-import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
-import { ImageService } from '../image/image.service';
-import { Element } from './element';
-import { TextElement } from './text-element';
-import {FontService} from '../font/font.service';
-import {ClientState, TableElement, Cell, TableElementCommands} from './table-element'
+import { Component } from '@angular/core';
+import {TableElement, TableElementCommands, Cell} from './table-element'
 import {Font} from '../font/font'
-import {TextContent} from '../content/text-content'
 import { ElementStore } from '../element/element.store'
 
 @Component({
     selector: 'cell-edit-toolbar',
-    template: `                     
+    template: `  
+                <!-- Controlls for changing background of selected cells -->
+
                 <button md-icon-button mdTooltip="Barva pozadí vybraných buněk" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="getCellBgColor()">fiber_manual_record</md-icon></button>
                 <my-md-menu #backgroundColorMenu>
                     <div md-menu-item [colorPicker]="getCellBgColor() ? getCellBgColor() : lastCellBgColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
@@ -19,12 +16,18 @@ import { ElementStore } from '../element/element.store'
                         Zobrazit/skrýt pozadí <md-checkbox #bgCheckbox [checked]="getCellBgColor()" (change)="toggleCellBackground(bgCheckbox.checked)" style="position: relative; z-index: 1000;"></md-checkbox>
                     </div>
                 </my-md-menu>
+
+                <!-- Controlls for changing font of selected cells-->
+
                 <font-selector (onFontSelected)="changeSelectedCellsFont($event)"  (onFontSizeSelected)="changeSelectedCellsFontSize($event)"></font-selector>
                 <button md-icon-button mdTooltip="Barva textu" [mdMenuTriggerFor]="textColorMenu"><md-icon  [style.color]="getCellTextColor()">fiber_manual_record</md-icon></button>
                 <my-md-menu #textColorMenu>
                     <div md-menu-item [colorPicker]="getCellTextColor()" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
                     </div>                   
                 </my-md-menu>
+
+                <!-- Controlls for changing text formating of selected cells-->
+
                 <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="Format text">A</button>
                 <my-md-menu #textMenu="mdMenu">
                     <button md-icon-button (click)="changeSelectedCellsTextAlign('left')"><md-icon>format_align_left</md-icon></button>
@@ -36,6 +39,9 @@ import { ElementStore } from '../element/element.store'
                     <button md-icon-button (click)="changeSelectedCellsTextAlignVert('bottom')"><md-icon>vertical_align_bottom</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlignVert('middle')"><md-icon>vertical_align_middle</md-icon></button>
                 </my-md-menu>
+
+                <!-- Controlls for changing appearence of border of selected cells-->
+
                 <button md-icon-button mdTooltip="Border format" [mdMenuTriggerFor]="borderMenu">B</button>
                 <my-md-menu #borderMenu="mdMenu">
                     <button md-menu-item (click)="changeSelectedCellsBorderStyle('none')">Žádný okraj</button>
@@ -43,6 +49,9 @@ import { ElementStore } from '../element/element.store'
                     <button md-menu-item (click)="changeSelectedCellsBorderStyle('none solid')">Vlevo a vpravo</button>
                     <button md-menu-item (click)="changeSelectedCellsBorderStyle('solid')">Ze všech stran</button>
                 </my-md-menu>
+
+                <!-- Controlls for changing color of selected cells-->
+
                 <button md-icon-button mdTooltip="Barva rámečku" [mdMenuTriggerFor]="borderColorMenu"><md-icon  [style.color]="getCellBColor()">fiber_manual_record</md-icon></button>
                 <my-md-menu #borderColorMenu>
                     <div md-menu-item [colorPicker]="getCellBColor()" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBorderColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
@@ -51,23 +60,34 @@ import { ElementStore } from '../element/element.store'
              `,
 })
 
+
+/* Provides controlls for table element for editing selected cells, shoudl be displayed only if the element
+is in the appropriate editing state
+*/
 export class CellEditToolbar {
     
+    //element that the toolbar controlls
     element: TableElement
+    //last colors that were set in controll elements defaults to default colors
     lastCellBgColor = Cell.defaultBackgroundColor
     lastCellTextColor = Cell.defaultTextColor
     lastCellBColor = Cell.defaultBorderColor
     
-
+    /*
+    @param 'elementStore' - injects store that is provided by editor root and contains selected element
+    @param 'commands' - injects commands used to change element states
+    */
     constructor(private elementStore: ElementStore, private commands: TableElementCommands){
         this.elementStore.element.subscribe(element=> this.element = <TableElement>element)
     }
 
+    //shorthand to get selected cells background color
     getCellBgColor(){
         return this.element.selectedCells[0].background_color
         
     }
 
+    //shorthand to get selected cells text color
     getCellTextColor(){
         let color = this.element.selectedCells[0].text_color
         if(color){
@@ -77,6 +97,7 @@ export class CellEditToolbar {
         }
     }
 
+    //shorthand to get selected cells border color
     getCellBColor(){
         let color = this.element.selectedCells[0].border_color
         if(color){
@@ -86,6 +107,7 @@ export class CellEditToolbar {
         }
     }
     
+    //shorthand to determine if selected cells have any background
     getSelectedCellsBackground(){
         if(this.element.selectedCells){
            return this.element.selectedCells.filter(cell => cell.background_color).length > 0 
@@ -94,32 +116,51 @@ export class CellEditToolbar {
        }
     }
 
+    /*calls command to change selected cells font
+    @param 'font' - font to be changed
+    */
     changeSelectedCellsFont(font: Font){
         this.commands.ChangeSCellsFont(this.element,font)
     }
     
+    /*calls command to change selected cells font size
+    @param 'size' - number to change font to (in px)
+    */
    changeSelectedCellsFontSize(size: number){
         this.commands.changeSCellsFontSize(this.element,size)
     }
     
+    /*calls command to toggle selected cells bold text appearance
+    */
     changeSelectedCellsBold(){
         this.commands.changeSCellsBold(this.element)
         
     }
     
+    /*calls command to toggle selected cells italic text appearance
+    */
     changeSelectedCellsItalic(){
         this.commands.changeSCellsItalic(this.element)
     }
     
+    /*calls command to set selected cells text alignement
+    @param 'align' - css string value to set
+    */
     changeSelectedCellsTextAlign(align: string){
         this.commands.changeSCellsTextAlign(this.element,align)
     }
     
+    /*calls command to set selected cells text vertical alignement
+    @param 'align' - css string value to set
+    */
     changeSelectedCellsTextAlignVert(align: string){
         this.commands.changeSCellsTextAlignVert(this.element,align)
     }
 
     
+    /*calls command to turn selected cells backround on or off
+    @param 'value' - if background should be present or not
+    */    
     toggleCellBackground(value: boolean){
         if(this.getCellBgColor()){
             this.commands.changeSCellsBackgroundColor(this.element, null)
@@ -127,7 +168,10 @@ export class CellEditToolbar {
             this.commands.changeSCellsBackgroundColor(this.element, this.lastCellBgColor)
         }
     }
-        
+
+    /*calls command to change selected cells background color
+    @param 'color' - css color to be set
+    */    
     changeSelectedCellsBackgroundColor(color: string){
         this.lastCellBgColor = color
         if(this.getCellBgColor() &&  this.getCellBgColor() !== this.lastCellBgColor){
@@ -135,28 +179,43 @@ export class CellEditToolbar {
         }
     }
     
+    /*calls command to change selected cells text color
+    @param 'color' - css color to be set
+    */ 
     changeSelectedCellsTextColor(color: string){
         this.lastCellTextColor = color
         this.commands.changeSCellsTextColor(this.element,color)
     }
     
+    /*calls command to change selected cells border style
+    @param 'style' - css style value to be set
+    */ 
     changeSelectedCellsBorderStyle(style: string){
         this.commands.changeSCellsBorderStyle(this.element,style)
     }
     
+    /*calls command to change selected cells border color
+    @param 'color' - css color to be set
+    */ 
     changeSelectedCellsBorderColor(color: string){
         this.lastCellBColor = color
         this.commands.changeSCellsBorderColor(this.element,color)
     }
     
+    /*calls command to change selected cells border width
+    @param 'width' - width to be set
+    */ 
     changeSelectedCellsBorderWidth(width: number){
         this.commands.changeSCellsBorderW(this.element,width)
     }
     
+    /*calls command to merge selected cells into one
+    */ 
     mergeCells(){
         this.commands.mergeSCells(this.element)
     }
     
+    //empty method used to trigger change detection
     onKey(){
         
     }
