@@ -37,9 +37,9 @@ export class PageService {
         }
         if(page.rulers){
             page.rulers.forEach(ruler => {
-                if (ruler.positionX){
+                if (ruler.positionX != null){
                     this.verticals.push({ positionX: ruler.positionX, guide: null, active: false, buffer:{value:0}})
-                } else if (ruler.positionY){
+                } else if (ruler.positionY != null){
                     this.horizontals.push({ positionY: ruler.positionY, guide: null, active: false, buffer:{value:0}})
                 }
             })

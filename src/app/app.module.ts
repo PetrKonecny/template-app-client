@@ -3,7 +3,6 @@ import {BrowserModule} from "@angular/platform-browser";
 import {HttpModule} from "@angular/http";  
 import {FormsModule, ReactiveFormsModule } from "@angular/forms";  
 import {MaterialModule} from '@angular/material'
-import "rxjs/Rx";
 import 'hammerjs';
 import { RouterModule, Routes } from '@angular/router';
 import { TemplateIndexComponent} from './template/template-index.component';
@@ -30,7 +29,7 @@ import { Resizable } from './resizable.directive'
 import { ImageListComponent} from './image/image-list.component';
 import { Ng2UploaderModule} from 'ng2-uploader';
 import { FontSelectorComponent} from './font/font-selector.component';
-import { ColorPickerModule} from 'angular2-color-picker'
+import { ColorPickerModule} from 'ngx-color-picker'
 import { TextSelectorComponent} from './editor/text-selector.component'
 import { FontListComponent} from './font/font-list.component';
 import { DisplayFontComponent } from './font/display-font.component' 

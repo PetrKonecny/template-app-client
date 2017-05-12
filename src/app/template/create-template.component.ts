@@ -45,8 +45,9 @@ export class TemplateCreateComponent implements AfterViewInit, OnInit  {
         this.route.params.subscribe(params=>{
             let width = +params['width']
             let height = +params['height']
-            if(width && height && width > 100 && width < 2000 && height > 100 && height < 2000){
-                this.factory.setWidth(width).setHeight(height)                
+            let margin = +params['margin']
+            if(width && height && width > 100 && width < 2000 && height > 100 && height < 2000 && margin >= 0){
+                this.factory.setWidth(width).setHeight(height).setMargin(margin)                
             }
             if(!this.template.pages || this.template.pages.length < 1){
                     this.template.pages = []

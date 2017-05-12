@@ -101,4 +101,5 @@ export class Page  {
   width: number;
   height: number;
   pageNumber: number;  
+  margin: number;
 }

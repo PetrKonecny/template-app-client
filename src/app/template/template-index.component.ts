@@ -152,7 +152,7 @@ export class TemplateIndexComponent implements OnInit  {
                     width = height
                     height = temp
             }
-            this.router.navigate(['/templates/new', {width:width,height:height}])
+            this.router.navigate(['/templates/new', {width:width,height:height,margin:val.margin}])
         })
     }     
 }

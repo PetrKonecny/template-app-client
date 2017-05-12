@@ -6,4 +6,5 @@ export class Album {
 	name: string
 	images: Image[]
 	tagged: Tag[]
+	public: boolean
 }

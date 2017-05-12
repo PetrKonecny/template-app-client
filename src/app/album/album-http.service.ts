@@ -56,6 +56,13 @@ export class AlbumHttpService {
                     .map(this.extractData)
     }
 
+   updateAlbum(album: Album) {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers , withCredentials: true});
+        return this.http.put(this._albumsUrl+'/'+album.id, JSON.stringify(album), options)
+                    .map(this.extractData)
+    }
+
     removeAlbum(id: number): Observable<Album> {
         return this.http.delete(this._albumsUrl+"/"+id, { withCredentials: true })
             .map(this.extractData)

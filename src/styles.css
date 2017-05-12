@@ -73,6 +73,10 @@ album-index-sidenav md-grid-list{
     bottom: 0;
     z-index: 1000;
 }
+.public-album{
+    color: #ffd740;
+    background: #673ab7 !important;
+}
 
 .hue {
     width: 142px !important;

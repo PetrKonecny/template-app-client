@@ -17,7 +17,7 @@ import { Observable }     from 'rxjs/Observable';
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
         <button md-fab class="index-button" (click)="openNewAlbumDialog()"><md-icon>add</md-icon></button>
-        <album-list *ngIf="albums" (onAlbumClicked)="onSelected($event)" [albums] = "albums"></album-list>
+        <album-list *ngIf="albums" [user]="currentUser" (onEditClicked)="onEdit($event)" (onDeleteClicked)="onDeleted($event)" (onAlbumClicked)="onSelected($event)" [albums] = "albums"></album-list>
     `,
     styles:[`
         
@@ -63,8 +63,12 @@ export class AlbumIndexComponent implements OnInit  {
         });
         dialogRef.afterClosed().subscribe(value => 
             {
-                if(value == 'save'){
-                    this.albumService.addAlbum(dialogRef.componentInstance.album).subscribe(album=>{
+                if(value){
+                    let album = new Album
+                    album.name = value.name
+                    album.tagged = value.tagged
+                    album.public = value.public
+                    this.albumService.addAlbum(album).subscribe(album=>{
                          this.albums.push(album)
                     },error=>{
                         this.snackBar.open("Chyba při vytváření alba",null,{duration: 2500})
@@ -72,8 +76,35 @@ export class AlbumIndexComponent implements OnInit  {
                 }
             }
         )
-        dialogRef.componentInstance.album = new Album 
     }  
+
+    onDelete(album){
+
+    }
+
+    onEdit(album){
+    let dialogRef = this.dialog.open(SaveAlbumModal, {
+          height: 'auto',
+          width: '30%',
+        });
+        dialogRef.afterClosed().subscribe(value => 
+            {
+                if(value){
+                    let album2 = new Album
+                    album2.id = album.id
+                    album2.name = value.name
+                    album2.tagged = value.tagged
+                    album2.public = value.public
+                    this.albumService.updateAlbum(album2).subscribe(updatedAlbum=>{
+                         this.albums.splice(this.albums.indexOf(album),1,updatedAlbum)
+                    },error=>{
+                        this.snackBar.open("Chyba při aktualizaci alba",null,{duration: 2500})
+                    })
+                }
+            }
+        )
+        dialogRef.componentInstance.setAlbum(album)
+    }
 
     onSelected(album: Album){
        this.router.navigate(['albums',album.id])

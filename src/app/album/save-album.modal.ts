@@ -13,17 +13,17 @@ import { Album } from '../album/album'
                 <md-dialog-content>
                     <div>
                     <md-input-container style="width: 100%;">
-                        <input mdInput [(ngModel)]="album.name" formControlName="name" type="text" placeholder="název alba">
+                        <input mdInput formControlName="name" type="text" placeholder="název alba">
                         <md-hint *ngIf="saveForm.controls['name'].hasError('required') && saveForm.controls['name'].touched"  style="color:red;">nutné vyplnit název</md-hint>                    
                     </md-input-container>
                     </div>
                     <div>
-                     <tag-input [(ngModel)]="album.tagged" [identifyBy]="'id'" [displayBy]="'tag_name'" formControlName="tags">
+                     <tag-input [identifyBy]="'id'" [displayBy]="'tag_name'" formControlName="tagged">
                       </tag-input>
                     </div>
                     <br>
                     <div>
-                    <md-checkbox [(ngModel)]="album.public" formControlName="public">Veřejné</md-checkbox>
+                    <md-checkbox formControlName="public">Veřejné</md-checkbox>
                     </div>
                     <hr>
                     <div style="float: right;">
@@ -42,16 +42,22 @@ export class SaveAlbumModal  {
     album: Album
 
     public saveForm = this.fb.group({
-        name: ["", Validators.required],
+        name: [, Validators.required],
         public: [false],
-        tags: [""]
+        tagged: [""]
     });
 
-    constructor(private fb: FormBuilder, private ref: MdDialogRef<SaveAlbumModal>){}
+    constructor(private fb: FormBuilder, private ref: MdDialogRef<SaveAlbumModal>){
+
+    }
+
+    setAlbum(album: Album){
+        this.saveForm.patchValue(album)
+    }
 
     onSaveButtonClicked(){
         if(this.saveForm.valid){
-            this.ref.close('save')
+            this.ref.close(this.saveForm.value)
         }
     }
      

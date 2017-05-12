@@ -36,6 +36,9 @@ import {MdDialogRef} from '@angular/material'
                                 <input formControlName="width" mdInput type="number" placeholder="šířka stránky (mm)">
                             </md-input-container>
                         </div>
+                        <md-input-container style="width: 100%;">
+                                <input formControlName="margin" mdInput type="number" placeholder="okraje stránky (px)">
+                        </md-input-container>
                     </div>
                     <hr>
                     <div style="float: right;">
@@ -58,6 +61,7 @@ export class CreateTemplateModal  {
         orientation: ["0",Validators.required],
         width: [],
         height: [],
+        margin: [0]
     },{validator: this.dimensionsValid});
 
 	constructor(private fb: FormBuilder, private ref: MdDialogRef<CreateTemplateModal>){}
