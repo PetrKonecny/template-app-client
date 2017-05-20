@@ -36,14 +36,24 @@ declare var tinymce: any;
         }
         `],
 })
+
+/**The component that integrates tiny-mce editor into Angular2 enviroment
+*/
 export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit  {
-    @Input() content: TextContent;
-    @Output() onEditorKeyup = new EventEmitter<any>();
+
+    @Input() 
+    //content containing the editor 
+    content: TextContent;
+    @Output() 
+    //triggered when typing into the editor
+    onEditorKeyup = new EventEmitter<any>();
 
     ngOnInit(){
         this.content.editor = new Editor()
     }
   
+    //sets up the editor with no menubar, no status bar, no toolbar
+    //in inline mode
     ngAfterViewInit() {
         tinymce.init({
             selector: '#'+this.content.editor.id,
@@ -74,16 +84,9 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit  {
       });
     }
     
+    //removes the editor instance if component is destroyed
     ngOnDestroy() {
         tinymce.remove(this.content.editor.editor);
-    }
-
-    bold(){
-        this.content.editor.editor.execCommand("Bold")     
-    }
-
-    textColor(color: string){
-        this.content.editor.editor.execCommand('ForeColor', false, color);
     }
     
     rgb2hex(rgb){

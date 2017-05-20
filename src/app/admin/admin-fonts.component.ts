@@ -15,16 +15,24 @@ import {FontService} from '../font/font.service'
     providers: []
 })
 
+//displays fonts in the admin section
 export class AdminFontsComponent implements OnInit {
     
+    //error thrown when loading fonts
     errorMessage: string;
+    //array of fonts to be displayed
     fonts : Font[];
+    //loading indicator
     loading = true;
 
+    /**
+    @param - fontService - font service to load fonts
+    */
     constructor(
         private fontService: FontService
     ){}
 
+    //loads fonts from the API
     ngOnInit(){
         this.fontService.getFonts().subscribe(
         fonts=>{

@@ -27,11 +27,13 @@ import { TableComponent } from '../admin/table.component'
     `,
 })
 
+//displays table of contents and some navigation on top of the table
 export class ContentTableComponent extends  TableComponent {
         
     @Input()
     rows : Content[] 
 
+    //columns in the table
     columns = [
         { prop: 'id'},
         { prop: 'type'},

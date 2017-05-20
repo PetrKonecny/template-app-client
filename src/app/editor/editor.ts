@@ -1,3 +1,4 @@
+//model for editor stored in text content
 export class Editor {
     editor: any
     id: string

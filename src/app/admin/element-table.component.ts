@@ -28,12 +28,15 @@ import { TableComponent } from '../admin/table.component'
     `,
 })
 
+//displays table of elements and some navigation on top of the table
 export class ElementTableComponent  extends TableComponent{
         
     
     @Input()
+    //elements to be displayed
     rows : Element[] 
 
+    //columns of the table
     columns = [
         { prop: 'id'},
         { prop: 'type'},

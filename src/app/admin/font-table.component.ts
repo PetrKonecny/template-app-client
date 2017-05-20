@@ -30,11 +30,14 @@ import { TableComponent } from '../admin/table.component'
     `,
 })
 
+//displays table of fonts and some navigation on top of the table
 export class FontTableComponent extends TableComponent {
            
     @Input()
+    //fonts to be displayed
     rows : Font[] 
 
+    //columns of the table
     columns = [
         { prop: 'id'},
         { prop: 'name'},

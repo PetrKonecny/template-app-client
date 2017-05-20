@@ -30,12 +30,15 @@ import { TemplateInstance} from '../template-instance/template-instance';
     `,
 })
 
+//displays table of pages and some navigation on top of the table
 export class PageTableComponent extends TableComponent {
         
     
     @Input()
+    //pages to be displayed
     rows : Page[] 
 
+    //columns of the table
     columns = [
         { prop: 'id'},
         { prop: 'created_at'},

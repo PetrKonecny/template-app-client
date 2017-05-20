@@ -26,13 +26,22 @@ import { MdSnackBar } from '@angular/material';
     `,
     providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
 })
-
+//displays index page for creating new document
 export class TemplateInstanceCreateComponent implements OnInit  {
     
+    //error thrown when loading template or document
     error: string;
+    //created document
     templateInstance : TemplateInstance;
+    //template belonging to the document
     template : Template;
 
+    /**
+    @param route - injects route service to get route params from the route
+    @param templateInstanceStore - injects store containing the current document
+    @param templateStore - injects store containing the current template
+    @param mdSnackBar - injects snackbar to display error on
+    */
     constructor(
         private route: ActivatedRoute,
         private templateInstanceStore: TemplateInstanceStore,
@@ -40,6 +49,7 @@ export class TemplateInstanceCreateComponent implements OnInit  {
         private snackBar: MdSnackBar 
     ){ }
     
+    //loads template and template instances , copies their contents into eachother
     ngOnInit(){
         this.templateInstanceStore.cleanStore()
         this.templateStore.cleanStore()
@@ -53,7 +63,6 @@ export class TemplateInstanceCreateComponent implements OnInit  {
             this.templateInstance.template_id = this.template.id
             TemplateInstanceHelper.copyContentsFromTemplate(this.templateInstance, this.template);
             TemplateInstanceHelper.getContentsFromTemplateInstance(this.templateInstance,this.template);
-            console.log(this.templateInstance.contents.length)
             this.templateInstance.name = this.template.name
             this.templateInstance.tagged = this.template.tagged
         })

@@ -20,25 +20,33 @@ import { AppConfig }from '../app.config'
     `
 })
 
+
+//displays list of documents
 export class TemplateInstanceListComponent {
     
     
     
     @Input()
+    //documents to be displayed
     templateInstances : TemplateInstance[] 
     
     @Output() 
+    //triggered when delete on the item clicked
     onDeleteClicked = new EventEmitter<TemplateInstance>();
 
+    /**
+    @param config - config to get API url from
+    */
     constructor(private config: AppConfig){
 
     }
 
+    //stops redirection when clicking on item menu
     onClick(event) {
        event.stopPropagation();
     }
 
-    
+    //triggered when deleting document
     onDelete(templateInstance: TemplateInstance){
         this.onDeleteClicked.emit(templateInstance);
     }

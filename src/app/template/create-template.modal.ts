@@ -51,9 +51,11 @@ import {MdDialogRef} from '@angular/material'
     providers: []
 })
 
+//dialog for creating template, containing necessary forms
 export class CreateTemplateModal  {
 
     @ViewChild('custom')
+    //reference to the switch for custom or preset dimensions
     custom
 
 	public createForm = this.fb.group({
@@ -64,14 +66,20 @@ export class CreateTemplateModal  {
         margin: [0]
     },{validator: this.dimensionsValid});
 
+    /**
+    @param fb - injects formBuider used to create the forms
+    @param ref - injects reference to the dialog to be able to close it
+    */
 	constructor(private fb: FormBuilder, private ref: MdDialogRef<CreateTemplateModal>){}
 
+    //triggered on the form submit
 	onSaveButtonClicked(){
         if(this.createForm.valid){
 		    this.ref.close(this.createForm.value)
         }
 	}
 
+    //checks if whem custom dimensions are set this dimensions are valid
     dimensionsValid(group: FormGroup) {
         let custom = group.controls['type'].value == 'custom'
         let width = group.controls['height'].value

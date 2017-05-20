@@ -10,14 +10,28 @@ export class TemplateCommands {
 
 	constructor(private service: UndoRedoService){}
 
+	/**adds page above the given page
+	@param template - template to add page to
+	@param page - page to add the page above
+	@param page2 - page to add
+	*/
 	addPageAbove(template: Template, page: Page, page2: Page){
 		this.service.execute(new AddPageAbovePage(template, page, page2))
 	}
 
+	/**adds page below the given page
+	@param template - template to add page to
+	@param page - page to add the page below
+	@param page2 - page to add
+	*/
 	addPageBelow(template: Template, page: Page, page2: Page){
 		this.service.execute(new AddPageBelowPage(template, page, page2))
 	}
 
+	/**deletes page from the template
+	@param template - template to delete page from
+	@param page - page to be deleted
+	*/
 	deletePage(template: Template, page: Page){
 		this.service.execute(new DeletePage(template, page))
 	}
@@ -25,7 +39,7 @@ export class TemplateCommands {
 }
 
 
-
+//executing this command adds page above
 export class AddPageAbovePage implements Command {
 
 	constructor(private template: Template,private page: Page, private page2: Page){}
@@ -41,6 +55,7 @@ export class AddPageAbovePage implements Command {
 
 }
 
+//executing this command adds page below
 export class AddPageBelowPage implements Command {
 
 	constructor(private template: Template,private page: Page, private page2: Page){}
@@ -55,6 +70,7 @@ export class AddPageBelowPage implements Command {
 
 }
 
+//executing this command deletes the page
 export class DeletePage implements Command {
 
 	index: number
@@ -72,7 +88,7 @@ export class DeletePage implements Command {
 }
 
 
-
+// template model
 export class Template {
   id: number;
   name: string;

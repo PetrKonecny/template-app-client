@@ -33,9 +33,11 @@ import { TemplateInstance} from '../template-instance/template-instance';
     providers: []
 })
 
+//dialog containing options for savign the document
 export class SaveTemplateInstanceModal  {
 	
 	@Input()
+    //document to be saved
 	templateInstance: TemplateInstance
 
 	public saveForm = this.fb.group({
@@ -43,8 +45,13 @@ export class SaveTemplateInstanceModal  {
         tags: [""]
     });
 
+    /**
+    @param fb - formBuilder used to creating forms
+    @param ref - reference to the dialog
+    */
 	constructor(private fb: FormBuilder, private ref: MdDialogRef<SaveTemplateInstanceModal>){}
 
+    //triggered when subniting the form
 	onSaveButtonClicked(){
         if(this.saveForm.valid){
 		    this.ref.close('save')

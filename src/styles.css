@@ -22,7 +22,7 @@ image-index, template-index, template-instance-index, album-index, display-album
     overflow: auto;
 }
 
-.content{
+.index-content{
     padding: 16px;
 }
 
@@ -93,9 +93,6 @@ album-index-sidenav md-grid-list{
 }
 
 .image{
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    border-radius: 2px; 
-    cursor: pointer;
 }
 
 .image-selected{

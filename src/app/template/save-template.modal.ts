@@ -11,13 +11,13 @@ import { TemplateInstanceStore } from '../template-instance/template-instance.st
     selector: 'template-save-modal',
     template: `
         <form [formGroup]="saveForm" (ngSubmit)="onSaveButtonClicked()">
-        		<h2 md-dialog-title>SAVE TEMPLATE</h2>
+        		<h2 md-dialog-title>ULOŽIT ŠABLONU</h2>
                 <hr>
         		<md-dialog-content>
                     <div>
         			<md-input-container style="width: 100%;">
-	                	<input mdInput [(ngModel)]="template.name" formControlName="name" type="text" placeholder="Template name">
-                        <md-hint *ngIf="saveForm.controls['name'].hasError('required') && saveForm.controls['name'].touched"  style="color:red;">Name is required</md-hint>	                
+	                	<input mdInput [(ngModel)]="template.name" formControlName="name" type="text" placeholder="Název šablony">
+                        <md-hint *ngIf="saveForm.controls['name'].hasError('required') && saveForm.controls['name'].touched"  style="color:red;">Je třeba vyplnit název</md-hint>	                
                 	</md-input-container>
                     </div>
                     <div>
@@ -26,12 +26,12 @@ import { TemplateInstanceStore } from '../template-instance/template-instance.st
                     </div>
                     <br>
                     <div>
-	            	<md-checkbox [(ngModel)]="template.public" formControlName="public">Public</md-checkbox>
+	            	<md-checkbox [(ngModel)]="template.public" formControlName="public">Veřejné</md-checkbox>
                     </div>
                     <hr>
                     <div style="float: right;">
-          			<button  md-raised-button color="primary" type = "submit" [disabled]="!saveForm.valid">Save</button>
-          			<button  md-raised-button color="primary" md-dialog-close type = "button">Close</button>
+          			<button  md-raised-button color="primary" type = "submit" [disabled]="!saveForm.valid">Uložit</button>
+          			<button  md-raised-button color="primary" md-dialog-close type = "button">Zrušit</button>
                     </div>
           		</md-dialog-content>
         </form>
@@ -39,9 +39,11 @@ import { TemplateInstanceStore } from '../template-instance/template-instance.st
     providers: []
 })
 
+//dialog for saving the template
 export class SaveTemplateModal  {
 	
 	@Input()
+    //template to be saved
 	template: Template
 
 	public saveForm = this.fb.group({
@@ -52,6 +54,7 @@ export class SaveTemplateModal  {
 
 	constructor(private fb: FormBuilder, private ref: MdDialogRef<SaveTemplateModal>){}
 
+    //triggered on form submit
 	onSaveButtonClicked(){
         if(this.saveForm.valid){
 		    this.ref.close('save')

@@ -23,22 +23,27 @@ import { AppConfig } from '../app.config'
     `]
 })
 
+//special case for displaying content as an image that can be dragged 
 export class DisplayContentImgDragComponent implements  DoCheck {
 
     @Input()
+    //content to be dragged
     content: ImageContent;
     element: ImageContent = this.content;
     
     @ViewChild('frame')
+    //reference to template element #frame
     frame: ElementRef;
-       
+
+    //reference to template element #image
     @ViewChild('image')
     image: ElementRef;
        
-    move(dimensions: ElementDimensions){
+    move(dimensions){
         this.commands.startMovingImage(this.content,dimensions)
     }
     
+    //this runs on every change in the application 
     ngDoCheck(){
         if((!this.content.width || !this.content.height) && this.image ){
             let width = this.image.nativeElement.naturalWidth
@@ -54,117 +59,11 @@ export class DisplayContentImgDragComponent implements  DoCheck {
         }
     }
     
-    
-    // part of code from draggable directive 
-    /*
-    startElement: ElementDimensions;
-    mousedrag;
-    mouseup = new EventEmitter();
-    mousedown = new EventEmitter();
-    mousemove = new EventEmitter();
-    mouseover = new EventEmitter();
-    
-   
-    @HostListener('document:mouseup', ['$event'])
-    onMouseup(event) {
-        this.mouseup.emit(event);
-        console.log('mouseup')
-        this.redoer.finishMovingImage()
-
-    }
-
-    @HostListener('mousedown', ['$event'])
-    onMousedown(event) {
-        this.mousedown.emit(event);
-        return false; // Call preventDefault() on the event
-    }
-
-    @HostListener('mousemove', ['$event'])
-    onMouseover(event: MouseEvent) {
-        this.mouseover.emit(event);
-        return false;
-    }
-
-    @HostListener('document:mousemove', ['$event'])
-    onMousemove(event) {
-        this.mousemove.emit(event);
-    }*/
-
+    /**
+    @param config - config to get API url from
+    @param commands - commands to manipulate the image
+    */
     constructor(private config: AppConfig, private commands: ImageContentCommands) {
-        /*
-        this.mousedrag = this.mousedown.map((event: MouseEvent) => {
-            this.startElement = this.getStats();
-            return {
-                left: event.clientX ,
-                top: event.clientY
-            };
-        })
-            .flatMap(imageOffset => this.mousemove.map((pos: MouseEvent) => {
-                return {
-                    top: pos.clientY - imageOffset.top,
-                    left: pos.clientX - imageOffset.left
-                }
-            })
-                .takeUntil(this.mouseup));*/
+       
     }
-
-/*
-    ngOnInit() {
-        this.mousedrag.subscribe({
-            next: pos => {
-                this.content.top = this.startElement.top + pos.top;
-                this.content.left = this.startElement.left + pos.left;               
-            }
-        });      
-    }
-    
-    zoomOut(){
-        this.content.width = this.content.width * 0.9;
-        this.content.height = this.content.height * 0.9;
-    }
-    
-    zoomIn(){
-        this.content.width = this.content.width * 1.1;
-        this.content.height = this.content.height * 1.1;
-    }
-    
-    styleToNum(style){
-        return Number(style.substring(0, style.length - 2));
-    }
-    
-    getHeight() {
-        //return this.content.height
-        return this.styleToNum(this.frame.nativeElement.style.height)
-        //return this.element.nativeElement.scrollHeight;
-    }
-
-    getWidth() {
-        //return this.content.width
-        return this.styleToNum(this.frame.nativeElement.style.width)
-        //return this.element.nativeElement.scrollWidth;
-    }
-    
-    getLeft() {
-        //return this.content.left
-        return this.styleToNum(this.frame.nativeElement.style.left);
-    }
-    
-    getTop() {
-        //return this.content.top
-        return this.styleToNum(this.frame.nativeElement.style.top);
-    }
-    
-    getStats() {
-        return { height: this.getHeight(), width: this.getWidth(), top: this.getTop(), left: this.getLeft()};
-    }*/
-}
-
-
-enum Border { left, right, bottom, top };
-
-interface ElementDimensions {
-    left
-    top
-    height
-    width
 }

@@ -27,13 +27,24 @@ import { PageFactory }from '../page/page.factory'
     providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands, ElementStore, PageStore]
 })
 
+
+//index page for opening already created templates containing the editor component
 export class TemplateEditComponent implements OnInit  {
     
+    //error thrown when loading the template
     error: string;
+    //template to be displayed
     template : Template;
-    private sub: any;
 
 
+    /**
+    @param route - injects route to get route params
+    @param templateStore - injects store containing current template
+    @param pageStore - injects store containing currently selected page
+    @param undoRedoService - injects undo redo ervice
+    @param snackBar - injects service to dispaly snackbar with error
+    @param factory - injects factory to build pages with right dimensions
+    */
     constructor(
         private route: ActivatedRoute,
         private templateStore: TemplateStore,
@@ -44,11 +55,13 @@ export class TemplateEditComponent implements OnInit  {
         private factory: PageFactory
     ){ }
     
+    //saves buffer commands if the mouse up event happens
     @HostListener('document:mouseup', ['$event'])
     onMouseup(event) {
        this.undoRedoService.saveBuffer()
     }
     
+    //loads template from the store with the right id
     ngOnInit(){
         this.templateStore.cleanStore()
 

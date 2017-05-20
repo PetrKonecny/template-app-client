@@ -24,20 +24,33 @@ import { Observable }     from 'rxjs/Observable';
     `]
 })
 
+//displays index page for albums
 export class AlbumIndexComponent implements OnInit  {
     
+    //error thrown while loading albums
     error: string;
+    //user albums to be displayed
     albums : Album[];
+    //public albums to be displayed
     publicAlbums: Album[]
+    //loading indicator
     loading = true
+    //user currently logged in
     currentUser
 
+    /**
+    @param userStore - user store containing currently logged in user
+    @param albumService - service to call API to get albums
+    @param dialog - dialog service to display dialogs
+    @param router -router service used to navigate in app
+    @param snackBar - snackbar to display errors on
+    */
     constructor(
         private userStore: UserStore, private albumService: AlbumHttpService, public dialog: MdDialog, private router: Router, private snackBar: MdSnackBar
     ){ 
     }
     
-    
+    //loads albums for user and all public albums
     ngOnInit(){
         this.userStore.user.first(user => user.id > 0)
         .do((user)=>{this.currentUser = user})
@@ -56,6 +69,7 @@ export class AlbumIndexComponent implements OnInit  {
         )
     }
 
+    //opens dialog to create new album
     openNewAlbumDialog(){
         let dialogRef = this.dialog.open(SaveAlbumModal, {
           height: 'auto',
@@ -82,6 +96,7 @@ export class AlbumIndexComponent implements OnInit  {
 
     }
 
+    //opens dialog to edit ablum
     onEdit(album){
     let dialogRef = this.dialog.open(SaveAlbumModal, {
           height: 'auto',
@@ -107,6 +122,7 @@ export class AlbumIndexComponent implements OnInit  {
         dialogRef.componentInstance.setAlbum(album)
     }
 
+    //triggered on album clicked
     onSelected(album: Album){
        this.router.navigate(['albums',album.id])
     }

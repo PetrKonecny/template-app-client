@@ -24,7 +24,7 @@ import { SaveTemplateInstanceModal} from '../template-instance/save-template-ins
                 <button md-icon-button (click)="saveTemplateInstance()"><md-icon>save</md-icon></button>
                 <button md-icon-button (click)="undo()"><md-icon>undo</md-icon></button>
                 <button md-icon-button><md-icon>redo</md-icon></button>
-                <button md-button (click)="openAsTemplate()">Open as new template</button>
+                <button md-button (click)="openAsTemplate()">Otevřít jako novou šablonu</button>
                 <text-select *ngIf="element && element.type == 'text_element' && element.content.editor"></text-select>
             </md-toolbar>
             <md-sidenav mode ="side" #sidenav style="width: 20%;">
@@ -55,16 +55,26 @@ import { SaveTemplateInstanceModal} from '../template-instance/save-template-ins
     `]
 })
 
+//displays editor for document edditing
 export class NewTemplateInstanceComponent {
     
-    displaySelectWindow: boolean;
     @Input()
+    //document being edited
     templateInstance: TemplateInstance;
     @Input()
+    //template of the document
     template: Template;
 
+    //selected element
     element: Element
     
+    /**
+    @param templateInstanceStore - injects store containing current document
+    @param elementStore - injects store containing selected element
+    @param router - injects router to navigate
+    @param templateStore - injects store containing current template
+    @param dialog - injects service to display the dialog
+    */
     constructor(
         private templateInstanceStore: TemplateInstanceStore,
         private elementStore: ElementStore,
@@ -79,6 +89,7 @@ export class NewTemplateInstanceComponent {
         })
     }
       
+    //opens dialog to save template instance and then saves is
     saveTemplateInstance() {
         let dialogRef = this.dialog.open(SaveTemplateInstanceModal, {
           height: 'auto',
@@ -98,6 +109,9 @@ export class NewTemplateInstanceComponent {
         dialogRef.componentInstance.templateInstance = this.templateInstance
     }
     
+    //this opens current display of the editor as new template by
+    //removing the ids from the template and setting store to not reset 
+    //on the next reset request
     openAsTemplate(){
         TemplateHelper.removeIdsFromTemplate(this.template)
         this.templateStore.ignoreNextClean();

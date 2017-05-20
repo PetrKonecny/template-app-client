@@ -27,12 +27,15 @@ import { TableComponent } from '../admin/table.component'
     `,
 })
 
+//displays table of documents and some navigation on top of the table
 export class TemplateInstanceTableComponent extends TableComponent{
         
     
     @Input()
+    //documents to display
     rows : TemplateInstance[] 
 
+    //columns of the table
     columns = [
         { prop: 'id'},
         { prop: 'name'},

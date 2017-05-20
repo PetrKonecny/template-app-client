@@ -134,6 +134,10 @@ import { NewTableCellComponent } from './element/new-table-cell.component'
 import {AdminAlbumsComponent} from './admin/admin-albums.component'
 import {AlbumTableComponent} from './admin/album-table.component'
 
+
+/** defines every route in the application and redirects if 
+no route matches
+*/ 
 const routes: Routes = [
     { path: 'admin', component: AdminIndexComponent},
     { path: 'admin/templates', component: AdminTemplatesComponent },
@@ -207,6 +211,7 @@ const routes: Routes = [
 
 export class AppModule { }  
 
+//loads config from the root of this app
 export function initConfig(config: AppConfig){
  return () => config.load() 
 }

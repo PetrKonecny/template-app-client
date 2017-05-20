@@ -28,23 +28,30 @@ import { MdSnackBar } from '@angular/material';
     providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
 })
 
+//displays index page for editing the document
 export class TemplateInstanceEditComponent implements OnInit  {
     
+    //error thrown when loading document or template
     error: string;
+    //document being edited
     templateInstance : TemplateInstance;
+    //ttemplate belonging to the document
     template : Template;
-    private subs: any[];
     
+    /**
+    @param route - injects service to get the url params from
+    @param templateInstanceStore - template instance store containing currrent document
+    @param templateSotre - store containing template belonging to the document
+    @param snackBar - snack bar displayed when errror is thrown
+    */
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
         private templateInstanceStore: TemplateInstanceStore,
         private templateStore: TemplateStore,
-        private templateService: TemplateService,
-        private templateInstanceService: TemplateInstanceService,
         private snackBar: MdSnackBar
     ){ }
       
+    //loads document based on id in url and its template
     ngOnInit(){
         this.templateInstanceStore.cleanStore()
         this.templateStore.cleanStore()  
@@ -66,7 +73,6 @@ export class TemplateInstanceEditComponent implements OnInit  {
             },
             error=>{
                 this.error = error
-                console.log(error)
                 this.snackBar.open("Chyba při načítání dokumentu",null,{duration: 1500})
             }
         )

@@ -16,16 +16,25 @@ import {MdSnackBar} from '@angular/material'
     providers: []
 })
 
+//displays pages in the admin sections
 export class AdminPagesComponent implements OnInit {
     
+    //error thrown on loading pages
     errorMessage: string;
+    //pages to be displayed
     pages : Page[];
+    //loading indicator
     loading = true;
 
+    /**
+    @param pageService - injects service to get the pages
+    @param snackBar - snack bar to display errors on
+    */
     constructor(
         private pageService: PageHttpService, private snackBar: MdSnackBar
     ){}
 
+    //triggered when delete clicked
     onDeleteClicked(pages: Page[]){
         pages.forEach(page =>{
             this.pageService.removePage(page.id).subscribe(
@@ -39,6 +48,7 @@ export class AdminPagesComponent implements OnInit {
         })
     }
 
+    //gets pages from the API
     ngOnInit(){
         this.pageService.getPages().subscribe(
         pages=>{

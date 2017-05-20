@@ -15,16 +15,24 @@ import {ContentHttpService} from '../content/content-http.service'
     providers: []
 })
 
+//displays contents index in the admin section
 export class AdminContentsComponent implements OnInit {
     
+    //error when loading the contents
     errorMessage: string;
+    //array of contents to display
     contents : Content[];
+    //loading indicator
     loading = true;
 
+    /**
+    @param contentService - content service to get contents from API
+    */
     constructor(
         private contentService: ContentHttpService
     ){}
 
+    //gets contents from the API
     ngOnInit(){
         this.contentService.getContents().subscribe(
         contents=>{

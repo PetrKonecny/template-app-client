@@ -44,65 +44,47 @@ import {Image} from '../image/image'
     `],
 })
 
+//displays text or image content 
 export class DisplayContentComponent {
     @Input()
+    //content to be displayed
     content: Content;
-    @ViewChild('textBox')
-    child: any;   
-    
-    @ViewChild('image')
-    image: ElementRef;
-    
-    @ViewChild('frame')
-    frame: ElementRef; 
-
+   
     @Output()
+    //triggered when new image is loaded
     loaded = new EventEmitter
 
     @Output()
+    //trigered if error while loading image
     loadingError = new EventEmitter
 
+    //loading indicator
     loading = true
     
+    //triggered when key in the editor is pressed
     keyupHandlerFunction(text: string){
         let content =<TextContent> this.content
         this.commands.changeText(content, text)
     }
 
+    //trigered when image is laoded
     onLoad(image: Image){
         this.loaded.emit(image)
     }
 
+    //triggered on error while loading image
     onError(){
         this.loadingError.emit()
     }
 
-    getSubject(){
-        return this.content
-    }
-
+    /**
+    @param config - config to get API URL from
+    @param commands - commands to manipulate text content
+    */
     constructor(
         private config: AppConfig,
         private commands: TextContentCommands
     ){}
-    
-    saveContent(){
-        /*if(this.content.type == 'text_content'){
-            (<TextContent> this.content).text = this.child.nativeElement.textContent;
-            this.child.nativeElement.textContent = (<TextContent>this.content).text;
-        }
-        if(this.content.type == 'image_content'){
-            var content = <ImageContent>this.content;
-            if(this.image){
-                content.width = this.image.nativeElement.width;
-                content.height = this.image.nativeElement.height; 
-                content.left = this.styleToNum(this.frame.nativeElement.style.left);
-                content.top = this.styleToNum(this.frame.nativeElement.style.top);
-            }
-        }*/
-    }
-
-
     
     styleToNum(style){
         return Number(style.substring(0, style.length - 2));

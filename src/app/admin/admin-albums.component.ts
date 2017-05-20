@@ -18,18 +18,25 @@ import { SaveAlbumModal } from '../album/save-album.modal'
     `]
 })
 
+//displays album index in admin section
 export class AdminAlbumsComponent implements OnInit  {
     
+    //error when loading albums
     error: string;
+    //array of albums to display
     albums : Album[];
+    //loading indicator
     loading = true
 
+    /**
+    @param albumService - service to get albums from API
+    */
     constructor(
         private albumService: AlbumHttpService, public dialog: MdDialog, private router: Router, private snackBar: MdSnackBar
     ){ 
     }
     
-    
+    //gets albums from API
     ngOnInit(){
         this.albumService.getAlbums().subscribe(
            albums => {
@@ -43,6 +50,9 @@ export class AdminAlbumsComponent implements OnInit  {
         )
     }
 
+    onDeleteClicked(){}
+
+    //triggered on album clicked
     onSelected(album: Album){
        this.router.navigate(['/admin/albums',album.id])
     }

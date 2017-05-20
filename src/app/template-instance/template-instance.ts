@@ -3,6 +3,7 @@ import {Content} from '../content/content';
 import {User} from '../user/user'
 import {Tag} from '../tag/tag'
 
+//model for the document
 export class TemplateInstance {
   id: number;
   name: string;

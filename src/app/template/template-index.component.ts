@@ -19,7 +19,7 @@ import {User} from '../user/user'
                 <button md-icon-button><md-icon>search</md-icon></button>
             </form>
         </md-toolbar>
-        <div class ="content">
+        <div class ="index-content">
             <div class="shutter">
                 <md-spinner *ngIf="loading"></md-spinner>
                 <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>

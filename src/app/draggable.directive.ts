@@ -3,7 +3,7 @@ import {Directive, HostListener, EventEmitter, Output, ElementRef, OnInit, Conte
 @Directive({
     selector: '[draggablex]'
 })
-
+//DEPRECATED
 export class Draggable implements OnInit {
 
     mousedrag;

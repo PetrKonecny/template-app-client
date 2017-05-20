@@ -15,14 +15,10 @@ import {Location } from '@angular/common';
 import {AppComponentRef} from './app.ref'
 import { TemplateStore } from './template/template.store'
 
-/**
-*@description 
-* root app component 
-**/
 @Component({
     selector: 'app-root',
     template: `
-    <span (mousemove)="test($event)" (document:keyup.shift)="onShiftUp()" (document:keydown.shift)="onShiftDown()" style="height: 95%">
+    <span (mousemove)="move($event)" (document:keyup.shift)="onShiftUp()" (document:keydown.shift)="onShiftDown()" style="height: 95%">
     <md-toolbar *ngIf="adminRoute" color="warn">
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/users" routerLinkActive="active">USERS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/templates" routerLinkActive="active">TEMPLATES</a>
@@ -46,34 +42,54 @@ import { TemplateStore } from './template/template.store'
     providers: [TemplateInstanceService,TemplateInstanceStore, TemplateStore, TemplateService,Draggable,AppComponentRef ]
 })
 
-export class AppComponent implements OnInit, AfterViewChecked {
+//root application module that displays navigation toolbar that is present on every page 
+export class AppComponent implements OnInit {
 
+    //whether route contains 'admin' 
     adminRoute = false;
 
+    /**
+    @param userStore - store containing user currently logged in
+    @param userService - injects http service to communicate with API
+    @param router - router service used for navigation in application
+    @param fontStore- store containing available fonts
+    @param config - application config
+    @param route - currently active route
+    */
     constructor(private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, private guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
     private ref: AppComponentRef){
 
     }
 
-    test($event){
+    /**triggered on mouse move in whole application
+    other parts of application use this trigger if they want to react on moved mouse
+    */ 
+    move($event){
         this.ref.nextMouseMove($event)        
     }
 
+    /**triggered when the shift key is lifted
+    other parts use this to ract on shift key action
+    */
     onShiftUp(){
         this.ref.nextShiftPress(false)
     }
 
+    /**triggered when the shift key is pressed
+    other parts use this to ract on shift key action
+    */
     onShiftDown(){
         this.ref.nextShiftPress(true)
     }
 
-    ngAfterViewChecked(){
-    }
-
+    //calls http service that logs out the user if logout button is clicked 
     onLogoutClicked(){
         this.userService.logoutUser().subscribe(()=>{this.userStore.loadUser(null)})
     }
 
+    /**triggered when component is created
+    gets authenticated user from api and avalilable fonts
+    */
     ngOnInit(){
         this.router.events.subscribe(event=>{
             this.adminRoute = event.url.includes('admin')
@@ -87,7 +103,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
         })
     }
 
-    //make this work through framework somehow
+    //adds font styles to the html document, so that they can be displayed
     appendFontStyle(font: Font){
         var newStyle = document.createElement('style');
             newStyle.appendChild(document.createTextNode("\

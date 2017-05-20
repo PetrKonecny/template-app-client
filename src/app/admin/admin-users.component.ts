@@ -9,17 +9,24 @@ import { User } from '../user/user'
     `,
     providers: []
 })
-
+//displays users in the admin section
 export class AdminUsersComponent implements OnInit {
     
+    //error thrown when loading users
     errorMessage: string;
+    //array of users to display
     users : User[];
+    //loading indicator
     loading = true;
 
+    /**
+    @param userService - service to load users from
+    */
     constructor(
         private userService: UserService
     ){}
 
+    //loads users
     ngOnInit(){
         this.userService.getUsers().subscribe(
         users=>{

@@ -28,10 +28,11 @@ import { TableComponent } from '../admin/table.component'
           </ngx-datatable>
     `,
 })
-
+//displays table of albums and some navigation on top of the table
 export class AlbumTableComponent extends  TableComponent {
         
     @Input()
+    //albums in the table
     albums : Album[]
 
     @Output()
@@ -40,7 +41,7 @@ export class AlbumTableComponent extends  TableComponent {
     onOpenClicked(){
         this.onOpen.emit(this.selected[0])
     } 
-
+    //columns displayed in the table
     columns = [
         { prop: 'id'},
         { prop: 'name'},

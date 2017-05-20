@@ -22,21 +22,22 @@ import { ElementStore } from '../element/element.store'
     providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands, ElementStore, PageStore]
 })
 
+//index page for creating new template containing the editor component
 export class TemplateCreateComponent implements AfterViewInit, OnInit  {
     
-    errorMessage: string;
     template : Template;
 
     constructor(
         private templateStore: TemplateStore, private pageStore: PageStore, private undoRedoService: UndoRedoService, private route: ActivatedRoute, private factory: PageFactory
     ){ }
 
+    //saves buffer commands if the mouse up event happens
     @HostListener('document:mouseup', ['$event'])
     onMouseup(event) {
        this.undoRedoService.saveBuffer()
     }
     
-    
+    //processes url parameters for creating setting up the editor
     ngOnInit(){
         this.templateStore.cleanStore();
         this.templateStore.template.first().subscribe( template => {

@@ -30,39 +30,49 @@ import { User } from '../user/user'
     styles: [`                         
             `]
 })
-
+//displays grid of albums with different color depending on their visibility
 export class AlbumListComponent {
      
     @Input()
+    //array of albums to display
     albums : Album[] 
 
     @Input()
+    //number of columns in the grid
     cols = 5;
 
     @Input()
+    //currently logged in user
     user: User
 
     @Output() 
+    //triggered on album clicked
     onAlbumClicked = new EventEmitter<Album>();
 
     @Output() 
+    //triggered on edit clicked
     onEditClicked = new EventEmitter<Album>();
 
     @Output() 
+    //trigered on delete clicked
     onDeleteClicked = new EventEmitter<Album>();
 
+    //makes album menu not click the album
     onClick(event) {
        event.stopPropagation();
     }
-   
+       
+   //triggered on album clicked
     onSelect(album: Album) {
         this.onAlbumClicked.emit(album);
     }    
 
+    //trigered on edit clicked
     onEditAlbum(album: Album){
         this.onEditClicked.emit(album);
     }
 
+    //trigered on delete clicked
     onDeleteAlbum(album: Album){
         this.onDeleteClicked.emit(album)
     }

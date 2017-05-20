@@ -27,14 +27,20 @@ import {AppComponentRef} from '../app.ref'
     `]
 })
 
-       
+//frame with 8 displayed around the image when inside the content and moving 
 export class ImageHandleComponent implements AfterContentInit {
 
     @ContentChild('handleContent')
     handleContent: any
     content: any
+    //if shift is being held down or not
     shift: boolean
 
+
+    /**
+    @param commands - commands used to move image in the content
+    @param ref - referene to app root to get shift from
+    */
     constructor(private commands: ImageContentCommands, private ref: AppComponentRef){
         this.ref.shiftPRess.subscribe(press => this.shift = press)
     }
@@ -44,6 +50,7 @@ export class ImageHandleComponent implements AfterContentInit {
         this.content = this.handleContent.content
     }
 
+    //triggered from top left handle
     leftTop(dimensions){
         if(this.shift){
             let ratio = this.content.width / this.content.height
@@ -53,10 +60,12 @@ export class ImageHandleComponent implements AfterContentInit {
         }
     }
 
+    //triggered from top handle
     top(dimensions){
         this.commands.startResizingImage(this.content,{height: -1*dimensions.top,  top: dimensions.top})
     }
 
+    //triggered from top right handle
     rightTop(dimensions){
         if(this.shift){
             let ratio = this.content.width / this.content.height
@@ -66,10 +75,12 @@ export class ImageHandleComponent implements AfterContentInit {
         }
     }
 
+    //triggered from right handle
     right(dimensions){
         this.commands.startResizingImage(this.content,{width: dimensions.left})
     }
 
+    //triggered from bottom right handle
    rightBottom(dimensions){
         if(this.shift){
             let ratio = this.content.width / this.content.height
@@ -79,10 +90,12 @@ export class ImageHandleComponent implements AfterContentInit {
         }
    }
 
+   //triggered from bottom handle
    bottom(dimensions){
         this.commands.startResizingImage(this.content,{height: dimensions.top})
    }
 
+   //triggered from bottom left handle
    leftBottom(dimensions){
        if(this.shift){
             let ratio = this.content.height / this.content.width
@@ -93,6 +106,7 @@ export class ImageHandleComponent implements AfterContentInit {
        }
    }
 
+   //triggered from left handle
    left(dimensions){
        this.commands.startResizingImage(this.content,{width:-1*dimensions.left, left: dimensions.left})
    }

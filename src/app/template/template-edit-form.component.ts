@@ -7,6 +7,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import {ActivatedRoute} from '@angular/router';
 
+//DEPRACATED
 @Component({
     selector: 'template-edit-form',
     template: `

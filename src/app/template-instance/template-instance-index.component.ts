@@ -18,17 +18,26 @@ import { UserStore } from '../user/user.store'
     providers: []
 })
 
+//displays index page containing user documents
 export class TemplateInstanceIndexComponent implements OnInit  {
     
+    //error thrown when loading the documents
     error: string
+    //loading indicator
     loading = true
+    //array of documents to be displayed
     templateInstances : TemplateInstance[]
 
+    /**
+    @param templateInstanceService - service to get docuemnts form API
+    @param userStore - store containing current user
+    */
     constructor(
         private templateInstanceService: TemplateInstanceService, private userStore: UserStore
     ){ }
     
     
+    //loads documents for user
     ngOnInit(){
         this.userStore.user
         .first(user=>user.id > 0)
@@ -43,22 +52,13 @@ export class TemplateInstanceIndexComponent implements OnInit  {
         )
 
     }
-        
     
-    getTemplates(){
-        this.templateInstanceService.getTemplateInstances().subscribe(
-               templateInstances => {
-                   this.templateInstances = templateInstances
-                   this.loading = false
-               },
-               error =>  this.error = error
-        );
-    }
-    
+    //triggered when delete button clicked
     onDeleteClicked(instance: TemplateInstance){
         this.templateInstanceService.removeTemplateInstance(instance.id).subscribe(res => this.deleteFromList(instance));
     }
     
+    //removes document from the list
     deleteFromList(instance: TemplateInstance){
         var index = this.templateInstances.indexOf(instance);
         this.templateInstances.splice(index,1);

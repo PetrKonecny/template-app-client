@@ -18,10 +18,7 @@ import {TemplateInstanceHelper} from '../template-instance/template-instance.hel
 
 /*
 
-Stores template and template instance (document) that is currently being worked on.
-provides methods that work with the saved template or template instance
-This calss should be provided by root as the tmeplate and template instance is shared through 
-different routes in some cases 
+Stores template instance (document) that is currently being worked on.
 */
 
 @Injectable()
@@ -54,13 +51,14 @@ export class TemplateInstanceStore {
 
     }
     
+    //gets template instance from the API and stores it in store
     getTemplateInstance(id: number){
         return this.templateInstanceService.getTemplateInstance(id).first().subscribe((res) => {
             this._templateInstance.next(res);
         });
     }
     
-   
+   //saves template instalce to the server
     saveTemplateInstance(){
         if(this._templateInstance.value.id > 0){
             return this.templateInstanceService.updateTemplateInstance(this._templateInstance.value)
@@ -71,6 +69,7 @@ export class TemplateInstanceStore {
         }
     }
     
+    //resets the store
     cleanStore(){
         if (this.cleanLocked){
             this.cleanLocked = false;
@@ -79,10 +78,12 @@ export class TemplateInstanceStore {
         }
     }
     
+    //loads documents into the store
     loadTemplateInstance(templateInstance: TemplateInstance){
         this._templateInstance.next(templateInstance)
     }
     
+    //ignores next cleanStore() request
     ignoreNextClean(){
         this.cleanLocked = true;
     }

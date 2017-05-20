@@ -14,7 +14,7 @@ import {ActivatedRoute} from '@angular/router';
     `,
     providers: []
 })
-
+//DEPRECATED
 export class UserTemplatesComponent implements OnInit {
     
     errorMessage: string;

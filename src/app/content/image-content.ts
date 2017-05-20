@@ -8,14 +8,26 @@ export class ImageContentCommands{
 
 	constructor(private service: UndoRedoService){}
 
+	/**sets image into the content
+	@param content - content to set image to
+	@param image -image to set
+	*/
 	SetImage(content: ImageContent, image: Image){
 		this.service.execute(new SetImage(content,image))
 	}
 
+	/** starts moving the image
+	@param content - content which image to move
+	@param dimensions - dimensions to move image by 
+	**/
 	startMovingImage(content: ImageContent, dimensions){
 		this.service.addToBufferAndExecute(new ChangeImageContentDimensions(content,dimensions))
 	}
 
+	/** starts resizing the image
+	@param content - content which image to resize
+	@param dimensions - dimensions to resize image by 
+	**/
 	startResizingImage(content: ImageContent, dimensions){
 		this.service.addToBufferAndExecute(new ChangeImageContentDimensions(content,dimensions))
 	}
@@ -30,7 +42,7 @@ export class ImageContentCommands{
 }
 
 
-
+//executing this command sets image into content
 export class SetImage implements Command{
 
 	oldImage: Image
@@ -48,6 +60,7 @@ export class SetImage implements Command{
 
 }
 
+//executing this command adds current and new image dimensions
 export class ChangeImageContentDimensions implements BufferCommand{
 
 	constructor(private content: ImageContent, private dimensions){}
@@ -102,12 +115,7 @@ export class ChangeImageContentDimensions implements BufferCommand{
 	}
 }
 
-export class MoveResizeImage{
-
-	constructor(private content: ImageContent, private image: Image){}
-}
-
-
+//model of image content
 export class ImageContent extends Content {
     image: Image;
     type: string = "image_content";

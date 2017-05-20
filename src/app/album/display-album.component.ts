@@ -30,26 +30,41 @@ import { ImageService } from '../image/image.service'
         
     `]
 })
-
+//displays images inside the album
 export class DisplayAlbumComponent implements OnInit  {
     
+    //error thrown while loading albums
     error: string;
+    //album to be displayed
     album : Album;
+    //selected images in the album
     selected = new Array
+    //whether the shift key is being held or not
     shift = false
+    //loading indicator
     loading = true
 
+    /**
+    @param imageService - http service used to manipulate images
+    @param albumService - service used to load album
+    @param dialog - service used for displaying the dialog
+    @param snackBar - service used to display snacbar with errors
+    @param route - current route containing params
+    @param config - configuration used to get API URl
+    @param ref - refference to the root component 
+    **/
     constructor(
         private imageService: ImageService, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig, private ref: AppComponentRef 
     ){
         this.ref.shiftPRess.subscribe(press => this.shift = press) 
     }
     
-    
+    //gets the images
     ngOnInit(){
         this.getImages()
     }
 
+    //opens modal to upload images
     openUploadModal() {
         let dialogRef = this.dialog.open(UploadComponent, {
           height: '90%',
@@ -61,6 +76,7 @@ export class DisplayAlbumComponent implements OnInit  {
         )        
     }
 
+    //opens modal to choose between albums
     openAlbumsModal() {
         let dialogRef = this.dialog.open(SelectAlbumModal, {
           height: '90%',
@@ -78,6 +94,7 @@ export class DisplayAlbumComponent implements OnInit  {
         })
     }
 
+    //triggered when delete button clicked
     onDeleteClicked(){
         this.selected.forEach((image)=>{
            this.imageService.removeImage(image).subscribe(
@@ -91,6 +108,7 @@ export class DisplayAlbumComponent implements OnInit  {
         })
     }
 
+    //triggered when image selected
     onSelected(image: Image){
         if(!this.shift){
             this.selected.forEach(image => image.selected = false)
@@ -100,6 +118,7 @@ export class DisplayAlbumComponent implements OnInit  {
         this.selected.push(image)
     }
     
+    //calls service to get images from API
     getImages(){
        this.route.params
         .flatMap((params)=>this.albumService.getAlbum(params['id']))

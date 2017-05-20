@@ -36,9 +36,11 @@ import { Album } from '../album/album'
     providers: []
 })
 
+//displays dialog to create or edit new album
 export class SaveAlbumModal  {
     
     @Input()
+    ///album to create or edit
     album: Album
 
     public saveForm = this.fb.group({
@@ -47,14 +49,20 @@ export class SaveAlbumModal  {
         tagged: [""]
     });
 
+    /**
+    @param fb - form builder that creates the form
+    @param ref - reference to the dialog 
+    */
     constructor(private fb: FormBuilder, private ref: MdDialogRef<SaveAlbumModal>){
 
     }
 
+    //sets album values into the form
     setAlbum(album: Album){
         this.saveForm.patchValue(album)
     }
 
+    //triggered when form is submitted
     onSaveButtonClicked(){
         if(this.saveForm.valid){
             this.ref.close(this.saveForm.value)

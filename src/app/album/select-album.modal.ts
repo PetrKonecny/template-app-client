@@ -13,11 +13,17 @@ import { AlbumHttpService } from '../album/album-http.service'
     providers: []
 })
 
+//dialog that presents albums to choose from
 export class SelectAlbumModal  {
     
     @Input()
+    //albums to choose from
     albums: Album[]
 
+    /**
+    @param ref - reference to close the dialog
+    @param service - service to load albums from
+    */
     constructor(private ref: MdDialogRef<SelectAlbumModal>, private service: AlbumHttpService){}
 
     ngOnInit(){

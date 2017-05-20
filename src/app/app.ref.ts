@@ -3,6 +3,10 @@ import {AppComponent} from './app.component'
 import {Subject, Observable} from 'rxjs/Rx'
 
 @Injectable()
+/** Reference to the root component
+is used to register mouse movement and shift press
+for better performance
+*/
 export class AppComponentRef {
 
     component: AppComponent

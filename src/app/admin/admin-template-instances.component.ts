@@ -12,16 +12,26 @@ import { Router } from '@angular/router'
     providers: []
 })
 
+//displays documents in the admin section
 export class AdminTemplateInstancesComponent implements OnInit {
     
+    //error thrown when loading documents
     errorMessage: string;
+    //array of documents to be displayed
     templateInstances : TemplateInstance[];
+    //loading indicators
     loading = true;
 
+    /**
+    @param templateInstanceService - service to get documents from the API
+    @param snackBar - snack bar to display errors on
+    @param router - router used for navigating in the app
+    */
     constructor(
         private templateInstanceService: TemplateInstanceService, private snackBar: MdSnackBar, private router: Router
     ){}
 
+    //triggered when delete is clicked
     onDelete(selected){
         selected.forEach((templateInst)=>{
            this.templateInstanceService.removeTemplateInstance(templateInst.id).subscribe(
@@ -35,10 +45,12 @@ export class AdminTemplateInstancesComponent implements OnInit {
         })
     }
 
+    //trigered when edit is clicked
     onEdit(selected){
         this.router.navigate(['/admin/template-instances',selected.id,'edit'])
     }
 
+    //loads documents form the API
     ngOnInit(){
         this.templateInstanceService.getTemplateInstances().subscribe(
         templateInstances=>{

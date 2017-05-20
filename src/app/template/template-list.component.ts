@@ -22,42 +22,33 @@ import { TemplateInstance} from '../template-instance/template-instance';
     `,
 })
 
+//displazs list of templates
 export class TemplateListComponent {
-    
-    mode = 'Observable';
-    
+        
     
     @Input()
+    //arraz of templates to be displayed
     templates : Template[] 
 
     @Input()
+    //optional user param to show template controlls
     user: User
     
     @Output() 
+    //triggered when delete button clicked
     onDeleteClicked = new EventEmitter<TemplateInstance>();
 
     
-    constructor(private router: Router){}
+    constructor(){}
     
-    onSelectEdit(template: Template) {
-        this.router.navigate(['/templates', template.id, '/edit']);
-    }
-    
-    onSelectInstance(template: Template) {
-        this.router.navigate(['/templates', template.id, '/instance']);
-    }
-    
-    
+    //triggered on delete clicked
     onDelete(templateInstance: TemplateInstance){
         this.onDeleteClicked.emit(templateInstance);
     }
     
-    
+    //stops event from triggering click on the item when opening actions menu
     onClick(event) {
        event.stopPropagation();
     }
-        
-    onSelectNew(template: Template) {
-        
-    }    
+    
 }

@@ -9,12 +9,17 @@ export class TextContentCommands{
 
 	constructor(private service: UndoRedoService){}
 
+	/**changes test of the text content
+	@param content - content to add text to
+	@param text - text to add
+	*/
 	changeText(content: TextContent, text: string){
 		this.service.addToBufferAndExecute(new ChangeText(content,text))
 	}
 
 }
 
+//executing this command changes text of the content 
 export class ChangeText implements BufferCommand{
 
 	constructor(private content: TextContent, private text: string){}
@@ -49,6 +54,7 @@ export class ChangeText implements BufferCommand{
 
 }
 
+//model for text content
 export class TextContent extends Content {
     text: string
     type: string = "text_content";

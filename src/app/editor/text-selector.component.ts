@@ -31,14 +31,18 @@ import {TextContent} from '../content/text-content'
              `,
 })
 
+//displays custom toolbar for tiny-mce editor 
 export class TextSelectorComponent {
     
-    fontsOpened : boolean;
+    //editor of currently selected text element
     editor: Editor  
-    fontSizes=[10,20,30,40,50]
+
     curColor: string
     
     
+    /**
+    @param elementStore - store containing selected element
+    */
     constructor(private elementStore: ElementStore){
         this.elementStore.element.subscribe(element => {
             if(element  && element.content && element.content.type == 'text_content'){
@@ -50,28 +54,28 @@ export class TextSelectorComponent {
         })
     }
       
-    onCpToggleChange(toggle: boolean){
-        if(!toggle){
-            this.changeEditorTextColor(this.curColor)
-        }
-    }
-    
+   //calls tiny-mce command to change font size   
    changeEditorFontSize(size: number){
         this.editor.editor.execCommand('fontSize',false,size+"px")       
     }
     
+    //calls tiny-mce command to change font bold
     changeEditorTextBold(){
         this.editor.editor.execCommand("Bold")     
     }
     
+    //calls tiny-mce command to change font italic
     changeEditorTextItalic(){
         this.editor.editor.execCommand("Italic")     
     }
     
+
+    //calls tiny-mce command to change text format
     changeEditorFormatBlock(block: string){
         this.editor.editor.execCommand('FormatBlock', false , block)
     }
     
+    //calls tiny-mce command to change editor font
     changeEditorFont(font: Font){
         let fontName = ""
         if(font.id){
@@ -82,10 +86,12 @@ export class TextSelectorComponent {
         this.editor.editor.execCommand('FontName',false,fontName)       
     }
     
+    //calls tiny-mce command to change text align
     changeEditorTextAlign(align: string){
         this.editor.editor.execCommand(align)
     }
      
+    //calls tiny-mce command to change text color
     changeEditorTextColor(color: string){
         this.editor.editor.execCommand('ForeColor', false, color);
     }

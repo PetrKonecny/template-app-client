@@ -16,16 +16,25 @@ import {MdSnackBar} from '@angular/material'
     providers: []
 })
 
+//displays elements in album index
 export class AdminElementsComponent implements OnInit {
     
+    //erro when loading elements
     errorMessage: string;
+    //array of elements to display
     elements : Element[];
+    //loading indicator
     loading = true;
-
+    
+    /**
+    @param elementService - service that calls API to get elements
+    @param snackBar - snackbar do display errors on
+    */
     constructor(
         private elementService: ElementHttpService, private snackBar: MdSnackBar
     ){}
 
+    //triggered when delete clicked
     onDeleteClicked(elements: Element[]){
         elements.forEach(element =>{
             this.elementService.removeElement(element.id).subscribe(
@@ -39,6 +48,7 @@ export class AdminElementsComponent implements OnInit {
         })
     }
 
+    //gets elements from the API
     ngOnInit(){
         this.elementService.getElements().subscribe(
         elements=>{
