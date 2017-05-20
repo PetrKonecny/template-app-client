@@ -34,18 +34,17 @@ import { Image } from './image';
             `]
 })
 
+//displays grid of images 
 export class ImageListComponent {
      
     @Input()
+    //images to be displayed
     images : Image[] 
+    //triggered when image is clicked
     @Output() onImageClicked = new EventEmitter<Image>();
-        
+    
+    //triggered when image is clicked    
     onSelect(image: Image) {
         this.onImageClicked.emit(image);
     }
-
-    drag(event, image){
-        event.dataTransfer.setData("text",JSON.stringify(image))
-    }
-    
 }

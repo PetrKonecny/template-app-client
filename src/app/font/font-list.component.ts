@@ -15,13 +15,15 @@ import { DisplayFontComponent } from './display-font.component'
             
             `]
 })
-
+//displays list of the fonts
 export class FontListComponent {
      
     @Input()
+    //fonts to be displayed
     fonts : Font[] 
     @Output() onFontClicked = new EventEmitter<Font>();
         
+    //triggered when font is clicked
     onSelect(font: Font) {
         this.onFontClicked.emit(font);
     }   

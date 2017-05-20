@@ -23,10 +23,11 @@ import { Guide } from './guide'
     `]
 })
 
-       
+//displays temporary guide in the editor
 export class DisplayGuideComponent {
     
     @Input()
+    //guide to be displayed
     guide : Guide
       
 }

@@ -24,10 +24,11 @@ import { ElementDimensions } from '../resizable.directive'
     `]
 })
 
-       
+//displays permament guide 
 export class DisplayRulerComponent {
     
     @Input()
+    //guide to display
     guide : Guide
       
 }

@@ -2,7 +2,7 @@ import {Font} from '../font/font';
 import {Element} from './element'
 import {TableContent, RowContent, CellContent} from '../content/table-content'
 export enum ClientState {moveResize,fillOut,editTable,editCells}
-import {UndoRedoService, Command} from '../undo-redo.service'
+import {UndoRedoService, Command, BufferCommand} from '../undo-redo.service'
 import {Injectable} from '@angular/core';
 
 /* Extending this command should allow rollback funcionality for
@@ -15,59 +15,111 @@ export class TableElementCommands{
 
     constructor(private service: UndoRedoService){}
 
-
+    /**adds rows above the ce;;
+    @param element - element to add row to
+    @param cell - cell that the row should be added above
+    */
     addRowAbove(element: TableElement, cell: Cell){
         this.service.execute(new AddRowAbove(element,cell))
     }
 
+    /**adds row below the cell
+    @param element - element to add row to
+    @param cell - cell that the row should be added below
+    */
     addRowBelow(element: TableElement, cell: Cell){
         this.service.execute(new AddRowBelow(element,cell))
     }
 
+    /**adds column left to the cell
+    @param element - element to add column to
+    @param cell - cell that the column should be added next to
+    */
     addColumnLeft(element: TableElement, cell: Cell){
         this.service.execute(new AddColumnLeft(element,cell))
     }
 
+    /**adds column right to the cell
+    @param element - element to add column to
+    @param cell - cell that the column should be added next to
+    */
     addColumnRight(element: TableElement, cell: Cell){
         this.service.execute(new AddColumnRight(element,cell))
     }
 
+    /**deletes row with the cell
+    @param element - element to remove row from
+    @param cell - cell which row should be deleted
+    */
     deleteRow(element: TableElement, cell: Cell){
         this.service.execute(new DeleteRow(element,cell))
     }
 
+    /**deletes column with the cell
+    @param element - element to remove column from
+    @param cell - cell which column should be deleted
+    */
     deleteColumn(element: TableElement, cell: Cell){
         this.service.execute(new DeleteColumn(element,cell))
     }
 
+    /**merges selected cells
+    @param element - element which cells are being merged
+    */
     mergeSCells(element: TableElement){
         this.service.execute(new mergeSCells(element))
     }
 
+    /**merges selected cells
+    @param element - element which cells are being merged
+    */
     changeSCellsBold(element: TableElement){
         this.service.execute(new changeSCellsBold(element))
     }
 
+    /**chengs selected cells font to italic
+    @param element - element containing the cells
+    */
     changeSCellsItalic(element: TableElement){
         this.service.execute(new changeSCellsItalic(element))
     }
 
+    /**chengs selected cells border width
+    @param element - element containing the cells
+    @param width - width of the border 
+    */
     changeSCellsBorderW(element: TableElement, width: number){
         this.service.execute(new changeSCellsParam(element,"border_width",width))
     }
 
+    /**chengs selected cells border style
+    @param element - element containing the cells
+    @param style - css style to be set
+    */
     changeSCellsBorderStyle(element: TableElement, style: string){
         this.service.execute(new changeSCellsParam(element,"border_style",style))
     }
 
+    /**chengs selected cells border color
+    @param element - element containing the cells
+    @param color - color of the border
+    */
     changeSCellsBorderColor(element: TableElement, color: string){
         this.service.execute(new changeSCellsParam(element,"border_color",color))
     }
 
+    /**chengs selected cells background color
+    @param element - element containing the cells
+    @param color - color of the border
+    */
     changeSCellsBackgroundColor(element: TableElement, color: string){
         this.service.execute(new changeSCellsParam(element,"background_color",color))
     }
 
+    /**chengs selected cells background display
+    @param element - element containing the cells
+    @param value - whether background should be displayed or not
+    */
     toggleSCellsBackground(element: TableElement, value: boolean){
         if(value){
             this.service.execute(new changeSCellsParam(element,"background_color",Element.defaultBackgroundColor))
@@ -76,28 +128,68 @@ export class TableElementCommands{
         }
     }
 
+    /**chengs selected cells text align
+    @param element - element containing the cells
+    @param align - css value of the alignement
+    */
     changeSCellsTextAlign(element: TableElement, align: string){
         this.service.execute(new changeSCellsParam(element,"text_align",align))
     }
 
+    /**chengs selected cells fvertical align
+    @param element - element containing the cells
+    @param align - css value of the alignement
+    */
     changeSCellsTextAlignVert(element: TableElement, align: string){
         this.service.execute(new changeSCellsParam(element,"vertical_align",align))
     }
 
+    /**chengs selected cells font size
+    @param element - element containing the cells
+    @param size - size of the fonts
+    */
     changeSCellsFontSize(element: TableElement, size: number){
         this.service.execute(new changeSCellsParam(element,"font_size",size))
     }
 
+    /**chengs selected cells text color
+    @param element - element containing the cells
+    @param color - color of the text
+    */
     changeSCellsTextColor(element: TableElement, color: string){
         this.service.execute(new changeSCellsParam(element,"text_color",color))
     }
 
+    /**chengs selected cells font
+    @param element - element containing the cells
+    @param font - font that is going to be set
+    */
     ChangeSCellsFont(element: TableElement, font: Font){
         this.service.execute(new ChangeSCellsFont(element,font))
     }
+
+    /**chengs selected cells row height
+    @param element - element containing the cells
+    @param dimensions - dimensions to change height by
+    @param y - coordinate of the row
+    */
+    changeRowHeight(element: TableElement, dimensions, y){
+        this.service.addToBufferAndExecute(new setRowHeight(element,dimensions,y))
+    }
+
+    /**chengs selected cells column width
+    @param element - element containing the cells
+    @param dimensions - dimensions to change width by
+    @param x - coordinate of the column
+    */
+    changeColumnWidth(element: TableElement, dimensions, x){
+        this.service.addToBufferAndExecute(new setColumnWidth(element,dimensions,x))
+    }
 }
 
-
+/* Default table command which can be extended to provide
+undo and redo funcionality for other commands on the TableElement
+*/
 export class DefaultTableCommand implements Command{
 
     constructor(public element: TableElement){
@@ -232,6 +324,8 @@ export class DeleteColumn extends DefaultTableCommand{
     }   
 }
 
+/**Executing this command merges selected cells together into one
+*/
 export class mergeSCells extends DefaultTableCommand{
     
     execute(){
@@ -263,6 +357,8 @@ export class mergeSCells extends DefaultTableCommand{
     }
 }
 
+/**Executing this command changes selected cells to bold
+**/
 export class changeSCellsBold extends DefaultTableCommand{
 
     execute(){
@@ -285,6 +381,8 @@ export class changeSCellsBold extends DefaultTableCommand{
 
 }
 
+/**Executing this command changes selected cells font to italic
+**/
 export class changeSCellsItalic extends DefaultTableCommand{
 
     execute(){
@@ -306,6 +404,8 @@ export class changeSCellsItalic extends DefaultTableCommand{
 
 }
 
+/**Executing this command changes selected cells parameter 
+*/
 export class changeSCellsParam extends DefaultTableCommand {
     constructor(public element: TableElement, private paramName: string, private paramValue){
         super(element)
@@ -324,6 +424,55 @@ export class changeSCellsParam extends DefaultTableCommand {
     }
 }
 
+/**Executing this command sets row height
+*/
+export class setRowHeight extends DefaultTableCommand implements BufferCommand {
+    constructor(public element: TableElement, private dimensions, private y: number){
+        super(element)
+    }
+
+    execute(){
+        super.execute()
+        this.element.rows[this.y].height += this.dimensions.top
+    }
+
+    getStoredState(){
+        return {content: this.contentString, rows: this.rowString}
+    }
+
+    setStoredState(params){
+        this.rowString = params.rows
+        this.contentString = params.content
+    }
+}
+
+/**Executing this command sets column width
+*/
+export class setColumnWidth extends DefaultTableCommand implements BufferCommand {
+    constructor(public element: TableElement, private dimensions, private x: number){
+        super(element)
+    }
+
+    execute(){
+        super.execute()
+        for (var row of this.element.rows){
+            row.cells[this.x].width += this.dimensions.left
+        }
+    }
+
+    getStoredState(){
+        return {content: this.contentString, rows: this.rowString}
+    }
+
+    setStoredState(params){
+        this.rowString = params.rows
+        this.contentString = params.content
+    }
+}
+
+
+/**Executing this command changes selected cells font
+*/
 export class ChangeSCellsFont extends DefaultTableCommand {
 
     constructor(public element: TableElement, private font: Font){
@@ -342,6 +491,7 @@ export class ChangeSCellsFont extends DefaultTableCommand {
     }
 }
 
+//Table element model 
 export class TableElement extends Element {
     font_size: number;
     type: string = 'table_element';
@@ -356,6 +506,14 @@ export class TableElement extends Element {
     selectionEnd: CellPosition
     clientState: ClientState = ClientState.moveResize 
 
+    /** adds rows to the element
+    @param element - element to add rows to
+    @param count - number of rows to add
+    @param length - length of the rows to add
+    @param height - height of the rows to add
+    @param width - width of the rows to add
+    @param position - position in the table where to add the rows
+    */
     static addRows(element:TableElement, count: number = 1, length: number, height: number = this.default_row_height, width: number = this.default_cell_width, position: number = 0){
         if(!element.content){
             element.content = new TableContent
@@ -370,6 +528,13 @@ export class TableElement extends Element {
         }
     }
 
+    /** adds columns to the element
+    @param element - element to add columns to
+    @param count - number of columns to add
+    @param height - height of the rows to add
+    @param width - width of the columns to add
+    @param position - position in the table where to add the rows
+    */
     static addColumns(element:TableElement, count: number = 1, height: number = this.default_row_height, width: number = this.default_cell_width, position: number = 0){
         if(!element.content){
             element.content = new TableContent
@@ -381,6 +546,9 @@ export class TableElement extends Element {
         })
     }
 
+    /**gets width of the row
+    @param row - row which width to get
+    */
     static getRowCellWidth(row: Row){
         let total = 0
         row.cells.forEach((cell)=>{
@@ -393,12 +561,20 @@ export class TableElement extends Element {
         return total
     }
 
+    /**deletes the row 
+    @param element - element to delete the row from
+    @param position - position of the row to delete
+    */
     static deleteRow(element: TableElement, position: number){
         let content = <TableContent> element.content
         element.rows.splice(position,1)
         content.rows.splice(position,1)
     }
 
+    /**deletes the column 
+    @param element - element to delete the column from
+    @param position - position of the column to delete
+    */
     static deleteColumn(element: TableElement, position: number){
         let content = <TableContent> element.content
         element.rows.forEach(row =>{
@@ -410,6 +586,10 @@ export class TableElement extends Element {
 
     }
 
+    /**gets position of the cell  
+    @param element - element to containing the cell
+    @param cell - cell which position to get
+    */
     static getCellPosition(element: TableElement, cell: Cell){
         let x = -1
         let y = -1 
@@ -429,6 +609,10 @@ export class TableElement extends Element {
         }
     }
     
+    /**adds cells to the end of every row of the element
+    @param element - element to add rows to 
+    @param width - width of the cell
+    */
     static addCellToRows(element:TableElement, width: number = this.default_cell_width){
         for(var row of element.rows){
             var cell = new Cell
@@ -437,12 +621,19 @@ export class TableElement extends Element {
         }
     }
     
+    /**removes one cell from end of every row
+    @param element - element to remove cells from
+    */
     static removeCellFromRows(element: TableElement){
         for(var row of element.rows){
             row.cells.pop()
         }
     }
     
+    /**selects the cell from the element
+    @param element - element containing the cell
+    @param cell - cell to be selected
+    */
     static selectCell(element: TableElement, cell: Cell){
         cell.selected = true
         if (!element.selectedCells){
@@ -451,11 +642,18 @@ export class TableElement extends Element {
         element.selectedCells.push(cell)
     }
     
+    /**clears all selected cells
+    @param element - element to clear
+    */
     static clearSelectedCells(element: TableElement){
         element.rows.forEach((row)=> row.cells.forEach((cell) => cell.selected = false))
         element.selectedCells = new Array
     }
 
+    /**gets top left corner (min. x and y coord.) from the given cells
+    @param element - element containing the cells
+    @param selectedCells - array of cells we want to get corner from
+    */
     static getTopLeftCorner(element: TableElement, selectedCells: Array<Cell>){
         let minCell: Cell = selectedCells[0]
         selectedCells.forEach(cell => { 
@@ -469,11 +667,16 @@ export class TableElement extends Element {
     } 
 }
 
-
+//model of the row of the table
 export class Row{
     cells: Array<Cell>;
     height: number
-    
+    /**
+    @param row - row to add cells to 
+    @param conut - count of the cells to add
+    @param width - width of the added cells
+    @param position - position where to add the cells
+    */
     static addCells (row: Row, count: number, width: number, position: number = 0){
         if (!row.cells) row.cells = new Array()
         for(var i = 0; i<count; i++){
@@ -484,6 +687,7 @@ export class Row{
     }
 }
 
+//model of the cell
 export class Cell{
     width: number
     position: CellPosition

@@ -8,12 +8,15 @@ import { TemplateInstance} from '../template-instance/template-instance';
     selector: 'template-list',
     template: `
         <md-nav-list>
-            <md-list-item *ngFor="let template of templates">
+            <md-list-item [routerLink] = "['/templates', template.id, 'instance']" *ngFor="let template of templates">
                 <span md-line>{{ template.name }}</span>
                 <md-chip-list md-line><md-chip *ngFor="let tag of template.tagged">{{tag.tag_name}}</md-chip></md-chip-list>
-                <a md-button *ngIf="user && user.id == template.user_id" [routerLink] = "['/templates', template.id, 'edit']">Edit</a>
-                <a md-button [routerLink] = "['/templates', template.id, 'instance']">New </a>
-                <a md-button *ngIf="user && user.id == template.user_id" href="javascript:void(0)"(click)="onDelete(template)">Delete</a>            
+                <button md-icon-button (click)="onClick($event)" [mdMenuTriggerFor]="templateListItemMenu"><md-icon>more_vert</md-icon></button>
+                <md-menu #templateListItemMenu="mdMenu">
+                    <button md-menu-item *ngIf="user && user.id == template.user_id" [routerLink] = "['/templates', template.id, 'edit']">Upravit šablonu</button>
+                    <button md-menu-item [routerLink] = "['/templates', template.id, 'instance']">Nový dokument</button>
+                    <button md-menu-item *ngIf="user && user.id == template.user_id" href="javascript:void(0)"(click)="onDelete(template)">Smazat</button>
+                </md-menu>            
             </md-list-item>
         </md-nav-list>
     `,
@@ -50,6 +53,9 @@ export class TemplateListComponent {
     }
     
     
+    onClick(event) {
+       event.stopPropagation();
+    }
         
     onSelectNew(template: Template) {
         

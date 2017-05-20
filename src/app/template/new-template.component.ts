@@ -16,20 +16,20 @@ import {CreateTableModal} from '../element/create-table-element.modal'
     template: `
         <md-sidenav-container style="height: 100%;">
             <md-toolbar>
-                <button md-icon-button *ngIf="!sidenav.opened" (click)="sidenav.toggle()"><md-icon>add</md-icon></button>
-                <button md-icon-button *ngIf="sidenav.opened" (click)="sidenav.toggle()"><md-icon>close</md-icon></button>
-                <button md-icon-button (click)="saveTemplate()"><md-icon>save</md-icon></button>
-                <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()"><md-icon>undo</md-icon></button>
-                <button md-icon-button [disabled]="!undoService.getRedos().length" ><md-icon>redo</md-icon></button>
+                <button md-icon-button *ngIf="!sidenav.opened" (click)="sidenav.toggle()" md-tooltip="přidat prvek"><md-icon>add</md-icon></button>
+                <button md-icon-button *ngIf="sidenav.opened" (click)="sidenav.toggle()" md-tooltip="zavřít boční menu"><md-icon>close</md-icon></button>
+                <button md-icon-button (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
+                <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
+                <button md-icon-button [disabled]="!undoService.getRedos().length" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
                 <element-toolbar style="width: 100%;"></element-toolbar>
             </md-toolbar>
             <md-sidenav mode ="side" #sidenav style="width: 20%;">
                 <md-tab-group>
-                    <md-tab label = "Elements">                   
+                    <md-tab label = "Prvky">                   
                         <page-select></page-select>
                         <ruler-select></ruler-select>
                     </md-tab>
-                    <md-tab label = "Images">
+                    <md-tab label = "Obrázky">
                         <album-index-sidenav></album-index-sidenav>
                     </md-tab>
                 </md-tab-group>

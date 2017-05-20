@@ -1,6 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import { ImageService } from '../image/image.service';
-import { Element, ElementCommands } from './element';
 import { FormBuilder, Validators, FormControl, FormGroup} from '@angular/forms';
 
 @Component({
@@ -29,18 +27,24 @@ import { FormBuilder, Validators, FormControl, FormGroup} from '@angular/forms';
     `]
 })
 
+//form to fill out the position (width, height, left, top)
 export class PositionForm  implements OnInit{
         
     @Input()
+    //dimensions that are preset in the form
     dimensions 
 
     @Output()
+    //called on form submit
     onSubmit = new EventEmitter
 
 
     public positionForm
 
-    constructor(private fb: FormBuilder, private commands: ElementCommands ){
+    /**
+    @param fb - injects FormBuilder to build the form
+    */
+    constructor(private fb: FormBuilder ){
 
     }
 
@@ -53,7 +57,7 @@ export class PositionForm  implements OnInit{
     	});    
     }
     
-
+    //called on form submit
     onSaveButtonClicked(){
     	if(this.positionForm.valid){
     		this.onSubmit.emit(this.positionForm.value)

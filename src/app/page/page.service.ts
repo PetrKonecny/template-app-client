@@ -22,7 +22,7 @@ export class PageService {
     
     constructor(){}
     
-    /* Initiates Guide objects for the element and page for each element edge 
+    /** Initiates Guide objects for the element and page for each element edge 
     @param element that is skipped
     @param page for which to take elements
     */
@@ -53,7 +53,7 @@ export class PageService {
     }
     
 
-   /*  Move transformation of the element on the page, taking into consideration all guides
+   /**  Move transformation of the element on the page, taking into consideration all guides
    and other page behaviour
    @param element to move
    @param dimensions dimensions by which the element is moving
@@ -80,7 +80,7 @@ export class PageService {
         return {left: dimensions.left, top: dimensions.top, width: null, height: null, border: null}
     }
     
-    /* Resolves if the element should or should not move and which guides should be displayed by 
+    /** Resolves if the element should or should not move and which guides should be displayed by 
     altering given dimensions and controls guide display by adding or removing guides from the guide array 
     @param breaks array of break objects that contain positions where the element should be stoped
     @param element that is manipulated
@@ -126,11 +126,11 @@ export class PageService {
     }
     
     
-    /* Resize transformation of the element on the page, taking into consideration all guides and other page
+    /** Resize transformation of the element on the page, taking into consideration all guides and other page
     behaviour
     @param element element that should be resized
-    @dimensions original transformation
-    @page page to which the element belongs
+    @param dimensions original transformation
+    @param page page to which the element belongs
     @param guides array of guide objects to which the guides that are displayed will be added
     @options array of aditional options 
         reverseWidth: boolean set true if resizing from left

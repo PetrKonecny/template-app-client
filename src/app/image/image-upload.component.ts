@@ -4,7 +4,7 @@ import { Image} from './image';
 import { FileUploader } from 'ng2-file-upload';
 import { AppConfig } from '../app.config'
 
-
+//DEPRACATED
 @Component({
     selector: 'image-upload',
     template: `

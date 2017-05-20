@@ -1,5 +1,6 @@
 import {User} from '../user/user'
 
+//font model
 export class Font {
     id: number;
     name: string;

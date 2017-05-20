@@ -12,11 +12,17 @@ import { Font } from './font';
             `]
 })
 
+/** Displays the font model in its font 
+*/
 export class DisplayFontComponent implements OnInit{
      
     @Input()
+    //font to be displayed
     font : Font
     
+    /**
+    @param elementRef - injects reference to the root elemnt of this component
+    */
     constructor(public elementRef: ElementRef){
     }
     

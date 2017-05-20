@@ -53,6 +53,7 @@ export class TemplateInstanceCreateComponent implements OnInit  {
             this.templateInstance.template_id = this.template.id
             TemplateInstanceHelper.copyContentsFromTemplate(this.templateInstance, this.template);
             TemplateInstanceHelper.getContentsFromTemplateInstance(this.templateInstance,this.template);
+            console.log(this.templateInstance.contents.length)
             this.templateInstance.name = this.template.name
             this.templateInstance.tagged = this.template.tagged
         })

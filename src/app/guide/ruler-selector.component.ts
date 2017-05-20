@@ -4,7 +4,7 @@ import { TemplateInstanceStore } from '../template-instance/template-instance.st
 import { TemplateHelper} from '../template/template.helper'
 import { TemplateStore } from '../template/template.store'
 import { Template } from '../template/template'
-
+//DEPRACATED
 @Component({
     selector: 'ruler-select',
     template: `

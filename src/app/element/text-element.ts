@@ -1,6 +1,7 @@
 import {Font} from '../font/font';
 import {Element} from './element'
 
+//text element model
 export class TextElement extends Element {
     font_size: number;
     max_text_length: number;

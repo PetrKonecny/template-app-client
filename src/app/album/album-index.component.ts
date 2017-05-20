@@ -95,6 +95,7 @@ export class AlbumIndexComponent implements OnInit  {
                     album2.name = value.name
                     album2.tagged = value.tagged
                     album2.public = value.public
+                    delete album2.images;
                     this.albumService.updateAlbum(album2).subscribe(updatedAlbum=>{
                          this.albums.splice(this.albums.indexOf(album),1,updatedAlbum)
                     },error=>{

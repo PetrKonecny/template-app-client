@@ -18,9 +18,10 @@ import { ImageService } from '../image/image.service'
           <md-spinner *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <md-toolbar *ngIf="selected.length" style="position: fixed; z-index:1000;">
-            <button md-button (click)="onDeleteClicked()">Delete</button>
-            <button md-button (click)="openAlbumsModal()">Move</button>
+        <md-toolbar style="position: fixed; z-index:1000;">
+            <h3>{{album?.name}}</h3>
+            <button *ngIf="selected.length" md-button (click)="onDeleteClicked()">Smazat výběr</button>
+            <button *ngIf="selected.length" md-button (click)="openAlbumsModal()">Přesunout výběr</button>
         </md-toolbar>
         <button md-fab class="index-button" (click)="openUploadModal()"><md-icon>add</md-icon></button>
         <image-list *ngIf="album && album.images" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>

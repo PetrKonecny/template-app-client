@@ -33,19 +33,30 @@ import { Observable }     from 'rxjs/Observable';
         
     `]
 })
-
+//Displays albums in the side menu of the editor
 export class AlbumIndexSidenavComponent implements OnInit  {
     
+    //error thrown when loading albums
     error: string;
+    //user albums to be displayed
     albums: Album[];
+    //public albums to be displayed
     publicAlbums: Album[]
+    //album that is selected
     selectedAlbum : Album;
+    //loading status
     loading = true
+    //currently logged in user
     currentUser
 
+    //reference to the component containing images in the album
     @ViewChild('albumDetail')
     albumDetail
 
+    /**
+    @param userStore - store containing currently logged in user
+    @param albumService - service used for loading albums
+    */
     constructor(
         private userStore: UserStore, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig
     ){ 
@@ -56,6 +67,7 @@ export class AlbumIndexSidenavComponent implements OnInit  {
         this.getAlbums()
     }
 
+    //triggered when album selected
     onSelected(album: Album){
         this.selectedAlbum = album
     }
@@ -67,10 +79,12 @@ export class AlbumIndexSidenavComponent implements OnInit  {
     onDeleteClicked(){
     }
 
+    //triggered when clicked back arrow
     onBackClicked(){
         this.selectedAlbum = null
     }
 
+    //triggered when clicked add button
     onAddClicked(){
         if(this.selectedAlbum){
             this.openUploadDialog()
@@ -80,6 +94,7 @@ export class AlbumIndexSidenavComponent implements OnInit  {
 
     }
 
+    //opens dialog to upload new images
     openUploadDialog() {
         let dialogRef = this.dialog.open(UploadComponent, {
           height: '90%',
@@ -91,6 +106,7 @@ export class AlbumIndexSidenavComponent implements OnInit  {
         )        
     }
 
+    //opens dialog to create new album
     openNewAlbumDialog(){
         let dialogRef = this.dialog.open(SaveAlbumModal, {
           height: 'auto',
@@ -110,6 +126,7 @@ export class AlbumIndexSidenavComponent implements OnInit  {
         dialogRef.componentInstance.album = new Album        
     }
     
+    //calls API to get public and user specific albums
     getAlbums(){
         this.userStore.user.first(user => user.id > 0)
         .do((user)=>{this.currentUser = user})

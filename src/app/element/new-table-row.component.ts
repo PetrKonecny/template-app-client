@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core';
-import { TableElement, Cell } from './table-element'
+import { TableElement, Cell, TableElementCommands } from './table-element'
 import { RowContent } from '../content/table-content'
 import { NewTableElement } from './new-table-element'
 
@@ -35,7 +35,7 @@ import { NewTableElement } from './new-table-element'
                         [attr.colspan]=cell.colspan 
                         [attr.rowspan]=cell.rowspan 
                         (mousedown)="onMousedownEdit(x, cell)" 
-                        [style.width.px]="cell.width" resizable (resize)="resize($event)" 
+                        [style.width.px]="cell.width"
                         [style.background]="getCellBGColor(cell)"
                         [style.color]="cell.text_color ? cell.text_color : defaultTextColor" 
                         [style.text-align]="element.rows[y].cells[x].text_align" 
@@ -47,7 +47,13 @@ import { NewTableElement } from './new-table-element'
                         [style.font-size.px]="element.rows[y].cells[x].font_size" 
                         [style.vertical-align]="element.rows[y].cells[x].vertical_align" 
                         [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
-                    >{{content.cells[x].text}}</td> 
+                    ><div style ="position: relative; height: 100%;">{{content.cells[x].text}}
+
+                <a draggable2 *ngIf="cell.selected" (move)="left($event)" style="left: 0; top: 50%;"></a>
+                <a draggable2 *ngIf="cell.selected" (move)="right($event)" style="top: 50%; left: 100%;"></a>
+                <a draggable2 *ngIf="cell.selected" (move)="top($event)" style="left: 50%; top:0;"></a>
+                <a draggable2 *ngIf="cell.selected" (move)="bottom($event)" style="left: 50%; top: 100%;"></a>
+                    </div></td> 
                 </template>
 
                 <!-- template for row when changing cell parameters -->
@@ -114,6 +120,7 @@ import { NewTableElement } from './new-table-element'
             -moz-box-sizing: border-box; /* FF1+ */
             box-sizing: border-box; /* Chrome, IE8, Opera, Safari 5.1*/
         }
+        a {z-index: 1000; position: absolute; margin: -6px; border-radius: 50%; width: 12px; height: 12px; background: blue;}
         td {
             height: inherit;
             padding: 0;
@@ -160,7 +167,7 @@ export class NewTableRowComponent implements OnInit{
     /***
     @param tableElement - reference to the table element used for selectiong
     */
-    constructor(private tableElement: NewTableElement){}
+    constructor(private tableElement: NewTableElement, private commands: TableElementCommands){}
     
     @HostListener('document:mouseup', ['$event'])
     onDocMouseup(event) {    
@@ -251,6 +258,38 @@ export class NewTableRowComponent implements OnInit{
     fillFromDOM(){
     }    
     
+    /**
+    calls the command to resize the column
+    @param dimensions - dimensions used to resize the column
+    **/
+    left(dimensions){
+        this.commands.changeColumnWidth(this.element,dimensions,this.x)
+    }
+
+    /**
+    calls the command to resize the column
+    @param dimensions - dimensions used to resize the column
+    **/
+    right(dimensions){
+        this.commands.changeColumnWidth(this.element,dimensions,this.x)
+    }
+
+    /**
+    calls the command to resize the row
+    @param dimensions - dimensions used to resize the row
+    **/
+    top(dimensions){
+        this.commands.changeRowHeight(this.element,dimensions,this.y)
+    }
+
+    /**
+    calls the command to resize the row
+    @param dimensions - dimensions used to resize the row
+    **/
+    bottom(dimensions){
+        this.commands.changeRowHeight(this.element,dimensions,this.y)
+    }
+
     ngOnInit(){    
     }
 }

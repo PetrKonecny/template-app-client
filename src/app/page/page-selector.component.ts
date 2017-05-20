@@ -12,7 +12,6 @@ import {TemplateInstanceStore} from '../template-instance/template-instance.stor
 import {Guide} from '../guide/guide'
 import {FrameElement} from '../element/frame-element'
 import {MdDialog, MdDialogRef} from '@angular/material'
-import {ImageSelectorComponent} from '../image/image-selector.component'
 import {CreateTableModal} from '../element/create-table-element.modal' 
 import {PageCommands} from './page'
 import {TextElementFactory, FrameElementFactory, TableElementFactory} from '../element/element.factory'
@@ -32,29 +31,36 @@ import {PageStore} from '../page/page.store'
     providers: [],
     styles: [`md-grid-tile {background: whitesmoke;}`]
 })
-
+//elements displayed in the sidenav in the template editor
 export class PageSelectorComponent {
         
+    //page that te elements are inserted into
     page: Page
-    imagesOpened: boolean
-    dialogRef: MdDialogRef<ImageSelectorComponent>
 
+    /**
+    @param pageStore - store containing selected page
+    @param dialog - dialog service used to display dialogs
+    @param commands - commands used to add the elements
+    */
     constructor(private pageStore: PageStore,
                 public dialog: MdDialog, 
                 private commands: PageCommands,){
         this.pageStore.page.subscribe(page => this.page = page)   
     }
     
+    //calls command to create new text element
     createNewTextElement(){
         let factory = new TextElementFactory
         this.commands.addElement(this.page, factory.build())
     }
     
+    //calls command to create new frame element
     createNewFrameElement(){
         let factory = new FrameElementFactory
         this.commands.addElement(this.page, factory.build())
     }
            
+    //calls command to create new table element
     createNewTableElement(){
         let dialogRef = this.dialog.open(CreateTableModal, {height: 'auto',
           width: '30%',})

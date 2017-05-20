@@ -16,56 +16,50 @@ import { ElementStore } from '../element/element.store'
             
             <!-- controlls for moving the table -->
 
-            <button md-raised-button  md-icon-button [color]="element.clientState == 0? 'accent' : 'background'" (click)="element.clientState = 0"><md-icon>zoom_out_map</md-icon></button>
+            <button md-raised-button  md-icon-button md-tooltip="posunout tabulku" [color]="element.clientState == 0? 'accent' : 'background'" (click)="element.clientState = 0"><md-icon>zoom_out_map</md-icon></button>
             
             <!-- controlls for filling out the table -->
 
-            <button md-raised-button  md-icon-button [color]="element.clientState == 1? 'accent' : 'background'"  (click)="element.clientState = 1">Ab</button>
+            <button md-raised-button  md-icon-button md-tooltip="vyplnit tabulku" [color]="element.clientState == 1? 'accent' : 'background'"  (click)="element.clientState = 1">Ab</button>
             
             <!-- controlls for editing table structure -->
 
-            <button md-raised-button  md-icon-button [color]="element.clientState == 2? 'accent' : 'background'"  (click)="element.clientState = 2"><md-icon>vertical_align_center</md-icon></button>
+            <button md-raised-button  md-icon-button md-tooltip="změnit strukturu tabulky" [color]="element.clientState == 2? 'accent' : 'background'"  (click)="element.clientState = 2"><md-icon>vertical_align_center</md-icon></button>
             <span *ngIf="element.clientState ==2">
                 <button md-icon-button [mdMenuTriggerFor]="resizeTableMenu"><md-icon>more_vert</md-icon></button>
                 <md-menu #resizeTableMenu="mdMenu">
                   <button md-menu-item (click)="addColumnLeft()" [disabled]="!element.selectedCells?.length == 1">
-                    <span>Add column to the left</span>
+                    <span>Přidat sloupec doprava</span>
                   </button>
                   <button md-menu-item (click)="addColumnRight()" [disabled]="!element.selectedCells?.length == 1">
-                    <span>Add column to the right</span>
+                    <span>Přidat sloupec doleva</span>
                   </button>
                   <button md-menu-item (click)="addRowBelow()" [disabled]="!element.selectedCells?.length == 1">
-                    <span>Add row below</span>
+                    <span>Přidat řádek pod</span>
                   </button>
                   <button md-menu-item (click)="addRowAbove()" [disabled]="!element.selectedCells?.length == 1">
-                    <span>Add row above</span>
+                    <span>Přidat řádek nad</span>
                   </button>
                   <button md-menu-item (click)="deleteColumn()" [disabled]="!element.selectedCells?.length == 1">
-                    <span>Delete column</span>
+                    <span>Smazat sloupec</span>
                   </button>
                   <button md-menu-item (click)="deleteRow()" [disabled]="!element.selectedCells?.length == 1">
-                    <span>Delete row</span>
-                  </button>
-                  <button md-menu-item>
-                    <span>Distribute rows</span>
-                  </button>
-                  <button md-menu-item>
-                    <span>Distribute columns</span>
-                  </button>              
+                    <span>Smazat řádek</span>
+                  </button>                   
                 </md-menu>
             </span>
 
             <!-- controlls for editing cell properties -->
 
-            <button md-raised-button  md-icon-button [color]="element.clientState == 3? 'accent' : 'background'"  (click)="element.clientState = 3"><md-icon>border_all</md-icon></button>
+            <button md-raised-button  md-icon-button md-tooltip="upravit vlastnosti polí" [color]="element.clientState == 3? 'accent' : 'background'"  (click)="element.clientState = 3"><md-icon>border_all</md-icon></button>
             <span *ngIf="element.clientState ==3">
                 <button md-icon-button [mdMenuTriggerFor]="editCellsMenu"><md-icon>more_vert</md-icon></button>
                 <md-menu #editCellsMenu="mdMenu">
                   <button md-menu-item (click)="mergeCells()" [disabled]="element.selectedCells?.length <= 1">
-                    <span>Merge cells</span>
+                    <span>Spojit vybrané buňky</span>
                   </button>
                   <button md-menu-item (click)="clearSelection()" [disabled]="!element.selectedCells?.length == 1">
-                    <span>Clear selection</span>
+                    <span>Zrušit výběr</span>
                   </button>                       
                 </md-menu>
             </span>      
@@ -77,7 +71,7 @@ import { ElementStore } from '../element/element.store'
             <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i" [style.height.px]="row.height" [content]="element.content.rows[i]" class="locked"></tr>
         </table>
 
-        <!-- talbe displayed when filling out the table -->
+        <!-- table displayed when filling out the table -->
 
         <table *ngIf="element.clientState == 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height - 4"></tr>

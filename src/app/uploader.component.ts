@@ -8,13 +8,13 @@ import { AppConfig } from './app.config'
     template: `
           <div style="position: absolute; background-color: white; width: 55%; margin-top: -24px; padding-top: 24px; z-index: 1000;">
           <label class="fileContainer">
-            <b>SELECT FILES ({{uploader.queue.length}})</b>
+            <b>VYBRAT SOUBORY ({{uploader.queue.length}})</b>
             <input type="file" ng2FileSelect [uploader]="uploader" multiple  />
           </label>
           <md-progress-bar mode="determinate" [value]="uploader.progress"></md-progress-bar>
-          <button md-raised-button (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">UPLOAD ALL</button>
-          <button md-raised-button (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">CANCEL ALL</button>
-          <button md-raised-button (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">REMOVE ALL</button>
+          <button md-raised-button (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">NAHRÁT VŠE</button>
+          <button md-raised-button (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">ZRUŠIT VŠE</button>
+          <button md-raised-button (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">ODSTRANIT VŠE</button>
           </div>
           <md-nav-list style="padding-top: 100px;">
               <div>          
@@ -23,9 +23,9 @@ import { AppConfig } from './app.config'
                   <span md-line>
                   <md-progress-bar mode="determinate" [value]="item.progress"></md-progress-bar>
                   </span>
-                  <button md-button (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">UPLOAD</button>
-                  <button md-button (click)="item.cancel()" [disabled]="!item.isUploading">CANCEL</button>
-                  <button md-button (click)="item.remove()">REMOVE</button>
+                  <button md-button (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">NAHRÁT</button>
+                  <button md-button (click)="item.cancel()" [disabled]="!item.isUploading">ZRUŠIT</button>
+                  <button md-button (click)="item.remove()">ODSTRANIT</button>
               </md-list-item>
               </div>
           </md-nav-list>

@@ -16,8 +16,7 @@ export class NewTableElement {
     selectionStart: CellPosition
     cellSelections: Array<CellPosition> = new Array
     
-    continueSelection(cell: Cell,x: number, y: number){
-        
+    continueSelection(cell: Cell,x: number, y: number){    
         let rows = this.cloneRows(this.component.element)       
         this.component.element.rows.forEach(row => row.cells.forEach(cell => { if (cell.colspan) { this.expandCell(rows,cell)}}))
         this.indexRowCopy(rows)

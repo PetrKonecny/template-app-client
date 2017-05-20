@@ -35,8 +35,12 @@ export class NewTextElementComponent  {
     defaultBackgroundColor = Element.defaultBackgroundColor
     selected: boolean
 
+    /**
+    @param elementStore - injects reference to the selected element
+    @param newPage - injects reference to the current page
+    @param coomands - injects commands to malipulate the eleemnt
+    */
     constructor(
-        public elementRef: ElementRef, 
         private elementStore: ElementStore,
         private newPage: NewPageRemote,
         private commands: ElementCommands
@@ -44,6 +48,7 @@ export class NewTextElementComponent  {
         this.elementStore.element.subscribe(element =>this.selected = this.element === element)
     }
     
+    //called as an utput of draggable directive
     move(dimensions: ElementDimensions){
         let d = this.newPage.move(this.element,dimensions)
         if(d){

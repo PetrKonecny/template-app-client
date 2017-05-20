@@ -2,6 +2,7 @@ import {Page} from './page';
 import {Injectable} from '@angular/core';
 
 @Injectable()
+//factory used for page creation. 
 export class PageFactory{
 
 	width: number = Page.defaultWidth

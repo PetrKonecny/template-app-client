@@ -21,7 +21,7 @@ import { ElementStore } from '../element/element.store'
 
                 <div class="toolbar" style="display: flex;" *ngIf="element"> 
                    
-                    <button md-icon-button (click)="deleteElement()"><md-icon>delete</md-icon></button>
+                    <button md-icon-button (click)="deleteElement()" md-tooltip="smazat prvek"><md-icon>delete</md-icon></button>
                     
                     <!-- displays general toolbar for all elements -->
 

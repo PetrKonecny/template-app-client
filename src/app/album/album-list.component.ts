@@ -10,9 +10,9 @@ import { User } from '../user/user'
             </div>
             <div class="list-wrapper">            
                 <md-grid-list  [cols]="cols">
-                    <md-grid-tile *ngFor="let album of albums">
-                        <div [class.public-album]="album.public" style="display: flex; align-items: center; justify-content: center; width: 90%; height: 90%; background: gainsboro; text-align: center;">
-                            <button *ngIf="user && album.user_id == user.id" md-icon-button [mdMenuTriggerFor]="albumMenu" style="position:absolute; right:0; top:0; margin: 12px;"><md-icon>more_vert</md-icon></button>
+                    <md-grid-tile (click)="onSelect(album)" *ngFor="let album of albums">
+                        <div class="album" [class.public-album]="album.public" style="display: flex; align-items: center; justify-content: center; width: 90%; height: 90%; background: gainsboro; text-align: center;">
+                            <button *ngIf="user && album.user_id == user.id" md-icon-button (click)="onClick($event)" [mdMenuTriggerFor]="albumMenu" style="position:absolute; right:0; top:0; margin: 12px;"><md-icon>more_vert</md-icon></button>
                             <md-menu #albumMenu="mdMenu">
                               <button md-menu-item (click)="onDeleteAlbum(album)">
                                 <span>Smazat album</span>
@@ -21,7 +21,7 @@ import { User } from '../user/user'
                                 <span>Upravit vlastnosti alba</span>
                               </button>
                             </md-menu>
-                            <h3 (click)="onSelect(album)">{{album.name ? album.name : 'album'}}</h3>
+                            <h3>{{album.name ? album.name : 'album'}}</h3>
                         </div>           
                     </md-grid-tile>
                 </md-grid-list> 
@@ -51,7 +51,10 @@ export class AlbumListComponent {
     @Output() 
     onDeleteClicked = new EventEmitter<Album>();
 
-        
+    onClick(event) {
+       event.stopPropagation();
+    }
+   
     onSelect(album: Album) {
         this.onAlbumClicked.emit(album);
     }    

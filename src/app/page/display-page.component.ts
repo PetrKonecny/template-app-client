@@ -20,11 +20,14 @@ import { Page} from './page';
     `]
 })
 
+//displays page in document editor
 export class DisplayPageComponent  {
 
     @Input()
+    //page to be displayed
     page: Page; 
 
+    //gets page width
     getPageWidth(){
         if(this.page.width){
             return this.page.width
@@ -33,6 +36,7 @@ export class DisplayPageComponent  {
         }
     }
 
+    //gets page height
     getPageHeight(){
         if(this.page.height){
             return this.page.height

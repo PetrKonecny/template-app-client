@@ -29,6 +29,7 @@ import { PageStore} from '../page/page.store'
             `]
 })
 
+//DEPRACATED
 export class ImageSelectorComponent implements OnInit{
     
     error: string;

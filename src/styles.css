@@ -22,6 +22,10 @@ image-index, template-index, template-instance-index, album-index, display-album
     overflow: auto;
 }
 
+.content{
+    padding: 16px;
+}
+
 admin-index{
     height: 100%;
     position: relative;
@@ -76,6 +80,26 @@ album-index-sidenav md-grid-list{
 .public-album{
     color: #ffd740;
     background: #673ab7 !important;
+}
+
+.album{
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    border-radius: 2px; 
+}
+
+.album:hover{
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.image{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    border-radius: 2px; 
+    cursor: pointer;
+}
+
+.image-selected{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 .hue {

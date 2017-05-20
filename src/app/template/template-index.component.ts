@@ -13,21 +13,28 @@ import {User} from '../user/user'
 @Component({
     selector: 'template-index',
     template: `
-        <form class="search-field" (ngSubmit)="onSearchKeyUp(search.value)">
-            <md-input-container><input #search mdInput type="search"></md-input-container>
-            <button md-button>SEARCH</button>
-        </form>
+        <md-toolbar>
+            <form class="search-field" (ngSubmit)="onSearchKeyUp(search.value)">
+                <md-input-container><input #search mdInput type="search"></md-input-container>
+                <button md-icon-button><md-icon>search</md-icon></button>
+            </form>
+        </md-toolbar>
+        <div class ="content">
+            <div class="shutter">
+                <md-spinner *ngIf="loading"></md-spinner>
+                <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
+            </div>
 
-        <div class="shutter">
-            <md-spinner *ngIf="loading"></md-spinner>
-            <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
-        </div>
-
-        <div class="template-list index-body" *ngIf="templates && publicTemplates && currentUser">
-            <h3>Vaše šablony</h3>
-            <template-list [templates] = "templates" [user]="currentUser" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>
-            <h3>Veřejné šablony</h3>
-            <template-list [templates] = "publicTemplates" [user]="currentUser" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>
+            <div class="template-list index-body" *ngIf="currentUser">
+                <div *ngIf="templates?.length">
+                    <h3>Vaše šablony</h3>
+                    <template-list [templates] = "templates" [user]="currentUser" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>
+                </div>
+                <div *ngIf="publicTemplates?.length">
+                    <h3>Veřejné šablony</h3>
+                    <template-list [templates] = "publicTemplates" [user]="currentUser" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>
+                </div>
+            </div>
         </div>
         <button md-fab class="index-button" (click)="onAddTemplateClicked()"><md-icon>add</md-icon></button>
     `,

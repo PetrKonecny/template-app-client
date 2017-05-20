@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs/Rx'
 
 
 @Injectable()
+//generic page store
 export class PageStore {
     
    

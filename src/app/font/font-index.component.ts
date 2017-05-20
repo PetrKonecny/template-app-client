@@ -6,7 +6,7 @@ import {UPLOAD_DIRECTIVES} from 'ng2-uploader/ng2-uploader';
 import {AppConfig} from '../app.config'
 
 
-
+//DEPRACTECATED COMPONENT
 @Component({
     selector: 'font-index',
     template: `

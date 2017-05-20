@@ -26,6 +26,7 @@ import {AppComponentRef} from '../app.ref'
     `]
 })
 
+//DEPRACATED
 export class ImageIndexComponent implements OnInit  {
     
     error: string;
