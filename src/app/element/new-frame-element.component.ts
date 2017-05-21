@@ -1,8 +1,8 @@
 import { Component, ElementRef, Input, OnInit} from '@angular/core';
 import { FrameElement } from './frame-element'
 import { ImageContent, ImageContentCommands } from '../content/image-content';
-import { ElementDimensions} from '../resizable.directive'
-import { NewPageRemote } from '../page/new-page.remote'
+import { ElementDimensions} from '../draggable.directive'
+import { NewPageReference } from '../page/new-page.ref'
 import { ElementCommands} from './element';
 import { ElementStore } from '../element/element.store'
 import {Page} from '../page/page'
@@ -67,7 +67,7 @@ export class NewFrameElementComponent implements OnInit{
 
     constructor(
         public elementRef: ElementRef, 
-        private newPage: NewPageRemote,
+        private newPage: NewPageReference,
         private contentCommands: ImageContentCommands,
         private elementCommands: ElementCommands,
         private elementStore: ElementStore,

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TableElement } from './table-element'
-import { NewTableElement } from './new-table-element'
+import { NewTableElementReference } from './new-table-element.ref'
 
 @Component({
     selector: 'display-table-element',
@@ -34,7 +34,7 @@ import { NewTableElement } from './new-table-element'
             border: 1px solid black;
         }`
     ],
-    providers: [NewTableElement]
+    providers: [NewTableElementReference]
 })
 
 /*

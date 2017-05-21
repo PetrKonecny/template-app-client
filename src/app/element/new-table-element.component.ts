@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core'
 import { TableElement, TableElementCommands } from './table-element'
-import { ElementDimensions} from '../resizable.directive'
-import { NewPageRemote } from '../page/new-page.remote'
-import { NewTableElement } from './new-table-element'
+import { ElementDimensions} from '../draggable.directive'
+import { NewPageReference } from '../page/new-page.ref'
+import { NewTableElementReference} from './new-table-element.ref'
 import { ElementCommands} from './element'
 import { ElementStore } from '../element/element.store'
 
@@ -105,7 +105,7 @@ import { ElementStore } from '../element/element.store'
             border: 1px solid black;
         }`
     ],
-    providers: [NewTableElement]
+    providers: [NewTableElementReference]
 })
 
        
@@ -158,8 +158,8 @@ export class NewTableElementComponent implements OnInit{
     @param - element store - injects element store that holds selected elements
     **/
     constructor (
-        private newPage: NewPageRemote, 
-        private newTableElement: NewTableElement, 
+        private newPage: NewPageReference, 
+        private newTableElement: NewTableElementReference, 
         private tableElementCommands: TableElementCommands,  
         private elementCommands: ElementCommands,
         private elementStore: ElementStore,

@@ -33,7 +33,6 @@ import {CreateTableModal} from '../element/create-table-element.modal'
                 <md-tab-group>
                     <md-tab label = "Prvky">                   
                         <page-select></page-select>
-                        <ruler-select></ruler-select>
                     </md-tab>
                     <md-tab label = "Obrázky">
                         <album-index-sidenav></album-index-sidenav>

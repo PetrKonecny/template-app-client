@@ -6,7 +6,7 @@ import { UploadComponent } from '../uploader.component'
 import {AppConfig} from '../app.config'
 
 @Component({
-    selector: 'font-selector',
+    selector: 'font-toolbar',
     template: `
                 <ng2-dropdown (onItemClicked)="onFontSizeClicked($event.value)">
                     <ng2-dropdown-button>
@@ -37,7 +37,7 @@ import {AppConfig} from '../app.config'
 @Injectable()
 /**Component that is used in the editor to select the font and its size
 */
-export class FontSelectorComponent implements OnInit {
+export class FontToolbarComponent implements OnInit {
     
     //fonts that can be selected
     private fonts: Font[];

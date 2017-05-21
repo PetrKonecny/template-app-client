@@ -25,7 +25,7 @@ import { SaveTemplateInstanceModal} from '../template-instance/save-template-ins
                 <button md-icon-button (click)="undo()"><md-icon>undo</md-icon></button>
                 <button md-icon-button><md-icon>redo</md-icon></button>
                 <button md-button (click)="openAsTemplate()">Otevřít jako novou šablonu</button>
-                <text-select *ngIf="element && element.type == 'text_element' && element.content.editor"></text-select>
+                <editor-toolbar *ngIf="element && element.type == 'text_element' && element.content.editor"></editor-toolbar>
             </md-toolbar>
             <md-sidenav mode ="side" #sidenav style="width: 20%;">
                 <album-index-sidenav></album-index-sidenav>

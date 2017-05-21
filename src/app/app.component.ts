@@ -1,8 +1,7 @@
-import { Component, OnInit, AfterViewChecked  }       from '@angular/core';
+import { Component, OnInit, AfterViewChecked, HostListener  }       from '@angular/core';
 import { TemplateInstanceService } from './template-instance/template-instance.service';
 import { TemplateService } from './template/template.service';
 import { TemplateInstanceStore } from './template-instance/template-instance.store';
-import { Draggable} from './draggable.directive'
 import {UserStore} from './user/user.store'
 import {UserService} from './user/user.service'
 import {Router} from '@angular/router'
@@ -18,7 +17,7 @@ import { TemplateStore } from './template/template.store'
 @Component({
     selector: 'app-root',
     template: `
-    <span (mousemove)="move($event)" (document:keyup.shift)="onShiftUp()" (document:keydown.shift)="onShiftDown()" style="height: 95%">
+    <div style="height: 93%">
     <md-toolbar *ngIf="adminRoute" color="warn">
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/users" routerLinkActive="active">USERS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/templates" routerLinkActive="active">TEMPLATES</a>
@@ -36,10 +35,10 @@ import { TemplateStore } from './template/template.store'
         <a md-button *ngIf="!guard.canActivate()" href="{{config.getConfig('api-url')}}/user/login">PŘIHLÁSIT</a>
         <a md-button *ngIf="guard.canActivate()" href="{{config.getConfig('api-url')}}/user/logout">ODHLÁSIT</a>
     </md-toolbar>
-        <router-outlet></router-outlet>
-    <span>
+    <router-outlet></router-outlet>
+    </div>
     `,
-    providers: [TemplateInstanceService,TemplateInstanceStore, TemplateStore, TemplateService,Draggable,AppComponentRef ]
+    providers: [TemplateInstanceService,TemplateInstanceStore, TemplateStore, TemplateService,AppComponentRef ]
 })
 
 //root application module that displays navigation toolbar that is present on every page 
@@ -64,6 +63,7 @@ export class AppComponent implements OnInit {
     /**triggered on mouse move in whole application
     other parts of application use this trigger if they want to react on moved mouse
     */ 
+    @HostListener('document:mousemove', ['$event'])
     move($event){
         this.ref.nextMouseMove($event)        
     }
@@ -71,6 +71,7 @@ export class AppComponent implements OnInit {
     /**triggered when the shift key is lifted
     other parts use this to ract on shift key action
     */
+    @HostListener('document:keyup.shift', ['$event'])
     onShiftUp(){
         this.ref.nextShiftPress(false)
     }
@@ -78,6 +79,7 @@ export class AppComponent implements OnInit {
     /**triggered when the shift key is pressed
     other parts use this to ract on shift key action
     */
+    @HostListener('document:keydown.shift', ['$event'])
     onShiftDown(){
         this.ref.nextShiftPress(true)
     }

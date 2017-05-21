@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core';
 import { TableElement, Cell, TableElementCommands } from './table-element'
 import { RowContent } from '../content/table-content'
-import { NewTableElement } from './new-table-element'
+import { NewTableElementReference } from './new-table-element.ref'
 
 @Component({
     selector: '[myTr]',
@@ -167,7 +167,7 @@ export class NewTableRowComponent implements OnInit{
     /***
     @param tableElement - reference to the table element used for selectiong
     */
-    constructor(private tableElement: NewTableElement, private commands: TableElementCommands){}
+    constructor(private tableElement: NewTableElementReference, private commands: TableElementCommands){}
     
     @HostListener('document:mouseup', ['$event'])
     onDocMouseup(event) {    

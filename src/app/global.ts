@@ -1,2 +1,0 @@
-'use strict';
-export const apiUrl: string = "http://localhost:8080"

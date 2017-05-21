@@ -2,7 +2,7 @@ import { Component, Input, HostListener, OnInit, ElementRef, ViewChild, AfterVie
 import { Page, PageCommands} from './page';
 import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
-import {NewPageRemote} from './new-page.remote'
+import {NewPageReference} from './new-page.ref'
 import {ImageElement} from '../element/image-element'
 import {PageStore} from '../page/page.store'
 import {ImageElementFactory} from '../element/element.factory'
@@ -29,7 +29,7 @@ import {ImageElementFactory} from '../element/element.factory'
             margin-top: 5px;
         }       
     `],
-    providers: [NewPageRemote]
+    providers: [NewPageReference]
 })
 
 //displays page in the template editor
@@ -56,14 +56,14 @@ export class NewPageComponent implements AfterViewInit {
     }
 
     /**
-    @param newPageRemote - reference to this component
+    @param newPageRef - reference to this component
     @param pageStore - store containing selected page
     @param commands - commands used for adding elements
     */
-    constructor(private newPageRemote: NewPageRemote, private pageStore: PageStore, private commands: PageCommands) {
-        this.newPageRemote.component = this
+    constructor(private newPageRef: NewPageReference, private pageStore: PageStore, private commands: PageCommands) {
+        this.newPageRef.component = this
         this.guides = new Array
-        this.pageStore.page.subscribe(page => {if(this.page == page){this.selected = true}else{this.selected = false}})
+        this.pageStore.page.subscribe(page => {if(this.page === page){this.selected = true}else{this.selected = false}})
     }
 
     //prevents default behaviour on drag over

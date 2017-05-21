@@ -3,43 +3,83 @@ import { NewTableElementComponent } from './new-table-element.component'
 import { Cell, CellPosition, Row, TableElement } from './table-element'
 
 /*
- * Extension of NewPage component that can be injected by any other component under it
- * NewPage is responsible for any state change of element relative to page
+ * Extension of New Table Element component that can be injected by any other component under it
+ * This reference is responsible for properly selecting the cells
  * such as resizing, moving, deleting
  */
   
 @Injectable()
-export class NewTableElement {
+export class NewTableElementReference {
    
+    //component which contains element for cells are being selected
     component: NewTableElementComponent
-    selecting : boolean
+    //start of the selection
     selectionStart: CellPosition
-    cellSelections: Array<CellPosition> = new Array
     
-    continueSelection(cell: Cell,x: number, y: number){    
-        let rows = this.cloneRows(this.component.element)       
+    /**
+    Implements simple algorithm for selecting cells always as a rectangle even with merged cells
+    - create new structure by copiying the old one
+    - every new cell references old one
+    - if cell has colwidth or rowheight > 1 replace it with that many cells on the propper position
+    - select rectangle
+    - check if any cell references same old cell as some cell outside selection
+    - if yes expand rectangle so it contains all of these cells
+    - else return selection 
+    */
+
+
+
+
+
+    continueSelection(cell: Cell,x: number, y: number){ 
+        //clones the original structure   
+        let rows = this.cloneRows(this.component.element)    
+
+        //expands the big cells   
         this.component.element.rows.forEach(row => row.cells.forEach(cell => { if (cell.colspan) { this.expandCell(rows,cell)}}))
+
+        //gives new cells indexes x and y
         this.indexRowCopy(rows)
+
+        //maps the old selection start onto new one
         let selectionStart = this.translateToCopyPosition(this.selectionStart,rows)
+        
+        //maps selection end onto new one
         let currentSelection = this.translateToCopyPosition(cell.position,rows)
+
+        
         TableElement.clearSelectedCells(this.component.element)
-        let corners = this.getCornersFromSelection([selectionStart,currentSelection])        
+
+        //gets corners from the selection
+        let corners = this.getCornersFromSelection([selectionStart,currentSelection])
+
+        //selects simple rectangle        
         let selectedRect = this.selectRect(corners.topLeft, corners.bottomRight,rows)
+
+        //expands it 
         let expandedSelect = this.getExpandedSelection(rows,selectedRect)
+
+        //repeats until there is nothing to expand to 
         while (selectedRect.length != expandedSelect.length){
             corners = this.getCornersFromSelection(expandedSelect.map(cell => cell.position))
             selectedRect = this.selectRect(corners.topLeft, corners.bottomRight,rows)
             expandedSelect = this.getExpandedSelection(rows,selectedRect)
         }
+
+        //selects the referenced cell
         selectedRect.forEach(cell => { 
             if (this.component.element.selectedCells.indexOf(cell.cell) < 0){
                 TableElement.selectCell(this.component.element,cell.cell)
             }
         })
+
+        //stores width and height of the selection
         this.component.element.selectionWidth = corners.bottomRight.x - corners.topLeft.x + 1
         this.component.element.selectionHeight = corners.bottomRight.y - corners.topLeft.y + 1
     }
     
+
+    //clones rows of the element into new array
     private cloneRows(element: TableElement){
         let rows: Array<RowCopy> = new Array
         element.rows.forEach(row => { 
@@ -50,12 +90,14 @@ export class NewTableElement {
         return rows       
     }
     
+    //clones cells of the element into new array
     private cloneCells(array: Array<Cell>){
         let cells: Array<CellCopy> = new Array
         array.forEach(cell => cells.push({cell:cell,position:null}))
         return cells
     }
     
+    //returns xcount number of cells
     private multiplyCell(cell: Cell, count: number){
         let result: Array<CellCopy> = new Array
         for(let i = 0; i<count; i++){
@@ -64,6 +106,10 @@ export class NewTableElement {
         return result
     }
     
+    /** expands original bigger cells, for example for cell with
+        colwidth 3 rowheight 2 creates 6 new cells where the big cell is
+        in the table
+    */
     private expandCell(rows: Array<RowCopy>, cell: Cell){
         let cells = rows[cell.position.y].cells
         var translatedPosition = this.translateToCopyPosition(cell.position,rows)
@@ -74,6 +120,7 @@ export class NewTableElement {
         }        
     }
     
+    //gets expanded selection
     private getExpandedSelection(rows: Array<RowCopy>, selectedCells: Array<CellCopy>){
         let allCells: Array<CellCopy> = [].concat.apply([], rows.map(row => row.cells))
         let notSelectedCells = allCells.filter(cell => selectedCells.indexOf(cell) < 0)
@@ -90,6 +137,7 @@ export class NewTableElement {
         return selectedCells.concat(overlapingCellCopy)
     }
     
+    //gets corners of selection
     private getCornersFromSelection(selectedPositions: Array<CellPosition>){
         let topLeftCorner = new CellPosition
         let bottomRightCorner = new CellPosition
@@ -106,14 +154,17 @@ export class NewTableElement {
         return {topLeft:{x:minX,y:minY}, bottomRight:{x: maxX,y: maxY}}
     }
     
+    //indexes element with x and y
     private indexTable(element: TableElement){
         element.rows.forEach((row, y) => row.cells.forEach((cell, x) => cell.position = {x:x,y:y}))
     }
     
+    //indexes copy with x and y
     private indexRowCopy(copy: Array<RowCopy>){
         copy.forEach((row, y) => row.cells.forEach((cell, x) => cell.position = {x:x,y:y}))
     }
     
+    //selects one cell as staring point
     startSelection(cell: Cell,x: number,y: number){
         if (this.component.element.selectedCells){
             TableElement.clearSelectedCells(this.component.element)
@@ -123,6 +174,7 @@ export class NewTableElement {
         this.selectionStart = {x:cell.position.x, y:cell.position.y}     
     }
     
+    //gets coordinates of original cell in the copy
     translateToCopyPosition(position: CellPosition, rows: Array<RowCopy>){
         for (let i = 0; i < rows.length; i++){
             for (let j = 0; j < rows[i].cells.length; j++){
@@ -134,7 +186,7 @@ export class NewTableElement {
         return position
     }
     
-          
+    //selects rectangle assuming every cell has same dimensions
     selectRect(topLeftCorner: CellPosition, bottomRightCorner: CellPosition, rows){
         let result = new Array
         for(let i = topLeftCorner.y; i<=bottomRightCorner.y; i++){

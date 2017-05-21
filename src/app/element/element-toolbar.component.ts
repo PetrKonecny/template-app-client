@@ -69,7 +69,7 @@ import { ElementStore } from '../element/element.store'
                     <!-- displays specialized toolbar for text elements -->
 
                     <div class="toolbarCategory" *ngIf="element.type == 'text_element' && element.content.editor">
-                        <text-select></text-select>
+                        <editor-toolbar></editor-toolbar>
                     </div>
 
                     <!-- displays specialized toolbar for table elements -->

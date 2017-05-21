@@ -22,14 +22,17 @@ import {PageStore} from '../page/page.store'
     template: `
                 <span *ngIf="page">
                     <md-grid-list cols="2">                    
-                        <md-grid-tile (click)="createNewTextElement()">text</md-grid-tile>
-                        <md-grid-tile (click)="createNewFrameElement()">rámeček</md-grid-tile>
-                        <md-grid-tile (click)="createNewTableElement()">tabulka</md-grid-tile>
+                        <md-grid-tile ><div (click)="createNewTextElement()">text</div></md-grid-tile>
+                        <md-grid-tile ><div (click)="createNewFrameElement()">rámeček</div></md-grid-tile>
+                        <md-grid-tile ><div (click)="createNewTableElement()">tabulka</div></md-grid-tile>
                     </md-grid-list>
+                </span>
+                <span style="width: 100%; height: 100%; display: flex; align-items: center; text-align: center;" *ngIf="!page">
+                    <h3 *ngIf="!page" class="nothing-found">Vyberte kliknutím stránku šablony</h3>
                 </span>
              `,
     providers: [],
-    styles: [`md-grid-tile {background: whitesmoke;}`]
+    styles: [`div {background: whitesmoke; width: 90%; height: 90%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-transform: uppercase; font-weight: bold;}`]
 })
 //elements displayed in the sidenav in the template editor
 export class PageSelectorComponent {

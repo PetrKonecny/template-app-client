@@ -38,7 +38,7 @@ import {transformMenu, fadeInItems} from '@angular/material/menu/menu-animations
 })
 
 /*
-Copy of the source code of md-menu changes so it does not close when user clicks inside the menu
+Copy of the source code of md-menu changed in a way that it does not close when user clicks inside the menu
 this behaviour was not supported by the default implementation and was necessary to implement
 */
 export class MyMdMenu implements MdMenuPanel, OnDestroy {

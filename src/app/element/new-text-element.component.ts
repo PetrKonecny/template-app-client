@@ -2,9 +2,9 @@ import { Component, ElementRef, Input, ViewChild, AfterViewInit, DoCheck, KeyVal
 import { Element, ElementCommands} from './element';
 import { TextElement} from './text-element'
 import { Font} from '../font/font'
-import { ElementDimensions } from '../resizable.directive'
-import { NewPageRemote } from '../page/new-page.remote'
+import { NewPageReference } from '../page/new-page.ref'
 import { ElementStore } from '../element/element.store'
+import { ElementDimensions} from '../draggable.directive'
 
 @Component({
     selector: 'create-new-text-element',
@@ -42,7 +42,7 @@ export class NewTextElementComponent  {
     */
     constructor(
         private elementStore: ElementStore,
-        private newPage: NewPageRemote,
+        private newPage: NewPageReference,
         private commands: ElementCommands
     ){
         this.elementStore.element.subscribe(element =>this.selected = this.element === element)

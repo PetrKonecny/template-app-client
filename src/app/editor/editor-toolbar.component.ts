@@ -7,9 +7,9 @@ import { ElementStore } from '../element/element.store'
 import {TextContent} from '../content/text-content'
 
 @Component({
-    selector: 'text-select',
+    selector: 'editor-toolbar',
     template: ` <span *ngIf="editor">
-                    <font-selector (onFontSelected)="changeEditorFont($event)" (onFontSizeSelected)="changeEditorFontSize($event)" [fontLabel]="editor.editorCurFont.substring(0,5)" [fontSizeLabel]="editor.editorCurFontSize"></font-selector>
+                    <font-toolbar (onFontSelected)="changeEditorFont($event)" (onFontSizeSelected)="changeEditorFontSize($event)" [fontLabel]="editor.editorCurFont.substring(0,5)" [fontSizeLabel]="editor.editorCurFontSize"></font-toolbar>
                     <button md-icon-button [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="editor.editorCurColor">fiber_manual_record</md-icon></button>
                     <my-md-menu #backgroundColorMenu>
                         <div md-menu-item [colorPicker]="editor.editorCurColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeEditorTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
@@ -32,7 +32,7 @@ import {TextContent} from '../content/text-content'
 })
 
 //displays custom toolbar for tiny-mce editor 
-export class TextSelectorComponent {
+export class EditorToolbarComponent {
     
     //editor of currently selected text element
     editor: Editor  

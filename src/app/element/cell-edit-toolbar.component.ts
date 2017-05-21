@@ -19,7 +19,7 @@ import { ElementStore } from '../element/element.store'
 
                 <!-- Controlls for changing font of selected cells-->
 
-                <font-selector (onFontSelected)="changeSelectedCellsFont($event)"  (onFontSizeSelected)="changeSelectedCellsFontSize($event)"></font-selector>
+                <font-toolbar (onFontSelected)="changeSelectedCellsFont($event)"  (onFontSizeSelected)="changeSelectedCellsFontSize($event)"></font-toolbar>
                 <button md-icon-button mdTooltip="Barva textu" [mdMenuTriggerFor]="textColorMenu"><md-icon  [style.color]="getCellTextColor()">fiber_manual_record</md-icon></button>
                 <my-md-menu #textColorMenu>
                     <div md-menu-item [colorPicker]="getCellTextColor()" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">

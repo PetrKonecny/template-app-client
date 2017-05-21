@@ -1,5 +1,5 @@
 import { Component,ContentChild, ElementRef, AfterContentInit, HostListener, Input} from '@angular/core';
-import {NewPageRemote} from '../page/new-page.remote'
+import {NewPageReference} from '../page/new-page.ref'
 import { Element, ElementCommands} from './element';
 import {AppComponentRef} from '../app.ref'
 
@@ -46,7 +46,7 @@ export class ElementHandleComponent implements AfterContentInit {
     @param 'commands' - injects commands used to resize element
     @parap 'ref' - injects reference to aplication root providing shift press event
     */
-    constructor (private newPage: NewPageRemote, private commands: ElementCommands, private ref: AppComponentRef){
+    constructor (private newPage: NewPageReference, private commands: ElementCommands, private ref: AppComponentRef){
         this.ref.shiftPRess.subscribe(press => this.shift = press)
     }
     

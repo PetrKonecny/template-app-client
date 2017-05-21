@@ -3,7 +3,6 @@ import { NewPageComponent } from './new-page.component'
 import { Element } from '../element/element' 
 import { TableElement } from '../element/table-element'
 import { TableContent, CellContent, RowContent } from '../content/table-content'
-import { ElementDimensions, Border} from '../resizable.directive'
 import { Guide } from '../guide/guide'
 import { Page } from './page'
 import { PageService } from './page.service'
@@ -11,7 +10,7 @@ import { PageService } from './page.service'
  
 @Injectable()
 //reference used for moving the elements
-export class NewPageRemote {
+export class NewPageReference {
    
     //reference to the component
     component: NewPageComponent
@@ -26,7 +25,7 @@ export class NewPageRemote {
 	@param element - element to be moved
 	@param dimensions - dimensions to move it by
     */
-    move(element: Element, dimensions: ElementDimensions){
+    move(element: Element, dimensions){
         return this.service.move(element,dimensions,this.component.page, this.component.guides)
     }   
     

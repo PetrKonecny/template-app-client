@@ -1,7 +1,7 @@
 import { Component, Input, ElementRef } from '@angular/core';
 import { ImageElement } from './image-element'
-import { NewPageRemote } from '../page/new-page.remote'
-import { ElementDimensions } from '../resizable.directive'
+import { NewPageReference } from '../page/new-page.ref'
+import { ElementDimensions } from '../draggable.directive'
 import { AppConfig } from '../app.config'
 import { Element, ElementCommands} from './element';
 import { ElementStore } from '../element/element.store'
@@ -37,7 +37,7 @@ export class NewImageElementComponent {
     @param elementStore - injects reference to the store containing selected element
     @param commands - injects element commands to provide operations on the element
     **/ 
-    constructor(private newPage: NewPageRemote, private elementStore: ElementStore, private commands: ElementCommands){
+    constructor(private newPage: NewPageReference, private elementStore: ElementStore, private commands: ElementCommands){
         this.elementStore.element.subscribe(element =>this.selected = this.element === element)
     }
 
