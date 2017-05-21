@@ -6,7 +6,7 @@ import { PageFactory } from './page.factory';
 import { NewPageComponent } from './new-page.component';
 import { Page, PageCommands} from './page';
 import { Observable } from "rxjs/Observable";
-import {NewPageRemote} from './new-page.remote'
+import {NewPageReference} from './new-page.ref'
 import {PageStore} from '../page/page.store'
 
 export function MockComponent(options: Component): Component {
@@ -41,13 +41,13 @@ describe('new page component', () => {
                       MockComponent({ selector: 'create-new-element' ,  inputs: ['element']}),
                       MockComponent({ selector: 'display-guide' ,  inputs: ['guide']}),
                       MockComponent({ selector: 'display-ruler' ,  inputs: ['guide']}) ],
-      providers: [ {provide: NewPageRemote, useValue: pageReferenceStub}, 
+      providers: [ {provide: NewPageReference, useValue: pageReferenceStub}, 
                    {provide: PageStore, useValue: pageStoreStub}, 
                    {provide : PageCommands, useValue: pageCommandsStub} ] // declare the test component
     }).overrideComponent(NewPageComponent, {
       set: {
         providers: [
-          { provide: NewPageRemote, useValue: pageReferenceStub }
+          { provide: NewPageReference, useValue: pageReferenceStub }
         ]
       }
     })

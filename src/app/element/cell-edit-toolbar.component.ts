@@ -28,7 +28,7 @@ import { ElementStore } from '../element/element.store'
 
                 <!-- Controlls for changing text formating of selected cells-->
 
-                <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="Format text">A</button>
+                <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="formát textu vybraných buněk">A</button>
                 <my-md-menu #textMenu="mdMenu">
                     <button md-icon-button (click)="changeSelectedCellsTextAlign('left')"><md-icon>format_align_left</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlign('right')"><md-icon>format_align_right</md-icon></button>
@@ -42,7 +42,7 @@ import { ElementStore } from '../element/element.store'
 
                 <!-- Controlls for changing appearence of border of selected cells-->
 
-                <button md-icon-button mdTooltip="Border format" [mdMenuTriggerFor]="borderMenu">B</button>
+                <button md-icon-button mdTooltip="formát rámečku vybraných buněk" [mdMenuTriggerFor]="borderMenu">B</button>
                 <my-md-menu #borderMenu="mdMenu">
                     <button md-menu-item (click)="changeSelectedCellsBorderStyle('none')">Žádný okraj</button>
                     <button md-menu-item (click)="changeSelectedCellsBorderStyle('solid none')">Nahoře a dole</button>

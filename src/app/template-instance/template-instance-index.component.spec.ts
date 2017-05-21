@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, async } from '@angular/core/testing';
 import { By }              from '@angular/platform-browser';
 import { DebugElement }    from '@angular/core';
-import { NewPageRemote } from '../page/new-page.remote'
-import { ElementStore } from '../element/element.store'
+\import { ElementStore } from '../element/element.store'
 import { Observable } from "rxjs/Observable";
 import { TemplateInstanceIndexComponent } from './template-instance-index.component';
 import { UserStore } from '../user/user.store'

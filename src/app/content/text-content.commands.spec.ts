@@ -1,7 +1,7 @@
 import {TextContent,ChangeText} from './text-content'
 import {Image} from '../image/image'
 
-fdescribe('element commands tests',()=>{
+describe('element commands tests',()=>{
 
 	let content
 	beforeEach(() => {

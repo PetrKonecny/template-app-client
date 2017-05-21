@@ -5,7 +5,7 @@ import { DebugElement }    from '@angular/core';
 import { TextElementFactory } from './element.factory';
 import { NewTextElementComponent } from './new-text-element.component';
 import { DisplayContentComponent } from '../content/display-content.component' 
-import { NewPageRemote } from '../page/new-page.remote'
+import { NewPageReference } from '../page/new-page.ref'
 import { ElementStore } from '../element/element.store'
 import { Element, ElementCommands} from './element';
 import { Observable } from "rxjs/Observable";
@@ -40,7 +40,7 @@ describe('new text component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ NewTextElementComponent, MockComponent({ selector: 'display-content' ,  inputs: ['content']})],
-      providers: [ {provide: NewPageRemote, useValue: pageReferenceStub}, {provide: ElementStore, useValue: elementStoreStub}, {provide : ElementCommands, useValue:elementCommandsStub} ] // declare the test component
+      providers: [ {provide: NewPageReference, useValue: pageReferenceStub}, {provide: ElementStore, useValue: elementStoreStub}, {provide : ElementCommands, useValue:elementCommandsStub} ] // declare the test component
     });
 
     fixture = TestBed.createComponent(NewTextElementComponent);

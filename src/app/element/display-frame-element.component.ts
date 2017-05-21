@@ -1,8 +1,6 @@
 import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@angular/core';
 import { FrameElement } from './frame-element'
 import { ImageContent, ImageContentCommands } from '../content/image-content';
-import { ElementDimensions} from '../resizable.directive'
-import { NewPageRemote } from '../page/new-page.remote'
 import { ElementStore } from '../element/element.store'
 
 @Component({
@@ -10,8 +8,8 @@ import { ElementStore } from '../element/element.store'
     template: `
         <div [class.selected]="selected" class= "inner" (drop)="onDrop($event)" (dragover)="onDragOver()" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
             <span *ngIf="!loading && !error && selected && element?.content?.image" style="position: absolute; top: -40px; z-index: 1000">
-                <button md-raised-button *ngIf="!draggable" (click)="onDoneAdjustButtonClick()"  md-icon-button mdTooltip="adjust frame"><md-icon>done</md-icon></button>
-                <button md-raised-button *ngIf="draggable" (click)="onAdjustButtonClick()" md-icon-button mdTooltip="adjust image"><md-icon>photo_size_select_large</md-icon></button>
+                <button md-raised-button *ngIf="!draggable" (click)="onDoneAdjustButtonClick()"  md-icon-button mdTooltip="upravit rámeček"><md-icon>done</md-icon></button>
+                <button md-raised-button *ngIf="draggable" (click)="onAdjustButtonClick()" md-icon-button mdTooltip="upravit obrázek"><md-icon>photo_size_select_large</md-icon></button>
                 <span *ngIf="!draggable">
                     <button md-icon-button [mdMenuTriggerFor]="adjustImageMenu"><md-icon>more_vert</md-icon></button>
                     <md-menu #adjustImageMenu="mdMenu">

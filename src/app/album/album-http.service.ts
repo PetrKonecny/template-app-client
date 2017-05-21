@@ -65,7 +65,6 @@ export class AlbumHttpService {
 
     removeAlbum(id: number): Observable<Album> {
         return this.http.delete(this._albumsUrl+"/"+id, { withCredentials: true })
-            .map(this.extractData)
             .catch(this.handleError);
     }
     

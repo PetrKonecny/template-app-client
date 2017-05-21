@@ -3,7 +3,6 @@ import { PageService } from './page.service'
 import {Element } from '../element/element'
 import {Page } from './page'
 import {Guide} from '../guide/guide'
-import { ElementDimensions, Border} from '../resizable.directive'
 
 describe('Page service move test', () => {
   let service: PageService
@@ -331,8 +330,8 @@ describe('Page service resize test', () => {
   it('should filter given edges',()=>{
     let element2 = addNewElement(1000,1000,50,50)
     let transform = service.resize(element,{width:155,height:155},page,guides,{filterThesePositions:[{x:1000}, {y:1000}]})
-    expect(service.verticals.length).toEqual(0)
-    expect(service.horizontals.length).toEqual(0)
+    expect(service.verticals.length).toEqual(1)
+    expect(service.horizontals.length).toEqual(1)
   })
 
  function addNewElement(x,y,width,height){

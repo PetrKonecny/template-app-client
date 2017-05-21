@@ -9,10 +9,8 @@ import { TemplateInstance} from '../template-instance/template-instance';
     selector: 'page-table',
     template: `
         <md-toolbar style="position: fixed; z-index:1000;"> 
-            <md-input-container><input #search mdInput type="search" placeholder="filter" (keyup)='updateFilter(search.value)'></md-input-container>
-            <button  md-button>Upload</button>
+            <md-input-container><input #search mdInput type="search" placeholder="column_name:query" (keyup)='updateFilter(search.value)'></md-input-container>
             <button  *ngIf="selected.length" md-button (click)="onDeleteClicked()">Delete</button>
-            <button *ngIf="selected.length == 1" md-button>Edit</button>
         </md-toolbar>
          <ngx-datatable
              class="material"

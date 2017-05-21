@@ -1,5 +1,4 @@
 import { Component,ContentChild, AfterContentInit, HostListener} from '@angular/core';
-import {NewPageRemote} from '../page/new-page.remote'
 import { ImageContent, ImageContentCommands } from './image-content'
 import {AppComponentRef} from '../app.ref'
 

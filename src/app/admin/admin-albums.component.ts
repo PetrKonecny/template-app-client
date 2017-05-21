@@ -50,7 +50,14 @@ export class AdminAlbumsComponent implements OnInit  {
         )
     }
 
-    onDeleteClicked(){}
+    onDeleteClicked(selected){
+        selected.forEach((album)=>{
+          this.albumService.removeAlbum(album.id).subscribe(()=>{
+              this.albums.splice(this.albums.indexOf(album),1)
+          },error =>{                        
+              this.snackBar.open("Chyba při mazání alba",null,{duration: 2500})})
+         })
+    }
 
     //triggered on album clicked
     onSelected(album: Album){

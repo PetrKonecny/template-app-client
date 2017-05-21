@@ -3,7 +3,6 @@ import { NewPageComponent } from './new-page.component'
 import { Element } from '../element/element' 
 import { TableElement } from '../element/table-element'
 import { TableContent, CellContent, RowContent } from '../content/table-content'
-import { ElementDimensions } from '../resizable.directive'
 import { Border } from '../element/element'
 import { Guide } from '../guide/guide'
 import { Page } from './page'
@@ -60,7 +59,7 @@ export class PageService {
    @param guides array of guide objects to which the guides that are displayed will be added
    @return transformation of the element
    */
-    move(element: Element, dimensions: any, page: Page, guides: Guide[]): ElementDimensions{
+    move(element: Element, dimensions: any, page: Page, guides: Guide[]){
         if(!element || !dimensions || !page || !guides){
             throw new TypeError("params must be defined")
         }
@@ -138,7 +137,7 @@ export class PageService {
         filterThesePositions: array{x: number, y: number}  positions of guides that are skipped in 
         calculations
     */
-    resize(element: Element,dimensions, page: Page, guides: Guide[], options?: any): ElementDimensions{
+    resize(element: Element,dimensions, page: Page, guides: Guide[], options?: any){
         if(!element || !dimensions || !page || !guides){
             throw new TypeError("params must be defined")
         }
@@ -154,9 +153,9 @@ export class PageService {
         }
 
         if(options && options.filterThesePositions && options.filterThesePositions.length > 0){
-            this.verticals = this.verticals.filter(guideBreak =>{ return !options.filterThesePositions.some(position => position.x === guideBreak.positionX)
+            this.verticals = this.verticals.filter(guideBreak =>{ return !options.filterThesePositions.some(position => position.x == guideBreak.positionX)
             })
-            this.horizontals = this.horizontals.filter(guideBreak =>{return !options.filterThesePositions.some(position => position.y === guideBreak.positionY)
+            this.horizontals = this.horizontals.filter(guideBreak =>{return !options.filterThesePositions.some(position => position.y == guideBreak.positionY)
             })
         }   
 

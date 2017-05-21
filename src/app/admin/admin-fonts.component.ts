@@ -6,11 +6,14 @@ import { Observable }     from 'rxjs/Observable';
 import {User } from '../user/user'
 import {ActivatedRoute} from '@angular/router';
 import {FontService} from '../font/font.service'
+import { MdDialog } from '@angular/material'
+import { UploadComponent } from '../uploader.component'
+import {AppConfig} from '../app.config'
 
 @Component({
     selector: 'admin-fonts',
     template: `
-        <font-table [rows] = "fonts" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></font-table>
+        <font-table [rows] = "fonts" [loadingIndicator]="loading" (onUploadClicked) ="openUploadModal()"></font-table>
     `,
     providers: []
 })
@@ -29,7 +32,7 @@ export class AdminFontsComponent implements OnInit {
     @param - fontService - font service to load fonts
     */
     constructor(
-        private fontService: FontService
+        private fontService: FontService, private dialog: MdDialog, private config: AppConfig
     ){}
 
     //loads fonts from the API
@@ -42,6 +45,17 @@ export class AdminFontsComponent implements OnInit {
         error =>{
             this.errorMessage = error
             this.loading = false
+        })
+    }
+
+    openUploadModal() {
+        let dialogRef = this.dialog.open(UploadComponent, {
+          height: '90%',
+          width: '60%',
+        });
+        dialogRef.componentInstance.uploadUrl = this.config.getConfig('api-url')+'/font';       
+        dialogRef.componentInstance.onCompleteAll.subscribe(closed =>{
+          this.ngOnInit()
         })
     }
 }

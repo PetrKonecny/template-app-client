@@ -10,12 +10,12 @@ import {TextContent} from '../content/text-content'
     selector: 'editor-toolbar',
     template: ` <span *ngIf="editor">
                     <font-toolbar (onFontSelected)="changeEditorFont($event)" (onFontSizeSelected)="changeEditorFontSize($event)" [fontLabel]="editor.editorCurFont.substring(0,5)" [fontSizeLabel]="editor.editorCurFontSize"></font-toolbar>
-                    <button md-icon-button [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="editor.editorCurColor">fiber_manual_record</md-icon></button>
+                    <button md-icon-button md-tooltip="barva písma" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="editor.editorCurColor">fiber_manual_record</md-icon></button>
                     <my-md-menu #backgroundColorMenu>
                         <div md-menu-item [colorPicker]="editor.editorCurColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeEditorTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
                         </div>       
                     </my-md-menu>
-                    <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="Format text">F</button>
+                    <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="formát textu">F</button>
                     <my-md-menu #textMenu="mdMenu">
                         <button md-icon-button (click)="changeEditorTextAlign('JustifyLeft')" mdTooltip="zarovnat doleva"><md-icon>format_align_left</md-icon></button>
                         <button md-icon-button (click)="changeEditorTextAlign('JustifyRight')" mdTooltip="zarovnat doprava"><md-icon>format_align_right</md-icon></button>

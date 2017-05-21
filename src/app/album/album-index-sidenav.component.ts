@@ -114,8 +114,12 @@ export class AlbumIndexSidenavComponent implements OnInit  {
         });
         dialogRef.afterClosed().subscribe(value => 
             {
-                if(value == 'save'){
-                    this.albumService.addAlbum(dialogRef.componentInstance.album).subscribe(album=>{
+                if(value){
+                    let album = new Album
+                    album.name = value.name
+                    album.tagged = value.tagged
+                    album.public = value.public
+                    this.albumService.addAlbum(album).subscribe(album=>{
                          this.albums.push(album)
                     },error=>{
                         this.snackBar.open("Chyba při vytváření alba",null,{duration: 2500})

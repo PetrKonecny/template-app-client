@@ -5,7 +5,7 @@ import { DebugElement }    from '@angular/core';
 import { FrameElementFactory } from './element.factory';
 import { NewFrameElementComponent } from './new-frame-element.component';
 import { DisplayContentComponent } from '../content/display-content.component' 
-import { NewPageRemote } from '../page/new-page.remote'
+import { NewPageReference } from '../page/new-page.ref'
 import { ElementStore } from '../element/element.store'
 import { Element, ElementCommands} from './element';
 import { Observable } from "rxjs/Observable";
@@ -46,7 +46,7 @@ describe('new frame component', () => {
                       MockComponent({ selector: 'display-content' ,  inputs: ['content']}), 
                       MockComponent({ selector: 'display-content-img-drag' ,  inputs: ['content']}), 
                       MockComponent({ selector: 'image-handle' ,  inputs: ['content']})],
-      providers: [ {provide: NewPageRemote, useValue: pageReferenceStub}, 
+      providers: [ {provide: NewPageReference, useValue: pageReferenceStub}, 
                    {provide: ElementStore, useValue: elementStoreStub}, 
                    {provide : ElementCommands, useValue:elementCommandsStub},
                    {provide : ImageContentCommands, useValue: imageCommandsStup}],

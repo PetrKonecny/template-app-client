@@ -92,8 +92,11 @@ export class AlbumIndexComponent implements OnInit  {
         )
     }  
 
-    onDelete(album){
-
+    onDeleted(album){
+        this.albumService.removeAlbum(album.id).subscribe(()=>{
+            this.albums.splice(this.albums.indexOf(album),1)
+        },error =>{                        
+            this.snackBar.open("Chyba při mazání alba",null,{duration: 2500})})
     }
 
     //opens dialog to edit ablum

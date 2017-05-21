@@ -1,6 +1,5 @@
 import { Component, Input, HostListener} from '@angular/core';
 import { Guide } from './guide'
-import { ElementDimensions } from '../resizable.directive'
 
 @Component({
     selector: 'display-ruler',

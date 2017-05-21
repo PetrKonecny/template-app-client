@@ -9,10 +9,8 @@ import { TableComponent } from '../admin/table.component'
     selector: 'font-table',
     template: `
         <md-toolbar style="position: fixed; z-index:1000;">
-            <md-input-container><input #search mdInput type="search" placeholder="filter" (keyup)='updateFilter(search.value)'></md-input-container>
-            <button  md-button>Upload</button>
-            <button  *ngIf="selected.length" md-button>Delete</button>
-            <button *ngIf="selected.length == 1" md-button>Edit</button>
+            <md-input-container><input #search mdInput type="search" placeholder="column_name:query" (keyup)='updateFilter(search.value)'></md-input-container>
+            <button  md-button (click)="onUploadClick()">Upload</button>
         </md-toolbar>
          <ngx-datatable
              class="material"
@@ -37,6 +35,9 @@ export class FontTableComponent extends TableComponent {
     //fonts to be displayed
     rows : Font[] 
 
+    @Output()
+    onUploadClicked = new EventEmitter
+
     //columns of the table
     columns = [
         { prop: 'id'},
@@ -44,7 +45,10 @@ export class FontTableComponent extends TableComponent {
         { prop: 'extension'},
         { prop: 'created_at'},
         { prop: 'updated_at'},
-        { prop: 'element_id'},
     ]
+
+    onUploadClick(){
+        this.onUploadClicked.emit()
+    }
 
 }

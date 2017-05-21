@@ -131,7 +131,7 @@ import {AlbumTableComponent} from './admin/album-table.component'
 no route matches
 */ 
 const routes: Routes = [
-    { path: 'admin', component: AdminIndexComponent},
+    { path: 'admin', redirectTo: 'admin/templates',},
     { path: 'admin/templates', component: AdminTemplatesComponent },
     { path: 'admin/templates/:id/edit', component: TemplateEditComponent },
     { path: 'admin/template-instances', component: AdminTemplateInstancesComponent },

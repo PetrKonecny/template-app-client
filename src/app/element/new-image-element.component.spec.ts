@@ -5,7 +5,7 @@ import { DebugElement }    from '@angular/core';
 import { ImageElementFactory } from './element.factory';
 import { NewImageElementComponent } from './new-image-element.component';
 import { DisplayContentComponent } from '../content/display-content.component' 
-import { NewPageRemote } from '../page/new-page.remote'
+import { NewPageReference } from '../page/new-page.ref'
 import { ElementStore } from '../element/element.store'
 import { Element, ElementCommands} from './element';
 import { Observable } from "rxjs/Observable";
@@ -40,7 +40,7 @@ describe('new image component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ NewImageElementComponent, MockComponent({ selector: 'image' ,  inputs: ['image']})],
-      providers: [ {provide: NewPageRemote, useValue: pageReferenceStub}, {provide: ElementStore, useValue: elementStoreStub}, {provide : ElementCommands, useValue:elementCommandsStub} ] // declare the test component
+      providers: [ {provide: NewPageReference, useValue: pageReferenceStub}, {provide: ElementStore, useValue: elementStoreStub}, {provide : ElementCommands, useValue:elementCommandsStub} ] // declare the test component
     });
 
     fixture = TestBed.createComponent(NewImageElementComponent);

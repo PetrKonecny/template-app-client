@@ -5,11 +5,11 @@ import { DebugElement }    from '@angular/core';
 import { TableElementFactory } from './element.factory';
 import { NewTableElementComponent } from './new-table-element.component';
 import { DisplayContentComponent } from '../content/display-content.component' 
-import { NewPageRemote } from '../page/new-page.remote'
+import { NewPageReference } from '../page/new-page.ref'
 import { ElementStore } from '../element/element.store'
 import { Element, ElementCommands} from './element';
 import { Observable } from "rxjs/Observable";
-import { NewTableElement } from './new-table-element'
+import { NewTableElementReference } from './new-table-element.ref'
 import {MaterialModule} from '@angular/material'
 import { TableElement, TableElementCommands } from './table-element'
 
@@ -43,11 +43,11 @@ describe('new table component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ NewTableElementComponent, MockComponent({ selector: 'tr' ,  inputs: ['myTr','y','content']})],
-      providers: [ {provide: NewPageRemote, useValue: pageReferenceStub}, 
+      providers: [ {provide: NewPageReference, useValue: pageReferenceStub}, 
       {provide: ElementStore, useValue: elementStoreStub}, 
       {provide : ElementCommands, useValue:elementCommandsStub},
       {provide : TableElementCommands, useValue:elementCommandsStub},
-      {provide: NewTableElement, useValue: tableElementReferenceStub}
+      {provide: NewTableElementReference, useValue: tableElementReferenceStub}
     ], 
       imports: [MaterialModule] 
     });

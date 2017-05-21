@@ -8,9 +8,7 @@ import { TableComponent } from '../admin/table.component'
     selector: 'user-table',
     template: `
         <md-toolbar style="position: fixed; z-index:1000;">
-            <md-input-container><input #search mdInput type="search" placeholder="filter" (keyup)='updateFilter(search.value)'></md-input-container>
-            <button  *ngIf="selected.length" md-button>Delete</button>
-            <button *ngIf="selected.length == 1" md-button>Edit</button>
+            <md-input-container><input #search mdInput type="search" placeholder="column_name:query" (keyup)='updateFilter(search.value)'></md-input-container>
         </md-toolbar>
          <ngx-datatable
              class="material"
