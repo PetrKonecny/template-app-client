@@ -41,9 +41,11 @@ export class TemplateInstanceHelper {
         templateInstance.contents.forEach((content,index) =>{
             content.id = templateInstance2.contents[index].id
         })
-        templateInstance.tagged.forEach((tag,index)=>{
-            tag.id = templateInstance2.tagged[index].id
-        })
+        if(templateInstance.tagged){
+            templateInstance.tagged.forEach((tag,index)=>{
+                tag.id = templateInstance2.tagged[index].id
+            })
+        }
     }
     
     /* Adds corresponding content from stored Template Instance to each element of stored Template 

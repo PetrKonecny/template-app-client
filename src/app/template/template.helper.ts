@@ -24,9 +24,11 @@ export class TemplateHelper {
                 element.content.id = template2.pages[index].elements[index2].content.id
             })
         })
-        template.tagged.forEach((tag,index)=>{
-            tag.id = template2.tagged[index].id
-        })
+        if(template.tagged){
+            template.tagged.forEach((tag,index)=>{
+                tag.id = template2.tagged[index].id
+            })
+        }
     }
 
 
