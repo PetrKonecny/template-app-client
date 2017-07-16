@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter} from '@angular/core';
 import { AlbumHttpService } from '../album/album-http.service'
 import { Album} from '../album/album'
 import { MdDialog } from '@angular/material'
@@ -10,6 +10,7 @@ import { AppConfig } from '../app.config'
 import { SaveAlbumModal } from '../album/save-album.modal'
 import {UserStore} from '../user/user.store'
 import { Observable }     from 'rxjs/Observable';
+import {CreateTableModal} from '../element/create-table-element.modal' 
 
 @Component({
     selector: 'album-index-sidenav',
@@ -18,17 +19,18 @@ import { Observable }     from 'rxjs/Observable';
           <md-spinner *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <md-toolbar>
+        <md-toolbar style="position:absolute; width: 80%;" class="bg-dark text-light">
             <button *ngIf="selectedAlbum" md-icon-button (click)="onBackClicked($event)"><md-icon>arrow_back</md-icon></button>
             <h4 *ngIf="selectedAlbum">{{selectedAlbum.name ? selectedAlbum.name : 'nepojmenované album'}}</h4>
-            <h4 *ngIf="!selectedAlbum">Všechna alba</h4>
-            <span style="flex: 1 1 auto"></span>´
-            <button *ngIf="!selectedAlbum" md-icon-button (click)="onAddClicked()" mdTooltip="přidat album"><md-icon>add</md-icon></button>
-            <button *ngIf="selectedAlbum" md-icon-button (click)="onAddClicked()" mdTooltip="nahrát obrázky do alba"><md-icon>add</md-icon></button>
+            <h4 *ngIf="!selectedAlbum">Alba</h4>
+            <span style="flex: 1 1 auto"></span>
+            <md-icon style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="onCloseClicked.emit(true)" mdTooltip="schovat boční panel">chevron_left</md-icon>    
         </md-toolbar>
-        <album-list *ngIf="!selectedAlbum && albums" (onAlbumClicked)="onSelected($event)" [albums] = "albums" [cols]="3"></album-list>
-        <display-album-sidenav #albumDetail *ngIf="selectedAlbum" [album]="selectedAlbum"></display-album-sidenav>
-    `,
+        <div style="padding-top: 64px; padding-left: 6px; padding-right: 6px;">
+            <album-list showAddTile="true" *ngIf="!selectedAlbum && albums" (onAddAlbumClicked)="openNewAlbumDialog()" (onAlbumClicked)="onSelected($event)" [albums] = "albums" [cols]="3"></album-list>
+            <display-album-sidenav #albumDetail *ngIf="selectedAlbum" [album]="selectedAlbum"></display-album-sidenav>
+        </div>
+        `,
     styles:[`
         
     `]
@@ -52,6 +54,10 @@ export class AlbumIndexSidenavComponent implements OnInit  {
     //reference to the component containing images in the album
     @ViewChild('albumDetail')
     albumDetail
+
+    @Output() 
+    //trigered on delete clicked
+    onCloseClicked = new EventEmitter<boolean>();
 
     /**
     @param userStore - store containing currently logged in user
@@ -148,4 +154,13 @@ export class AlbumIndexSidenavComponent implements OnInit  {
             }
         )
     }
+
+    createNewTableElement(){
+        let dialogRef = this.dialog.open(CreateTableModal, {height: 'auto',
+          width: '30%',})
+        dialogRef.afterClosed().subscribe(val =>{
+            if(val && val.rows && val.columns && val.rowHeight && val.columnWidth){
+             }     
+        })
+    }  
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter} from '@angular/core';
 import { Image} from '../image/image';
 import { Element } from '../element/element';
 import {Page} from './page'
@@ -20,19 +20,24 @@ import {PageStore} from '../page/page.store'
 @Component({
     selector: 'page-select',
     template: `
-                <span *ngIf="page">
-                    <md-grid-list cols="2">                    
-                        <md-grid-tile ><div (click)="createNewTextElement()">text</div></md-grid-tile>
-                        <md-grid-tile ><div (click)="createNewFrameElement()">rámeček</div></md-grid-tile>
-                        <md-grid-tile ><div (click)="createNewTableElement()">tabulka</div></md-grid-tile>
+                    <md-toolbar style="position:absolute; width: 80%;" class="bg-dark text-light">
+                        <h4>Prvky</h4>
+                        <span style="flex: 1 1 auto"></span>
+                        <md-icon style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="onCloseClicked.emit(true)" mdTooltip="schovat boční panel">chevron_left</md-icon>  
+                    </md-toolbar>
+                    <div style="padding-top: 64px; padding-left: 6px; padding-right: 6px;">
+                    <md-grid-list *ngIf="page" cols="2    ">                    
+                        <md-grid-tile ><button class="element-tile" (click)="createNewTextElement()"><md-icon>format_color_text    </md-icon><h5>text</h5></button></md-grid-tile>
+                        <md-grid-tile ><button class="element-tile" (click)="createNewFrameElement()"><md-icon>wallpaper</md-icon><h5>rámeček></h5></button></md-grid-tile>
+                        <md-grid-tile ><button class="element-tile" (click)="createNewTableElement()"><md-icon>border_all</md-icon><h5>tabulka</h5></button></md-grid-tile>
                     </md-grid-list>
-                </span>
-                <span style="width: 100%; height: 100%; display: flex; align-items: center; text-align: center;" *ngIf="!page">
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; text-align: center;" *ngIf="!page">
                     <h3 *ngIf="!page" class="nothing-found">Vyberte kliknutím stránku šablony</h3>
-                </span>
+                </div>
+                </div>
              `,
     providers: [],
-    styles: [`div {background: whitesmoke; width: 90%; height: 90%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-transform: uppercase; font-weight: bold;}`]
+    styles: [`button {background: whitesmoke; width: 90%; height: 90%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-transform: uppercase; font-weight: bold;}`]
 })
 //elements displayed in the sidenav in the template editor
 export class PageSelectorComponent {
@@ -50,6 +55,10 @@ export class PageSelectorComponent {
                 private commands: PageCommands,){
         this.pageStore.page.subscribe(page => this.page = page)   
     }
+
+    @Output() 
+    //trigered on delete clicked
+    onCloseClicked = new EventEmitter<boolean>();
     
     //calls command to create new text element
     createNewTextElement(){

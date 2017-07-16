@@ -9,8 +9,15 @@ import { Image } from './image';
             </div>
             <div class="list-wrapper">
                 <md-grid-list cols="3">
+                    <md-grid-tile md-tooltip="přidat obrázky">
+                        <div class="album plus-album">
+                            <md-icon>add</md-icon>
+                        </div>
+                    </md-grid-tile>
                     <md-grid-tile *ngFor="let image of images" (click)="onSelect(image)">
-                        <image (click)="onSelect(image)" [image]="image" [thumb]="true"></image>            
+                        <div class="image-wrap">
+                            <image (click)="onSelect(image)" [image]="image" [thumb]="true"></image>
+                        </div>            
                     </md-grid-tile>
                 </md-grid-list>
             </div> `,

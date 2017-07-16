@@ -5,13 +5,13 @@ import { User } from '../user/user'
 @Component({
     selector: 'album-list',
     template: `
-            <div class="shutter">
+            <div class="shutter ">
                 <h3 *ngIf="albums && albums.length == 0" class="nothing-found">Žádná alba k zobrazení</h3>
             </div>
             <div class="list-wrapper">            
                 <md-grid-list  [cols]="cols">
                     <md-grid-tile (click)="onSelect(album)" *ngFor="let album of albums">
-                        <div class="album" [class.public-album]="album.public" style="display: flex; align-items: center; justify-content: center; width: 90%; height: 90%; background: gainsboro; text-align: center;">
+                        <div class="album" [class.public-album]="album.public">
                             <button *ngIf="user && album.user_id == user.id" md-icon-button (click)="onClick($event)" [mdMenuTriggerFor]="albumMenu" style="position:absolute; right:0; top:0; margin: 12px;"><md-icon>more_vert</md-icon></button>
                             <md-menu #albumMenu="mdMenu">
                               <button md-menu-item (click)="onDeleteAlbum(album)">
@@ -23,6 +23,11 @@ import { User } from '../user/user'
                             </md-menu>
                             <h3>{{album.name ? album.name : 'album'}}</h3>
                         </div>           
+                    </md-grid-tile>
+                    <md-grid-tile *ngIf="showAddTile" md-tooltip="nové album">
+                        <button (click)="onAddAlbumClicked.emit()" class="album plus-album">
+                            <md-icon>add</md-icon>
+                        </button>
                     </md-grid-tile>
                 </md-grid-list> 
             </div>
@@ -45,9 +50,16 @@ export class AlbumListComponent {
     //currently logged in user
     user: User
 
+    @Input()
+    showAddTile: boolean
+
     @Output() 
     //triggered on album clicked
     onAlbumClicked = new EventEmitter<Album>();
+
+    @Output() 
+    //triggered on album clicked
+    onAddAlbumClicked = new EventEmitter<null>();
 
     @Output() 
     //triggered on edit clicked

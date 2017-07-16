@@ -38,12 +38,18 @@ export class TemplateInstanceHelper {
 
     static copyIds(templateInstance: TemplateInstance, templateInstance2: TemplateInstance){
         templateInstance.id = templateInstance2.id
-        templateInstance.contents.forEach((content,index) =>{
-            content.id = templateInstance2.contents[index].id
-        })
+        if(templateInstance.contents){
+            templateInstance.contents.forEach((content,index) =>{
+                if(templateInstance2.contents[index]){
+                    content.id = templateInstance2.contents[index].id
+                }
+            })
+        }
         if(templateInstance.tagged){
             templateInstance.tagged.forEach((tag,index)=>{
-                tag.id = templateInstance2.tagged[index].id
+                if(templateInstance2.tagged[index]){
+                    tag.id = templateInstance2.tagged[index].id
+                }
             })
         }
     }

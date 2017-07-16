@@ -9,7 +9,7 @@ import {FontStore} from './font/font.store'
 import {Font} from './font/font'
 import {UserGuard} from './user/user.guard'
 import {AppConfig} from './app.config'
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute,NavigationEnd} from '@angular/router';
 import {Location } from '@angular/common';
 import {AppComponentRef} from './app.ref'
 import { TemplateStore } from './template/template.store'
@@ -17,8 +17,8 @@ import { TemplateStore } from './template/template.store'
 @Component({
     selector: 'app-root',
     template: `
-    <div style="height: 93%">
-    <md-toolbar *ngIf="adminRoute" color="warn">
+    <div style="height: 100%;">
+    <md-toolbar *ngIf="adminRoute" color="warn" class="mat-elevation-z2 main-toolbar">
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/users" routerLinkActive="active">USERS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/templates" routerLinkActive="active">TEMPLATES</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/template-instances" routerLinkActive="active">DOCUMENTS</a>
@@ -28,7 +28,7 @@ import { TemplateStore } from './template/template.store'
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/elements" routerLinkActive="active">ELEMENTS</a>
         <a md-button *ngIf="guard.canActivate()"  routerLink="admin/fonts" routerLinkActive="active">FONTS</a>
     </md-toolbar>
-    <md-toolbar *ngIf="!adminRoute" color="primary">
+    <md-toolbar *ngIf="!adminRoute" color="primary" class="mat-elevation-z6 main-toolbar">
         <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">ŠABLONY</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">DOKUMENTY</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/albums" routerLinkActive="active">OBRÁZKY</a>
@@ -92,9 +92,11 @@ export class AppComponent implements OnInit {
     /**triggered when component is created
     gets authenticated user from api and avalilable fonts
     */
-    ngOnInit(){
-        this.router.events.subscribe(event=>{
-            this.adminRoute = event.url.includes('admin')
+    ngOnInit(){       
+        this.router.events
+        .filter(event => event instanceof NavigationEnd)
+        .subscribe((event : NavigationEnd)=>{
+        this.adminRoute = event.url.includes('admin')
 
         })
         this.userStore.auth().subscribe()

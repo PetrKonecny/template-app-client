@@ -11,13 +11,13 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  ElementRef,
 } from '@angular/core';
-import {MenuPositionX, MenuPositionY} from '@angular/material/menu/menu-positions';
-import {MdMenuInvalidPositionX, MdMenuInvalidPositionY} from '@angular/material/menu/menu-errors';
-import {MdMenuItem} from '@angular/material/menu/menu-item';
-import {MdMenuPanel} from '@angular/material/menu/menu-panel';
+import {MenuPositionX, MenuPositionY} from '@angular/material';
+import {MdMenuItem} from '@angular/material';
+import {MdMenuPanel} from '@angular/material';
 import {Subscription} from 'rxjs/Subscription';
-import {transformMenu, fadeInItems} from '@angular/material/menu/menu-animations';
+import {transformMenu, fadeInItems} from '@angular/material';
 
 @Component({
   selector: 'my-md-menu',
@@ -45,27 +45,44 @@ export class MyMdMenu implements MdMenuPanel, OnDestroy {
 
   /** Subscription to tab events on the menu panel */
   /** Config object to be passed into the menu's ngClass */
+  private _xPosition: MenuPositionX = 'after';
+  private _yPosition: MenuPositionY = 'below';
+
+  /** Subscription to tab events on the menu panel */
+  private _tabSubscription: Subscription;
+
+  /** Config object to be passed into the menu's ngClass */
   _classList: any = {};
 
   /** Position of the menu in the X axis. */
-  positionX: MenuPositionX = 'after';
+  @Input()
+  get xPosition() { return this._xPosition; }
+  set xPosition(value: MenuPositionX) {
+    if (value !== 'before' && value !== 'after') {
+      //throwMdMenuInvalidPositionX();
+    }
+    this._xPosition = value;
+    this.setPositionClasses();
+  }
 
   /** Position of the menu in the Y axis. */
-  positionY: MenuPositionY = 'below';
+  @Input()
+  get yPosition() { return this._yPosition; }
+  set yPosition(value: MenuPositionY) {
+    if (value !== 'above' && value !== 'below') {
+      //throwMdMenuInvalidPositionY();
+    }
+    this._yPosition = value;
+    this.setPositionClasses();
+  }
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+
+  /** List of the items inside of a menu. */
   @ContentChildren(MdMenuItem) items: QueryList<MdMenuItem>;
+
+  /** Whether the menu should overlap its trigger. */
   @Input() overlapTrigger = true;
-
-  constructor(@Attribute('x-position') posX: MenuPositionX,
-              @Attribute('y-position') posY: MenuPositionY) {
-    if (posX) { this._setPositionX(posX); }
-    if (posY) { this._setPositionY(posY); }
-    this.setPositionClasses(this.positionX, this.positionY);
-  }
-
-  ngOnDestroy() {
-  }
 
   /**
    * This method takes classes set on the host md-menu element and applies them on the
@@ -75,15 +92,32 @@ export class MyMdMenu implements MdMenuPanel, OnDestroy {
    */
   @Input('class')
   set classList(classes: string) {
-    this._classList = classes.split(' ').reduce((obj: any, className: string) => {
-      obj[className] = true;
-      return obj;
-    }, {});
-    this.setPositionClasses(this.positionX, this.positionY);
+    if (classes && classes.length) {
+      this._classList = classes.split(' ').reduce((obj: any, className: string) => {
+        obj[className] = true;
+        return obj;
+      }, {});
+
+      this._elementRef.nativeElement.className = '';
+      this.setPositionClasses();
+    }
   }
 
   /** Event emitted when the menu is closed. */
   @Output() close = new EventEmitter<void>();
+
+  constructor(private _elementRef: ElementRef) { }
+
+  ngOnDestroy() {
+    if (this._tabSubscription) {
+      this._tabSubscription.unsubscribe();
+    }
+  }
+
+  /** Handle a keyboard event from the menu, delegating to the appropriate action. */
+  _handleKeydown(event: KeyboardEvent) {
+    
+  }
 
   /**
    * Focus the first item in the menu. This method is used by the menu trigger
@@ -100,29 +134,15 @@ export class MyMdMenu implements MdMenuPanel, OnDestroy {
     this.close.emit();
   }
 
-  private _setPositionX(pos: MenuPositionX): void {
-    if ( pos !== 'before' && pos !== 'after') {
-      throw new MdMenuInvalidPositionX();
-    }
-    this.positionX = pos;
-  }
-
-  private _setPositionY(pos: MenuPositionY): void {
-    if ( pos !== 'above' && pos !== 'below') {
-      throw new MdMenuInvalidPositionY();
-    }
-    this.positionY = pos;
-  }
-
   /**
    * It's necessary to set position-based classes to ensure the menu panel animation
    * folds out from the correct direction.
    */
-  setPositionClasses(posX: MenuPositionX, posY: MenuPositionY): void {
-    this._classList['md-menu-before'] = posX == 'before';
-    this._classList['md-menu-after'] = posX == 'after';
-    this._classList['md-menu-above'] = posY == 'above';
-    this._classList['md-menu-below'] = posY == 'below';
+  setPositionClasses(posX = this.xPosition, posY = this.yPosition): void {
+    this._classList['mat-menu-before'] = posX === 'before';
+    this._classList['mat-menu-after'] = posX === 'after';
+    this._classList['mat-menu-above'] = posY === 'above';
+    this._classList['mat-menu-below'] = posY === 'below';
   }
 
 }

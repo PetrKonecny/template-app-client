@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule } from "@angular/forms"
 import {MaterialModule} from '@angular/material'
 import 'hammerjs'
 import { RouterModule, Routes } from '@angular/router'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TemplateIndexComponent} from './template/template-index.component'
 import { TemplateCreateComponent } from './template/create-template.component'
 import { TemplateEditComponent } from './template/edit-template.component'
@@ -190,12 +191,13 @@ const routes: Routes = [
         FormsModule,
         ReactiveFormsModule,
         Ng2UploaderModule,
-        MaterialModule.forRoot() ,
+        MaterialModule,
         Ng2DropdownModule,
         TagInputModule,
         FileUploadModule,
         NgxDatatableModule,
-        ColorPickerModule,       
+        ColorPickerModule,
+        BrowserAnimationsModule       
     ],
     // providers
     providers: [

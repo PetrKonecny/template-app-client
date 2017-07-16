@@ -30,16 +30,16 @@ import { ElementStore } from '../element/element.store'
                         <!-- displays controls to change dimensions -->
 
                         <button md-icon-button [mdMenuTriggerFor]="menu" mdTooltip="pozice a šířka">XY</button>
-                        <my-md-menu #menu="mdMenu">
-                            <position-form [dimensions]="getDimensions()" (onSubmit)="onPositionMenuConfirmed($event)"></position-form>
-                        </my-md-menu>
+                        <md-menu #menu="mdMenu">
+                            <position-form (click)="$event.stopPropagation()" [dimensions]="getDimensions()" (onSubmit)="onPositionMenuConfirmed($event)"></position-form>
+                        </md-menu>
 
                         <!-- displays controls to change opacity -->
 
                         <button md-icon-button [mdMenuTriggerFor]="opacity" mdTooltip="průhlednost"><md-icon>opacity</md-icon></button>
-                        <my-md-menu #opacity="mdMenu">
-                            <md-slider style="margin:10px; width: 200px;" [thumbLabel]="true" [value]="this.element.opacity ? this.element.opacity : 100" (input)="onSliderChange($event)"></md-slider>
-                        </my-md-menu>
+                        <md-menu #opacity="mdMenu">
+                            <md-slider (click)="$event.stopPropagation()"  style="margin:10px; width: 200px;" [thumbLabel]="true" [value]="this.element.opacity ? this.element.opacity : 100" (input)="onSliderChange($event)"></md-slider>
+                        </md-menu>
 
                         <!-- displays controls to change order of elements -->
 
@@ -56,13 +56,15 @@ import { ElementStore } from '../element/element.store'
                         <!-- displays controls to change color of the background --> 
 
                         <button md-icon-button mdTooltip="Barva pozadí" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="element.background_color">fiber_manual_record</md-icon></button>
-                        <my-md-menu #backgroundColorMenu>
-                            <div md-menu-item [colorPicker]="element.background_color ? element.background_color : lastColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeBackgroundColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
+                        <md-menu #backgroundColorMenu>
+                            <div (click)="$event.stopPropagation()">
+                                <div md-menu-item [colorPicker]="element.background_color ? element.background_color : lastColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeBackgroundColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
+                                </div>
                             </div>
-                            <div md-menu-item style="overflow: hidden;">
+                            <div (click)="$event.stopPropagation()" md-menu-item style="overflow: hidden;">
                                 Zobrazit/skrýt pozadí <md-checkbox #bgCheckbox [checked]="element.background_color" (change)="toggleElementBackground(bgCheckbox.checked)" style="position: relative; z-index: 1000;"></md-checkbox>
                             </div>
-                        </my-md-menu>
+                        </md-menu>
 
                     </div>
 

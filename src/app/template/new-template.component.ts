@@ -10,6 +10,9 @@ import { PageFactory } from '../page/page.factory'
 import { TemplateStore } from '../template/template.store'
 import {MdSnackBar} from '@angular/material';
 import {CreateTableModal} from '../element/create-table-element.modal' 
+import {PageCommands} from '../page/page'
+import {TextElementFactory, FrameElementFactory, TableElementFactory} from '../element/element.factory'
+import {PageStore} from '../page/page.store'
 
 @Component({
     selector: 'create-new-template',
@@ -18,9 +21,14 @@ import {CreateTableModal} from '../element/create-table-element.modal'
 
             <!-- main app toolbar -->
 
-            <md-toolbar>
-                <button md-icon-button *ngIf="!sidenav.opened" (click)="sidenav.toggle()" md-tooltip="přidat prvek"><md-icon>add</md-icon></button>
-                <button md-icon-button *ngIf="sidenav.opened" (click)="sidenav.toggle()" md-tooltip="zavřít boční menu"><md-icon>close</md-icon></button>
+            <md-toolbar class="mat-elevation-z4" style="z-index: 30; position: relative;">
+                <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
+                <button md-icon-button [mdMenuTriggerFor]="menu"  md-tooltip="přidat prvek"><md-icon>add</md-icon></button>
+                <md-menu #menu="mdMenu">
+                    <button md-menu-item [disabled]="!this.page" (click)="createNewFrameElement()"> Rámeček </button>
+                    <button md-menu-item [disabled]="!this.page" (click)="createNewTableElement()"> tabulka </button>
+                    <button md-menu-item [disabled]="!this.page" (click)="createNewTextElement()"> Text </button>
+                </md-menu>
                 <button md-icon-button (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
@@ -29,15 +37,23 @@ import {CreateTableModal} from '../element/create-table-element.modal'
 
             <!-- side menu -->
 
-            <md-sidenav mode ="side" #sidenav style="width: 20%;">
-                <md-tab-group>
-                    <md-tab label = "Prvky">                   
-                        <page-select></page-select>
-                    </md-tab>
-                    <md-tab label = "Obrázky">
-                        <album-index-sidenav></album-index-sidenav>
-                    </md-tab>
-                </md-tab-group>
+            <md-sidenav  opened="true" class="mat-elevation-z6 bg-dark" mode ="side" #sidenav style="width: 20%; display:flex; overflow: visible;">
+                    <div style="display:flex; flex-direction:row; width: 100%;">
+                        <div style="background: #673ab7; flex:1; width: 15%;">
+                        
+                            <div class="side-switch" [class.switch-active]="sidenavState == 1" (click)="clickImages()"><md-icon>image</md-icon></div>
+                            <div class="side-switch" [class.switch-active]="sidenavState == 0" (click)="clickElements()"><md-icon>web</md-icon></div>
+                        </div>
+                        <div style="flex: 5; width: 85%;">
+                            <div class="sidenav" [class.sidenav-active]="sidenavState == 1" >
+                            <album-index-sidenav  [hidden]="sidenavState != 1" (onCloseClicked)="sidenav.close()"></album-index-sidenav>
+                            </div>
+                            <div class="sidenav" [class.sidenav-active]="sidenavState == 0" >
+                            <page-select  [hidden]="sidenavState != 0"></page-select>
+                            </div>
+                            
+                        </div>
+                    </div>
             </md-sidenav>       
 
             <!-- pages of the template -->
@@ -85,6 +101,8 @@ export class NewTemplateComponent  {
     @Input()
     //template that should be edited
     template: Template;
+    page: Page;
+    sidenavState: number = 0;
     
     /**
     @param templateStore - injects store containing current template
@@ -101,8 +119,12 @@ export class NewTemplateComponent  {
         private pageFactory: PageFactory,
         private pageService: PageService,
         private templateCommands: TemplateCommands,
-        private snackBar: MdSnackBar
-    ){ }
+        private snackBar: MdSnackBar,
+        private pageStore: PageStore,
+        private pageCommands: PageCommands
+    ){ 
+        this.pageStore.page.subscribe(page => this.page = page)
+    }
     
     //calls store to save the template     
     saveTemplate() {
@@ -148,5 +170,39 @@ export class NewTemplateComponent  {
     //calls redo in redo service
     redo(){
         this.undoService.redo()
+    }
+
+    createNewTextElement(){
+        let factory = new TextElementFactory
+        this.pageCommands.addElement(this.page, factory.build())
+    }
+    
+    //calls command to create new frame element
+    createNewFrameElement(){
+        let factory = new FrameElementFactory
+        this.pageCommands.addElement(this.page, factory.build())
+    }
+           
+    //calls command to create new table element
+    createNewTableElement(){
+        let dialogRef = this.dialog.open(CreateTableModal, {height: 'auto',
+          width: '30%',})
+        dialogRef.afterClosed().subscribe(val =>{
+            if(val && val.rows && val.columns && val.rowHeight && val.columnWidth){
+                let factory = new TableElementFactory
+                factory.setColumnCount(val.columns)
+                factory.setRowCount(val.rows)
+                factory.setColumnWidth(val.columnWidth)
+                factory.setRowHeight(val.rowHeight)
+                this.pageCommands.addElement(this.page, factory.build())}
+        })
+    }
+
+    clickImages(){
+        this.sidenavState = 1
+    }
+
+    clickElements(){
+        this.sidenavState = 0
     }
 }

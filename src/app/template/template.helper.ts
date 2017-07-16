@@ -21,12 +21,16 @@ export class TemplateHelper {
             page.id = template2.pages[index].id
             page.elements.forEach((element,index2) =>{
                 element.id = template2.pages[index].elements[index2].id
-                element.content.id = template2.pages[index].elements[index2].content.id
+                if(template2.pages[index].elements[index2].content){
+                    element.content.id = template2.pages[index].elements[index2].content.id
+                }
             })
         })
         if(template.tagged){
             template.tagged.forEach((tag,index)=>{
-                tag.id = template2.tagged[index].id
+                if(template2.tagged[index]){
+                    tag.id = template2.tagged[index].id
+                }
             })
         }
     }
