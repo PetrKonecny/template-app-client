@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { AlbumHttpService } from '../album/album-http.service'
 import { Album} from '../album/album'
 import { MdDialog } from '@angular/material'
@@ -8,6 +8,7 @@ import { MdSnackBar } from '@angular/material';
 import { SaveAlbumModal } from '../album/save-album.modal'
 import {UserStore} from '../user/user.store'
 import { Observable }     from 'rxjs/Observable';
+import {AlbumHelper} from '../album/album.helper'
 
 @Component({
     selector: 'album-index',
@@ -16,8 +17,39 @@ import { Observable }     from 'rxjs/Observable';
           <md-spinner *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
+        <md-toolbar style="position: fixed; z-index: 5;">
+                <button md-button *ngIf="showOpenButton()" [routerLink] = "['/albums', selected[0].id]">OTEVŘÍT ALBUM</button>
+                <button md-button *ngIf="showEditButton()" (click)="onEditClicked(selected[0])">UPRAVIT ALBUM</button>
+                <button md-button *ngIf="showDeleteButton()" (click)="onDeleteClicked(selected[0])">SMAZAT ALBUM</button>
+        </md-toolbar>
+        <div class ="index-content">
+            <ngx-datatable #table style="padding-top: 64px;" *ngIf="currentUser && albums?.length"
+                     class="material"
+                    [columnMode]="'force'"
+                    [headerHeight]="50"
+                    [footerHeight]="0"
+                    [rowHeight]="'auto'"
+                    [selected]="selected"
+                    [selectionType]="'single'"
+                    [rows]="albums"
+                >
+                <ngx-datatable-column prop="name" name="název">
+                </ngx-datatable-column>
+                <ngx-datatable-column prop="tagged" name="tagy">
+                    <ng-template  let-value="value" ngx-datatable-cell-template>
+                    <md-chip-list>
+                    <md-chip *ngFor="let tag of value">{{tag.tag_name}}</md-chip>
+                    </md-chip-list>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column prop="updated_at" name="naposledy upraveno">
+                    <ng-template  let-value="value" ngx-datatable-cell-template>
+                    {{value | date : 'short'}}
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
         <button md-fab class="index-button" (click)="openNewAlbumDialog()"><md-icon>add</md-icon></button>
-        <album-list *ngIf="albums" [user]="currentUser" (onEditClicked)="onEdit($event)" (onDeleteClicked)="onDeleted($event)" (onAlbumClicked)="onSelected($event)" [albums] = "albums"></album-list>
     `,
     styles:[`
         
@@ -26,7 +58,10 @@ import { Observable }     from 'rxjs/Observable';
 
 //displays index page for albums
 export class AlbumIndexComponent implements OnInit  {
-    
+
+
+    @ViewChild('table')
+    table: any    
     //error thrown while loading albums
     error: string;
     //user albums to be displayed
@@ -35,6 +70,8 @@ export class AlbumIndexComponent implements OnInit  {
     publicAlbums: Album[]
     //loading indicator
     loading = true
+
+    selected: Album[] = []
     //user currently logged in
     currentUser
 
@@ -69,6 +106,18 @@ export class AlbumIndexComponent implements OnInit  {
         )
     }
 
+    showOpenButton(){
+        return this.selected.length
+    }
+
+    showEditButton(){
+        return this.selected.length && AlbumHelper.canEditAlbum(this.currentUser, this.selected[0])
+    }
+
+    showDeleteButton(){
+        return this.selected.length && AlbumHelper.canEditAlbum(this.currentUser, this.selected[0])
+    }
+
     //opens dialog to create new album
     openNewAlbumDialog(){
         let dialogRef = this.dialog.open(SaveAlbumModal, {
@@ -92,7 +141,7 @@ export class AlbumIndexComponent implements OnInit  {
         )
     }  
 
-    onDeleted(album){
+    onDeleteClicked(album){
         this.albumService.removeAlbum(album.id).subscribe(()=>{
             this.albums.splice(this.albums.indexOf(album),1)
         },error =>{                        
@@ -100,7 +149,7 @@ export class AlbumIndexComponent implements OnInit  {
     }
 
     //opens dialog to edit ablum
-    onEdit(album){
+    onEditClicked(album){
     let dialogRef = this.dialog.open(SaveAlbumModal, {
           height: 'auto',
           width: '30%',
@@ -115,7 +164,9 @@ export class AlbumIndexComponent implements OnInit  {
                     album2.public = value.public
                     delete album2.images;
                     this.albumService.updateAlbum(album2).subscribe(updatedAlbum=>{
-                         this.albums.splice(this.albums.indexOf(album),1,updatedAlbum)
+                         this.albums.splice(this.albums.indexOf(album),1, updatedAlbum)
+                         let albums = [...this.albums]
+                         this.albums = albums
                     },error=>{
                         this.snackBar.open("Chyba při aktualizaci alba",null,{duration: 2500})
                     })
@@ -126,7 +177,4 @@ export class AlbumIndexComponent implements OnInit  {
     }
 
     //triggered on album clicked
-    onSelected(album: Album){
-       this.router.navigate(['albums',album.id])
-    }
 }

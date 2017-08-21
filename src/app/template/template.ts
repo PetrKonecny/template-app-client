@@ -94,6 +94,8 @@ export class Template {
   name: string;
   pages: Page[];
   user: User
+  user_id: number;
   tagged: Tag[]
   public: boolean
+  singular: boolean
 }

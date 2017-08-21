@@ -73,7 +73,8 @@ export class ImageComponent implements OnChanges{
 
     //triggered when the drag is started
     onDragStart(event, image){
-        event.dataTransfer.setData("text",JSON.stringify(image))
+        event.dataTransfer.setData("type","IMAGE_ELEMENT")
+        event.dataTransfer.setData("data",JSON.stringify(image))
     }
 
     //triggered when there is error while loading the image

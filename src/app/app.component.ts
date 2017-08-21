@@ -13,7 +13,7 @@ import {ActivatedRoute,NavigationEnd} from '@angular/router';
 import {Location } from '@angular/common';
 import {AppComponentRef} from './app.ref'
 import { TemplateStore } from './template/template.store'
-
+import { User} from './user/user'
 @Component({
     selector: 'app-root',
     template: `
@@ -31,7 +31,8 @@ import { TemplateStore } from './template/template.store'
     <md-toolbar *ngIf="!adminRoute" color="primary" class="mat-elevation-z6 main-toolbar">
         <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">ŠABLONY</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">DOKUMENTY</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="/albums" routerLinkActive="active">OBRÁZKY</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="/albums" routerLinkActive="active">ALBA</a>
+        <a md-button *ngIf="guard.canActivate()" [routerLink]="['/users', currentUser?.id]" routerLinkActive="active">PROFIL</a>
         <a md-button *ngIf="!guard.canActivate()" href="{{config.getConfig('api-url')}}/user/login">PŘIHLÁSIT</a>
         <a md-button *ngIf="guard.canActivate()" href="{{config.getConfig('api-url')}}/user/logout">ODHLÁSIT</a>
     </md-toolbar>
@@ -46,6 +47,7 @@ export class AppComponent implements OnInit {
 
     //whether route contains 'admin' 
     adminRoute = false;
+    currentUser: User;
 
     /**
     @param userStore - store containing user currently logged in
@@ -57,7 +59,7 @@ export class AppComponent implements OnInit {
     */
     constructor(private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, private guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
     private ref: AppComponentRef){
-
+        this.userStore.user.subscribe(user=>this.currentUser = user)
     }
 
     /**triggered on mouse move in whole application
@@ -82,6 +84,19 @@ export class AppComponent implements OnInit {
     @HostListener('document:keydown.shift', ['$event'])
     onShiftDown(){
         this.ref.nextShiftPress(true)
+    }
+
+    @HostListener('document:keyup.control', ['$event'])
+    onCtrlUp(){
+        this.ref.nextCtrlPress(false)
+    }
+
+    /**triggered when the shift key is pressed
+    other parts use this to ract on shift key action
+    */
+    @HostListener('document:keydown.control', ['$event'])
+    onCtrilDown(){
+        this.ref.nextCtrlPress(true)
     }
 
     //calls http service that logs out the user if logout button is clicked 

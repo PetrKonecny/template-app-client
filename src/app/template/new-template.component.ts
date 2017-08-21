@@ -13,6 +13,8 @@ import {CreateTableModal} from '../element/create-table-element.modal'
 import {PageCommands} from '../page/page'
 import {TextElementFactory, FrameElementFactory, TableElementFactory} from '../element/element.factory'
 import {PageStore} from '../page/page.store'
+import domtoimage from 'dom-to-image'
+import { SaveTemplateInstanceModal} from '../template-instance/save-template-instance.modal'
 
 @Component({
     selector: 'create-new-template',
@@ -23,12 +25,6 @@ import {PageStore} from '../page/page.store'
 
             <md-toolbar class="mat-elevation-z4" style="z-index: 30; position: relative;">
                 <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
-                <button md-icon-button [mdMenuTriggerFor]="menu"  md-tooltip="přidat prvek"><md-icon>add</md-icon></button>
-                <md-menu #menu="mdMenu">
-                    <button md-menu-item [disabled]="!this.page" (click)="createNewFrameElement()"> Rámeček </button>
-                    <button md-menu-item [disabled]="!this.page" (click)="createNewTableElement()"> tabulka </button>
-                    <button md-menu-item [disabled]="!this.page" (click)="createNewTextElement()"> Text </button>
-                </md-menu>
                 <button md-icon-button (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
@@ -40,7 +36,6 @@ import {PageStore} from '../page/page.store'
             <md-sidenav  opened="true" class="mat-elevation-z6 bg-dark" mode ="side" #sidenav style="width: 20%; display:flex; overflow: visible;">
                     <div style="display:flex; flex-direction:row; width: 100%;">
                         <div style="background: #673ab7; flex:1; width: 15%;">
-                        
                             <div class="side-switch" [class.switch-active]="sidenavState == 1" (click)="clickImages()"><md-icon>image</md-icon></div>
                             <div class="side-switch" [class.switch-active]="sidenavState == 0" (click)="clickElements()"><md-icon>web</md-icon></div>
                         </div>
@@ -49,7 +44,7 @@ import {PageStore} from '../page/page.store'
                             <album-index-sidenav  [hidden]="sidenavState != 1" (onCloseClicked)="sidenav.close()"></album-index-sidenav>
                             </div>
                             <div class="sidenav" [class.sidenav-active]="sidenavState == 0" >
-                            <page-select  [hidden]="sidenavState != 0"></page-select>
+                            <page-select  [hidden]="sidenavState != 0" (onCloseClicked)="sidenav.close()"></page-select>
                             </div>
                             
                         </div>
@@ -145,6 +140,27 @@ export class NewTemplateComponent  {
         )
         dialogRef.componentInstance.template = this.template
     }
+    /*
+    saveTemplateAsDocument() {
+        let dialogRef = this.dialog.open(SaveTemplateInstanceModal, {
+          height: 'auto',
+          width: '30%',
+        });
+        dialogRef.afterClosed().subscribe(value => 
+            {
+                if(value){
+                    this.templateInstance.name = value.name
+                    this.templateInstance.tagged = value.tagged
+                    this.templateInstanceStore.saveTemplateInstance().subscribe(template=>{
+                        this.snackBar.open("Dokument úspěšně uložen",null,{duration: 1500})
+                    },error=>{
+                        this.snackBar.open("Chyba při ukládání dokumentu",null,{duration: 2500})
+                    })
+                }
+            }
+        )
+        dialogRef.componentInstance.setTemplateInstance(this.templateInstance)
+    }*/
 
 
     //calls command to instert page above
@@ -204,5 +220,16 @@ export class NewTemplateComponent  {
 
     clickElements(){
         this.sidenavState = 0
+    }
+
+    //this has to bypass framework
+    createSnapshot(){
+        let firstPageDOM = document.getElementsByClassName("page")[0]
+        console.log(domtoimage)
+        console.log(firstPageDOM)
+        domtoimage.toBlob(firstPageDOM)
+        .then(function (blob) {
+            (<any>window).saveAs(blob, 'test.jpg');
+        });
     }
 }

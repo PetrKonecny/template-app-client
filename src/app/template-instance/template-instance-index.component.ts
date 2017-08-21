@@ -4,7 +4,7 @@ import { TemplateInstanceService } from './template-instance.service';
 import { TemplateInstance} from './template-instance';
 import { Observable }     from 'rxjs/Observable';
 import { UserStore } from '../user/user.store'
-
+import { AppConfig }from '../app.config'
 
 @Component({
     selector: 'template-instance-index',
@@ -13,7 +13,38 @@ import { UserStore } from '../user/user.store'
             <md-spinner *ngIf="loading && !error"></md-spinner>
             <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <template-instance-list class="template-instance-list" *ngIf="templateInstances" [templateInstances] = "templateInstances" (onDeleteClicked) = "onDeleteClicked($event)"></template-instance-list>
+        <md-toolbar style="position: fixed; z-index: 5;">
+                <button md-button *ngIf="showEditButton()" [routerLink] = "['/template-instances', selected[0].id]">OTEVŘÍT DOKUMENT</button>
+                <button md-button *ngIf="showDeleteButton()" (click)="onDeleteClicked(selected[0])">SMAZAT DOKUMENT</button>
+                <a md-button *ngIf="showPdfButton()" href="{{config.getConfig('api-url')}}/templateInstance/{{selected[0].id}}/pdf"  target="_blank">PDF</a>
+        </md-toolbar>
+        <div class ="index-content">
+            <ngx-datatable style="padding-top: 64px;" *ngIf="templateInstances?.length"
+                     class="material"
+                    [columnMode]="'force'"
+                    [headerHeight]="50"
+                    [footerHeight]="0"
+                    [rowHeight]="'auto'"
+                    [selected]="selected"
+                    [selectionType]="'single'"
+                    [rows]="templateInstances"
+                >
+                <ngx-datatable-column prop="name" name="název">
+                </ngx-datatable-column>
+                <ngx-datatable-column prop="tagged" name="tagy">
+                    <ng-template  let-value="value" ngx-datatable-cell-template>
+                    <md-chip-list>
+                    <md-chip *ngFor="let tag of value">{{tag.tag_name}}</md-chip>
+                    </md-chip-list>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column prop="updated_at" name="naposledy upraveno">
+                    <ng-template  let-value="value" ngx-datatable-cell-template>
+                    {{value | date : 'short'}}
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
     `,
     providers: []
 })
@@ -28,15 +59,27 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     //array of documents to be displayed
     templateInstances : TemplateInstance[]
 
+    selected: TemplateInstance[] = []
+
     /**
     @param templateInstanceService - service to get docuemnts form API
     @param userStore - store containing current user
     */
     constructor(
-        private templateInstanceService: TemplateInstanceService, private userStore: UserStore
+        private config: AppConfig, private templateInstanceService: TemplateInstanceService, private userStore: UserStore
     ){ }
     
-    
+    showEditButton(){
+        return this.selected.length
+    }
+
+    showDeleteButton(){
+        return this.selected.length
+    }
+
+    showPdfButton(){
+        return this.selected.length
+    }
     //loads documents for user
     ngOnInit(){
         this.userStore.user

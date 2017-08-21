@@ -6,6 +6,7 @@ import { AppComponentRef} from '../app.ref'
 import { MdSnackBar } from '@angular/material';
 import { UploadComponent } from '../uploader.component'
 import { AppConfig } from '../app.config'
+import { ImageUploadComponent } from '../image/image-uploader.component'
 
 @Component({
     selector: 'display-album-sidenav',
@@ -14,7 +15,7 @@ import { AppConfig } from '../app.config'
           <md-spinner *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <image-list *ngIf="album && album.images" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>
+        <image-list *ngIf="album && album.images" [showAddTile]="true" (onAddImageClicked)="openUploadModal()" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>
     `,
     styles:[`
         
@@ -53,13 +54,15 @@ export class DisplayAlbumSidenavComponent implements OnInit  {
 
     //opens dialog to upload new images into the album
     openUploadModal() {
-        let dialogRef = this.dialog.open(UploadComponent, {
-          height: '90%',
+        let dialogRef = this.dialog.open(ImageUploadComponent, {
+          height: '60%',
           width: '60%',
         });
         dialogRef.componentInstance.uploadUrl = this.config.getConfig('api-url')+'/album/'+this.album.id+'/upload'
-        dialogRef.componentInstance.onCompleteAll.subscribe(()=>
-          this.getImages()
+        dialogRef.componentInstance.onCompleteAll.subscribe(()=>{
+              this.getImages()
+              dialogRef.close()
+          }
         )        
     }
 

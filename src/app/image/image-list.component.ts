@@ -9,15 +9,15 @@ import { Image } from './image';
             </div>
             <div class="list-wrapper">
                 <md-grid-list cols="3">
-                    <md-grid-tile md-tooltip="přidat obrázky">
-                        <div class="album plus-album">
-                            <md-icon>add</md-icon>
-                        </div>
-                    </md-grid-tile>
                     <md-grid-tile *ngFor="let image of images" (click)="onSelect(image)">
                         <div class="image-wrap">
                             <image (click)="onSelect(image)" [image]="image" [thumb]="true"></image>
                         </div>            
+                    </md-grid-tile>
+                    <md-grid-tile *ngIf="showAddTile" md-tooltip="přidat obrázky">
+                        <button (click)="onAddImageClicked.emit()" class="album plus-album">
+                            <md-icon>add</md-icon>
+                        </button>
                     </md-grid-tile>
                 </md-grid-list>
             </div> `,
@@ -47,8 +47,15 @@ export class ImageListComponent {
     @Input()
     //images to be displayed
     images : Image[] 
+
+    @Input()
+    showAddTile: boolean
     //triggered when image is clicked
     @Output() onImageClicked = new EventEmitter<Image>();
+
+    @Output() 
+    //triggered on album clicked
+    onAddImageClicked = new EventEmitter<null>();
     
     //triggered when image is clicked    
     onSelect(image: Image) {

@@ -127,7 +127,11 @@ import { NewTableCellComponent } from './element/new-table-cell.component'
 import {AdminAlbumsComponent} from './admin/admin-albums.component'
 import {AlbumTableComponent} from './admin/album-table.component'
 
+import {ImageUploadComponent} from './image/image-uploader.component'
+import { LOCALE_ID } from '@angular/core';
 
+import {DisplayUserComponent} from './user/display-user.component'
+import {AlbumMenuComponent} from './album/album-menu.component'
 /** defines every route in the application and redirects if 
 no route matches
 */ 
@@ -157,6 +161,7 @@ const routes: Routes = [
     { path: 'template-instances/:id', component: TemplateInstanceEditComponent },
     { path: 'albums', component: AlbumIndexComponent },
     { path: 'albums/:id',component: DisplayAlbumComponent },
+    { path: 'users/:id',component: DisplayUserComponent },
     { path: '**', redirectTo: '/templates', pathMatch: 'full' },
 ]
 
@@ -173,7 +178,8 @@ const routes: Routes = [
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal,
         CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent,
         FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumListComponent, DisplayAlbumComponent,
-        DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent, AdminAlbumsComponent, AlbumTableComponent
+        DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent, AdminAlbumsComponent, AlbumTableComponent, ImageUploadComponent,
+        DisplayUserComponent, AlbumMenuComponent
     ],
     // modules
     /**
@@ -201,13 +207,13 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
+        {provide: LOCALE_ID, useValue: "cz-EU" }, ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
     ],
     bootstrap: [
         AppComponent
     ],
     //these components are used as dialogs
-    entryComponents: [SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent, ColorPickerComponent, SaveTemplateInstanceModal, SaveAlbumModal, SelectAlbumModal]
+    entryComponents: [SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent, ImageUploadComponent, ColorPickerComponent, SaveTemplateInstanceModal, SaveAlbumModal, SelectAlbumModal, DisplayUserComponent]
 })
 
 export class AppModule { }  

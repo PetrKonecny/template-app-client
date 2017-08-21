@@ -27,9 +27,9 @@ import {PageStore} from '../page/page.store'
                     </md-toolbar>
                     <div style="padding-top: 64px; padding-left: 6px; padding-right: 6px;">
                     <md-grid-list *ngIf="page" cols="2    ">                    
-                        <md-grid-tile ><button class="element-tile" (click)="createNewTextElement()"><md-icon>format_color_text    </md-icon><h5>text</h5></button></md-grid-tile>
-                        <md-grid-tile ><button class="element-tile" (click)="createNewFrameElement()"><md-icon>wallpaper</md-icon><h5>rámeček></h5></button></md-grid-tile>
-                        <md-grid-tile ><button class="element-tile" (click)="createNewTableElement()"><md-icon>border_all</md-icon><h5>tabulka</h5></button></md-grid-tile>
+                        <md-grid-tile ><button class="element-tile" (click)="createNewTextElement()" draggable="true" (dragstart)="onTextDragStart($event)"><md-icon>format_color_text</md-icon><h5>text</h5></button></md-grid-tile>
+                        <md-grid-tile ><button class="element-tile" (click)="createNewFrameElement()" draggable="true" (dragstart)="onFrameDragStart($event)"><md-icon>wallpaper</md-icon><h5>rámeček</h5></button></md-grid-tile>
+                        <md-grid-tile ><button class="element-tile" (click)="createNewTableElement()" draggable="true" (dragstart)="onTableDragStart($event)"><md-icon>border_all</md-icon><h5>tabulka</h5></button></md-grid-tile>
                     </md-grid-list>
                 <div style="width: 100%; height: 100%; display: flex; align-items: center; text-align: center;" *ngIf="!page">
                     <h3 *ngIf="!page" class="nothing-found">Vyberte kliknutím stránku šablony</h3>
@@ -85,5 +85,17 @@ export class PageSelectorComponent {
                 factory.setRowHeight(val.rowHeight)
                 this.commands.addElement(this.page, factory.build())}
         })
-    }    
+    }
+
+    onTextDragStart(event){
+        event.dataTransfer.setData("type","TEXT_ELEMENT")
+    }
+
+    onFrameDragStart(event){
+        event.dataTransfer.setData("type","FRAME_ELEMENT")
+    }
+
+    onTableDragStart(event){
+        event.dataTransfer.setData("type","TABLE_ELEMENT")
+    }
 }

@@ -27,6 +27,12 @@ export class UserService {
             .catch(this.handleError);
     }    
 
+    getUser(id: number): Observable<User> {
+        return this.http.get(this._usersUrl+"/"+id, { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
     getUsers(): Observable<User[]> {
         return this.http.get(this._usersUrl, { withCredentials: true })
             .map(this.extractData)

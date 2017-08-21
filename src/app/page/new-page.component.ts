@@ -5,7 +5,9 @@ import { Guide } from '../guide/guide'
 import {NewPageReference} from './new-page.ref'
 import {ImageElement} from '../element/image-element'
 import {PageStore} from '../page/page.store'
-import {ImageElementFactory} from '../element/element.factory'
+import {ImageElementFactory, TextElementFactory, FrameElementFactory, TableElementFactory} from '../element/element.factory'
+import {MdDialog, MdDialogRef} from '@angular/material'
+import {CreateTableModal} from '../element/create-table-element.modal' 
 
 @Component({
     selector: 'create-new-page',
@@ -60,7 +62,7 @@ export class NewPageComponent implements AfterViewInit {
     @param pageStore - store containing selected page
     @param commands - commands used for adding elements
     */
-    constructor(private newPageRef: NewPageReference, private pageStore: PageStore, private commands: PageCommands) {
+    constructor(private newPageRef: NewPageReference, private pageStore: PageStore, private commands: PageCommands, public dialog: MdDialog) {
         this.newPageRef.component = this
         this.guides = new Array
         this.pageStore.page.subscribe(page => {if(this.page === page){this.selected = true}else{this.selected = false}})
@@ -93,20 +95,48 @@ export class NewPageComponent implements AfterViewInit {
     @param event - event fired on drop
     */
     onDrop(event){
-        let data = event.dataTransfer.getData("text");
-        let image
-        try{
-            image = JSON.parse(data)
-        }catch(e){
-            return;
+        let type = event.dataTransfer.getData("type")
+        let data = event.dataTransfer.getData("data")
+        let factory = null
+        switch(type){
+            case "IMAGE_ELEMENT" :
+                let image
+                try{ image = JSON.parse(data)}catch(e){return}
+                factory = new ImageElementFactory()
+                factory.setWidth(null).setHeight(null).setImage(image)
+                break
+            case "TEXT_ELEMENT" :
+                factory = new TextElementFactory()
+            break
+            case "FRAME_ELEMENT" :
+                factory = new FrameElementFactory()
+            break
+            case "TABLE_ELEMENT" :
+                factory = new TableElementFactory()
+                let dialogRef = this.dialog.open(CreateTableModal, {height: 'auto',
+                    width: '30%',})
+                dialogRef.afterClosed().subscribe(val =>{
+                if(val && val.rows && val.columns && val.rowHeight && val.columnWidth){
+                    factory.setColumnCount(val.columns)
+                    factory.setRowCount(val.rows)
+                    factory.setColumnWidth(val.columnWidth)
+                    factory.setRowHeight(val.rowHeight)
+                    this.addElementToPage(event,factory)
+              }})
+            return
+
         }
+       this.addElementToPage(event,factory);
+    }
+
+    addElementToPage(event,factory){
         let x = event.clientX - this.pageElementRef.nativeElement.getBoundingClientRect().left
         let y = event.clientY - this.pageElementRef.nativeElement.getBoundingClientRect().top
-        let factory = new ImageElementFactory()
-        factory.setPositionX(x).setPositionY(y).setWidth(null).setHeight(null).setImage(image)
+        factory.setPositionX(x).setPositionY(y)
         this.commands.addElement(this.page,factory.build())
         event.preventDefault()
     }
+
     
     //sets page borders when the page is created
     ngAfterViewInit(){

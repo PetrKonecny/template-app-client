@@ -1,11 +1,12 @@
 import { Component, Input} from '@angular/core';
 import { Guide } from './guide'
+import { AppComponentRef } from '../app.ref'
 
 @Component({
     selector: 'display-guide',
     template: `
-        <div *ngIf="guide.positionX" class="vertical" [style.left.px]="guide.positionX" ></div>
-        <div *ngIf="guide.positionY" [style.top.px]="guide.positionY" class="horizontal"></div>
+        <div *ngIf="guide.positionX && guide.visible" class="vertical" [style.left.px]="guide.positionX" ></div>
+        <div *ngIf="guide.positionY && guide.visible" [style.top.px]="guide.positionY" class="horizontal"></div>
     `,
     styles: [` 
             .vertical{
@@ -26,8 +27,13 @@ import { Guide } from './guide'
 //displays temporary guide in the editor
 export class DisplayGuideComponent {
     
-    @Input()
+    constructor(private ref: AppComponentRef){
+        this.ref.ctrilPRess.subscribe((pressed)=>{
+                this.guide.visible = !pressed
+            }
+        )
+    }
     //guide to be displayed
-    guide : Guide
-      
+    @Input()
+    guide : Guide      
 }

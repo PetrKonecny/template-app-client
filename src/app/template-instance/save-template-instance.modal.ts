@@ -13,13 +13,13 @@ import { TemplateInstance} from '../template-instance/template-instance';
         		<md-dialog-content>
                     <div>
         			<md-input-container style="width: 100%;">
-	                	<input mdInput [(ngModel)]="templateInstance.name" formControlName="name" type="text" placeholder="Název dokumentu">
+	                	<input mdInput formControlName="name" type="text" placeholder="Název dokumentu">
                         <md-hint *ngIf="saveForm.controls['name'].hasError('required') && saveForm.controls['name'].touched"  style="color:red;">Name is required</md-hint>	                
                 	</md-input-container>
                     </div>
                     <div>
-                     <tag-input [(ngModel)]="templateInstance.tagged" [identifyBy]="'id'" [displayBy]="'tag_name'" formControlName="tags">
-                      </tag-input>
+                        <tag-input [secondaryPlaceholder]="'Přidejte tagy'" [identifyBy]="'id'" [displayBy]="'tag_name'" formControlName="tagged">
+                        </tag-input>
                     </div>
                     <br>
                     <hr>
@@ -36,13 +36,10 @@ import { TemplateInstance} from '../template-instance/template-instance';
 //dialog containing options for savign the document
 export class SaveTemplateInstanceModal  {
 	
-	@Input()
-    //document to be saved
-	templateInstance: TemplateInstance
-
+	
 	public saveForm = this.fb.group({
         name: ["", Validators.required],
-        tags: [""]
+        tagged: [""]
     });
 
     /**
@@ -51,10 +48,14 @@ export class SaveTemplateInstanceModal  {
     */
 	constructor(private fb: FormBuilder, private ref: MdDialogRef<SaveTemplateInstanceModal>){}
 
+    setTemplateInstance(instance: TemplateInstance){
+        this.saveForm.patchValue(instance)
+    }
+
     //triggered when subniting the form
 	onSaveButtonClicked(){
         if(this.saveForm.valid){
-		    this.ref.close('save')
+		    this.ref.close(this.saveForm.value)
         }
 	}
      

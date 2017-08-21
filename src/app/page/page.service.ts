@@ -78,6 +78,10 @@ export class PageService {
         this.resolveBreaks(this.verticals, element, dimensions, 'left', 'positionX', 'width', guides)
         return {left: dimensions.left, top: dimensions.top, width: null, height: null, border: null}
     }
+
+    moveWithoutGuides(dimensions: any){
+        return {left: dimensions.left, top: dimensions.top, width: null, height: null, border: null}
+    }
     
     /** Resolves if the element should or should not move and which guides should be displayed by 
     altering given dimensions and controls guide display by adding or removing guides from the guide array 

@@ -6,6 +6,7 @@ import { TableContent, CellContent, RowContent } from '../content/table-content'
 import { Guide } from '../guide/guide'
 import { Page } from './page'
 import { PageService } from './page.service'
+import { AppComponentRef } from '../app.ref'
 
  
 @Injectable()
@@ -14,11 +15,14 @@ export class NewPageReference {
    
     //reference to the component
     component: NewPageComponent
+    ctrlPressed: boolean
 
     /**
 	@param service - injects service used to calculate element movements
     */
-    constructor(private service: PageService){}
+    constructor(private service: PageService,private appRef: AppComponentRef){
+        this.appRef.ctrilPRess.subscribe((pressed)=>this.ctrlPressed = pressed)
+    }
       
     
     /** moves the element
@@ -26,7 +30,11 @@ export class NewPageReference {
 	@param dimensions - dimensions to move it by
     */
     move(element: Element, dimensions){
-        return this.service.move(element,dimensions,this.component.page, this.component.guides)
+        if(this.ctrlPressed){
+            return this.service.moveWithoutGuides(dimensions)
+        }else{
+            return this.service.move(element,dimensions,this.component.page, this.component.guides)    
+        }
     }   
     
     /** resizes the element

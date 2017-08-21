@@ -7,6 +7,7 @@ export class Album {
 	name: string
 	images: Image[]
 	user: User
+	user_id: number
 	tagged: Tag[]
 	public: boolean
 }

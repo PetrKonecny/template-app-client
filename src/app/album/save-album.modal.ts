@@ -1,6 +1,6 @@
 import { Component, Input} from '@angular/core'
 import { Observable }     from 'rxjs/Observable'
-import { FormBuilder, Validators } from '@angular/forms'
+import { FormBuilder, Validators, FormControl} from '@angular/forms'
 import {MdDialogRef} from '@angular/material'
 import { Album } from '../album/album'
 
@@ -8,29 +8,35 @@ import { Album } from '../album/album'
     selector: 'album-save-modal',
     template: `
         <form [formGroup]="saveForm" (ngSubmit)="onSaveButtonClicked()">
-                <h2 md-dialog-title>ALBUM</h2>
-                <hr>
+                <h2 md-dialog-title>{{title}}</h2>
                 <md-dialog-content>
                     <div>
                     <md-input-container style="width: 100%;">
-                        <input mdInput formControlName="name" type="text" placeholder="název alba">
-                        <md-hint *ngIf="saveForm.controls['name'].hasError('required') && saveForm.controls['name'].touched"  style="color:red;">nutné vyplnit název</md-hint>                    
+                        <input mdInput formControlName="name" type="text" placeholder="Název alba">
                     </md-input-container>
                     </div>
                     <div>
-                     <tag-input [identifyBy]="'id'" [displayBy]="'tag_name'" formControlName="tagged">
+                     <tag-input [secondaryPlaceholder]="'Přidejte tagy'" [identifyBy]="'id'" [displayBy]="'tag_name'" formControlName="tagged">
                       </tag-input>
                     </div>
                     <br>
                     <div>
-                    <md-checkbox formControlName="public">Veřejné</md-checkbox>
-                    </div>
+                        <md-radio-group formControlName="public">
+                        <md-radio-button [value]="0">Album vidíte jen vy </md-radio-button>
+                        <br>
+                        <md-radio-button [value]="1">Album je viditelné všem </md-radio-button>
+                        </md-radio-group>
+                        </div>
                     <hr>
-                    <div style="float: right;">
-                      <button  md-raised-button color="primary" type = "submit" [disabled]="!saveForm.valid">Uložit</button>
-                      <button  md-raised-button color="primary" md-dialog-close type = "button">Zrušit</button>
+                </md-dialog-content>
+                <md-dialog-actions>
+                    <div>
+                    <button  md-raised-button color="primary" type = "submit" [disabled]="!saveForm.valid">Uložit</button>
                     </div>
-                  </md-dialog-content>
+                    <div>
+                    <button  md-raised-button color="primary" md-dialog-close type = "button">Zrušit</button>
+                    </div>
+                </md-dialog-actions>
         </form>
     `,
     providers: []
@@ -42,10 +48,11 @@ export class SaveAlbumModal  {
     @Input()
     ///album to create or edit
     album: Album
+    title:string = "Album"
 
     public saveForm = this.fb.group({
         name: [, Validators.required],
-        public: [false],
+        public: [1],
         tagged: [""]
     });
 

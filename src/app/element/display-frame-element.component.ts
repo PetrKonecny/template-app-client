@@ -78,7 +78,7 @@ export class DisplayFrameElementComponent {
     onDrop(event){
        this.loading = true
         this.error = false
-        let data = event.dataTransfer.getData("text");
+        let data = event.dataTransfer.getData("data");
         let image 
         try{
             image = JSON.parse(data)

@@ -1,6 +1,10 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import { Album } from '../album/album';
 import { User } from '../user/user'
+import { SaveAlbumModal } from '../album/save-album.modal'
+import { MdDialog } from '@angular/material'
+import { MdSnackBar } from '@angular/material';
+import { AlbumHttpService } from '../album/album-http.service'
 
 @Component({
     selector: 'album-list',
@@ -9,19 +13,11 @@ import { User } from '../user/user'
                 <h3 *ngIf="albums && albums.length == 0" class="nothing-found">Žádná alba k zobrazení</h3>
             </div>
             <div class="list-wrapper">            
-                <md-grid-list  [cols]="cols">
+                <md-grid-list  [cols]="cols" *ngIf="grid">
                     <md-grid-tile (click)="onSelect(album)" *ngFor="let album of albums">
                         <div class="album" [class.public-album]="album.public">
-                            <button *ngIf="user && album.user_id == user.id" md-icon-button (click)="onClick($event)" [mdMenuTriggerFor]="albumMenu" style="position:absolute; right:0; top:0; margin: 12px;"><md-icon>more_vert</md-icon></button>
-                            <md-menu #albumMenu="mdMenu">
-                              <button md-menu-item (click)="onDeleteAlbum(album)">
-                                <span>Smazat album</span>
-                              </button>
-                              <button md-menu-item (click)="onEditAlbum(album)">
-                                <span>Upravit vlastnosti alba</span>
-                              </button>
-                            </md-menu>
-                            <h3>{{album.name ? album.name : 'album'}}</h3>
+                            <album-menu [album]="album" (afterAlbumEdited)="onEditAlbum(album)" (afterAlbumDeleted)="onDeleteAlbum(album)"></album-menu>
+                            <h4>{{album.name ? album.name : 'album'}}</h4>
                         </div>           
                     </md-grid-tile>
                     <md-grid-tile *ngIf="showAddTile" md-tooltip="nové album">
@@ -29,7 +25,15 @@ import { User } from '../user/user'
                             <md-icon>add</md-icon>
                         </button>
                     </md-grid-tile>
-                </md-grid-list> 
+                </md-grid-list>
+
+                <md-nav-list *ngIf="!grid">
+                    <md-list-item [routerLink] = "['/albums', album.id]" *ngFor="let album of albums">
+                        <span md-line>{{ album.name }}</span>
+                        <md-chip-list md-line><md-chip *ngFor="let tag of album.tagged">{{tag.tag_name}}</md-chip></md-chip-list>
+                        <album-menu [album]="album" (afterAlbumEdited)="onEditAlbum($event)" (afterAlbumDeleted)="onDeleteAlbum($event)"></album-menu>
+                    </md-list-item>
+                </md-nav-list> 
             </div>
             `,
     styles: [`                         
@@ -42,9 +46,14 @@ export class AlbumListComponent {
     //array of albums to display
     albums : Album[] 
 
+    constructor(private dialog: MdDialog, private albumService: AlbumHttpService, private snackBar: MdSnackBar ){}
+
     @Input()
     //number of columns in the grid
     cols = 5;
+
+    @Input()
+    grid: boolean = true;
 
     @Input()
     //currently logged in user
@@ -81,11 +90,12 @@ export class AlbumListComponent {
 
     //trigered on edit clicked
     onEditAlbum(album: Album){
-        this.onEditClicked.emit(album);
+        let searchedAlbum = this.albums.filter(album2 => album2.id === album.id )[0]
+        this.albums.splice(this.albums.indexOf(searchedAlbum) ,1 ,album)
     }
 
     //trigered on delete clicked
     onDeleteAlbum(album: Album){
-        this.onDeleteClicked.emit(album)
+        this.albums.splice(this.albums.indexOf(album) ,1 )
     }
 }

@@ -2,7 +2,7 @@ import {Page} from '../page/page'
 import {Template} from '../template/template';
 import {Element} from '../element/element'
 import {Guide} from '../guide/guide'
-
+import {User} from '../user/user'
 
 export class TemplateHelper {
 
@@ -77,5 +77,17 @@ export class TemplateHelper {
             delete page.id
             page.elements.forEach(element => delete element.id)
         })
+    }
+
+    static canDeleteTemplate(user: User, template: Template){
+        return user && user.id == template.user_id
+    }
+
+    static canEditTemplate(user: User, template: Template){
+        return user && user.id == template.user_id
+    }
+
+    static canCreateDocumentFromTemplate(user: User, template: Template){
+        return true;
     }
 }

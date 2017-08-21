@@ -27,7 +27,7 @@ import { SaveTemplateInstanceModal} from '../template-instance/save-template-ins
                 <button md-button (click)="openAsTemplate()">Otevřít jako novou šablonu</button>
                 <editor-toolbar *ngIf="element && element.type == 'text_element' && element.content.editor"></editor-toolbar>
             </md-toolbar>
-            <md-sidenav mode ="side" #sidenav style="width: 20%;">
+            <md-sidenav mode ="side" class="sidenav" #sidenav style="width: 20%;">
                 <album-index-sidenav></album-index-sidenav>
             </md-sidenav>       
             <div class="pages" *ngIf="template">
@@ -97,7 +97,9 @@ export class NewTemplateInstanceComponent {
         });
         dialogRef.afterClosed().subscribe(value => 
             {
-                if(value == 'save'){
+                if(value){
+                    this.templateInstance.name = value.name
+                    this.templateInstance.tagged = value.tagged
                     this.templateInstanceStore.saveTemplateInstance().subscribe(template=>{
                         this.snackBar.open("Dokument úspěšně uložen",null,{duration: 1500})
                     },error=>{
@@ -106,7 +108,7 @@ export class NewTemplateInstanceComponent {
                 }
             }
         )
-        dialogRef.componentInstance.templateInstance = this.templateInstance
+        dialogRef.componentInstance.setTemplateInstance(this.templateInstance)
     }
     
     //this opens current display of the editor as new template by
