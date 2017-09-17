@@ -5,6 +5,10 @@ import { TemplateInstance} from './template-instance';
 import { Observable }     from 'rxjs/Observable';
 import { UserStore } from '../user/user.store'
 import { AppConfig }from '../app.config'
+import { MdDialog, MdDialogRef } from '@angular/material'
+import { CreateTemplateModal } from '../template/create-template.modal'
+import { Page } from '../page/page'
+import { Router } from '@angular/router'
 
 @Component({
     selector: 'template-instance-index',
@@ -45,6 +49,7 @@ import { AppConfig }from '../app.config'
                 </ngx-datatable-column>
             </ngx-datatable>
         </div>
+        <button md-fab class="index-button" (click)="onAddTemplateClicked()"><md-icon>add</md-icon></button>
     `,
     providers: []
 })
@@ -66,7 +71,11 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     @param userStore - store containing current user
     */
     constructor(
-        private config: AppConfig, private templateInstanceService: TemplateInstanceService, private userStore: UserStore
+        private config: AppConfig, 
+        private templateInstanceService: TemplateInstanceService, 
+        private userStore: UserStore, 
+        public dialog: MdDialog, 
+        private router: Router
     ){ }
     
     showEditButton(){
@@ -106,5 +115,40 @@ export class TemplateInstanceIndexComponent implements OnInit  {
         var index = this.templateInstances.indexOf(instance);
         this.templateInstances.splice(index,1);
     }
+
+    onAddTemplateClicked(){
+        let dialogRef = this.dialog.open(CreateTemplateModal, { height: 'auto', width: '30%',disableClose: false})
+        dialogRef.afterClosed().subscribe(val =>{
+            if(!val){
+                return 
+            }
+            let width
+            let height
+            switch(val.type){
+                case('A3'): 
+                    height = Page.presetDimensions.A3.height
+                    width = Page.presetDimensions.A3.width
+                    break
+                case('A4'):
+                    height = Page.presetDimensions.A4.height
+                    width = Page.presetDimensions.A4.width
+                    break
+                case('A5'):
+                    height = Page.presetDimensions.A5.height
+                    width = Page.presetDimensions.A5.width
+                    break
+                case('custom'):
+                    height = val.height
+                    width = val.width
+                    break
+            }
+            if(val.type !== 'custom' && val.orientation == 1){
+                    let temp = width
+                    width = height
+                    height = temp
+            }
+            this.router.navigate(['/template-instances/new', {width:width,height:height,margin:val.margin}])
+        })
+    }    
      
 }

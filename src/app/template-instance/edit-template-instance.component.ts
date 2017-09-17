@@ -15,6 +15,8 @@ import { TemplateStore } from '../template/template.store'
 import { TemplateService } from '../template/template.service'
 import { TemplateInstanceService } from '../template-instance/template-instance.service'
 import { MdSnackBar } from '@angular/material';
+import { ElementStore } from '../element/element.store'
+import { PageStore } from '../page/page.store'
 
 @Component({
     selector: 'template-edit',
@@ -25,7 +27,7 @@ import { MdSnackBar } from '@angular/material';
         </div>
         <create-new-template-instance *ngIf="template && templateInstance" [templateInstance] = "templateInstance" [template] = "template"></create-new-template-instance>
     `,
-    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands]
+    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands, ElementStore, PageStore]
 })
 
 //displays index page for editing the document

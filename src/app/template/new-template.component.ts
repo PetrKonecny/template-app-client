@@ -15,6 +15,8 @@ import {TextElementFactory, FrameElementFactory, TableElementFactory} from '../e
 import {PageStore} from '../page/page.store'
 import domtoimage from 'dom-to-image'
 import { SaveTemplateInstanceModal} from '../template-instance/save-template-instance.modal'
+import { TemplateInstance} from '../template-instance/template-instance';
+import { Router} from '@angular/router'
 
 @Component({
     selector: 'create-new-template',
@@ -25,7 +27,8 @@ import { SaveTemplateInstanceModal} from '../template-instance/save-template-ins
 
             <md-toolbar class="mat-elevation-z4" style="z-index: 30; position: relative;">
                 <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
-                <button md-icon-button (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
+                <button md-icon-button *ngIf="template && !templateInstance" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
+                <button md-icon-button *ngIf="template && templateInstance" (click)="saveBoth()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
                 <element-toolbar style="width: 100%;"></element-toolbar>
@@ -96,6 +99,10 @@ export class NewTemplateComponent  {
     @Input()
     //template that should be edited
     template: Template;
+
+    @Input()
+    templateInstance: TemplateInstance
+ 
     page: Page;
     sidenavState: number = 0;
     
@@ -108,19 +115,21 @@ export class NewTemplateComponent  {
     @param snackBar - injects service to display snackbars  
     */
     constructor(
-        private templateStore: TemplateStore,
+        protected templateStore: TemplateStore,
         public dialog: MdDialog,
-        private undoService: UndoRedoService,
-        private pageFactory: PageFactory,
-        private pageService: PageService,
-        private templateCommands: TemplateCommands,
-        private snackBar: MdSnackBar,
-        private pageStore: PageStore,
-        private pageCommands: PageCommands
+        protected undoService: UndoRedoService,
+        protected pageFactory: PageFactory,
+        protected pageService: PageService,
+        protected templateCommands: TemplateCommands,
+        protected snackBar: MdSnackBar,
+        protected pageStore: PageStore,
+        protected pageCommands: PageCommands,
+        protected templateInstanceStore: TemplateInstanceStore,
+        protected router: Router
     ){ 
         this.pageStore.page.subscribe(page => this.page = page)
     }
-    
+  
     //calls store to save the template     
     saveTemplate() {
         let dialogRef = this.dialog.open(SaveTemplateModal, {
@@ -140,8 +149,9 @@ export class NewTemplateComponent  {
         )
         dialogRef.componentInstance.template = this.template
     }
-    /*
-    saveTemplateAsDocument() {
+
+    //calls store to save just the instance of the template
+    saveInstance() {
         let dialogRef = this.dialog.open(SaveTemplateInstanceModal, {
           height: 'auto',
           width: '30%',
@@ -160,8 +170,12 @@ export class NewTemplateComponent  {
             }
         )
         dialogRef.componentInstance.setTemplateInstance(this.templateInstance)
-    }*/
+    }
 
+    //calls store to save both instance and its template
+    saveBoth(){
+
+    }
 
     //calls command to instert page above
     onClickAddAbove(page: Page){

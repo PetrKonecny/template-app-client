@@ -16,20 +16,21 @@ import { TemplateInstanceHelper} from './template-instance.helper'
 import { MdSnackBar } from '@angular/material';
 import { ElementStore } from '../element/element.store'
 import { PageStore } from '../page/page.store'
+import {PageFactory} from '../page/page.factory'
 
 @Component({
-    selector: 'template-create',
+    selector: 'template-instance-with-template-create',
     template: `
         <div class="shutter">
           <md-spinner *ngIf="(!template || !templateInstance) && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <create-new-template-instance *ngIf="template && templateInstance" [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
+        <create-new-template *ngIf="template && templateInstance" [template] = "template" [templateInstance] = "templateInstance"></create-new-template>
     `,
     providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands, ElementStore, PageStore]
 })
 //displays index page for creating new document
-export class TemplateInstanceCreateComponent implements OnInit  {
+export class TemplateInstanceTemplateCreateComponent implements OnInit  {
     
     //error thrown when loading template or document
     error: string;
@@ -48,7 +49,8 @@ export class TemplateInstanceCreateComponent implements OnInit  {
         private route: ActivatedRoute,
         private templateInstanceStore: TemplateInstanceStore,
         private templateStore: TemplateStore,
-        private snackBar: MdSnackBar 
+        private snackBar: MdSnackBar,
+        private factory: PageFactory 
     ){ }
     
     //loads template and template instances , copies their contents into eachother
@@ -58,28 +60,25 @@ export class TemplateInstanceCreateComponent implements OnInit  {
 
         this.templateStore.template
         .flatMap((template)=>this.templateInstanceStore.templateInstance.map((templateInstance)=>{return{template: template, templateInstance: templateInstance}}))
-        .first((res)=> res.template.id > 0)
+        .first()
         .subscribe((res)=>{       
             this.template = res.template
             this.templateInstance = res.templateInstance
-            this.templateInstance.template_id = this.template.id
-            TemplateInstanceHelper.copyContentsFromTemplate(this.templateInstance, this.template);
-            TemplateInstanceHelper.getContentsFromTemplateInstance(this.templateInstance,this.template);
-            this.templateInstance.name = this.template.name
-            this.templateInstance.tagged = this.template.tagged
+            this.template.singular = true
+        })
+        this.route.params.subscribe(params=>{
+            let width = +params['width']
+            let height = +params['height']
+            let margin = +params['margin']
+            this.template.singular = params['sing']
+            if(width && height && width > 100 && width < 2000 && height > 100 && height < 2000 && margin >= 0){
+                this.factory.setWidth(width).setHeight(height).setMargin(margin)                
+            }
+            if(!this.template.pages || this.template.pages.length < 1){
+                    this.template.pages = []
+                    this.template.pages.push(this.factory.build())
+            }
         })
 
-        this.route.params
-        .flatMap((params) => this.templateStore.getTemplate(params['id']))
-        .first()
-        .subscribe(
-            res => {                               
-                
-            }
-            ,error =>{
-                this.error = error
-                this.snackBar.open("Chyba při načítání dokumentu",null,{duration: 1500})
-            }
-        )
     }
 }
