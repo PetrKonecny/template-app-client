@@ -20,7 +20,7 @@ import {PageStore} from '../page/page.store'
 @Component({
     selector: 'page-select',
     template: `
-                    <md-toolbar style="position:absolute; width: 80%;" class="bg-dark text-light">
+                    <md-toolbar class="sidenav-toolbar bg-dark text-light">
                         <h4>Prvky</h4>
                         <span style="flex: 1 1 auto"></span>
                         <md-icon style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="onCloseClicked.emit(true)" mdTooltip="schovat boční panel">chevron_left</md-icon>  

@@ -28,8 +28,8 @@ import { NewTemplateComponent } from '../template/new-template.component'
                 <button md-button (click)="openAsTemplate()">Otevřít jako novou šablonu</button>
                 <editor-toolbar *ngIf="element && element.type == 'text_element' && element.content.editor"></editor-toolbar>
             </md-toolbar>
-            <md-sidenav mode ="side" class="sidenav" #sidenav style="width: 20%;">
-                <album-index-sidenav></album-index-sidenav>
+            <md-sidenav #sidenav opened="true" class="sidenav mat-elevation-z6 bg-dark" mode ="side" style="width: 20%; display:flex; overflow: visible;">
+                <album-index-sidenav (onCloseClicked)="sidenav.close()"></album-index-sidenav>
             </md-sidenav>       
             <div class="pages" *ngIf="template">
                 <display-page *ngFor="let page of template.pages" [page]="page"></display-page>

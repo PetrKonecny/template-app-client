@@ -11,12 +11,14 @@ import {TextContent} from '../content/text-content'
     template: ` <span *ngIf="editor">
                     <font-toolbar (onFontSelected)="changeEditorFont($event)" (onFontSizeSelected)="changeEditorFontSize($event)" [fontLabel]="editor.editorCurFont.substring(0,5)" [fontSizeLabel]="editor.editorCurFontSize"></font-toolbar>
                     <button md-icon-button md-tooltip="barva písma" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="editor.editorCurColor">fiber_manual_record</md-icon></button>
-                    <my-md-menu #backgroundColorMenu>
-                        <div md-menu-item [colorPicker]="editor.editorCurColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeEditorTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
+                    <md-menu #backgroundColorMenu>
+                        <div (click)="$event.stopPropagation()">
+                            <div md-menu-item [colorPicker]="editor.editorCurColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeEditorTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
+                            </div>
                         </div>       
-                    </my-md-menu>
+                    </md-menu>
                     <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="formát textu">F</button>
-                    <my-md-menu #textMenu="mdMenu">
+                    <md-menu (click)="$event.stopPropagation()" #textMenu="mdMenu">
                         <button md-icon-button (click)="changeEditorTextAlign('JustifyLeft')" mdTooltip="zarovnat doleva"><md-icon>format_align_left</md-icon></button>
                         <button md-icon-button (click)="changeEditorTextAlign('JustifyRight')" mdTooltip="zarovnat doprava"><md-icon>format_align_right</md-icon></button>
                         <button md-icon-button (click)="changeEditorTextAlign('JustifyCenter')" mdTooltip="zarovnat na střed"><md-icon>format_align_center</md-icon></button>
@@ -26,7 +28,7 @@ import {TextContent} from '../content/text-content'
                         <button md-icon-button (click)="changeEditorFormatBlock('h1')" mdTooltip="nadpis 1">H1</button>
                         <button md-icon-button (click)="changeEditorFormatBlock('h2')" mdTooltip="nadpis 2">H2</button>
                         <button md-icon-button (click)="changeEditorFormatBlock('p')" mdTooltip="odstavec">P</button>
-                    </my-md-menu>
+                    </md-menu>
                 </span>
              `,
 })

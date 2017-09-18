@@ -62,7 +62,7 @@ import { ElementStore } from '../element/element.store'
                                 </div>
                             </div>
                             <div (click)="$event.stopPropagation()" md-menu-item style="overflow: hidden;">
-                                Zobrazit/skrýt pozadí <md-checkbox #bgCheckbox [checked]="element.background_color" (change)="toggleElementBackground(bgCheckbox.checked)" style="position: relative; z-index: 1000;"></md-checkbox>
+                                Zobrazit/skrýt pozadí <md-checkbox #bgCheckbox [checked]="element.background_color" (change)="toggleElementBackground(bgCheckbox.checked)" style="position: relative; z-index: 1000; padding-left: 16px"></md-checkbox>
                             </div>
                         </md-menu>
 

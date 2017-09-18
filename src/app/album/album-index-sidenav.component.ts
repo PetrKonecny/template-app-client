@@ -19,7 +19,7 @@ import {CreateTableModal} from '../element/create-table-element.modal'
           <md-spinner *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <md-toolbar style="position:absolute; width: 80%;" class="bg-dark text-light">
+        <md-toolbar class="sidenav-toolbar bg-dark text-light">
             <button *ngIf="selectedAlbum" md-icon-button (click)="onBackClicked($event)"><md-icon>arrow_back</md-icon></button>
             <h4 *ngIf="selectedAlbum">{{selectedAlbum.name ? selectedAlbum.name : 'nepojmenované album'}}</h4>
             <h4 *ngIf="!selectedAlbum">Alba</h4>

@@ -41,6 +41,15 @@ datatable-body-row.active md-chip{
     color: white;
 }
 
+.sidenav-toolbar{
+    position: absolute; 
+    width: 80% !important;
+}
+
+create-new-template-instance .sidenav-toolbar{
+    width: 100% !important;
+}
+
 admin-index{
     height: 100%;
     position: relative;

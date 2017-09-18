@@ -21,7 +21,7 @@ import { Router} from '@angular/router'
 @Component({
     selector: 'create-new-template',
     template: `
-        <md-sidenav-container style="height: 100%;">
+        <md-sidenav-container style="height: calc(100% - 64px);">
 
             <!-- main app toolbar -->
 
@@ -76,8 +76,10 @@ import { Router} from '@angular/router'
         }
         .pages{
             position: relative;
-            overflow-y: scroll;
-            height: 90%;
+            overflow-y: auto;
+            height: calc(100% - 64px);
+            box-sizing: border-box;
+            padding: 16px;
         }       
         .buttons{
             margin-left: auto;

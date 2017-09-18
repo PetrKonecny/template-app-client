@@ -9,27 +9,31 @@ import { ElementStore } from '../element/element.store'
                 <!-- Controlls for changing background of selected cells -->
 
                 <button md-icon-button mdTooltip="Barva pozadí vybraných buněk" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="getCellBgColor()">fiber_manual_record</md-icon></button>
-                <my-md-menu #backgroundColorMenu>
+                <md-menu #backgroundColorMenu>
+                <div (click)="$event.stopPropagation()">
                     <div md-menu-item [colorPicker]="getCellBgColor() ? getCellBgColor() : lastCellBgColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
                     </div>
                     <div md-menu-item style="overflow: hidden;">
                         Zobrazit/skrýt pozadí <md-checkbox #bgCheckbox [checked]="getCellBgColor()" (change)="toggleCellBackground(bgCheckbox.checked)" style="position: relative; z-index: 1000;"></md-checkbox>
                     </div>
-                </my-md-menu>
+                </div>
+                </md-menu>
 
                 <!-- Controlls for changing font of selected cells-->
 
                 <font-toolbar (onFontSelected)="changeSelectedCellsFont($event)"  (onFontSizeSelected)="changeSelectedCellsFontSize($event)"></font-toolbar>
                 <button md-icon-button mdTooltip="Barva textu" [mdMenuTriggerFor]="textColorMenu"><md-icon  [style.color]="getCellTextColor()">fiber_manual_record</md-icon></button>
-                <my-md-menu #textColorMenu>
+                <md-menu #textColorMenu>
+                <div (click)="$event.stopPropagation()">
                     <div md-menu-item [colorPicker]="getCellTextColor()" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
-                    </div>                   
-                </my-md-menu>
+                    </div>    
+                </div>               
+                </md-menu>
 
                 <!-- Controlls for changing text formating of selected cells-->
 
                 <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="formát textu vybraných buněk">A</button>
-                <my-md-menu #textMenu="mdMenu">
+                <md-menu (click)="$event.stopPropagation()" #textMenu="mdMenu">
                     <button md-icon-button (click)="changeSelectedCellsTextAlign('left')"><md-icon>format_align_left</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlign('right')"><md-icon>format_align_right</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlign('center')"><md-icon>format_align_center</md-icon></button>
@@ -38,25 +42,27 @@ import { ElementStore } from '../element/element.store'
                     <button md-icon-button (click)="changeSelectedCellsTextAlignVert('top')"><md-icon>vertical_align_top</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlignVert('bottom')"><md-icon>vertical_align_bottom</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlignVert('middle')"><md-icon>vertical_align_middle</md-icon></button>
-                </my-md-menu>
+                </md-menu>
 
                 <!-- Controlls for changing appearence of border of selected cells-->
 
                 <button md-icon-button mdTooltip="formát rámečku vybraných buněk" [mdMenuTriggerFor]="borderMenu">B</button>
-                <my-md-menu #borderMenu="mdMenu">
+                <md-menu (click)="$event.stopPropagation()" #borderMenu="mdMenu">
                     <button md-menu-item (click)="changeSelectedCellsBorderStyle('none')">Žádný okraj</button>
                     <button md-menu-item (click)="changeSelectedCellsBorderStyle('solid none')">Nahoře a dole</button>
                     <button md-menu-item (click)="changeSelectedCellsBorderStyle('none solid')">Vlevo a vpravo</button>
                     <button md-menu-item (click)="changeSelectedCellsBorderStyle('solid')">Ze všech stran</button>
-                </my-md-menu>
+                </md-menu>
 
                 <!-- Controlls for changing color of selected cells-->
 
                 <button md-icon-button mdTooltip="Barva rámečku" [mdMenuTriggerFor]="borderColorMenu"><md-icon  [style.color]="getCellBColor()">fiber_manual_record</md-icon></button>
-                <my-md-menu #borderColorMenu>
+                <md-menu #borderColorMenu>
+                <div (click)="$event.stopPropagation()">
                     <div md-menu-item [colorPicker]="getCellBColor()" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeSelectedCellsBorderColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
                     </div>                   
-                </my-md-menu>
+                </div>
+                </md-menu>
              `,
 })
 
