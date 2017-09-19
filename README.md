@@ -14,7 +14,8 @@ Share document templates with other users. They can then easily fill out the tem
 
 ![Filling out template example](https://imgur.com/o2Fyjut.gif)
 
-Created with Angular
+Created with Angular. 
+Application in testing/developement. Currently only Chrome is supported. Bugs may occour in other browsers.
 
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
