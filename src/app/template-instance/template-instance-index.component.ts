@@ -13,17 +13,17 @@ import { Router } from '@angular/router'
 @Component({
     selector: 'template-instance-index',
     template: `
-        <div class="shutter">
-            <md-spinner *ngIf="loading && !error"></md-spinner>
-            <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
-        </div>
-        <md-toolbar style="position: fixed; z-index: 5;">
+        <md-toolbar>
                 <button md-button *ngIf="showEditButton()" [routerLink] = "['/template-instances', selected[0].id]">OTEVŘÍT DOKUMENT</button>
                 <button md-button *ngIf="showDeleteButton()" (click)="onDeleteClicked(selected[0])">SMAZAT DOKUMENT</button>
                 <a md-button *ngIf="showPdfButton()" href="{{config.getConfig('api-url')}}/templateInstance/{{selected[0].id}}/pdf"  target="_blank">PDF</a>
         </md-toolbar>
+        <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
+        <div class="shutter" *ngIf="error">
+                <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
+        </div>
         <div class ="index-content">
-            <ngx-datatable style="padding-top: 64px;" *ngIf="templateInstances?.length"
+            <ngx-datatable *ngIf="templateInstances?.length"
                      class="material"
                     [columnMode]="'force'"
                     [headerHeight]="50"

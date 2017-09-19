@@ -13,7 +13,7 @@ import {Page} from '../page/page'
 @Component({
     selector: 'create-new-image-element',
     template: `
-        <div draggable2 [style.opacity]="element.opacity ? element.opacity/100 : 1" [class.selected]="selected" (move) ="move($event)" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [style.width.px]="element.width ? element.width : 100 " [style.height.px]="element.height ? element.height : 100">
+        <div draggable2 [style.opacity]="element.opacity ? element.opacity/100 : 1" [class.animated]="animated" [class.selected]="selected" (move) ="move($event)" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [style.width.px]="element.width ? element.width : 100 " [style.height.px]="element.height ? element.height : 100">
             <image (loaded)="onLoad($event)" *ngIf="element?.image" [image]="element.image"></image>          
         </div>
     `,
@@ -31,6 +31,7 @@ export class NewImageElementComponent {
     element : ImageElement
     //true if element is selected false otherwise
     selected: boolean
+    animated: boolean = false
 
     /**
     @param newPage - injects reference to new page for moving the element
@@ -51,7 +52,7 @@ export class NewImageElementComponent {
         if(this.element.width && this.element.height){
             return
         }
-        
+        this.animated = true
         let page = this.newPage.component.page
         let width = image.originalWidth
         let height = image.originalHeight
@@ -69,6 +70,8 @@ export class NewImageElementComponent {
         }
         this.element.width = width
         this.element.height = height
+        //delay value should be same as css transition duration
+        setInterval(()=>{this.animated = false},200)
     }
     
 

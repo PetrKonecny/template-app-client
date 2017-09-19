@@ -15,7 +15,7 @@ import {DisplayUserComponent} from '../user/display-user.component'
 @Component({
     selector: 'template-index',
     template: `
-        <md-toolbar style="position: fixed; z-index: 5;">
+        <md-toolbar>
             <form class="search-field" (ngSubmit)="onSearchKeyUp(search.value)">
                 <md-input-container><input #search mdInput type="search"></md-input-container>
                 <button md-icon-button><md-icon>search</md-icon></button>
@@ -24,12 +24,12 @@ import {DisplayUserComponent} from '../user/display-user.component'
                 <button md-button *ngIf="showEditButton()" [routerLink] = "['/templates', selected[0].id, 'edit']">UPRAVIT ŠABLONU</button>
                 <button md-button *ngIf="showDeleteButton()" (click)="onDeleteClicked(selected[0])">SMAZAT ŠABLONU</button>
         </md-toolbar>
+        <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
+        <div class="shutter" *ngIf="error">
+                <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
+        </div>
         <div class ="index-content">
-            <div class="shutter">
-                <md-spinner *ngIf="loading"></md-spinner>
-                <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
-            </div>
-            <ngx-datatable style="padding-top: 64px;" *ngIf="currentUser && templates?.length"
+            <ngx-datatable *ngIf="currentUser && templates?.length"
                  class="material"
                 [columnMode]="'force'"
                 [headerHeight]="50"
@@ -119,7 +119,7 @@ export class TemplateIndexComponent implements OnInit  {
         .subscribe(res => {
             this.templates = res[0]
                 /*
-                this.templates = []
+                                this.templates = []
                 for(let i = 0; i<20; i++){
                     this.templates = this.templates.concat(res[0])
                 }*/

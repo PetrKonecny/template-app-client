@@ -13,17 +13,17 @@ import {AlbumHelper} from '../album/album.helper'
 @Component({
     selector: 'album-index',
     template: `
-        <div class="shutter">
-          <md-spinner *ngIf="loading && !error"></md-spinner>
-          <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
-        </div>
-        <md-toolbar style="position: fixed; z-index: 5;">
+        <md-toolbar>
                 <button md-button *ngIf="showOpenButton()" [routerLink] = "['/albums', selected[0].id]">OTEVŘÍT ALBUM</button>
                 <button md-button *ngIf="showEditButton()" (click)="onEditClicked(selected[0])">UPRAVIT ALBUM</button>
                 <button md-button *ngIf="showDeleteButton()" (click)="onDeleteClicked(selected[0])">SMAZAT ALBUM</button>
         </md-toolbar>
+        <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
+        <div class="shutter" *ngIf="error">
+                <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
+        </div>
         <div class ="index-content">
-            <ngx-datatable #table style="padding-top: 64px;" *ngIf="currentUser && albums?.length"
+            <ngx-datatable #table *ngIf="currentUser && albums?.length"
                      class="material"
                     [columnMode]="'force'"
                     [headerHeight]="50"

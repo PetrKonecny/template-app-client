@@ -25,7 +25,7 @@ import {PageStore} from '../page/page.store'
                         <span style="flex: 1 1 auto"></span>
                         <md-icon style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="onCloseClicked.emit(true)" mdTooltip="schovat boční panel">chevron_left</md-icon>  
                     </md-toolbar>
-                    <div style="padding-top: 64px; padding-left: 6px; padding-right: 6px;">
+                    <div style="padding-left: 6px; padding-right: 6px;">
                     <md-grid-list *ngIf="page" cols="2    ">                    
                         <md-grid-tile ><button class="element-tile" (click)="createNewTextElement()" draggable="true" (dragstart)="onTextDragStart($event)"><md-icon>format_color_text</md-icon><h5>text</h5></button></md-grid-tile>
                         <md-grid-tile ><button class="element-tile" (click)="createNewFrameElement()" draggable="true" (dragstart)="onFrameDragStart($event)"><md-icon>wallpaper</md-icon><h5>rámeček</h5></button></md-grid-tile>

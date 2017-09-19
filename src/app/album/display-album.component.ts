@@ -14,17 +14,19 @@ import { ImageService } from '../image/image.service'
 @Component({
     selector: 'display-album',
     template: `
-        <div class="shutter">
-          <md-spinner *ngIf="loading && !error"></md-spinner>
-          <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
-        </div>
-        <md-toolbar style="position: fixed; z-index:1000;">
+        <md-toolbar>
             <h3>{{album?.name}}</h3>
             <button *ngIf="selected.length" md-button (click)="onDeleteClicked()">Smazat výběr</button>
             <button *ngIf="selected.length" md-button (click)="openAlbumsModal()">Přesunout výběr</button>
         </md-toolbar>
+        <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
+        <div class="shutter" *ngIf="error">
+                <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
+        </div>
+        <div class ="index-content"  style="overflow-y: auto;" >
         <button md-fab class="index-button" (click)="openUploadModal()"><md-icon>add</md-icon></button>
         <image-list *ngIf="album && album.images" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>
+        </div>
     `,
     styles:[`
         

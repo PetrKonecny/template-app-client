@@ -26,7 +26,7 @@ import {CreateTableModal} from '../element/create-table-element.modal'
             <span style="flex: 1 1 auto"></span>
             <md-icon style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="onCloseClicked.emit(true)" mdTooltip="schovat boční panel">chevron_left</md-icon>    
         </md-toolbar>
-        <div style="padding-top: 64px; padding-left: 6px; padding-right: 6px; height: 85%;">
+        <div style="padding-left: 6px; padding-right: 6px; height: 100%; max-height: calc(100% - 64px)">
             <album-list showAddTile="true" *ngIf="!selectedAlbum && albums" (onAddAlbumClicked)="openNewAlbumDialog()" (onAlbumClicked)="onSelected($event)" [albums] = "albums" [cols]="3"></album-list>
             <display-album-sidenav #albumDetail *ngIf="selectedAlbum" [album]="selectedAlbum"></display-album-sidenav>
         </div>
