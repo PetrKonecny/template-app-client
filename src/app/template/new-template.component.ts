@@ -27,8 +27,8 @@ import { Router} from '@angular/router'
 
             <md-toolbar class="mat-elevation-z4" style="z-index: 30; position: relative;">
                 <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
-                <button md-icon-button *ngIf="template && !templateInstance" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
-                <button md-icon-button *ngIf="template && templateInstance" (click)="saveBoth()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
+                <button md-icon-button *ngIf="template && template.type!='no_instance_template'" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
+                <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
                 <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
                 <element-toolbar style="width: 100%;"></element-toolbar>
@@ -152,8 +152,7 @@ export class NewTemplateComponent  {
         dialogRef.componentInstance.template = this.template
     }
 
-    //calls store to save just the instance of the template
-    saveInstance() {
+    saveDocument() {
         let dialogRef = this.dialog.open(SaveTemplateInstanceModal, {
           height: 'auto',
           width: '30%',
@@ -161,9 +160,9 @@ export class NewTemplateComponent  {
         dialogRef.afterClosed().subscribe(value => 
             {
                 if(value){
-                    this.templateInstance.name = value.name
-                    this.templateInstance.tagged = value.tagged
-                    this.templateInstanceStore.saveTemplateInstance().subscribe(template=>{
+                    this.template.name = value.name
+                    this.template.tagged = value.tagged
+                    this.templateStore.saveTemplate().subscribe(template=>{
                         this.snackBar.open("Dokument úspěšně uložen",null,{duration: 1500})
                     },error=>{
                         this.snackBar.open("Chyba při ukládání dokumentu",null,{duration: 2500})
@@ -171,12 +170,8 @@ export class NewTemplateComponent  {
                 }
             }
         )
-        dialogRef.componentInstance.setTemplateInstance(this.templateInstance)
-    }
-
-    //calls store to save both instance and its template
-    saveBoth(){
-
+        let instance = <any> this.template
+        dialogRef.componentInstance.setTemplateInstance(instance)
     }
 
     //calls command to instert page above

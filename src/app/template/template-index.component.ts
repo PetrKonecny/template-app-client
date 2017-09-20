@@ -126,6 +126,7 @@ export class TemplateIndexComponent implements OnInit  {
                 this.publicTemplates = res[1]   
                 this.publicTemplates = this.publicTemplates.filter((template)=> {return !this.templates.some(template2 => template.id == template2.id)})
                 this.loading = false
+                this.templates.concat(this.publicTemplates)
             }
             ,error=>{
                 this.error = error

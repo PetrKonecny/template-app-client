@@ -29,6 +29,7 @@ import { User} from './user/user'
         <a md-button *ngIf="guard.canActivate()"  routerLink="admin/fonts" routerLinkActive="active">FONTS</a>
     </md-toolbar>
     <md-toolbar *ngIf="!adminRoute" color="primary" class="mat-elevation-z6 main-toolbar">
+        <a md-button *ngIf="guard.canActivate()" routerLink="/about" routerLinkActive="active">ABOUT</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">ŠABLONY</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">DOKUMENTY</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/albums" routerLinkActive="active">ALBA</a>

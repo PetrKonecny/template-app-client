@@ -22,7 +22,7 @@ import { PageStore } from '../page/page.store'
     template: `
         <div class="shutter">
           <md-spinner *ngIf="(!template || !templateInstance) && !error"></md-spinner>
-          <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
+          <md-icon style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
         <create-new-template-instance *ngIf="template && templateInstance" [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
     `,

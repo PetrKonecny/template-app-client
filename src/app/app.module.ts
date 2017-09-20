@@ -133,7 +133,8 @@ import { LOCALE_ID } from '@angular/core';
 import {DisplayUserComponent} from './user/display-user.component'
 import {AlbumMenuComponent} from './album/album-menu.component'
 
-import {TemplateInstanceTemplateCreateComponent} from './template-instance/create-template-instance-with-template.component'
+
+import {AboutComponent} from './about.component'
 /** defines every route in the application and redirects if 
 no route matches
 */ 
@@ -159,12 +160,12 @@ const routes: Routes = [
     { path: 'templates/:id/form-edit', component: TemplateEditForm},
     { path: 'templates/search', component: TemplateSearchComponent},
     { path: 'templates/:id/instance', component: TemplateInstanceCreateComponent }, 
-    { path: 'template-instances/new', component: TemplateInstanceTemplateCreateComponent }, 
     { path: 'template-instances', component: TemplateInstanceIndexComponent },
     { path: 'template-instances/:id', component: TemplateInstanceEditComponent },
     { path: 'albums', component: AlbumIndexComponent },
     { path: 'albums/:id',component: DisplayAlbumComponent },
     { path: 'users/:id',component: DisplayUserComponent },
+    { path: 'about', component: AboutComponent},
     { path: '**', redirectTo: '/templates', pathMatch: 'full' },
 ]
 
@@ -182,7 +183,7 @@ const routes: Routes = [
         CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent,
         FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumListComponent, DisplayAlbumComponent,
         DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent, AdminAlbumsComponent, AlbumTableComponent, ImageUploadComponent,
-        DisplayUserComponent, AlbumMenuComponent, TemplateInstanceTemplateCreateComponent
+        DisplayUserComponent, AlbumMenuComponent, AboutComponent
     ],
     // modules
     /**

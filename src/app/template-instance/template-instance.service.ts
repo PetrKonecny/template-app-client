@@ -35,7 +35,7 @@ export class TemplateInstanceService {
             .map(this.extractData)
             .catch(this.handleError);
     }
-    
+
     addTemplateInstance(templateInstance: TemplateInstance) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers, withCredentials: true });

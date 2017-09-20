@@ -12,4 +12,5 @@ export class TemplateInstance {
   contents: Content[];
   user: User
   tagged: Tag[]
+  empty: boolean
 }

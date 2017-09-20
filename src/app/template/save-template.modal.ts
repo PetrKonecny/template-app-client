@@ -11,12 +11,12 @@ import { TemplateInstanceStore } from '../template-instance/template-instance.st
     selector: 'template-save-modal',
     template: `
         <form [formGroup]="saveForm" (ngSubmit)="onSaveButtonClicked()">
-        		<h2 md-dialog-title>ULOŽIT ŠABLONU</h2>
+        		<h2 md-dialog-title>{{title}}</h2>
                 <hr>
         		<md-dialog-content>
                     <div>
         			<md-input-container style="width: 100%;">
-	                	<input mdInput [(ngModel)]="template.name" formControlName="name" type="text" placeholder="Název šablony">
+	                	<input mdInput [(ngModel)]="template.name" formControlName="name" type="text" placeholder={{placeholderName}}>
                         <md-hint *ngIf="saveForm.controls['name'].hasError('required') && saveForm.controls['name'].touched"  style="color:red;">Je třeba vyplnit název</md-hint>	                
                 	</md-input-container>
                     </div>
@@ -46,13 +46,22 @@ export class SaveTemplateModal  {
     //template to be saved
 	template: Template
 
+    @Input()
+    title: string = 'ULOŽIT ŠABLONU'
+
+    @Input()
+    placeholderName :string = 'jméno šablony'
+
 	public saveForm = this.fb.group({
         name: ["", Validators.required],
         public: [false],
         tags: [""]
     });
 
-	constructor(private fb: FormBuilder, private ref: MdDialogRef<SaveTemplateModal>){}
+	constructor(private fb: FormBuilder, private ref: MdDialogRef<SaveTemplateModal>){
+
+
+    }
 
     //triggered on form submit
 	onSaveButtonClicked(){

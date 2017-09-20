@@ -97,5 +97,5 @@ export class Template {
   user_id: number;
   tagged: Tag[]
   public: boolean
-  singular: boolean
+  type: string
 }

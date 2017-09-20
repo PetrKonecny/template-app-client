@@ -9,14 +9,15 @@ import { MdDialog, MdDialogRef } from '@angular/material'
 import { CreateTemplateModal } from '../template/create-template.modal'
 import { Page } from '../page/page'
 import { Router } from '@angular/router'
+import { TemplateService } from '../template/template.service';
 
 @Component({
     selector: 'template-instance-index',
     template: `
         <md-toolbar>
-                <button md-button *ngIf="showEditButton()" [routerLink] = "['/template-instances', selected[0].id]">OTEVŘÍT DOKUMENT</button>
+                <button md-button *ngIf="showEditButton()" [routerLink] ="getLinkToEdit()">OTEVŘÍT DOKUMENT</button>
                 <button md-button *ngIf="showDeleteButton()" (click)="onDeleteClicked(selected[0])">SMAZAT DOKUMENT</button>
-                <a md-button *ngIf="showPdfButton()" href="{{config.getConfig('api-url')}}/templateInstance/{{selected[0].id}}/pdf"  target="_blank">PDF</a>
+                <a md-button *ngIf="showPdfButton()" href={{getLinkToPdf()}}  target="_blank">PDF</a>
         </md-toolbar>
         <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
         <div class="shutter" *ngIf="error">
@@ -73,6 +74,7 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     constructor(
         private config: AppConfig, 
         private templateInstanceService: TemplateInstanceService, 
+        private templateService: TemplateService,
         private userStore: UserStore, 
         public dialog: MdDialog, 
         private router: Router
@@ -93,10 +95,10 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     ngOnInit(){
         this.userStore.user
         .first(user=>user.id > 0)
-        .flatMap(user => this.templateInstanceService.getTemplateInstancesForUser(user.id))
+        .flatMap(user => Observable.forkJoin(this.templateInstanceService.getTemplateInstancesForUser(user.id),this.templateService.getTemplatesForUserByType(user.id,'no_instance_template')))
         .subscribe(
-            templateInsts =>{
-                this.templateInstances = templateInsts
+            res =>{
+                this.templateInstances = res[0].concat(res[1])
                 this.loading = false
             },error => {
                 this.error = error
@@ -104,10 +106,32 @@ export class TemplateInstanceIndexComponent implements OnInit  {
         )
 
     }
+
+    getLinkToPdf(){
+        let selected = <any> this.selected[0]
+        if(selected.type && selected.type == "no_instance_template" ){
+            return this.config.getConfig('api-url')+'/template/'+selected.id+'/pdf'
+        }else{
+            return this.config.getConfig('api-url')+'/templateInstance/'+selected.id+'/pdf'
+        }
+    }
+
+    getLinkToEdit(){
+        let selected = <any> this.selected[0]
+        if(selected.type && selected.type == "no_instance_template" ){
+            return ['/templates',selected.id,'edit']
+        }else{
+            return ['/template-instances',selected.id]
+        }
+    }
     
     //triggered when delete button clicked
-    onDeleteClicked(instance: TemplateInstance){
-        this.templateInstanceService.removeTemplateInstance(instance.id).subscribe(res => this.deleteFromList(instance));
+    onDeleteClicked(document: any){
+        if(document.type && document.type == "no_instance_template"){
+            this.templateService.removeTemplate(document.id).subscribe(res => this.deleteFromList(document));
+        }else{
+            this.templateInstanceService.removeTemplateInstance(document.id).subscribe(res => this.deleteFromList(document));
+        }
     }
     
     //removes document from the list
@@ -147,7 +171,7 @@ export class TemplateInstanceIndexComponent implements OnInit  {
                     width = height
                     height = temp
             }
-            this.router.navigate(['/template-instances/new', {width:width,height:height,margin:val.margin}])
+            this.router.navigate(['/templates/new', {width:width,height:height,margin:val.margin,type:'no_instance_template'}])
         })
     }    
      

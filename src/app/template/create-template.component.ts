@@ -47,7 +47,7 @@ export class TemplateCreateComponent implements AfterViewInit, OnInit  {
             let width = +params['width']
             let height = +params['height']
             let margin = +params['margin']
-            this.template.singular = params['sing']
+            this.template.type = params['type']
             if(width && height && width > 100 && width < 2000 && height > 100 && height < 2000 && margin >= 0){
                 this.factory.setWidth(width).setHeight(height).setMargin(margin)                
             }
