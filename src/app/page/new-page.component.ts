@@ -12,7 +12,7 @@ import {CreateTableModal} from '../element/create-table-element.modal'
 @Component({
     selector: 'create-new-page',
     template: `            
-          <div class ="page" #pageRef [style.width.mm]="getPageWidth()" [style.height.mm]="getPageHeight()" [class.selected]="selected" (drop)="onDrop($event)" (dragover)="onDragOver()"  (click)="onPageClicked()">             
+          <div class ="page mat-elevation-z1" #pageRef [style.width.mm]="getPageWidth()" [style.height.mm]="getPageHeight()" [class.selected]="selected" (drop)="onDrop($event)" (dragover)="onDragOver()"  (click)="onPageClicked()">             
             <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>
             <display-guide *ngFor="let guide of guides" [guide] = "guide" ></display-guide>
             <display-ruler *ngFor="let guide of page.rulers" [guide] = "guide" ></display-ruler>

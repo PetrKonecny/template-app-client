@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 $dark: #320b86;
-$light: #f5f5f5;
+$textLight: #f5f5f5;
 $accent: #ffd740; 
 app-root{
     position: absolute;
@@ -110,7 +110,7 @@ album-index-sidenav album-menu{
 }
 
 .text-light{
-    color: $light;
+    color: $textLight;
 }
 
 .shutter{
@@ -297,7 +297,7 @@ h1,h2,h3 {
 }
 
 .selected {
-	border: 2px dashed blue !important;
+	border: 2px dashed $dark !important;
 }
 
 .toolbar{
@@ -307,3 +307,34 @@ h1,h2,h3 {
 .nothing-found{
     opacity: 0.2;
 }
+
+.element-handle{
+    z-index: 5; 
+    position: absolute; 
+    margin: -2px; 
+    border-radius: 50%; 
+    width: 10px; 
+    height: 10px; 
+    background: $dark;
+    cursor: pointer;
+}
+
+.vertical{
+    width: 1px; 
+    height: 100%;
+}
+.horizontal{
+    height: 1px; 
+    width: 100%;
+}
+
+.guide{
+    background-color: $dark; 
+    position: absolute;
+} 
+
+.ruler{
+    opacity: 1;
+    background-color: $dark; 
+    position: absolute;
+} 

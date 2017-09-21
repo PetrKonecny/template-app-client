@@ -5,7 +5,7 @@ import { Page} from './page';
     selector: 'display-page',
     template: `
         <br>
-        <div class ="page" [style.width.mm]="getPageWidth()" [style.height.mm]="getPageHeight()">
+        <div class ="page mat-elevation-z1" [style.width.mm]="getPageWidth()" [style.height.mm]="getPageHeight()">
             <display-element *ngFor ="let element of page.elements" [element] = "element"></display-element>
         </div>
     `,

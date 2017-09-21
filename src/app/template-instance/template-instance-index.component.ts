@@ -173,6 +173,7 @@ export class TemplateInstanceIndexComponent implements OnInit  {
             }
             this.router.navigate(['/templates/new', {width:width,height:height,margin:val.margin,type:'no_instance_template'}])
         })
+        dialogRef.componentInstance.title = "VYTVOŘIT DOKUMENT"
     }    
      
 }

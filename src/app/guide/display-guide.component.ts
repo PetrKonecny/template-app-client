@@ -5,8 +5,8 @@ import { AppComponentRef } from '../app.ref'
 @Component({
     selector: 'display-guide',
     template: `
-        <div *ngIf="guide.positionX && guide.visible" class="vertical" [style.left.px]="guide.positionX" ></div>
-        <div *ngIf="guide.positionY && guide.visible" [style.top.px]="guide.positionY" class="horizontal"></div>
+        <div *ngIf="guide.positionX && guide.visible" class="guide vertical" [style.left.px]="guide.positionX" ></div>
+        <div *ngIf="guide.positionY && guide.visible" [style.top.px]="guide.positionY" class="guide horizontal"></div>
     `,
     styles: [` 
             .vertical{
@@ -17,10 +17,6 @@ import { AppComponentRef } from '../app.ref'
                 height: 1px; 
                 width: 100%;
             }
-            div{
-                background-color: red; 
-                position: absolute;
-            } 
     `]
 })
 

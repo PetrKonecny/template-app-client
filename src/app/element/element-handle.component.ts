@@ -12,21 +12,20 @@ import {AppComponentRef} from '../app.ref'
                 [style.margin-top.px]="element?.positionY"
                 [style.margin-left.px]="element?.positionX">
                 <span *ngIf="handleContent?.selected && !handleContent?.hideHandles">
-                <a draggable2 (move)="leftTop($event)" style="left: 0; top: 0;"></a>
-                <a draggable2 (move)="rightTop($event)" style="top: 0; left: 100%;"></a>
-                <a draggable2 (move)="leftBottom($event)" style="left: 0; top:100%;"></a>
-                <a draggable2 (move)="rightBottom($event)" style="left: 100%; top: 100%;"></a>
-                <a draggable2 (move)="top($event)" style="top: 0; left: 50%;"></a>
-                <a draggable2 (move)="left($event)" style="left: 0; top: 50%;" ></a>
-                <a draggable2 (move)="bottom($event)" style="left:50%; top: 100%;"></a>
-                <a draggable2 (move)="right($event)" style="left: 100%; top: 50%;"></a>
+                <a class="element-handle" draggable2 (move)="leftTop($event)" style="left: 0; top: 0;"></a>
+                <a class="element-handle" draggable2 (move)="rightTop($event)" style="top: 0; left: 100%;"></a>
+                <a class="element-handle" draggable2 (move)="leftBottom($event)" style="left: 0; top:100%;"></a>
+                <a class="element-handle" draggable2 (move)="rightBottom($event)" style="left: 100%; top: 100%;"></a>
+                <a class="element-handle" draggable2 (move)="top($event)" style="top: 0; left: 50%;"></a>
+                <a class="element-handle" draggable2 (move)="left($event)" style="left: 0; top: 50%;" ></a>
+                <a class="element-handle" draggable2 (move)="bottom($event)" style="left:50%; top: 100%;"></a>
+                <a class="element-handle" draggable2 (move)="right($event)" style="left: 100%; top: 50%;"></a>
                 </span>
                 <ng-content></ng-content>
             </div>
         `,
     styles: [`
         div{position: absolute;}
-        a {z-index: 1000; position: absolute; margin: -2px; border-radius: 50%; width: 10px; height: 10px; background: blue;}
     `]
 })
 

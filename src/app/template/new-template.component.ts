@@ -25,7 +25,7 @@ import { Router} from '@angular/router'
 
             <!-- main app toolbar -->
 
-            <md-toolbar class="mat-elevation-z4" style="z-index: 30; position: relative;">
+            <md-toolbar class="mat-elevation-z2" style="z-index: 30; position: relative;">
                 <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
                 <button md-icon-button *ngIf="template && template.type!='no_instance_template'" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
                 <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>

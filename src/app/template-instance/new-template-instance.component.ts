@@ -19,7 +19,7 @@ import { NewTemplateComponent } from '../template/new-template.component'
     template:
        `
         <md-sidenav-container style="height: 100%; max-height: calc(100% - 64px); overflow: hidden;">
-            <md-toolbar>
+            <md-toolbar class="mat-elevation-z2">
                 <button md-icon-button *ngIf="!sidenav.opened" (click)="sidenav.toggle()"><md-icon>add</md-icon></button>
                 <button md-icon-button *ngIf="sidenav.opened" (click)="sidenav.toggle()"><md-icon>close</md-icon></button>
                 <button md-icon-button (click)="saveTemplateInstance()"><md-icon>save</md-icon></button>

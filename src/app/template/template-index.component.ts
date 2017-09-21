@@ -212,5 +212,6 @@ export class TemplateIndexComponent implements OnInit  {
             }
             this.router.navigate(['/templates/new', {width:width,height:height,margin:val.margin}])
         })
+        dialogRef.componentInstance.title = "VYTVOŘIT ŠABLONU"
     }     
 }

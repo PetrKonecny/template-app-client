@@ -7,7 +7,7 @@ import {MdDialogRef} from '@angular/material'
     selector: 'create-template-modal',
     template: `
         <form [formGroup]="createForm" (ngSubmit)="onSaveButtonClicked()">
-        		<h2 md-dialog-title>VYTVOŘIT ŠABLONU</h2>
+        		<h2 md-dialog-title>{{title}}</h2>
                 <hr>
         		<md-dialog-content>
                     <div>
@@ -57,6 +57,10 @@ export class CreateTemplateModal  {
     @ViewChild('custom')
     //reference to the switch for custom or preset dimensions
     custom
+
+    @Input()
+    title = "TITLE"
+
 
 	public createForm = this.fb.group({
         type: ["A4", Validators.required],
