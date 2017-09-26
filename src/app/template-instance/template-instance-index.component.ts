@@ -10,6 +10,7 @@ import { CreateTemplateModal } from '../template/create-template.modal'
 import { Page } from '../page/page'
 import { Router } from '@angular/router'
 import { TemplateService } from '../template/template.service';
+import { TemplateInstanceHelper } from '../template-instance/template-instance.helper'
 
 @Component({
     selector: 'template-instance-index',
@@ -64,8 +65,11 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     loading = true
     //array of documents to be displayed
     templateInstances : TemplateInstance[]
-
+    
     selected: TemplateInstance[] = []
+
+    linkToPdf = TemplateInstanceHelper.getLinkToPdf
+    linkToEdit = TemplateInstanceHelper.getLinkToEdit
 
     /**
     @param templateInstanceService - service to get docuemnts form API
@@ -108,21 +112,11 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     }
 
     getLinkToPdf(){
-        let selected = <any> this.selected[0]
-        if(selected.type && selected.type == "no_instance_template" ){
-            return this.config.getConfig('api-url')+'/template/'+selected.id+'/pdf'
-        }else{
-            return this.config.getConfig('api-url')+'/templateInstance/'+selected.id+'/pdf'
-        }
+        return TemplateInstanceHelper.getLinkToPdf(this.selected[0],this.config)
     }
 
     getLinkToEdit(){
-        let selected = <any> this.selected[0]
-        if(selected.type && selected.type == "no_instance_template" ){
-            return ['/templates',selected.id,'edit']
-        }else{
-            return ['/template-instances',selected.id]
-        }
+        return TemplateInstanceHelper.getLinkToEdit(this.selected[0])
     }
     
     //triggered when delete button clicked

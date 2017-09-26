@@ -10,22 +10,26 @@ import { SelectAlbumModal } from '../album/select-album.modal'
 import {AppComponentRef} from '../app.ref'
 import { Image} from '../image/image';
 import { ImageService } from '../image/image.service'
-
+import { UserStore } from '../user/user.store'
 @Component({
     selector: 'display-album',
     template: `
         <md-toolbar>
-            <h3>{{album?.name}}</h3>
-            <button *ngIf="selected.length" md-button (click)="onDeleteClicked()">Smazat výběr</button>
-            <button *ngIf="selected.length" md-button (click)="openAlbumsModal()">Přesunout výběr</button>
+            <h1 class="album-chip">{{album?.name}}</h1>
+            <div style="padding-right: 16px;" >
+            <button *ngIf="selected.length" md-button (click)="onDeleteClicked()">SMAZAT VÝBĚR</button>
+            <button *ngIf="selected.length" md-button (click)="openAlbumsModal()">PŘESUNOUT VÝBĚR</button>
+            </div>
         </md-toolbar>
         <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
         <div class="shutter" *ngIf="error">
                 <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
         </div>
-        <div class ="index-content"  style="overflow-y: auto;" >
-        <button md-fab class="index-button" (click)="openUploadModal()"><md-icon>add</md-icon></button>
+        <div class ="index-content">
+        <button *ngIf="currentUser && album && currentUser.id == album.user_id" md-fab class="index-button" (click)="openUploadModal()"><md-icon>add</md-icon></button>
+        <div class="mat-elevation-z4 image-list">
         <image-list *ngIf="album && album.images" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>
+        </div>
         </div>
     `,
     styles:[`
@@ -46,6 +50,8 @@ export class DisplayAlbumComponent implements OnInit  {
     //loading indicator
     loading = true
 
+    currentUser
+
     /**
     @param imageService - http service used to manipulate images
     @param albumService - service used to load album
@@ -56,9 +62,10 @@ export class DisplayAlbumComponent implements OnInit  {
     @param ref - refference to the root component 
     **/
     constructor(
-        private imageService: ImageService, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig, private ref: AppComponentRef 
+        private userStore: UserStore, private imageService: ImageService, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig, private ref: AppComponentRef 
     ){
         this.ref.shiftPRess.subscribe(press => this.shift = press) 
+        this.userStore.user.first(user => user.id > 0).subscribe(user => this.currentUser = user)
     }
     
     //gets the images

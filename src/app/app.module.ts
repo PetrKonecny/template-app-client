@@ -133,7 +133,7 @@ import { LOCALE_ID } from '@angular/core';
 import {DisplayUserComponent} from './user/display-user.component'
 import {AlbumMenuComponent} from './album/album-menu.component'
 
-
+import {AlbumStore} from './album/album.store'
 import {AboutComponent} from './about.component'
 /** defines every route in the application and redirects if 
 no route matches
@@ -211,7 +211,7 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        {provide: LOCALE_ID, useValue: "cz-EU" }, ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
+        {provide: LOCALE_ID, useValue: "cz-EU" }, AlbumStore, ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
     ],
     bootstrap: [
         AppComponent

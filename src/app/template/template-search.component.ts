@@ -11,15 +11,18 @@ import {UserStore} from '../user/user.store'
     template: `
         <md-toolbar>
             <form (ngSubmit)="onSearchKeyUp(search.value)">
-                <md-input-container><input #search mdInput type="search"></md-input-container>
+                <md-input-container><input #search mdInput value={{query}} type="search"></md-input-container>
                 <button md-icon-button><md-icon>search</md-icon></button>
             </form>
         </md-toolbar>
+        <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
+        <div class="shutter" *ngIf="error">
+                <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
+        </div>
         <div class="index-content">
-            <div class="shutter">
-                    <md-spinner *ngIf="loading"></md-spinner>
-                    <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
-            </div>
+        <div style="opacity: 0.5; width: 100%; height: 20%; display: flex; align-items: center; justify-content: center;" *ngIf="!loading && !templates.length">
+            <h3>Žádné výsledky na dotaz "{{query}}"</h3>
+        </div>
         <template-list [templates] = "templates" [user]="userStore.user | async" (onDeleteClicked) = "onDeleteClicked($event)"></template-list>
     `,
     providers: []
@@ -31,6 +34,8 @@ export class TemplateSearchComponent implements OnInit  {
     error: string;
     //loading indicator
     loading: boolean = true;
+
+    query: string;
     //array of serched templates
     templates : Template[];
 
@@ -47,6 +52,9 @@ export class TemplateSearchComponent implements OnInit  {
     
     ngOnInit(){
         this.getTemplates();
+        this.route.params.subscribe((params)=>{
+            this.query = params['query']
+        })
     }
 
     //triggers on search field submit

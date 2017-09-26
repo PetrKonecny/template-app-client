@@ -11,6 +11,7 @@ import { SaveAlbumModal } from '../album/save-album.modal'
 import {UserStore} from '../user/user.store'
 import { Observable }     from 'rxjs/Observable';
 import {CreateTableModal} from '../element/create-table-element.modal' 
+import { AlbumStore } from '../album/album.store'
 
 @Component({
     selector: 'album-index-sidenav',
@@ -58,19 +59,29 @@ export class AlbumIndexSidenavComponent implements OnInit  {
     @Output() 
     //trigered on delete clicked
     onCloseClicked = new EventEmitter<boolean>();
-
+    
+    sub
     /**
     @param userStore - store containing currently logged in user
     @param albumService - service used for loading albums
     */
     constructor(
-        private userStore: UserStore, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig
+        private albumStore: AlbumStore, private userStore: UserStore, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig
     ){ 
     }
     
     
     ngOnInit(){
-        this.getAlbums()
+        this.sub  = this.albumStore.content.subscribe(content => {
+            this.loading = content.loading
+            this.albums = content.albums
+            this.error = content.error
+        })
+        this.userStore.user.first(user => user.id > 0).do(user => this.currentUser = user).flatMap(user => this.albumStore.getAlbums(user)).subscribe()
+    }
+
+    ngOnDestroy(){
+        this.sub.unsubscribe()
     }
 
     //triggered when album selected
@@ -138,24 +149,6 @@ export class AlbumIndexSidenavComponent implements OnInit  {
     }
     
     //calls API to get public and user specific albums
-    getAlbums(){
-        this.userStore.user.first(user => user.id > 0)
-        .do((user)=>{this.currentUser = user})
-        .flatMap(user => Observable.forkJoin(this.albumService.getAlbumsForUser(user.id),this.albumService.getPublicAlbums()))
-        .subscribe(res => {
-                this.albums = res[0]
-                this.publicAlbums = res[1]   
-                this.publicAlbums = this.publicAlbums.filter((template)=> {return !this.albums.some(template2 => template.id == template2.id)})
-                this.albums = this.albums.concat(this.publicAlbums)
-                this.loading = false
-            }
-            ,error=>{
-                this.error = error
-                this.loading = false
-            }
-        )
-    }
-
     createNewTableElement(){
         let dialogRef = this.dialog.open(CreateTableModal, {height: 'auto',
           width: '30%',})

@@ -9,6 +9,7 @@ import { SaveAlbumModal } from '../album/save-album.modal'
 import {UserStore} from '../user/user.store'
 import { Observable }     from 'rxjs/Observable';
 import {AlbumHelper} from '../album/album.helper'
+import { AlbumStore } from '../album/album.store'
 
 @Component({
     selector: 'album-index',
@@ -74,7 +75,7 @@ export class AlbumIndexComponent implements OnInit  {
     selected: Album[] = []
     //user currently logged in
     currentUser
-
+    sub
     /**
     @param userStore - user store containing currently logged in user
     @param albumService - service to call API to get albums
@@ -83,27 +84,22 @@ export class AlbumIndexComponent implements OnInit  {
     @param snackBar - snackbar to display errors on
     */
     constructor(
-        private userStore: UserStore, private albumService: AlbumHttpService, public dialog: MdDialog, private router: Router, private snackBar: MdSnackBar
+        private userStore: UserStore, private albumStore: AlbumStore, public dialog: MdDialog, private router: Router, private snackBar: MdSnackBar
     ){ 
     }
     
     //loads albums for user and all public albums
     ngOnInit(){
-        this.userStore.user.first(user => user.id > 0)
-        .do((user)=>{this.currentUser = user})
-        .flatMap(user => Observable.forkJoin(this.albumService.getAlbumsForUser(user.id),this.albumService.getPublicAlbums()))
-        .subscribe(res => {
-                this.albums = res[0]
-                this.publicAlbums = res[1]   
-                this.publicAlbums = this.publicAlbums.filter((template)=> {return !this.albums.some(template2 => template.id == template2.id)})
-                this.albums = this.albums.concat(this.publicAlbums)
-                this.loading = false
-            }
-            ,error=>{
-                this.error = error
-                this.loading = false
-            }
-        )
+        this.sub  = this.albumStore.content.subscribe(content => {
+            this.loading = content.loading
+            this.albums = content.albums
+            this.error = content.error
+        })
+        this.userStore.user.first(user => user.id > 0).do(user => this.currentUser = user).flatMap(user => this.albumStore.getAlbums(user)).subscribe()
+    }
+
+    ngOnDestroy(){
+        this.sub.unsubscribe()
     }
 
     showOpenButton(){
@@ -131,9 +127,7 @@ export class AlbumIndexComponent implements OnInit  {
                     album.name = value.name
                     album.tagged = value.tagged
                     album.public = value.public
-                    this.albumService.addAlbum(album).subscribe(album=>{
-                         this.albums.push(album)
-                    },error=>{
+                    this.albumStore.addAlbum(album).subscribe(null,error=>{
                         this.snackBar.open("Chyba při vytváření alba",null,{duration: 2500})
                     })
                 }
@@ -142,9 +136,7 @@ export class AlbumIndexComponent implements OnInit  {
     }  
 
     onDeleteClicked(album){
-        this.albumService.removeAlbum(album.id).subscribe(()=>{
-            this.albums.splice(this.albums.indexOf(album),1)
-        },error =>{                        
+        this.albumStore.deleteAlbum(album).subscribe(null,error =>{                        
             this.snackBar.open("Chyba při mazání alba",null,{duration: 2500})})
     }
 
@@ -163,11 +155,7 @@ export class AlbumIndexComponent implements OnInit  {
                     album2.tagged = value.tagged
                     album2.public = value.public
                     delete album2.images;
-                    this.albumService.updateAlbum(album2).subscribe(updatedAlbum=>{
-                         this.albums.splice(this.albums.indexOf(album),1, updatedAlbum)
-                         let albums = [...this.albums]
-                         this.albums = albums
-                    },error=>{
+                    this.albumStore.editAlbum(album2).subscribe(null,error=>{
                         this.snackBar.open("Chyba při aktualizaci alba",null,{duration: 2500})
                     })
                 }

@@ -17,7 +17,7 @@ export class UserStore {
     }
 
     auth(){
-    	return this.service.getCurrentUser().map(user => {
+    	return this.service.getCurrentUser().first().subscribe(user => {
             this._user.next(user)
         })
     }

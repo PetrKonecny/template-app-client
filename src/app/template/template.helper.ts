@@ -80,11 +80,11 @@ export class TemplateHelper {
     }
 
     static canDeleteTemplate(user: User, template: Template){
-        return user && user.id == template.user_id
+        return (user && user.id == template.user_id) || (user && user.admin)
     }
 
     static canEditTemplate(user: User, template: Template){
-        return user && user.id == template.user_id
+        return (user && user.id == template.user_id) || (user && user.admin)
     }
 
     static canCreateDocumentFromTemplate(user: User, template: Template){

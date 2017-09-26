@@ -5,7 +5,10 @@ import { User} from '../user/user';
 import { Observable }     from 'rxjs/Observable';
 import { ActivatedRoute} from '@angular/router';
 import { MdSnackBar } from '@angular/material';
-import {UserStore} from '../user/user.store'
+import { UserStore } from '../user/user.store'
+import { TemplateService } from '../template/template.service';
+import { TemplateInstanceService } from '../template-instance/template-instance.service';
+import { AlbumHttpService } from '../album/album-http.service'
 
 @Component({
     selector: 'display-user',
@@ -15,46 +18,38 @@ import {UserStore} from '../user/user.store'
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
         <div class="wrapper">
-        <div class="side">
-        <div class="profile-pic"></div>
+        <div class="header">
+        <div class="profile-pic"><div>{{user?.name.charAt(0)}}</div></div>
         <h1 class="name">{{user?.name ? user.name : 'Uživatelské jméno'}}</h1>
         </div>
-        <md-tab-group class="main">
+        <div class="content" style="height: 100%;">
+        <md-tab-group style="height: 100%; margin: 0 16px; background: white;">
             <md-tab label="šablony">
-                <template-list [user]="currentUser" [templates]="user?.templates"></template-list>
+                <template-list [user]="userStore.user | async" [templates]="templates"></template-list>
             </md-tab>
-            <md-tab *ngIf="currentUser?.id  == user?.id" label="dokumenty">
-                <template-instance-list [templateInstances]="user?.template_instances"></template-instance-list>
+            <md-tab *ngIf="(userStore.user | async)?.id  == user?.id" label="dokumenty">
+                <template-instance-list [templateInstances]="documents"></template-instance-list>
             </md-tab>
             <md-tab label="alba">
-                <album-list [albums]="user?.albums" [grid]="false"></album-list>
+                <album-list [albums]="albums" [grid]="false"></album-list>
             </md-tab>
         </md-tab-group>
+        </div>
         </div>
     `,
     providers: [],
     styles: [`
-        .profile-pic{
-            width: 10%;
-            padding-top: 10%;
-            background: white;
-            border-radius: 50%;
-        }
         .name{
             padding-left: 16px;
         }
         .wrapper{
             height: 100%;
-            display: flex;
-            flex-direction: column;
         }
-        .side{
-            display: flex;
+        .header{
             padding: 16px;
+            display: flex;
             align-items: center;
             flex-direction: row;
-        }
-        .main{
         }
 
     `]
@@ -68,25 +63,29 @@ export class DisplayUserComponent implements OnInit{
 
     error: string
 
-    currentUser: User
+    documents
+    templates
+    albums
 
     constructor(
-        private userStore: UserStore, private userService: UserService, private route: ActivatedRoute, private snackBar: MdSnackBar  
+        private albumService: AlbumHttpService, private templateService: TemplateService, private templateInstanceService: TemplateInstanceService, private userStore: UserStore, private userService: UserService, private route: ActivatedRoute, private snackBar: MdSnackBar  
     ){ 
-        userStore.user.subscribe(user => this.currentUser = user)
     }
 
     ngOnInit(){
-        this.getUser()
-    }
-
-    getUser(){
-       this.route.params
+        this.route.params
         .flatMap((params)=>this.userService.getUser(params['id']))
+        .do(user => this.user = user)
+        .flatMap(user => Observable.forkJoin(this.templateInstanceService.getTemplateInstancesForUser(user.id),
+                                             this.templateService.getTemplatesForUserByType(user.id,'no_instance_template'),
+                                             this.templateService.getTemplatesForUser(user.id),
+                                             this.albumService.getAlbumsForUser(user.id)))
         .first()
         .subscribe(
-            user=> {
-                this.user = user
+            res=> {
+                this.templates = res[2]
+                this.documents = res[1].concat(res[0])
+                this.albums = res[3]
                 this.loading = false
             },
             error=> {

@@ -4,4 +4,5 @@ export class User {
     templates
     template_instances
     albums
+    admin: boolean
 }

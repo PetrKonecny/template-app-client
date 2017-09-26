@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms'
 import {MdDialogRef} from '@angular/material'
 import { Album } from '../album/album'
 import { AlbumHttpService } from '../album/album-http.service'
+import { AlbumStore } from '../album/album.store'
 
 @Component({
     selector: 'album-select-modal',
@@ -24,11 +25,11 @@ export class SelectAlbumModal  {
     @param ref - reference to close the dialog
     @param service - service to load albums from
     */
-    constructor(private ref: MdDialogRef<SelectAlbumModal>, private service: AlbumHttpService){}
+    constructor(private ref: MdDialogRef<SelectAlbumModal>, private store: AlbumStore){}
 
     ngOnInit(){
-        this.service.getAlbums().subscribe(albums =>{
-            this.albums = albums
+        this.store.content.subscribe(res =>{
+            this.albums = res.albums
         })
     }
 

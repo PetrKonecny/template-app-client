@@ -17,14 +17,14 @@ import {DisplayUserComponent} from '../user/display-user.component'
     template: `
         <md-toolbar>
             <form class="search-field" (ngSubmit)="onSearchKeyUp(search.value)">
-                <md-input-container><input #search mdInput type="search"></md-input-container>
+                <md-input-container><input placeholder="hledat" #search mdInput type="search"></md-input-container>
                 <button md-icon-button><md-icon>search</md-icon></button>
             </form>
                 <button md-button *ngIf="showCreateButton()" [routerLink] = "['/templates', selected[0].id, 'instance']">NOVÝ DOKUMENT</button>
                 <button md-button *ngIf="showEditButton()" [routerLink] = "['/templates', selected[0].id, 'edit']">UPRAVIT ŠABLONU</button>
                 <button md-button *ngIf="showDeleteButton()" (click)="onDeleteClicked(selected[0])">SMAZAT ŠABLONU</button>
         </md-toolbar>
-        <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
+        <md-progress-bar *ngIf="loading" mode="indeterminate" ></md-progress-bar>
         <div class="shutter" *ngIf="error">
                 <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
         </div>
@@ -53,9 +53,9 @@ import {DisplayUserComponent} from '../user/display-user.component'
                 {{value | date : 'short'}}
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column prop="user_id" name="uživatel">
+            <ngx-datatable-column prop="user" name="uživatel">
                 <ng-template  let-value="value" ngx-datatable-cell-template>
-                <a [routerLink]="['/users', value]">{{value.name? value.name : 'neznámé jméno'}}</a>
+                <a [routerLink]="['/users', value.id]">{{value.name? value.name : 'neznámé jméno'}}</a>
                 </ng-template>
             </ngx-datatable-column>
             </ngx-datatable>
@@ -106,7 +106,7 @@ export class TemplateIndexComponent implements OnInit  {
         { prop: 'name', name: 'název'},
         { prop: 'tagged', name: 'tagy'},
         { prop: 'updated_at', name: 'naposledy upraveno'},
-        { prop: 'user_id', name: 'uživatel'}
+        { prop: 'user', name: 'uživatel'}
     ]
     
     /*

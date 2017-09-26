@@ -14,6 +14,7 @@ import {Location } from '@angular/common';
 import {AppComponentRef} from './app.ref'
 import { TemplateStore } from './template/template.store'
 import { User} from './user/user'
+import { AlbumStore } from './album/album.store'
 @Component({
     selector: 'app-root',
     template: `
@@ -29,7 +30,7 @@ import { User} from './user/user'
         <a md-button *ngIf="guard.canActivate()"  routerLink="admin/fonts" routerLinkActive="active">FONTS</a>
     </md-toolbar>
     <md-toolbar *ngIf="!adminRoute" color="primary" class="mat-elevation-z6 main-toolbar">
-        <a md-button *ngIf="guard.canActivate()" routerLink="/about" routerLinkActive="active">ABOUT</a>
+        <a md-button *ngIf="guard.canActivate()" routerLink="/about" routerLinkActive="active">O APLIKACI</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">ŠABLONY</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">DOKUMENTY</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/albums" routerLinkActive="active">ALBA</a>
@@ -58,7 +59,7 @@ export class AppComponent implements OnInit {
     @param config - application config
     @param route - currently active route
     */
-    constructor(private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, private guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
+    constructor(private albumStore: AlbumStore, private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, private guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
     private ref: AppComponentRef){
         this.userStore.user.subscribe(user=>this.currentUser = user)
     }
@@ -115,7 +116,9 @@ export class AppComponent implements OnInit {
         this.adminRoute = event.url.includes('admin')
 
         })
-        this.userStore.auth().subscribe()
+        this.userStore.auth()
+        this.userStore.user.first(user => user.id > 0).subscribe(user =>{
+        })
         this.fontStore.fonts.subscribe(fonts=>{
             fonts.forEach(font => {
                 this.appendFontStyle(font)

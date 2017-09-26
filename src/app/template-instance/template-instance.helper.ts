@@ -117,4 +117,20 @@ export class TemplateInstanceHelper {
         return content;
     }
 
+    static getLinkToPdf(selected: any, config){
+        if(selected.type && selected.type == "no_instance_template" ){
+            return config.getConfig('api-url')+'/template/'+selected.id+'/pdf'
+        }else{
+            return config.getConfig('api-url')+'/templateInstance/'+selected.id+'/pdf'
+        }
+    }
+
+    static getLinkToEdit(selected: any){
+        if(selected.type && selected.type == "no_instance_template" ){
+            return ['/templates',selected.id,'edit']
+        }else{
+            return ['/template-instances',selected.id]
+        }
+    }
+
 }
