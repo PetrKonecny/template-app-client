@@ -11,6 +11,9 @@ import {AppComponentRef} from '../app.ref'
 import { Image} from '../image/image';
 import { ImageService } from '../image/image.service'
 import { UserStore } from '../user/user.store'
+import { AlbumStore } from '../album/album.store'
+import { AlbumHelper } from '../album/album.helper'
+
 @Component({
     selector: 'display-album',
     template: `
@@ -62,10 +65,10 @@ export class DisplayAlbumComponent implements OnInit  {
     @param ref - refference to the root component 
     **/
     constructor(
-        private userStore: UserStore, private imageService: ImageService, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig, private ref: AppComponentRef 
+        private albumStore: AlbumStore, private userStore: UserStore, private imageService: ImageService, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private route: ActivatedRoute,  private config: AppConfig, private ref: AppComponentRef 
     ){
         this.ref.shiftPRess.subscribe(press => this.shift = press) 
-        this.userStore.user.first(user => user.id > 0).subscribe(user => this.currentUser = user)
+        this.userStore.user.first(user =>(user && user.id > 0)).subscribe(user => this.currentUser = user)
     }
     
     //gets the images
@@ -100,6 +103,10 @@ export class DisplayAlbumComponent implements OnInit  {
                    this.snackBar.open("Chyba při přesunu obrázků",null,{duration: 1500})
                 })
             }
+        })
+        this.albumStore.content.first().subscribe((res)=>{
+            let albums = res.albums.filter(album=>AlbumHelper.canEditAlbum(this.currentUser,album))
+            dialogRef.componentInstance.albums = albums
         })
     }
 

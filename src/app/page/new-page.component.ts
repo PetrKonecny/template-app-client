@@ -65,7 +65,11 @@ export class NewPageComponent implements AfterViewInit {
     constructor(private newPageRef: NewPageReference, private pageStore: PageStore, private commands: PageCommands, public dialog: MdDialog) {
         this.newPageRef.component = this
         this.guides = new Array
-        this.pageStore.page.subscribe(page => {if(this.page === page){this.selected = true}else{this.selected = false}})
+    }
+
+    ngOnInit(){
+        this.pageStore.page.subscribe(page => {this.selected = this.page === page})
+        this.pageStore.echo()
     }
 
     //prevents default behaviour on drag over
@@ -145,14 +149,14 @@ export class NewPageComponent implements AfterViewInit {
             let width = this.pageElementRef.nativeElement.clientWidth
             let height = this.pageElementRef.nativeElement.clientHeight
             let minDim = Math.min(width,height) 
-            if(minDim > margin*2){
+            if(this.page.margin && minDim > this.page.margin*1.5){
                 margin = this.page.margin
             }
             this.page.rulers = new Array
             let ruler = new Guide
             ruler.positionX = margin
             let ruler2 = new Guide
-            ruler2.positionY = this.page.margin
+            ruler2.positionY = margin
             let ruler3 = new Guide
             let ruler4 = new Guide
             ruler3.positionX = + width - margin
@@ -161,6 +165,7 @@ export class NewPageComponent implements AfterViewInit {
             this.page.rulers.push(ruler3)
             this.page.rulers.push(ruler2)
             this.page.rulers.push(ruler)
+            console.log(this.page)
         });        
     }
     

@@ -30,7 +30,8 @@ import { AlbumStore } from './album/album.store'
         <a md-button *ngIf="guard.canActivate()"  routerLink="admin/fonts" routerLinkActive="active">FONTS</a>
     </md-toolbar>
     <md-toolbar *ngIf="!adminRoute" color="primary" class="mat-elevation-z6 main-toolbar">
-        <a md-button *ngIf="guard.canActivate()" routerLink="/about" routerLinkActive="active">O APLIKACI</a>
+        <a md-button routerLink="/about" routerLinkActive="active">O APLIKACI</a>
+        <a md-button *ngIf="!guard.canActivate()" routerLink="/demo" routerLinkActive="active">DEMO</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">ŠABLONY</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/template-instances" routerLinkActive="active">DOKUMENTY</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/albums" routerLinkActive="active">ALBA</a>
@@ -116,8 +117,8 @@ export class AppComponent implements OnInit {
         this.adminRoute = event.url.includes('admin')
 
         })
-        this.userStore.auth()
-        this.userStore.user.first(user => user.id > 0).subscribe(user =>{
+        this.userStore.auth().subscribe()
+        this.userStore.user.first(user => (user && user.id > 0)).subscribe(user =>{
         })
         this.fontStore.fonts.subscribe(fonts=>{
             fonts.forEach(font => {

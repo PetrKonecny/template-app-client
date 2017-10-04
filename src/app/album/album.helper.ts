@@ -4,10 +4,10 @@ import {User} from '../user/user'
 export class AlbumHelper {
 
     static canEditAlbum(user: User, album: Album){
-        return user && user.id == album.user_id
+        return user && (user.id == album.user_id || user.admin)
     }
 
     static canDeleteAlbum(user: User, album: Album){
-        return user && user.id == album.user_id
+        return user && (user.id == album.user_id || user.admin)
     }
 }

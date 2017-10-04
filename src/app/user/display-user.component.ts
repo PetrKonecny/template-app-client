@@ -9,6 +9,7 @@ import { UserStore } from '../user/user.store'
 import { TemplateService } from '../template/template.service';
 import { TemplateInstanceService } from '../template-instance/template-instance.service';
 import { AlbumHttpService } from '../album/album-http.service'
+import { AlbumStore } from '../album/album.store'
 
 @Component({
     selector: 'display-user',
@@ -31,13 +32,13 @@ import { AlbumHttpService } from '../album/album-http.service'
                 <template-instance-list [templateInstances]="documents"></template-instance-list>
             </md-tab>
             <md-tab label="alba">
-                <album-list [albums]="albums" [grid]="false"></album-list>
+                <album-list [user]="user" [albums]="(albumStore.content | async).albums"></album-list>
             </md-tab>
         </md-tab-group>
         </div>
         </div>
     `,
-    providers: [],
+    providers: [AlbumStore],
     styles: [`
         .name{
             padding-left: 16px;
@@ -68,7 +69,7 @@ export class DisplayUserComponent implements OnInit{
     albums
 
     constructor(
-        private albumService: AlbumHttpService, private templateService: TemplateService, private templateInstanceService: TemplateInstanceService, private userStore: UserStore, private userService: UserService, private route: ActivatedRoute, private snackBar: MdSnackBar  
+        private albumStore: AlbumStore, private albumService: AlbumHttpService, private templateService: TemplateService, private templateInstanceService: TemplateInstanceService, private userStore: UserStore, private userService: UserService, private route: ActivatedRoute, private snackBar: MdSnackBar  
     ){ 
     }
 
@@ -79,7 +80,7 @@ export class DisplayUserComponent implements OnInit{
         .flatMap(user => Observable.forkJoin(this.templateInstanceService.getTemplateInstancesForUser(user.id),
                                              this.templateService.getTemplatesForUserByType(user.id,'no_instance_template'),
                                              this.templateService.getTemplatesForUser(user.id),
-                                             this.albumService.getAlbumsForUser(user.id)))
+                                             this.albumStore.getForUser(user)))
         .first()
         .subscribe(
             res=> {

@@ -42,6 +42,12 @@ export class AlbumHttpService {
             .catch(this.handleError);
     }
 
+    getDemoAlbum(): Observable<Album> {
+        return this.http.get(this._albumsUrl+"/demo")
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
     moveImages(images: Image[], album: Album){
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers ,  withCredentials: true});

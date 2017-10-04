@@ -14,9 +14,20 @@ export class AlbumStore {
     
     constructor(private service: AlbumHttpService){}
 
-    getAlbums(user: User){
+    getAlbums(user: User): Observable<Album[]>{
     	this._content.next(Object.assign({},this._content.value,{albums: null,loading: true}))
-    	if(user.admin){
+        if(!user.id){
+            return this.service.getDemoAlbum().first()
+            .do(null,error => this._content.next(Object.assign({},this._content.value,{loading: false, error: error})))
+            .map(
+                album => {
+                    let albums = [].concat(album)
+                    this._content.next(Object.assign({},this._content.value,{error: null, loading: false, updatedAt: Date.now(), albums: albums}))
+                    return albums
+                }
+            )
+        }
+    	else if(user.admin){
     		return this.service.getAlbums().first()
             .do(null,error => this._content.next(Object.assign({},this._content.value,{loading: false, error: error})))
             .map(
@@ -58,6 +69,12 @@ export class AlbumStore {
     		res => this._content.next(Object.assign({},this._content.value,{error: null, loading: false, updatedAt: Date.now(), albums: [].concat(this._content.value.albums).filter(album2 => album2.id != album.id)})),
     		error => this._content.next(Object.assign({},this._content.value,{loading: false, error: error}))
 		)
+    }
+
+    getForUser(user: User){
+        return this.service.getAlbumsForUser(user.id).first().do(
+            res => this._content.next(Object.assign({},this._content.value,{error: null, loading: false, updatedAt: Date.now(), albums: res })),
+            error => this._content.next(Object.assign({},this._content.value,{loading: false, error: error})))
     }
 
 }

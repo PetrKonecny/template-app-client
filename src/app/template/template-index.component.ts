@@ -55,7 +55,7 @@ import {DisplayUserComponent} from '../user/display-user.component'
             </ngx-datatable-column>
             <ngx-datatable-column prop="user" name="uživatel">
                 <ng-template  let-value="value" ngx-datatable-cell-template>
-                <a [routerLink]="['/users', value.id]">{{value.name? value.name : 'neznámé jméno'}}</a>
+                <a [routerLink]="['/users', value.id]">{{value.name? value.name : value.id}}</a>
                 </ng-template>
             </ngx-datatable-column>
             </ngx-datatable>
@@ -113,7 +113,7 @@ export class TemplateIndexComponent implements OnInit  {
     Called after component is initiated
     */
     ngOnInit(){
-        this.userStore.user.first(user => user.id > 0)
+        this.userStore.user.first(user => (user && user.id > 0))
         .do((user)=>{this.currentUser = user})
         .flatMap(user => Observable.forkJoin(this.templateService.getTemplatesForUser(user.id),this.templateService.getPublicTemplates()))
         .subscribe(res => {

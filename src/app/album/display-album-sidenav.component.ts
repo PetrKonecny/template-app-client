@@ -7,6 +7,8 @@ import { MdSnackBar } from '@angular/material';
 import { UploadComponent } from '../uploader.component'
 import { AppConfig } from '../app.config'
 import { ImageUploadComponent } from '../image/image-uploader.component'
+import {UserStore} from '../user/user.store'
+import { AlbumHelper } from '../album/album.helper'
 
 @Component({
     selector: 'display-album-sidenav',
@@ -15,7 +17,7 @@ import { ImageUploadComponent } from '../image/image-uploader.component'
           <md-spinner *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <image-list *ngIf="album && album.images" [showAddTile]="true" (onAddImageClicked)="openUploadModal()" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>
+        <image-list *ngIf="album && album.images" [showAddTile]="showAddTile()" (onAddImageClicked)="openUploadModal()" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>
     `,
     styles:[`
         
@@ -33,6 +35,8 @@ export class DisplayAlbumSidenavComponent implements OnInit  {
     //loading indicator
     loading = true
 
+    currentUser
+
     /**
     @param albumService - service to load the albums
     @param dialog - dialog service used to display dialogs
@@ -40,12 +44,17 @@ export class DisplayAlbumSidenavComponent implements OnInit  {
     @param config - contains API address
     */
     constructor(
-        private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private config: AppConfig
+        private userStore: UserStore, private albumService: AlbumHttpService, public dialog: MdDialog, private snackBar: MdSnackBar, private config: AppConfig
     ){ 
+    }
+
+    showAddTile(){
+        return AlbumHelper.canEditAlbum(this.currentUser, this.album)
     }
     
     
     ngOnInit(){
+        this.userStore.user.first(user => (user && user.id > 0)).do(user => this.currentUser = user).subscribe()
         this.getImages()
     }
 

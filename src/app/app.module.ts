@@ -73,7 +73,6 @@ import { FileUploadModule } from 'ng2-file-upload/file-upload/file-upload.module
 import { ElementHandleComponent } from './element/element-handle.component'
 import { ImageHandleComponent } from './content/image-handle.component'
 import { NgxDatatableModule } from '@swimlane/ngx-datatable'
-
 import {TemplateEditForm} from './template/template-edit-form.component'
 import {AdminIndexComponent} from './admin/admin-index.component'
 import {AdminTemplatesComponent} from './admin/admin-templates.component'
@@ -83,58 +82,46 @@ import {UserTableComponent} from './admin/user-table.component'
 import {TemplateInstanceTableComponent} from './admin/template-instance-table.component'
 import {TemplateTableComponent } from './admin/template-table.component'
 import {CreateTableModal} from './element/create-table-element.modal'
-
 import {PageFactory} from './page/page.factory'
-
 import {CreateTemplateModal} from './template/create-template.modal'
-
 import { ImageService } from './image/image.service'
 import { ImageComponent} from './image/image.component'
-
 import { UploadComponent } from './uploader.component'
 import { ColorPickerComponent } from './color-picker.component'
-
 import { PositionForm } from './element/position-form.component'
-
 import {ElementHttpService} from './element/element-http.service'
 import {ElementTableComponent} from './admin/element-table.component'
 import {AdminElementsComponent} from './admin/admin-elements.component'
-
 import {ContentHttpService} from './content/content-http.service'
 import {ContentTableComponent} from './admin/content-table.component'
 import {AdminContentsComponent} from './admin/admin-contents.component'
-
 import {FontTableComponent} from './admin/font-table.component'
 import {AdminFontsComponent} from './admin/admin-fonts.component'
-
 import {PageHttpService} from './page/page-http.service'
 import {PageTableComponent} from './admin/page-table.component'
 import {AdminPagesComponent} from './admin/admin-pages.component'
-
 import { SaveTemplateInstanceModal} from './template-instance/save-template-instance.modal'
-
 import { AlbumHttpService } from './album/album-http.service'
 import { AlbumIndexComponent } from './album/album-index.component'
-import { AlbumListComponent } from './album/album-list.component'
+import { AlbumGridComponent } from './album/album-grid.component'
 import { DisplayAlbumComponent } from './album/display-album.component'
-
 import { DisplayAlbumSidenavComponent } from './album/display-album-sidenav.component'
 import { AlbumIndexSidenavComponent } from './album/album-index-sidenav.component'
 import { SaveAlbumModal } from './album/save-album.modal'
 import { SelectAlbumModal } from './album/select-album.modal'
 import { NewTableCellComponent } from './element/new-table-cell.component'
-
 import {AdminAlbumsComponent} from './admin/admin-albums.component'
 import {AlbumTableComponent} from './admin/album-table.component'
-
 import {ImageUploadComponent} from './image/image-uploader.component'
 import { LOCALE_ID } from '@angular/core';
-
 import {DisplayUserComponent} from './user/display-user.component'
 import {AlbumMenuComponent} from './album/album-menu.component'
-
 import {AlbumStore} from './album/album.store'
 import {AboutComponent} from './about.component'
+import {TemplateDemoComponent} from './template/template-demo.component'
+import { MessageDialog } from './message.dialog'
+import { AlbumListComponent } from './album/album-list.component'
+
 /** defines every route in the application and redirects if 
 no route matches
 */ 
@@ -166,7 +153,8 @@ const routes: Routes = [
     { path: 'albums/:id',component: DisplayAlbumComponent },
     { path: 'users/:id',component: DisplayUserComponent },
     { path: 'about', component: AboutComponent},
-    { path: '**', redirectTo: '/templates', pathMatch: 'full' },
+    { path: 'demo', component: TemplateDemoComponent},
+    { path: '**', redirectTo: '/about', pathMatch: 'full' },
 ]
 
 @NgModule({
@@ -181,9 +169,9 @@ const routes: Routes = [
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
         TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal,
         CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent,
-        FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumListComponent, DisplayAlbumComponent,
+        FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumGridComponent, DisplayAlbumComponent,
         DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent, AdminAlbumsComponent, AlbumTableComponent, ImageUploadComponent,
-        DisplayUserComponent, AlbumMenuComponent, AboutComponent
+        DisplayUserComponent, AlbumMenuComponent, AboutComponent, TemplateDemoComponent, MessageDialog, AlbumListComponent
     ],
     // modules
     /**
@@ -217,7 +205,7 @@ const routes: Routes = [
         AppComponent
     ],
     //these components are used as dialogs
-    entryComponents: [SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent, ImageUploadComponent, ColorPickerComponent, SaveTemplateInstanceModal, SaveAlbumModal, SelectAlbumModal, DisplayUserComponent]
+    entryComponents: [SaveTemplateModal, CreateTableModal, CreateTemplateModal, UploadComponent, ImageUploadComponent, ColorPickerComponent, SaveTemplateInstanceModal, SaveAlbumModal, SelectAlbumModal, DisplayUserComponent, MessageDialog]
 })
 
 export class AppModule { }  

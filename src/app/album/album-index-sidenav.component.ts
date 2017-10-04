@@ -28,7 +28,7 @@ import { AlbumStore } from '../album/album.store'
             <md-icon style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="onCloseClicked.emit(true)" mdTooltip="schovat boční panel">chevron_left</md-icon>    
         </md-toolbar>
         <div style="padding-left: 6px; padding-right: 6px; height: 100%; max-height: calc(100% - 64px)">
-            <album-list showAddTile="true" *ngIf="!selectedAlbum && albums" (onAddAlbumClicked)="openNewAlbumDialog()" (onAlbumClicked)="onSelected($event)" [albums] = "albums" [cols]="3"></album-list>
+            <album-grid [showAddTile]="currentUser?.id > 0" *ngIf="!selectedAlbum && albums" (onAddAlbumClicked)="openNewAlbumDialog()" (onAlbumClicked)="onSelected($event)" [albums] = "albums" [cols]="3"></album-grid>
             <display-album-sidenav #albumDetail *ngIf="selectedAlbum" [album]="selectedAlbum"></display-album-sidenav>
         </div>
         `,
@@ -77,7 +77,7 @@ export class AlbumIndexSidenavComponent implements OnInit  {
             this.albums = content.albums
             this.error = content.error
         })
-        this.userStore.user.first(user => user.id > 0).do(user => this.currentUser = user).flatMap(user => this.albumStore.getAlbums(user)).subscribe()
+        this.userStore.user.first(user => user !== null).do(user => this.currentUser = user).flatMap(user => this.albumStore.getAlbums(user)).subscribe()
     }
 
     ngOnDestroy(){

@@ -98,7 +98,7 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     //loads documents for user
     ngOnInit(){
         this.userStore.user
-        .first(user=>user.id > 0)
+        .first(user=>(user && user.id > 0))
         .flatMap(user => Observable.forkJoin(this.templateInstanceService.getTemplateInstancesForUser(user.id),this.templateService.getTemplatesForUserByType(user.id,'no_instance_template')))
         .subscribe(
             res =>{

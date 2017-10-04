@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Page} from './page'
-import {BehaviorSubject, Observable} from 'rxjs/Rx'
+import {BehaviorSubject, Subject, Observable} from 'rxjs/Rx'
 
 
 @Injectable()
@@ -13,5 +13,9 @@ export class PageStore {
     
     selectPage(page: Page){
         this._page.next(page)
+    }
+
+    echo(){
+    	this._page.next(this._page.value)
     }
 }

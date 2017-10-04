@@ -23,20 +23,9 @@ import { Router} from '@angular/router'
     template: `
         <md-sidenav-container style="height: calc(100% - 64px);">
 
-            <!-- main app toolbar -->
-
-            <md-toolbar class="mat-elevation-z2" style="z-index: 30; position: relative;">
-                <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
-                <button md-icon-button *ngIf="template && template.type!='no_instance_template'" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
-                <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
-                <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
-                <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
-                <element-toolbar style="width: 100%;"></element-toolbar>
-            </md-toolbar>
-
             <!-- side menu -->
 
-            <md-sidenav  opened="true" class="mat-elevation-z6 bg-dark" mode ="side" #sidenav style="width: 20%; display:flex; overflow: visible;">
+            <md-sidenav opened="true" class="mat-elevation-z6 bg-dark" mode ="side" #sidenav style="width: 20%; display:flex; overflow: visible;">
                     <div style="display:flex; flex-direction:row; width: 100%;">
                         <div style="background: #673ab7; flex:1; width: 15%;">
                             <div class="side-switch" [class.switch-active]="sidenavState == 1" (click)="clickImages()"><md-icon>image</md-icon></div>
@@ -52,7 +41,18 @@ import { Router} from '@angular/router'
                             
                         </div>
                     </div>
-            </md-sidenav>       
+            </md-sidenav>
+
+            <!-- main app toolbar -->
+
+            <md-toolbar class="mat-elevation-z2" style="z-index: 30; position: relative;">
+                <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
+                <button md-icon-button *ngIf="template && template.type!='no_instance_template'" [disabled]="disableSave" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
+                <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" [disabled]="disableSave" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
+                <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
+                <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
+                <element-toolbar style="width: 100%;"></element-toolbar>
+            </md-toolbar>       
 
             <!-- pages of the template -->
 
@@ -105,6 +105,9 @@ export class NewTemplateComponent  {
     @Input()
     templateInstance: TemplateInstance
  
+    @Input()
+    disableSave: boolean = false;
+
     page: Page;
     sidenavState: number = 0;
     

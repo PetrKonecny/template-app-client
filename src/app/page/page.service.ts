@@ -28,18 +28,19 @@ export class PageService {
     private initGuides(element: Element, page: Page){
         if(page.elements){
             page.elements.filter(elmnt => elmnt != element).forEach(elmnt => { 
-                this.verticals.push({positionX: elmnt.width + elmnt.positionX, guide: null, active: false, buffer:{value:0}})
-                this.verticals.push({positionX: elmnt.positionX, guide: null , active: false, buffer:{value:0}})
-                this.horizontals.push({positionY: elmnt.height + elmnt.positionY, guide: null, active: false, buffer:{value:0} })
-                this.horizontals.push({positionY: elmnt.positionY, guide: null , active: false, buffer:{value:0}})              
+                this.verticals.push({positionX: elmnt.width + elmnt.positionX, guide: null, active: false, buffer:{value:0}, priority : 0})
+                this.verticals.push({positionX: elmnt.positionX, guide: null , active: false, buffer:{value:0}, priority : 0})
+                this.horizontals.push({positionY: elmnt.height + elmnt.positionY, guide: null, active: false, buffer:{value:0}, priority : 0 })
+                this.horizontals.push({positionY: elmnt.positionY, guide: null , active: false, buffer:{value:0}, priority : 0})              
             })
         }
         if(page.rulers){
             page.rulers.forEach(ruler => {
-                if (ruler.positionX != null){
-                    this.verticals.push({ positionX: ruler.positionX, guide: null, active: false, buffer:{value:0}})
-                } else if (ruler.positionY != null){
-                    this.horizontals.push({ positionY: ruler.positionY, guide: null, active: false, buffer:{value:0}})
+                console.log(ruler)
+                if (ruler.positionX !== undefined){
+                    this.verticals.push({ positionX: ruler.positionX, guide: null, active: false, buffer:{value:0}, priority : 0})
+                } else if (ruler.positionY !== undefined){
+                    this.horizontals.push({ positionY: ruler.positionY, guide: null, active: false, buffer:{value:0}, priority : 0})
                 }
             })
         }     
@@ -94,16 +95,20 @@ export class PageService {
     */
     private resolveBreaks(breaks: Array<Break>,element: Element, dimensions , paramVector: string,paramPosition: string, paramDimension: string, guides: Guide[]){
         let resultVector = dimensions[paramVector]
-        for (var guideBreak of breaks){           
+        let finalBreak 
+        for (var guideBreak of breaks){
+
+            if(guideBreak.priority > 0){
+                guideBreak.priority--
+            }
+
             if(!guideBreak.active){
-                var edge2 = element[paramPosition] + dimensions[paramVector]  + element[paramDimension] <= guideBreak[paramPosition] + 10 && element[paramPosition]  + dimensions[paramVector] + element[paramDimension] > guideBreak[paramPosition] - 10
-                var edge1 = element[paramPosition] + dimensions[paramVector] > guideBreak[paramPosition] -10 && element[paramPosition] + dimensions[paramVector] < guideBreak[paramPosition] + 10
+                var edge2 = (element[paramPosition] + dimensions[paramVector]  + element[paramDimension] <= guideBreak[paramPosition] + 10 && element[paramPosition]  + dimensions[paramVector] + element[paramDimension] > guideBreak[paramPosition] - 10)
+                var edge1 = (element[paramPosition] + dimensions[paramVector] > guideBreak[paramPosition] -10 && element[paramPosition] + dimensions[paramVector] < guideBreak[paramPosition] + 10)
                 if (edge1 || edge2){
-                    var guide = new Guide()
-                    guide[paramPosition] = guideBreak[paramPosition]
-                    guideBreak.guide = guide
-                    guides.push(guide)
-                    guideBreak.active = true
+                    if(!finalBreak || finalBreak.priority > guideBreak.priority){
+                        finalBreak = guideBreak
+                    }
                     if(edge1 && !edge2){
                        resultVector = guideBreak[paramPosition] - element[paramPosition]
                     }
@@ -122,8 +127,18 @@ export class PageService {
                     guideBreak.guide = null
                     guideBreak.active = false
                     guideBreak.buffer.value = 0
+                    guideBreak.priority = 100
                 }
+                finalBreak = null
+                break
             }
+        }
+        if(finalBreak){
+            var guide = new Guide()
+            guide[paramPosition] = finalBreak[paramPosition]
+            finalBreak.guide = guide
+            guides.push(guide)
+            finalBreak.active = true
         }
         dimensions[paramVector] = resultVector
     }
@@ -196,6 +211,7 @@ interface Break{
     positionX?:number
     positionY?:number
     guide: Guide
+    priority: number
     active: boolean
     buffer: Buffer
 }

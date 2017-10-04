@@ -4,7 +4,7 @@ import { User } from '../user/user'
 import { SaveAlbumModal } from '../album/save-album.modal'
 import { MdDialog } from '@angular/material'
 import { MdSnackBar } from '@angular/material';
-import { AlbumHttpService } from '../album/album-http.service'
+import { AlbumStore } from '../album/album.store'
 
 @Component({
     selector: 'album-menu',
@@ -29,7 +29,7 @@ export class AlbumMenuComponent {
     //array of albums to display
     album : Album 
 
-    constructor(private dialog: MdDialog, private albumService: AlbumHttpService, private snackBar: MdSnackBar ){}
+    constructor(private dialog: MdDialog, private albumStore: AlbumStore, private snackBar: MdSnackBar ){}
 
     @Output() 
     //triggered on edit clicked
@@ -58,8 +58,8 @@ export class AlbumMenuComponent {
                     album2.name = value.name
                     album2.tagged = value.tagged
                     album2.public = value.public
-                    delete album2.images;
-                    this.albumService.updateAlbum(album2).subscribe(updatedAlbum=>{
+                    delete album2.images
+                    this.albumStore.editAlbum(album2).subscribe(updatedAlbum=>{
                         this.afterAlbumEdited.emit(updatedAlbum)
                     },error=>{
                         this.snackBar.open("Chyba při aktualizaci alba",null,{duration: 2500})
@@ -72,7 +72,7 @@ export class AlbumMenuComponent {
 
     //trigered on delete clicked
     onDeleteAlbum(album: Album){
-       this.albumService.removeAlbum(album.id).subscribe(()=>{
+       this.albumStore.deleteAlbum(album).subscribe(()=>{
            this.afterAlbumDeleted.emit(album)
         },error =>{                        
             this.snackBar.open("Chyba při mazání alba",null,{duration: 2500})})

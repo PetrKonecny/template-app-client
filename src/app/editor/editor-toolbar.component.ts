@@ -40,6 +40,8 @@ export class EditorToolbarComponent {
     editor: Editor  
 
     curColor: string
+
+    init: boolean
     
     
     /**
@@ -95,7 +97,10 @@ export class EditorToolbarComponent {
      
     //calls tiny-mce command to change text color
     changeEditorTextColor(color: string){
-        this.editor.editor.execCommand('ForeColor', false, color);
+        if(this.init){
+            this.editor.editor.execCommand('ForeColor', false, color);
+        }
+        this.init = true
     }
     
 }

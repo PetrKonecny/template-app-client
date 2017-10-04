@@ -34,6 +34,7 @@ import { ElementStore } from '../element/element.store'
 
                 <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="formát textu vybraných buněk">A</button>
                 <md-menu (click)="$event.stopPropagation()" #textMenu="mdMenu">
+                    <div style="width: 100%; height: 100%; overflow: hidden;">
                     <button md-icon-button (click)="changeSelectedCellsTextAlign('left')"><md-icon>format_align_left</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlign('right')"><md-icon>format_align_right</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlign('center')"><md-icon>format_align_center</md-icon></button>
@@ -42,6 +43,7 @@ import { ElementStore } from '../element/element.store'
                     <button md-icon-button (click)="changeSelectedCellsTextAlignVert('top')"><md-icon>vertical_align_top</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlignVert('bottom')"><md-icon>vertical_align_bottom</md-icon></button>
                     <button md-icon-button (click)="changeSelectedCellsTextAlignVert('middle')"><md-icon>vertical_align_middle</md-icon></button>
+                    </div>
                 </md-menu>
 
                 <!-- Controlls for changing appearence of border of selected cells-->

@@ -95,7 +95,7 @@ export class AlbumIndexComponent implements OnInit  {
             this.albums = content.albums
             this.error = content.error
         })
-        this.userStore.user.first(user => user.id > 0).do(user => this.currentUser = user).flatMap(user => this.albumStore.getAlbums(user)).subscribe()
+        this.userStore.user.first(user => (user && user.id > 0)).do(user => this.currentUser = user).flatMap(user => this.albumStore.getAlbums(user)).subscribe()
     }
 
     ngOnDestroy(){

@@ -30,6 +30,15 @@ export class TemplateStore {
             }
         )
     }
+
+    getDemoTemplate(){
+        return this.templateService.getDemoTemplate().do(
+            data => {
+                this._template.next(data);
+            }
+
+        )
+    }
     /* Sends stored template to the update/add http service depending on it's id
     (instances saved in the backend have IDs while those just created in the app
     and not yet saved in backend don't)

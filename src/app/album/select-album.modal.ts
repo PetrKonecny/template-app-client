@@ -27,12 +27,6 @@ export class SelectAlbumModal  {
     */
     constructor(private ref: MdDialogRef<SelectAlbumModal>, private store: AlbumStore){}
 
-    ngOnInit(){
-        this.store.content.subscribe(res =>{
-            this.albums = res.albums
-        })
-    }
-
     onAlbumSelected(album: Album){
         this.ref.close(album)
     }
