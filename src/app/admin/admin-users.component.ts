@@ -5,7 +5,7 @@ import { User } from '../user/user'
 @Component({
     selector: 'admin-users',
     template: `
-        <user-table [users] = "users" [loadingIndicator]="loading" (onDeleteClicked) = "onDeleteClicked($event)"></user-table>
+        <user-table [users] = "users" [loadingIndicator]="loading"></user-table>
     `,
     providers: []
 })

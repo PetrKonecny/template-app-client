@@ -122,7 +122,7 @@ export class NewTemplateComponent  {
     constructor(
         protected templateStore: TemplateStore,
         public dialog: MdDialog,
-        protected undoService: UndoRedoService,
+        public undoService: UndoRedoService,
         protected pageFactory: PageFactory,
         protected pageService: PageService,
         protected templateCommands: TemplateCommands,

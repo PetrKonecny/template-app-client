@@ -98,4 +98,6 @@ export class Template {
   tagged: Tag[]
   public: boolean
   type: string
+  created_at: number
+  updated_at: number
 }

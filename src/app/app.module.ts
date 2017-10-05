@@ -199,7 +199,7 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        {provide: LOCALE_ID, useValue: "cz-EU" }, AlbumStore, ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, { provide: APP_INITIALIZER, useFactory: initConfig, deps: [AppConfig], multi: true }, PageFactory         
+        {provide: LOCALE_ID, useValue: "cz-EU" }, AlbumStore, ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, PageFactory         
     ],
     bootstrap: [
         AppComponent
@@ -212,5 +212,5 @@ export class AppModule { }
 
 //loads config from the root of this app
 export function initConfig(config: AppConfig){
- return () => config.load() 
+ //return () => config.load() 
 }

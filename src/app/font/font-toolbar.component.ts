@@ -40,7 +40,7 @@ import {AppConfig} from '../app.config'
 export class FontToolbarComponent implements OnInit {
     
     //fonts that can be selected
-    private fonts: Font[];
+    fonts: Font[];
     @Input()
     //label displayed in the selector
     fontLabel: string

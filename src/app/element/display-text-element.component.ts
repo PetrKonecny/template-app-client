@@ -24,7 +24,7 @@ export class DisplayTextElementComponent {
     element: TextElement;
 
     //shorthand to get background color
-    private getBgColor(){
+    getBgColor(){
         let color = this.element.background_color
         if(color){
             return color

@@ -69,7 +69,7 @@ export class DisplayUserComponent implements OnInit{
     albums
 
     constructor(
-        private albumStore: AlbumStore, private albumService: AlbumHttpService, private templateService: TemplateService, private templateInstanceService: TemplateInstanceService, private userStore: UserStore, private userService: UserService, private route: ActivatedRoute, private snackBar: MdSnackBar  
+        public albumStore: AlbumStore, public albumService: AlbumHttpService, private templateService: TemplateService, private templateInstanceService: TemplateInstanceService, public userStore: UserStore, private userService: UserService, private route: ActivatedRoute, private snackBar: MdSnackBar  
     ){ 
     }
 

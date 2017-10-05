@@ -13,6 +13,7 @@ import { MdSnackBar } from '@angular/material';
 import { MdDialog } from '@angular/material'
 import { SaveTemplateInstanceModal} from '../template-instance/save-template-instance.modal'
 import { NewTemplateComponent } from '../template/new-template.component'
+import { UndoRedoService } from '../undo-redo.service'
 
 @Component({
     selector: 'create-new-template-instance',
@@ -24,11 +25,11 @@ import { NewTemplateComponent } from '../template/new-template.component'
                 <button md-icon-button (click)="saveTemplateInstance()"><md-icon>save</md-icon></button>
                 <button md-icon-button (click)="undo()"><md-icon>undo</md-icon></button>
                 <button md-icon-button><md-icon>redo</md-icon></button>
-                <button md-icon-button (click)="onClick($event)" [mdMenuTriggerFor]="templateInstanceMore"><md-icon>more_vert</md-icon></button>
+                <button md-icon-button [mdMenuTriggerFor]="templateInstanceMore"><md-icon>more_vert</md-icon></button>
                 <md-menu #templateInstanceMore="mdMenu">
                     <button md-button (click)="openAsTemplate()">Zkopírovat a upravit šablonu</button>
                 </md-menu>  
-                <editor-toolbar *ngIf="element && element.type == 'text_element' && element.content.editor"></editor-toolbar>
+                <editor-toolbar *ngIf="element && element.type == 'text_element' && content && content.editor"></editor-toolbar>
             </md-toolbar>
             <md-sidenav #sidenav opened="true" class="sidenav mat-elevation-z6 bg-dark" mode ="side" style="width: 20%; display:flex; overflow: visible;">
                 <album-index-sidenav (onCloseClicked)="sidenav.close()"></album-index-sidenav>
@@ -71,6 +72,7 @@ export class NewTemplateInstanceComponent {
          
      //selected element        
      element: Element        
+     content: TextContent
              
      /**        
      @param templateInstanceStore  injects store containing current document        
@@ -82,6 +84,7 @@ export class NewTemplateInstanceComponent {
      constructor(        
          private templateInstanceStore: TemplateInstanceStore,        
          private elementStore: ElementStore,        
+         public undoService: UndoRedoService,
          private router: Router,        
          private templateStore: TemplateStore,        
          public dialog: MdDialog,        
@@ -89,7 +92,8 @@ export class NewTemplateInstanceComponent {
      ){         
                  
          this.elementStore.element.subscribe(element=> {        
-             this.element = element        
+             this.element = element   
+             this.content = <TextContent> element.content     
          })        
      }        
                
@@ -114,6 +118,15 @@ export class NewTemplateInstanceComponent {
          )        
          dialogRef.componentInstance.setTemplateInstance(this.templateInstance)        
      }
+
+     undo(){
+        this.undoService.undo()
+    }
+
+    //calls redo in redo service
+    redo(){
+        this.undoService.redo()
+    }
 
      openAsTemplate(){
         TemplateHelper.removeIdsFromTemplate(this.template)

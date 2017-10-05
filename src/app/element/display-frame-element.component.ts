@@ -26,7 +26,7 @@ import { ElementStore } from '../element/element.store'
             <div class="content"> 
                 <display-content [hidden]="loading||error" (loaded)="onLoad($event)"  (loadingError)="onError($event)"  *ngIf="draggable && element.content" [content] = "element.content"></display-content>
             </div>
-            <image-handle *ngIf="!draggable && element.content && element.content.image">
+            <image-handle *ngIf="!draggable && element.content && element?.content?.image">
                 <display-content-img-drag #handleContent [content] = "element.content"></display-content-img-drag>
             </image-handle>
         </div>

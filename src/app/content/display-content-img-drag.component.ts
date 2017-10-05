@@ -63,7 +63,7 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     @param config - config to get API url from
     @param commands - commands to manipulate the image
     */
-    constructor(private config: AppConfig, private commands: ImageContentCommands) {
+    constructor(public config: AppConfig, private commands: ImageContentCommands) {
        
     }
 }

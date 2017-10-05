@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
+import { environment } from '../environments/environment'
 
 class EnvData {
    env: string;
@@ -9,7 +10,7 @@ class EnvData {
 @Injectable()
 export class AppConfig {
 
-    private config: Object = null;
+    private config: Object  = {"api-url": environment.api_url };
     private env:    Object = null;
 
     constructor(private http: Http) {

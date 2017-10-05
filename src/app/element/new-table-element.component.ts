@@ -28,22 +28,22 @@ import { ElementStore } from '../element/element.store'
             <span *ngIf="element.clientState ==2">
                 <button md-icon-button [mdMenuTriggerFor]="resizeTableMenu"><md-icon>more_vert</md-icon></button>
                 <md-menu #resizeTableMenu="mdMenu">
-                  <button md-menu-item (click)="addColumnLeft()" [disabled]="!element.selectedCells?.length == 1">
+                  <button md-menu-item (click)="addColumnLeft()" [disabled]="!(element.selectedCells?.length === 1)">
                     <span>Přidat sloupec doprava</span>
                   </button>
-                  <button md-menu-item (click)="addColumnRight()" [disabled]="!element.selectedCells?.length == 1">
+                  <button md-menu-item (click)="addColumnRight()"  [disabled]="!(element.selectedCells?.length === 1)">
                     <span>Přidat sloupec doleva</span>
                   </button>
-                  <button md-menu-item (click)="addRowBelow()" [disabled]="!element.selectedCells?.length == 1">
+                  <button md-menu-item (click)="addRowBelow()"  [disabled]="!(element.selectedCells?.length === 1)">
                     <span>Přidat řádek pod</span>
                   </button>
-                  <button md-menu-item (click)="addRowAbove()" [disabled]="!element.selectedCells?.length == 1">
+                  <button md-menu-item (click)="addRowAbove()"  [disabled]="!(element.selectedCells?.length === 1)">
                     <span>Přidat řádek nad</span>
                   </button>
-                  <button md-menu-item (click)="deleteColumn()" [disabled]="!element.selectedCells?.length == 1">
+                  <button md-menu-item (click)="deleteColumn()"  [disabled]="!(element.selectedCells?.length === 1)">
                     <span>Smazat sloupec</span>
                   </button>
-                  <button md-menu-item (click)="deleteRow()" [disabled]="!element.selectedCells?.length == 1">
+                  <button md-menu-item (click)="deleteRow()"  [disabled]="!(element.selectedCells?.length === 1)">
                     <span>Smazat řádek</span>
                   </button>                   
                 </md-menu>
@@ -58,7 +58,7 @@ import { ElementStore } from '../element/element.store'
                   <button md-menu-item (click)="mergeCells()" [disabled]="element.selectedCells?.length <= 1">
                     <span>Spojit vybrané buňky</span>
                   </button>
-                  <button md-menu-item (click)="clearSelection()" [disabled]="!element.selectedCells?.length == 1">
+                  <button md-menu-item (click)="clearSelection()"  [disabled]="!(element.selectedCells?.length === 1)">
                     <span>Zrušit výběr</span>
                   </button>                       
                 </md-menu>

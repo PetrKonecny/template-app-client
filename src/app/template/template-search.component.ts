@@ -46,7 +46,7 @@ export class TemplateSearchComponent implements OnInit  {
      @param userStore - injects store that stores current user
     */
     constructor(
-        private templateService: TemplateService, private router: Router, private route: ActivatedRoute, private userStore: UserStore
+        private templateService: TemplateService, private router: Router, private route: ActivatedRoute, public userStore: UserStore
     ){ }
     
     
