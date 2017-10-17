@@ -11,6 +11,7 @@ import {UserStore} from '../user/user.store'
 import {User} from '../user/user'
 import {TemplateHelper} from '../template/template.helper'
 import {DisplayUserComponent} from '../user/display-user.component'
+import { UserService } from '../user/user.service';
 
 @Component({
     selector: 'template-index',
@@ -87,7 +88,7 @@ export class TemplateIndexComponent implements OnInit  {
     (ex, if user can't edit template edit button is not present)
     */
     constructor(
-        private templateService: TemplateService, private router: Router, public dialog: MdDialog, private userStore: UserStore 
+        private userService: UserService, private templateService: TemplateService, private router: Router, public dialog: MdDialog, private userStore: UserStore 
     ){ }
 
     showEditButton(){
@@ -115,7 +116,7 @@ export class TemplateIndexComponent implements OnInit  {
     ngOnInit(){
         this.userStore.user.first(user => (user && user.id > 0))
         .do((user)=>{this.currentUser = user})
-        .flatMap(user => Observable.forkJoin(this.templateService.getTemplatesForUser(user.id),this.templateService.getPublicTemplates()))
+        .flatMap(user => Observable.forkJoin(this.userService.getUserTemplates(user.id),this.templateService.getPublicTemplates()))
         .subscribe(res => {
             this.templates = res[0]
                 /*
@@ -124,9 +125,9 @@ export class TemplateIndexComponent implements OnInit  {
                     this.templates = this.templates.concat(res[0])
                 }*/
                 this.publicTemplates = res[1]   
-                this.publicTemplates = this.publicTemplates.filter((template)=> {return !this.templates.some(template2 => template.id == template2.id)})
+                this.publicTemplates = this.publicTemplates.filter((template)=> {return !this.templates.some(template2 => template.id === template2.id)})
                 this.loading = false
-                this.templates.concat(this.publicTemplates)
+                this.templates = this.templates.concat(this.publicTemplates)
             }
             ,error=>{
                 this.error = error

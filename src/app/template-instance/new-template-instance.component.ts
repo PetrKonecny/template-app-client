@@ -93,7 +93,7 @@ export class NewTemplateInstanceComponent {
                  
          this.elementStore.element.subscribe(element=> {        
              this.element = element   
-             this.content = <TextContent> element.content     
+             this.content = element && <TextContent> element.content     
          })        
      }        
                

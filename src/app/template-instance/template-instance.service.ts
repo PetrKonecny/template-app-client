@@ -30,12 +30,6 @@ export class TemplateInstanceService {
             .catch(this.handleError);
     }
 
-    getTemplateInstancesForUser(id: number){
-        return this.http.get(this.templateInstancesUrl+"/user/"+id, { withCredentials: true })
-            .map(this.extractData)
-            .catch(this.handleError);
-    }
-
     addTemplateInstance(templateInstance: TemplateInstance) {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers, withCredentials: true });

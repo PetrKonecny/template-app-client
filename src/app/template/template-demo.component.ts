@@ -64,10 +64,7 @@ export class TemplateDemoComponent implements OnInit  {
     }
 
     ngAfterViewInit(){
-        let dialogRef = this.dialog.open(MessageDialog, {
-        });
-        dialogRef.componentInstance.title = "Demo stránka"
-        dialogRef.componentInstance.message = "Toto je testovací demo stránka. Ukládání šablony a obrázků je vypnuto"
+        
     }
     
     //loads template from the store with the right id
@@ -87,11 +84,18 @@ export class TemplateDemoComponent implements OnInit  {
        this.templateStore.getDemoTemplate()
        .first()
        .subscribe(
-            null,
+            ()=>{this.displayDialog()},
             error => {
               this.error = error
               this.snackBar.open("Chyba při načítání dema",null,{duration: 1500})
             }
        )
+   }
+
+   displayDialog(){
+       let dialogRef = this.dialog.open(MessageDialog, {
+        });
+        dialogRef.componentInstance.title = "Demo stránka"
+        dialogRef.componentInstance.message = "Zpráva že je to demostránka"
    }
 }

@@ -77,9 +77,9 @@ export class DisplayUserComponent implements OnInit{
         this.route.params
         .flatMap((params)=>this.userService.getUser(params['id']))
         .do(user => this.user = user)
-        .flatMap(user => Observable.forkJoin(this.templateInstanceService.getTemplateInstancesForUser(user.id),
-                                             this.templateService.getTemplatesForUserByType(user.id,'no_instance_template'),
-                                             this.templateService.getTemplatesForUser(user.id),
+        .flatMap(user => Observable.forkJoin(this.userService.getUserTemplateInstances(user.id).map((instances)=>instances,(intances)=>[]),
+                                             this.userService.getUserTemplatesByType(user.id,'no_instance_template'),
+                                             this.userService.getUserTemplates(user.id),
                                              this.albumStore.getForUser(user)))
         .first()
         .subscribe(

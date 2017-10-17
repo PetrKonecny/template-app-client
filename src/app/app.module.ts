@@ -121,7 +121,6 @@ import {AboutComponent} from './about.component'
 import {TemplateDemoComponent} from './template/template-demo.component'
 import { MessageDialog } from './message.dialog'
 import { AlbumListComponent } from './album/album-list.component'
-
 /** defines every route in the application and redirects if 
 no route matches
 */ 

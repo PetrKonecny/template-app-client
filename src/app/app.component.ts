@@ -18,7 +18,7 @@ import { AlbumStore } from './album/album.store'
 @Component({
     selector: 'app-root',
     template: `
-    <div style="height: 100%;">
+    <div class="app-root" style="height: 100%;">
     <md-toolbar *ngIf="adminRoute" color="warn" class="mat-elevation-z2 main-toolbar">
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/users" routerLinkActive="active">USERS</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="admin/templates" routerLinkActive="active">TEMPLATES</a>

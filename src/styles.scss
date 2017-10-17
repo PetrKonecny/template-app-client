@@ -8,14 +8,27 @@ app-root{
     bottom: 0;
     left: 0;
     right: 0;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
     overflow: hidden;
+}
+
+.app-root{
+  animation: 0.25s ease-out 0s 1 fadeIn;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+-webkit-inner-spin-button {
+    display: none;
+    -webkit-appearance: none;
 }
 
 image-index, template-index, template-instance-index, album-index, display-album{

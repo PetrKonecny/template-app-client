@@ -44,13 +44,19 @@ export class UserService {
             .catch(this.handleError);
     }
 
-    getUserTemplates(userId: number): Observable<Template[]> {
+    getUserTemplates(userId: number){
         return this.http.get(this._usersUrl+'/'+userId+'/templates', { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);
     }
 
-    getUserTemplateInstances(userId: number): Observable<TemplateInstance[]> {
+    getUserTemplatesByType(userId: number, type: string){
+        return this.http.get(this._usersUrl+'/'+userId+'/templates?type='+type, { withCredentials: true })
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    getUserTemplateInstances(userId: number){
         return this.http.get(this._usersUrl+'/'+userId+'/template-instances', { withCredentials: true })
             .map(this.extractData)
             .catch(this.handleError);

@@ -11,6 +11,7 @@ import { Page } from '../page/page'
 import { Router } from '@angular/router'
 import { TemplateService } from '../template/template.service';
 import { TemplateInstanceHelper } from '../template-instance/template-instance.helper'
+import { UserService } from '../user/user.service';
 
 @Component({
     selector: 'template-instance-index',
@@ -80,6 +81,7 @@ export class TemplateInstanceIndexComponent implements OnInit  {
         private templateInstanceService: TemplateInstanceService, 
         private templateService: TemplateService,
         private userStore: UserStore, 
+        private userService: UserService,
         public dialog: MdDialog, 
         private router: Router
     ){ }
@@ -99,7 +101,7 @@ export class TemplateInstanceIndexComponent implements OnInit  {
     ngOnInit(){
         this.userStore.user
         .first(user=>(user && user.id > 0))
-        .flatMap(user => Observable.forkJoin(this.templateInstanceService.getTemplateInstancesForUser(user.id),this.templateService.getTemplatesForUserByType(user.id,'no_instance_template')))
+        .flatMap(user => Observable.forkJoin(this.userService.getUserTemplateInstances(user.id),this.userService.getUserTemplatesByType(user.id,'no_instance_template')))
         .subscribe(
             res =>{
                 this.templateInstances = res[0].concat(res[1])

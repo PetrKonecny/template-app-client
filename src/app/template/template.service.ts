@@ -41,19 +41,6 @@ export class TemplateService {
             .catch(this.handleError);
     }
 
-    getTemplatesForUser(id: number){
-        return this.http.get(this._templatesUrl+"/user/"+id, { withCredentials: true })
-            .map(this.extractData)
-            .catch(this.handleError);
-    }
-
-    getTemplatesForUserByType(id: number, type: string){
-        return this.http.get(this._templatesUrl+"/user/"+id+"?type="+type, { withCredentials: true })
-            .map(this.extractData)
-            .catch(this.handleError);
-    }
-   
-
     getPublicTemplates(){
         return this.http.get(this._templatesUrl+"/public", { withCredentials: true })
             .map(this.extractData)
