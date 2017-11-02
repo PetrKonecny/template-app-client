@@ -20,8 +20,8 @@ import { AlbumHelper } from '../album/album.helper'
         <md-toolbar>
             <h1 class="album-chip">{{album?.name}}</h1>
             <div style="padding-right: 16px;" >
-            <button *ngIf="selected.length && helper.canDelete(currentUser,album)" md-button (click)="onDeleteClicked()">SMAZAT VÝBĚR</button>
-            <button *ngIf="selected.length&& helper.canEdit(currentUser,album)" md-button (click)="openAlbumsModal()">PŘESUNOUT VÝBĚR</button>
+            <button *ngIf="selected.length && helper.canDeleteAlbum(currentUser,album)" md-button (click)="onDeleteClicked()">SMAZAT VÝBĚR</button>
+            <button *ngIf="selected.length&& helper.canEditAlbum(currentUser,album)" md-button (click)="openAlbumsModal()">PŘESUNOUT VÝBĚR</button>
             </div>
         </md-toolbar>
         <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>

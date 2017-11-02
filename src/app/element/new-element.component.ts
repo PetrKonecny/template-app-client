@@ -6,13 +6,13 @@ import { ElementStore } from '../element/element.store'
 @Component({
     selector: 'create-new-element',
     template: `
-            <element-handle *ngIf="element.type == 'text_element'" >
+            <element-handle [element]="element" *ngIf="element.type == 'text_element'" >
                 <create-new-text-element #handleContent *ngIf="element.type == 'text_element'" [element] = "element"></create-new-text-element>
             </element-handle>
-            <element-handle *ngIf="element.type == 'frame_element'">
+            <element-handle [element]="element" *ngIf="element.type == 'frame_element'">
                 <create-new-frame-element #handleContent *ngIf="element.type == 'frame_element'" [element] = "element"></create-new-frame-element>
             </element-handle>
-            <element-handle *ngIf="element.type == 'image_element'"> 
+            <element-handle [element]="element" *ngIf="element.type == 'image_element'"> 
                 <create-new-image-element #handleContent *ngIf="element.type == 'image_element'" [element] = "element"></create-new-image-element>
             </element-handle>
             <create-new-table-element #handleContent *ngIf="element.type == 'table_element'" [element] = "element"></create-new-table-element>

@@ -50,7 +50,6 @@ export class ElementHandleComponent implements AfterContentInit {
     }
     
     ngAfterContentInit(){
-        this.element = this.handleContent.element
     }
 
     //calls commands to resize element from the top left handle

@@ -96,6 +96,17 @@ export class TemplateDemoComponent implements OnInit  {
        let dialogRef = this.dialog.open(MessageDialog, {
         });
         dialogRef.componentInstance.title = "Demo stránka"
-        dialogRef.componentInstance.message = "Zpráva že je to demostránka"
+        dialogRef.componentInstance.message = 
+        `
+        Vítejte v demu aplikace na tvorbu dokumentů :
+        <ul>
+          <li>Aplikace je stále ve vývoji.</li>
+          <li>Aplikace je zatím optimalizována a testována pouze v Chrome</li>
+          <li>Aplikace není 100% otestována a obsahuje drobné bugy</li>
+          <li>Aplikace je určena pro desktop a není optimalizována pro mobily</li>
+          <li>Tento dokument slouží pouze pro demo editoru<br>
+          a nelze tedy uložit ani do něj přidat vlastní obrázky nebo fonty</li>
+        </ul>  
+        `
    }
 }

@@ -121,6 +121,8 @@ import {AboutComponent} from './about.component'
 import {TemplateDemoComponent} from './template/template-demo.component'
 import { MessageDialog } from './message.dialog'
 import { AlbumListComponent } from './album/album-list.component'
+import { TemplateStore } from './template/template.store'
+
 /** defines every route in the application and redirects if 
 no route matches
 */ 
@@ -198,7 +200,7 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        {provide: LOCALE_ID, useValue: "cz-EU" }, AlbumStore, ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, PageFactory         
+        {provide: LOCALE_ID, useValue: "cz-EU" }, AlbumStore, ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserGuard, UserStore, PageService, FontService, FontStore, AppConfig, PageFactory, TemplateService, TemplateInstanceService, TemplateInstanceStore, TemplateStore, TemplateService         
     ],
     bootstrap: [
         AppComponent

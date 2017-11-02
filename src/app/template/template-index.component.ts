@@ -12,18 +12,20 @@ import {User} from '../user/user'
 import {TemplateHelper} from '../template/template.helper'
 import {DisplayUserComponent} from '../user/display-user.component'
 import { UserService } from '../user/user.service';
+import { AppConfig }from '../app.config'
 
 @Component({
     selector: 'template-index',
     template: `
         <md-toolbar>
             <form class="search-field" (ngSubmit)="onSearchKeyUp(search.value)">
-                <md-input-container><input placeholder="hledat" #search mdInput type="search"></md-input-container>
+                <md-input-container><input  #search mdInput type="search"></md-input-container>
                 <button md-icon-button><md-icon>search</md-icon></button>
             </form>
                 <button md-button *ngIf="showCreateButton()" [routerLink] = "['/templates', selected[0].id, 'instance']">NOVÝ DOKUMENT</button>
                 <button md-button *ngIf="showEditButton()" [routerLink] = "['/templates', selected[0].id, 'edit']">UPRAVIT ŠABLONU</button>
                 <button md-button *ngIf="showDeleteButton()" (click)="onDeleteClicked(selected[0])">SMAZAT ŠABLONU</button>
+                <a md-button *ngIf="showCreateButton()" href={{getPdfLink()}} target="_blank">PDF</a>
         </md-toolbar>
         <md-progress-bar *ngIf="loading" mode="indeterminate" ></md-progress-bar>
         <div class="shutter" *ngIf="error">
@@ -88,7 +90,8 @@ export class TemplateIndexComponent implements OnInit  {
     (ex, if user can't edit template edit button is not present)
     */
     constructor(
-        private userService: UserService, private templateService: TemplateService, private router: Router, public dialog: MdDialog, private userStore: UserStore 
+        private userService: UserService, private templateService: TemplateService, private router: Router, public dialog: MdDialog, private userStore: UserStore , public config: AppConfig
+
     ){ }
 
     showEditButton(){
@@ -101,6 +104,10 @@ export class TemplateIndexComponent implements OnInit  {
 
     showCreateButton(){
         return this.selected.length && TemplateHelper.canCreateDocumentFromTemplate(this.currentUser, this.selected[0])
+    }
+
+    getPdfLink(){
+        return this.config.getConfig('api-url')+'/template/'+this.selected[0].id+'/pdf' 
     }
 
     columns = [
@@ -214,5 +221,10 @@ export class TemplateIndexComponent implements OnInit  {
             this.router.navigate(['/templates/new', {width:width,height:height,margin:val.margin}])
         })
         dialogRef.componentInstance.title = "VYTVOŘIT ŠABLONU"
+    }
+
+    onUserClicked(id: number){
+        let dialogRef = this.dialog.open(DisplayUserComponent, { height: 'auto', width: '50%', panelClass: 'user-detail-dialog'})
+        dialogRef.componentInstance.id = id
     }     
 }

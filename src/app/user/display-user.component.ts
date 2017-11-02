@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import {UserListComponent} from './user-list.component';
 import { UserService } from './user.service';
 import { User} from '../user/user';
@@ -23,15 +23,15 @@ import { AlbumStore } from '../album/album.store'
         <div class="profile-pic"><div>{{user?.name.charAt(0)}}</div></div>
         <h1 class="name">{{user?.name ? user.name : 'Uživatelské jméno'}}</h1>
         </div>
-        <div class="content" style="height: 100%;">
+        <div class="content" style="height: 100%;" *ngIf="albums?.length || documents?.length || templates?.length">
         <md-tab-group style="height: 100%; margin: 0 16px; background: white;">
-            <md-tab label="šablony">
+            <md-tab label="šablony ({{templates.length}})" *ngIf="templates?.length">
                 <template-list [user]="userStore.user | async" [templates]="templates"></template-list>
             </md-tab>
-            <md-tab *ngIf="(userStore.user | async)?.id  == user?.id" label="dokumenty">
+            <md-tab *ngIf="documents?.length && (userStore.user | async)?.id  == user?.id" label="dokumenty ({{documents.length}})">
                 <template-instance-list [templateInstances]="documents"></template-instance-list>
             </md-tab>
-            <md-tab label="alba">
+            <md-tab label="alba ({{albums.length}})" *ngIf="albums?.length">
                 <album-list [user]="user" [albums]="(albumStore.content | async).albums"></album-list>
             </md-tab>
         </md-tab-group>
@@ -64,6 +64,9 @@ export class DisplayUserComponent implements OnInit{
 
     error: string
 
+    @Input()
+    id: number
+
     documents
     templates
     albums
@@ -75,13 +78,13 @@ export class DisplayUserComponent implements OnInit{
 
     ngOnInit(){
         this.route.params
-        .flatMap((params)=>this.userService.getUser(params['id']))
+        .do(params =>{if(params['id']){this.id = params['id']}})
+        .flatMap((params)=>this.userService.getUser(this.id))
         .do(user => this.user = user)
         .flatMap(user => Observable.forkJoin(this.userService.getUserTemplateInstances(user.id).map((instances)=>instances,(intances)=>[]),
                                              this.userService.getUserTemplatesByType(user.id,'no_instance_template'),
                                              this.userService.getUserTemplates(user.id),
                                              this.albumStore.getForUser(user)))
-        .first()
         .subscribe(
             res=> {
                 this.templates = res[2]

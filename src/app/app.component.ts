@@ -42,7 +42,7 @@ import { AlbumStore } from './album/album.store'
     <router-outlet></router-outlet>
     </div>
     `,
-    providers: [TemplateInstanceService,TemplateInstanceStore, TemplateStore, TemplateService,AppComponentRef ]
+    providers: [AppComponentRef]
 })
 
 //root application module that displays navigation toolbar that is present on every page 
