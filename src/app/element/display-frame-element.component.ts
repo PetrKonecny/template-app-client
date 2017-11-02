@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@a
 import { FrameElement } from './frame-element'
 import { ImageContent, ImageContentCommands } from '../content/image-content';
 import { ElementStore } from '../element/element.store'
+import { AppConfig } from '../app.config'
 
 @Component({
     selector: 'display-frame-element',
@@ -24,6 +25,7 @@ import { ElementStore } from '../element/element.store'
                 <md-icon *ngIf="error">error</md-icon>
             </div>
             <div class="content"> 
+                <inframe-image-upload uploadUrl="{{config.getConfig('api-url')}}/image" (onComplete)="parseImageFromJSON($event)" (onProgress)="onProgress($event)" ></inframe-image-upload>
                 <display-content [hidden]="loading||error" (loaded)="onLoad($event)"  (loadingError)="onError($event)"  *ngIf="draggable && element.content" [content] = "element.content"></display-content>
             </div>
             <image-handle *ngIf="!draggable && element.content && element?.content?.image">
@@ -66,7 +68,7 @@ export class DisplayFrameElementComponent {
 
 
     constructor(
-        private elementStore: ElementStore, private contentCommands: ImageContentCommands
+        private elementStore: ElementStore, private contentCommands: ImageContentCommands, public config: AppConfig
     ){
         this.elementStore.element.subscribe(element =>this.selected = this.element == element)
     }
@@ -75,10 +77,20 @@ export class DisplayFrameElementComponent {
         return false
     }
 
+    onProgress(value){
+        this.error = false
+        this.loading = true
+    }
+
     onDrop(event){
-       this.loading = true
+        this.loading = true
         this.error = false
         let data = event.dataTransfer.getData("data");
+        this.parseImageFromJSON(data)     
+        event.stopPropagation();
+    }
+
+    parseImageFromJSON(data){
         let image 
         try{
             image = JSON.parse(data)
@@ -92,7 +104,6 @@ export class DisplayFrameElementComponent {
         content.width = 0 
         content.height = 0 
         this.contentCommands.SetImage(<ImageContent>content,image)      
-        event.stopPropagation();
     }
 
     onLoad(image){

@@ -4,7 +4,7 @@ import { AppConfig } from '../app.config'
 import { UploadComponent} from '../uploader.component'
 
 @Component({
-    selector: 'upload',
+    selector: 'image-upload',
     template: `
           <h2 md-dialog-title>Nahrát obrázky</h2>
           <label *ngIf="!uploader.getNotUploadedItems().length" class="fileContainer">
@@ -16,46 +16,7 @@ import { UploadComponent} from '../uploader.component'
              <md-progress-spinner [value]="uploader.progress"></md-progress-spinner>
              <h4>{{uploader.progress}}%</h4>
           </div>
-    `,
-    styles: [`
-      .fileContainer {
-          overflow: hidden;
-          position: relative;
-          width:100%;
-          height: 80%;
-          border: 2px dashed;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-      }
-
-      md-dialog-content{
-        display: flex;  
-        height: 100%;
-        width: 100%;
-        justify-content: center;
-      }
-
-      .fileContainer [type=file] {
-          cursor: inherit;
-          display: block;
-          font-size: 999px;
-          filter: alpha(opacity=0);
-          min-height: 100%;
-          min-width: 100%;
-          opacity: 0;
-          position: absolute;
-          right: 0;
-          text-align: right;
-          top: 0;
-      }
-
-      .fileContainer [type=file] {
-          cursor: pointer;
-      }
-      
-    `]
+    `
 })
 
 export class ImageUploadComponent {
@@ -65,6 +26,12 @@ export class ImageUploadComponent {
 
     @Output()
     onCompleteAll = new EventEmitter
+
+    @Output()
+    onComplete = new EventEmitter
+
+    @Output()
+    onProgress = new EventEmitter
       
     public uploader:FileUploader 
 
@@ -80,11 +47,17 @@ export class ImageUploadComponent {
       this.uploader.onCompleteAll =  () => {
         this.onCompleteAll.emit()
       }
+      this.uploader.onCompleteItem = (item,response,status,headers) => {
+        this.onComplete.emit(response)
+      }
+      this.uploader.onProgressAll = (value) => {
+        this.onProgress.emit(value)
+      }
       this.uploader.onAfterAddingAll = () => {
         this.uploader.uploadAll()
       }
     }
- 
+
     public fileOverBase(e:any):void {
       this.hasBaseDropZoneOver = e;
     }

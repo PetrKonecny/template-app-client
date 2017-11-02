@@ -122,7 +122,7 @@ import {TemplateDemoComponent} from './template/template-demo.component'
 import { MessageDialog } from './message.dialog'
 import { AlbumListComponent } from './album/album-list.component'
 import { TemplateStore } from './template/template.store'
-
+import { InframeImageUploaderComponent } from './image/inframe-image-uploader.component'
 /** defines every route in the application and redirects if 
 no route matches
 */ 
@@ -172,7 +172,7 @@ const routes: Routes = [
         CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent,
         FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumGridComponent, DisplayAlbumComponent,
         DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent, AdminAlbumsComponent, AlbumTableComponent, ImageUploadComponent,
-        DisplayUserComponent, AlbumMenuComponent, AboutComponent, TemplateDemoComponent, MessageDialog, AlbumListComponent
+        DisplayUserComponent, AlbumMenuComponent, AboutComponent, TemplateDemoComponent, MessageDialog, AlbumListComponent, InframeImageUploaderComponent
     ],
     // modules
     /**
