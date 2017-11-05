@@ -422,6 +422,7 @@ image-upload {
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          cursor: pointer;
       }
 
       md-dialog-content{
@@ -431,8 +432,7 @@ image-upload {
         justify-content: center;
       }
 
-      .fileContainer [type=file] {
-          cursor: inherit;
+      [type=file] {
           display: block;
           font-size: 999px;
           filter: alpha(opacity=0);
@@ -444,10 +444,6 @@ image-upload {
           text-align: right;
           top: 0;
       }
-
-      .fileContainer [type=file] {
-          cursor: pointer;
-      }
 }
 
 inframe-image-upload {
@@ -456,5 +452,21 @@ inframe-image-upload {
         position: absolute;
         height: 100%;
         border: none;
+        background: black;
+        opacity: 0;
+        color: white;
+
+        md-icon{
+            color: white;
+        }
+    }
+
+    .fileContainer:hover{
+        opacity: 0.5;
+        transition: opacity 0.5s;
+        md-icon{
+            transform: scale(2,2);
+            transition: transform 0.5s;
+        }
     }
 }

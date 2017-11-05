@@ -8,6 +8,8 @@ import { ImageUploadComponent } from '../image/image-uploader.component'
     template: `
           <label *ngIf="!uploader.getNotUploadedItems().length" class="fileContainer">
             <input type="file" ng2FileSelect [uploader]="uploader" single  />
+  			<md-icon>file_upload</md-icon>
+  			<div style="text-align: center; padding-top: 10px;">Nahrejte obrázek přetažením nebo kliknutím</div>
           </label>
         `   
 })

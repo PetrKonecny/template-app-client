@@ -25,7 +25,7 @@ import { AppConfig } from '../app.config'
                 <md-icon *ngIf="error">error</md-icon>
             </div>
             <div class="content"> 
-                <inframe-image-upload uploadUrl="{{config.getConfig('api-url')}}/image" (onComplete)="parseImageFromJSON($event)" (onProgress)="onProgress($event)" ></inframe-image-upload>
+                <inframe-image-upload *ngIf="selected" uploadUrl="{{config.getConfig('api-url')}}/image" [hidden]="loading" (onComplete)="parseImageFromJSON($event)" (onProgress)="onProgress($event)" ></inframe-image-upload>
                 <display-content [hidden]="loading||error" (loaded)="onLoad($event)"  (loadingError)="onError($event)"  *ngIf="draggable && element.content" [content] = "element.content"></display-content>
             </div>
             <image-handle *ngIf="!draggable && element.content && element?.content?.image">
@@ -85,8 +85,11 @@ export class DisplayFrameElementComponent {
     onDrop(event){
         this.loading = true
         this.error = false
+        let type = event.dataTransfer.getData("type")
         let data = event.dataTransfer.getData("data");
-        this.parseImageFromJSON(data)     
+        if(type === "IMAGE_ELEMENT"){
+            this.parseImageFromJSON(data) 
+        }    
         event.stopPropagation();
     }
 
@@ -126,6 +129,7 @@ export class DisplayFrameElementComponent {
     }
 
     onError(){
+        this.loading = false
         this.error = true
     }
 
