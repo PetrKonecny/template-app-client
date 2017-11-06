@@ -1,0 +1,161 @@
+/* You can add global styles to this file, and also import other style files */
+$dark: #320b86;
+$textLight: #f5f5f5;
+$accent: #ffd740; 
+app-root{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.app-root{
+  animation: 0.25s ease-out 0s 1 fadeIn;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+-webkit-inner-spin-button {
+    display: none;
+    -webkit-appearance: none;
+}
+
+.index-content{
+    height: 100%;
+    max-height: calc(100% - 64px);
+    background: #f5f5f5;
+}
+
+.ngx-datatable.material.single-selection .datatable-body-row.active, .ngx-datatable.material.single-selection .datatable-body-row.active .datatable-row-group, .ngx-datatable.material.multi-selection .datatable-body-row.active, .ngx-datatable.material.multi-selection .datatable-body-row.active .datatable-row-group, .ngx-datatable.material.multi-click-selection .datatable-body-row.active, .ngx-datatable.material.multi-click-selection .datatable-body-row.active .datatable-row-group{
+    background-color: $accent !important;
+}
+datatable-body-row.active md-chip{
+    background-color: white !important;
+}
+
+admin-index{
+    height: 100%;
+    position: relative;
+    overflow: auto;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-toolbar{
+    z-index: 20;
+    position: relative;
+}
+
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~@swimlane/ngx-datatable/release/index.css';
+@import '~@swimlane/ngx-datatable/release/themes/material.css';
+@import '~@swimlane/ngx-datatable/release/assets/icons.css';
+
+
+.fullscreen {
+    height: auto !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.bg-dark{
+    background: $dark;
+}
+
+.text-light{
+    color: $textLight;
+}
+
+.shutter{
+    position: absolute;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.index-button{
+    position: fixed !important; 
+    margin: 30px !important;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+md-radio-button{
+    padding: 6px;
+}
+
+md-dialog-actions div{
+    padding-left: 6px;
+}
+
+body{
+    font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
+}
+
+.ng2-tag-input__text-input{padding: 0 !important;}
+
+.ng2-tag-input{padding: 0 !important;}
+
+ngx-datatable {
+    height: 100%;
+    overflow-y: auto !important;
+}
+
+h1,h2,h3 {
+	font-family: Roboto,"Helvetica Neue",sans-serif;
+}
+
+.toolbar{
+    font-size: 14px;
+}
+
+.nothing-found{
+    opacity: 0.2;
+}
+
+.warn{
+    padding: 16px; 
+    background: #F44336; 
+    margin: 6px;
+    display: flex;
+    flex-direction: column;
+}
+
+.warn-att{
+    @extend .warn;
+    background: $accent;
+}
+
+.index-progress{
+    position: absolute !important;
+    left: 0;
+    top: 0;
+    z-index: 100;
+}
+
+.ngx-datatable{
+    margin: 0 16px 16px 16px;
+}
+

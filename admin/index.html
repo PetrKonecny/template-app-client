@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TemplateAppClient</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <app-root>
+	<style>
+  .loader-main{
+    position: absolute;
+    top: calc(50% - 75px);
+    left: calc(50% - 75px);
+    width: 150px;
+    height: 150px;
+    animation: rotate 1s linear infinite ;
+  }
+  .loader-outer{
+    background: red;
+    height: 150px;
+    border-radius: 75px;
+  }
+
+  .loader-scale{
+    width: 100%;
+    height: 100%;
+    animation: scale 2s ease-in-out infinite ;
+  }
+
+  .loader-inner{
+    background: #f5f5f5;
+    position: absolute;
+    left: 15px;  
+    top: 15px;
+    height: 120px;
+    width: 120px;
+    border-radius: 75px;
+  }
+
+  .loader-divider{
+    width: 75px;
+    height: 20px;
+    background: #f5f5f5;
+    position: absolute;
+    top: 65px;
+  }
+
+  body{
+    background: #f5f5f5;
+  }
+
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+ 		
+  </style>
+  <div class="loader-main">
+    <div class="loader-outer">
+    </div>
+    <div class="loader-inner">
+    </div>
+    <div class="loader-divider">
+    </div>
+  </div>
+  </app-root>
+</body>
+</html>
