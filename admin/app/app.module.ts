@@ -11,7 +11,6 @@ import { AppComponent} from "./app.component"
 import { Ng2UploaderModule} from 'ng2-uploader' 
 import { UserService} from '../../src/app/user/user.service'
 import { UserStore} from '../../src/app/user/user.store'
-import { PageService} from '../../src/app/page/page.service'
 import { FontService} from '../../src/app/font/font.service'
 import { FontStore} from '../../src/app/font/font.store'
 import { AppConfig} from '../../src/app/app.config'
@@ -52,7 +51,8 @@ import { UserGuard } from '../../src/app/user/user.guard'
 no route matches
 */ 
 const routes: Routes = [
-    { path: 'admin', redirectTo: 'admin/templates',},
+    { path: 'admin', redirectTo: 'admin/dash',},
+    { path: 'admin/dash', component: AdminIndexComponent },
     { path: 'admin/templates', component: AdminTemplatesComponent },
     { path: 'admin/template-instances', component: AdminTemplateInstancesComponent },
     { path: 'admin/users', component: AdminUsersComponent },
@@ -69,7 +69,7 @@ const routes: Routes = [
     declarations: [
         AppComponent, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent
         , ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent, TemplateTableComponent,
-        FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent,  AdminAlbumsComponent, AlbumTableComponent
+        FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent,  AdminAlbumsComponent, AlbumTableComponent, AppComponent
     ],
     // modules
     /**
@@ -95,7 +95,7 @@ const routes: Routes = [
     ],
     // providers
     providers: [
-        AppConfig, FontStore, {provide: LOCALE_ID, useValue: "cz-EU" }, AlbumStore, ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserStore, PageService, FontService, TemplateService, TemplateInstanceService, TemplateInstanceStore, TemplateStore, TemplateService, UserGuard         
+        AppConfig, FontStore, {provide: LOCALE_ID, useValue: "cz-EU" }, AlbumStore, ImageService, TemplateInstanceService, UserService, ElementHttpService, AlbumHttpService, ContentHttpService, PageHttpService, UserStore, FontService, TemplateService, TemplateInstanceService, TemplateInstanceStore, TemplateStore, TemplateService, UserGuard         
     ],
     bootstrap: [
         AppComponent

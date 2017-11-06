@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     @param config - application config
     @param route - currently active route
     */
-    constructor(private albumStore: AlbumStore, private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, private guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
+    constructor(private albumStore: AlbumStore, private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, public guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
     private ref: AppComponentRef){
         this.userStore.user.subscribe(user=>this.currentUser = user)
     }

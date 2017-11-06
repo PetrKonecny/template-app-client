@@ -1,5 +1,4 @@
 import { Component, OnInit, Input} from '@angular/core';
-import {TemplateListComponent} from '../../../src/app/template/template-list.component';
 import { TemplateService } from '../../../src/app/template/template.service';
 import { Page} from '../../../src/app/page/page';
 import { Observable }     from 'rxjs/Observable';

@@ -1,5 +1,4 @@
 import { Component, OnInit, Input} from '@angular/core';
-import {TemplateListComponent} from '../../../src/app/template/template-list.component';
 import { TemplateService } from '../../../src/app/template/template.service';
 import { Font} from '../../../src/app/font/font';
 import { Observable }     from 'rxjs/Observable';
@@ -7,7 +6,6 @@ import {User } from '../../../src/app/user/user'
 import {ActivatedRoute} from '@angular/router';
 import {FontService} from '../../../src/app/font/font.service'
 import { MdDialog } from '@angular/material'
-import { UploadComponent } from '../../../src/app/uploader.component'
 import {AppConfig} from '../../../src/app/app.config'
 
 @Component({
@@ -49,6 +47,7 @@ export class AdminFontsComponent implements OnInit {
     }
 
     openUploadModal() {
+        /*
         let dialogRef = this.dialog.open(UploadComponent, {
           height: '90%',
           width: '60%',
@@ -57,5 +56,6 @@ export class AdminFontsComponent implements OnInit {
         dialogRef.componentInstance.onCompleteAll.subscribe(closed =>{
           this.ngOnInit()
         })
+        */
     }
 }

@@ -38,7 +38,7 @@ app-root{
 }
 
 .ngx-datatable.material.single-selection .datatable-body-row.active, .ngx-datatable.material.single-selection .datatable-body-row.active .datatable-row-group, .ngx-datatable.material.multi-selection .datatable-body-row.active, .ngx-datatable.material.multi-selection .datatable-body-row.active .datatable-row-group, .ngx-datatable.material.multi-click-selection .datatable-body-row.active, .ngx-datatable.material.multi-click-selection .datatable-body-row.active .datatable-row-group{
-    background-color: $accent !important;
+    background-color: #F44336 !important;
 }
 datatable-body-row.active md-chip{
     background-color: white !important;
@@ -118,11 +118,6 @@ body{
 
 .ng2-tag-input{padding: 0 !important;}
 
-ngx-datatable {
-    height: 100%;
-    overflow-y: auto !important;
-}
-
 h1,h2,h3 {
 	font-family: Roboto,"Helvetica Neue",sans-serif;
 }
@@ -156,6 +151,9 @@ h1,h2,h3 {
 }
 
 .ngx-datatable{
-    margin: 0 16px 16px 16px;
+    margin: 64px 16px 0 16px;
+    max-height: calc(100% - 64px);
+    box-sizing: border-box;
+    overflow-y: auto !important;
 }
 

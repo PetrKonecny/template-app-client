@@ -13,7 +13,6 @@ import { TableComponent } from '../table.component'
         </md-toolbar>
          <ngx-datatable
              class="material"
-             style="padding-top: 64px;"
             [columnMode]="'force'"
             [headerHeight]="50"
             [loadingIndicator]="loadingIndicator"

@@ -1,7 +1,5 @@
 import { Component, Input, EventEmitter,Output, OnInit} from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
-import { AppConfig } from './app.config'
-
 
 @Component({
     selector: 'upload',
@@ -78,11 +76,7 @@ export class UploadComponent implements OnInit {
 
     public hasBaseDropZoneOver:boolean = false;
     public hasAnotherDropZoneOver:boolean = false;
-
-    constructor(private config: AppConfig){
-      
-    }
-
+    
     ngOnInit(){
       this.uploader = new FileUploader({url: this.uploadUrl})
       this.uploader.onCompleteAll =  () => {
