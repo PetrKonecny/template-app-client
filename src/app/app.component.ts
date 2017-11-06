@@ -19,17 +19,7 @@ import { AlbumStore } from './album/album.store'
     selector: 'app-root',
     template: `
     <div class="app-root" style="height: 100%;">
-    <md-toolbar *ngIf="adminRoute" color="warn" class="mat-elevation-z2 main-toolbar">
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin/users" routerLinkActive="active">USERS</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin/templates" routerLinkActive="active">TEMPLATES</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin/template-instances" routerLinkActive="active">DOCUMENTS</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin/albums" routerLinkActive="active">IMAGES</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin/pages" routerLinkActive="active">PAGES</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin/contents" routerLinkActive="active">CONTENTS</a>
-        <a md-button *ngIf="guard.canActivate()" routerLink="admin/elements" routerLinkActive="active">ELEMENTS</a>
-        <a md-button *ngIf="guard.canActivate()"  routerLink="admin/fonts" routerLinkActive="active">FONTS</a>
-    </md-toolbar>
-    <md-toolbar *ngIf="!adminRoute" color="primary" class="mat-elevation-z6 main-toolbar">
+    <md-toolbar color="primary" class="mat-elevation-z6 main-toolbar">
         <a md-button routerLink="/about" routerLinkActive="active">O APLIKACI</a>
         <a md-button *ngIf="!guard.canActivate()" routerLink="/demo" routerLinkActive="active">DEMO</a>
         <a md-button *ngIf="guard.canActivate()" routerLink="/templates" routerLinkActive="active">ŠABLONY</a>
@@ -111,12 +101,6 @@ export class AppComponent implements OnInit {
     gets authenticated user from api and avalilable fonts
     */
     ngOnInit(){       
-        this.router.events
-        .filter(event => event instanceof NavigationEnd)
-        .subscribe((event : NavigationEnd)=>{
-        this.adminRoute = event.url.includes('admin')
-
-        })
         this.userStore.auth().subscribe()
         this.userStore.user.first(user => (user && user.id > 0)).subscribe(user =>{
         })

@@ -36,7 +36,6 @@ export class PageService {
         }
         if(page.rulers){
             page.rulers.forEach(ruler => {
-                console.log(ruler)
                 if (ruler.positionX !== undefined){
                     this.verticals.push({ positionX: ruler.positionX, guide: null, active: false, buffer:{value:0}, priority : 0})
                 } else if (ruler.positionY !== undefined){

@@ -74,13 +74,6 @@ import { ElementHandleComponent } from './element/element-handle.component'
 import { ImageHandleComponent } from './content/image-handle.component'
 import { NgxDatatableModule } from '@swimlane/ngx-datatable'
 import {TemplateEditForm} from './template/template-edit-form.component'
-import {AdminIndexComponent} from './admin/admin-index.component'
-import {AdminTemplatesComponent} from './admin/admin-templates.component'
-import {AdminUsersComponent} from './admin/admin-users.component'
-import {AdminTemplateInstancesComponent} from './admin/admin-template-instances.component'
-import {UserTableComponent} from './admin/user-table.component'
-import {TemplateInstanceTableComponent} from './admin/template-instance-table.component'
-import {TemplateTableComponent } from './admin/template-table.component'
 import {CreateTableModal} from './element/create-table-element.modal'
 import {PageFactory} from './page/page.factory'
 import {CreateTemplateModal} from './template/create-template.modal'
@@ -90,16 +83,8 @@ import { UploadComponent } from './uploader.component'
 import { ColorPickerComponent } from './color-picker.component'
 import { PositionForm } from './element/position-form.component'
 import {ElementHttpService} from './element/element-http.service'
-import {ElementTableComponent} from './admin/element-table.component'
-import {AdminElementsComponent} from './admin/admin-elements.component'
 import {ContentHttpService} from './content/content-http.service'
-import {ContentTableComponent} from './admin/content-table.component'
-import {AdminContentsComponent} from './admin/admin-contents.component'
-import {FontTableComponent} from './admin/font-table.component'
-import {AdminFontsComponent} from './admin/admin-fonts.component'
 import {PageHttpService} from './page/page-http.service'
-import {PageTableComponent} from './admin/page-table.component'
-import {AdminPagesComponent} from './admin/admin-pages.component'
 import { SaveTemplateInstanceModal} from './template-instance/save-template-instance.modal'
 import { AlbumHttpService } from './album/album-http.service'
 import { AlbumIndexComponent } from './album/album-index.component'
@@ -110,8 +95,6 @@ import { AlbumIndexSidenavComponent } from './album/album-index-sidenav.componen
 import { SaveAlbumModal } from './album/save-album.modal'
 import { SelectAlbumModal } from './album/select-album.modal'
 import { NewTableCellComponent } from './element/new-table-cell.component'
-import {AdminAlbumsComponent} from './admin/admin-albums.component'
-import {AlbumTableComponent} from './admin/album-table.component'
 import {ImageUploadComponent} from './image/image-uploader.component'
 import { LOCALE_ID } from '@angular/core';
 import {DisplayUserComponent} from './user/display-user.component'
@@ -127,18 +110,6 @@ import { InframeImageUploaderComponent } from './image/inframe-image-uploader.co
 no route matches
 */ 
 const routes: Routes = [
-    { path: 'admin', redirectTo: 'admin/templates',},
-    { path: 'admin/templates', component: AdminTemplatesComponent },
-    { path: 'admin/templates/:id/edit', component: TemplateEditComponent },
-    { path: 'admin/template-instances', component: AdminTemplateInstancesComponent },
-    { path: 'admin/template-instances/:id/edit', component: TemplateInstanceEditComponent },
-    { path: 'admin/users', component: AdminUsersComponent },
-    { path: 'admin/elements', component: AdminElementsComponent },
-    { path: 'admin/contents', component: AdminContentsComponent },
-    { path: 'admin/fonts', component: AdminFontsComponent },
-    { path: 'admin/pages', component: AdminPagesComponent },
-    { path: 'admin/albums', component: AdminAlbumsComponent },
-    { path: 'admin/albums/:id', component: DisplayAlbumComponent },
     { path: 'users', component: UserIndexComponent},
     { path: 'users/:id/templates', component: UserTemplatesComponent},
     { path: 'users/:id/template-instances', component: UserTemplateInstancesComponent},
@@ -167,11 +138,10 @@ const routes: Routes = [
         NewTableRowComponent, DisplayPageComponent, NewPageComponent, ElementToolbarComponent, PageSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
         FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
-        UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ElementHandleComponent, ImageHandleComponent, TemplateTableComponent,
-        TemplateEditForm, AdminIndexComponent, AdminTemplatesComponent, AdminUsersComponent, AdminTemplateInstancesComponent, UserTableComponent, TemplateInstanceTableComponent, CreateTableModal,
-        CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm, ElementTableComponent, AdminElementsComponent, ContentTableComponent, AdminContentsComponent,
-        FontTableComponent,AdminFontsComponent, PageTableComponent, AdminPagesComponent, SaveTemplateInstanceModal, AlbumIndexComponent, AlbumGridComponent, DisplayAlbumComponent,
-        DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent, AdminAlbumsComponent, AlbumTableComponent, ImageUploadComponent,
+        UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ElementHandleComponent, ImageHandleComponent,
+        TemplateEditForm, CreateTableModal, CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm,
+        SaveTemplateInstanceModal, AlbumIndexComponent, AlbumGridComponent, DisplayAlbumComponent,
+        DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent, ImageUploadComponent,
         DisplayUserComponent, AlbumMenuComponent, AboutComponent, TemplateDemoComponent, MessageDialog, AlbumListComponent, InframeImageUploaderComponent
     ],
     // modules
@@ -211,7 +181,3 @@ const routes: Routes = [
 
 export class AppModule { }  
 
-//loads config from the root of this app
-export function initConfig(config: AppConfig){
- //return () => config.load() 
-}
