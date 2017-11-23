@@ -4,6 +4,7 @@ import {Tag} from '../tag/tag'
 import {PageFactory} from '../page/page.factory'
 import {Injectable} from '@angular/core';
 import {UndoRedoService, Command} from '../undo-redo.service'
+import { Action } from '@ngrx/store'
 
 @Injectable()
 export class TemplateCommands {
@@ -85,6 +86,12 @@ export class DeletePage implements Command {
 		this.template.pages.splice(this.index,0,this.page)
 	}
 
+}
+
+export function templateReducer(state: {test: "HELLO WORLD"}, action: Action) {
+	switch (action.type) {
+		default: return state;
+	}
 }
 
 

@@ -2,6 +2,7 @@
 $dark: #320b86;
 $textLight: #f5f5f5;
 $accent: #ffd740; 
+$primary: #673ab7;
 app-root{
     position: absolute;
     top: 0;
@@ -26,10 +27,21 @@ app-root{
   }
 }
 
+@keyframes slideToolbarFromTop {
+  0% {
+    margin-top: -64px;
+  }
+  100% {
+    margin-top: 0px;
+  }
+}
+
+
 -webkit-inner-spin-button {
     display: none;
     -webkit-appearance: none;
 }
+
 
 image-index, template-index, template-instance-index, album-index, display-album{
     height: 100%;
@@ -99,6 +111,7 @@ album-index-sidenav{
 }
 
 .main-toolbar{
+    display: flex;
     z-index: 20;
     position: relative;
 }
@@ -127,6 +140,10 @@ album-index-sidenav album-menu{
 
 .bg-dark{
     background: $dark;
+}
+
+.bg-primary{
+    background: $primary;
 }
 
 .text-light{
@@ -222,8 +239,12 @@ md-dialog-actions div{
     align-items: center;
     min-height: 64px;
     color: white;
-    background: #673ab7;
+    background: $primary;
     transition:0.5s ease;
+}
+
+.secondary-editor-toolbar{ 
+    animation: 0.25s ease-out 0s 1 slideToolbarFromTop;
 }
 
 .side-switch.switch-active{
@@ -235,6 +256,20 @@ md-dialog-actions div{
     height: 100%;
     display: none;
     transition: 0.5s ease;
+    md-toolbar{
+        background: $dark;
+        color: $textLight;
+    }
+}
+
+.sidenav-container{
+    background: $dark;
+}
+
+.sidenav-strip{
+    flex: 1;
+    width: 15%;
+    background: $primary;
 }
 
 .sidenav div::-webkit-scrollbar {

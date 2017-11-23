@@ -14,6 +14,7 @@ import { AlbumStore } from '../album/album.store'
 @Component({
     selector: 'display-user',
     template: `
+        <main-toolbar></main-toolbar>
         <div class="shutter">
           <md-spinner *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>

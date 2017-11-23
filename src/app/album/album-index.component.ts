@@ -14,6 +14,7 @@ import { AlbumStore } from '../album/album.store'
 @Component({
     selector: 'album-index',
     template: `
+        <main-toolbar></main-toolbar>
         <md-toolbar>
                 <button md-button *ngIf="showOpenButton()" [routerLink] = "['/albums', selected[0].id]">OTEVŘÍT ALBUM</button>
                 <button md-button *ngIf="showEditButton()" (click)="onEditClicked(selected[0])">UPRAVIT ALBUM</button>

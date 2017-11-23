@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'about',
     template: `
+        <main-toolbar></main-toolbar>
     	<div style="padding: 16px; box-sizing: border-box; overflow: auto;" class="index-content">
         <h1>APLIKACE PRO TVORBU DOKUMENTŮ</h1>
     	<div class="mat-elevation-z4 warn" >

@@ -31,6 +31,5 @@ export class AppComponentRef {
     nextCtrlPress(press: boolean){
         this._ctrlPress.next(press)
     }
-    
 
 }

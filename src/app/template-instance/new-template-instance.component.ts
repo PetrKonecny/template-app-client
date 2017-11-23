@@ -19,17 +19,20 @@ import { UndoRedoService } from '../undo-redo.service'
     selector: 'create-new-template-instance',
     template:
        `
-        <md-sidenav-container style="height: 100%; max-height: calc(100% - 64px); overflow: hidden;">
-            <md-toolbar class="mat-elevation-z2">
+       <md-toolbar color="primary" class="mat-elevation-z2">
+            <button md-icon-button (click)="saveTemplateInstance()"><md-icon>save</md-icon></button>
+            <button md-icon-button (click)="undo()"><md-icon>undo</md-icon></button>
+            <button md-icon-button><md-icon>redo</md-icon></button>
+            <h2 style="margin-left: auto">{{'dokument' + (templateInstance.name ? ' : ' + templateInstance.name : ' : nepojmenovaný dokument')}}</h2>
+            <button md-icon-button [mdMenuTriggerFor]="templateInstanceMore"><md-icon>more_vert</md-icon></button> 
+            <md-menu #templateInstanceMore="mdMenu">
+                <button md-button (click)="openAsTemplate()">Zkopírovat a upravit šablonu</button>
+            </md-menu> 
+        </md-toolbar>
+        <md-sidenav-container [class.pushDown]="element" >
+            <md-toolbar *ngIf="element && element.type == 'text_element' && content && content.editor" class="secondary-editor-toolbar mat-elevation-z1">
                 <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
-                <button md-icon-button (click)="saveTemplateInstance()"><md-icon>save</md-icon></button>
-                <button md-icon-button (click)="undo()"><md-icon>undo</md-icon></button>
-                <button md-icon-button><md-icon>redo</md-icon></button>
-                <button md-icon-button [mdMenuTriggerFor]="templateInstanceMore"><md-icon>more_vert</md-icon></button>
-                <md-menu #templateInstanceMore="mdMenu">
-                    <button md-button (click)="openAsTemplate()">Zkopírovat a upravit šablonu</button>
-                </md-menu>  
-                <editor-toolbar *ngIf="element && element.type == 'text_element' && content && content.editor"></editor-toolbar>
+                <editor-toolbar></editor-toolbar>
             </md-toolbar>
             <md-sidenav #sidenav opened="true" class="sidenav mat-elevation-z6 bg-dark" mode ="side" style="width: 20%; display:flex; overflow: visible;">
                 <album-index-sidenav (onCloseClicked)="sidenav.close()"></album-index-sidenav>
@@ -45,6 +48,12 @@ import { UndoRedoService } from '../undo-redo.service'
             float: left;
             margin-top: 10px;
             width: 300px;
+        }
+        md-sidenav-container{
+            height: 100%;
+        }
+        .pushDown{
+            height: calc(100% - 64px);
         }
         .pages{
             position: relative;

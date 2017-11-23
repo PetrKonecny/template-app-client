@@ -106,6 +106,9 @@ import { MessageDialog } from './message.dialog'
 import { AlbumListComponent } from './album/album-list.component'
 import { TemplateStore } from './template/template.store'
 import { InframeImageUploaderComponent } from './image/inframe-image-uploader.component'
+import { MainToolbarComponent } from './main-toolbar.component'
+import { StoreModule } from '@ngrx/store'
+import { templateReducer } from './template/template'
 /** defines every route in the application and redirects if 
 no route matches
 */ 
@@ -140,7 +143,7 @@ const routes: Routes = [
         FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ElementHandleComponent, ImageHandleComponent,
         TemplateEditForm, CreateTableModal, CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm,
-        SaveTemplateInstanceModal, AlbumIndexComponent, AlbumGridComponent, DisplayAlbumComponent,
+        SaveTemplateInstanceModal, AlbumIndexComponent, AlbumGridComponent, DisplayAlbumComponent, MainToolbarComponent,
         DisplayAlbumSidenavComponent,AlbumIndexSidenavComponent, SaveAlbumModal, SelectAlbumModal, NewTableCellComponent, ImageUploadComponent,
         DisplayUserComponent, AlbumMenuComponent, AboutComponent, TemplateDemoComponent, MessageDialog, AlbumListComponent, InframeImageUploaderComponent
     ],
@@ -166,7 +169,8 @@ const routes: Routes = [
         FileUploadModule,
         NgxDatatableModule,
         ColorPickerModule,
-        BrowserAnimationsModule       
+        BrowserAnimationsModule,
+        StoreModule.forRoot({ template: templateReducer })
     ],
     // providers
     providers: [

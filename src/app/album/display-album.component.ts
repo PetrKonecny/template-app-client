@@ -17,6 +17,7 @@ import { AlbumHelper } from '../album/album.helper'
 @Component({
     selector: 'display-album',
     template: `
+        <main-toolbar></main-toolbar>
         <md-toolbar>
             <h1 class="album-chip">{{album?.name}}</h1>
             <div style="padding-right: 16px;" >

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, QueryList, AfterViewInit} from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, QueryList, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { MdDialog } from '@angular/material'
 import { Template, TemplateCommands} from './template';
 import { Page} from '../page/page';
@@ -17,17 +17,27 @@ import domtoimage from 'dom-to-image'
 import { SaveTemplateInstanceModal} from '../template-instance/save-template-instance.modal'
 import { TemplateInstance} from '../template-instance/template-instance';
 import { Router} from '@angular/router'
+import { ElementStore } from '../element/element.store'
 
 @Component({
     selector: 'create-new-template',
     template: `
-        <md-sidenav-container style="height: calc(100% - 64px);">
+        <!-- main app toolbar -->
+
+        <md-toolbar color="primary" class="editor-main-toolbar mat-elevation-z2" style="z-index: 30; position: relative;">
+            <button md-icon-button *ngIf="template && template.type!='no_instance_template'" [disabled]="disableSave" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
+            <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" [disabled]="disableSave" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
+            <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
+            <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
+            <h2 style="margin-left: auto">{{(template.type == 'no_instance_template' ? 'dokument' : 'šablona') + (template.name ? ' : ' + template.name : ' : nepojmenovaný dokument')}}</h2>
+        </md-toolbar>    
+        <md-sidenav-container [class.pushDown]="elementStore.element | async">
 
             <!-- side menu -->
 
-            <md-sidenav opened="true" class="mat-elevation-z6 bg-dark" mode ="side" #sidenav style="width: 20%; display:flex; overflow: visible;">
+            <md-sidenav opened="true" class="sidenav-container mat-elevation-z6" mode ="side" #sidenav style="width: 20%; display:flex; overflow: visible;">
                     <div style="display:flex; flex-direction:row; width: 100%;">
-                        <div style="background: #673ab7; flex:1; width: 15%;">
+                        <div class="sidenav-strip">
                             <div class="side-switch" [class.switch-active]="sidenavState == 1" (click)="clickImages()"><md-icon>image</md-icon></div>
                             <div class="side-switch" [class.switch-active]="sidenavState == 0" (click)="clickElements()"><md-icon>web</md-icon></div>
                         </div>
@@ -42,18 +52,10 @@ import { Router} from '@angular/router'
                         </div>
                     </div>
             </md-sidenav>
-
-            <!-- main app toolbar -->
-
-            <md-toolbar class="mat-elevation-z2" style="z-index: 30; position: relative;">
+            <md-toolbar *ngIf="elementStore.element | async" class="secondary-editor-toolbar mat-elevation-z1">
                 <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
-                <button md-icon-button *ngIf="template && template.type!='no_instance_template'" [disabled]="disableSave" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
-                <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" [disabled]="disableSave" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
-                <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
-                <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
                 <element-toolbar style="width: 100%;"></element-toolbar>
-            </md-toolbar>       
-
+            </md-toolbar>
             <!-- pages of the template -->
 
             <div class="pages">
@@ -74,6 +76,12 @@ import { Router} from '@angular/router'
             margin-top: 10px;
             width: 300px;
         }
+        md-sidenav-container{
+            height: 100%;
+        }
+        .pushDown{
+            height: calc(100% - 64px);
+        }
         .pages{
             position: relative;
             overflow-y: auto;
@@ -88,11 +96,14 @@ import { Router} from '@angular/router'
             display: flex;
             flex-direction: row-reverse;
         }
-
         md-tab-group{
             height: 100%;
         }
-    `],
+        .mat-icon-button[disabled]{
+            color: white;
+            opacity: 0.38;
+        }
+    `]
 })
 
 //component representing the editor
@@ -130,6 +141,7 @@ export class NewTemplateComponent  {
         protected pageStore: PageStore,
         protected pageCommands: PageCommands,
         protected templateInstanceStore: TemplateInstanceStore,
+        public elementStore: ElementStore,
         protected router: Router
     ){ 
         this.pageStore.page.subscribe(page => this.page = page)

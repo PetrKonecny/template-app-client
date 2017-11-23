@@ -70,13 +70,13 @@ import { ElementStore } from '../element/element.store'
 
                     <!-- displays specialized toolbar for text elements -->
 
-                    <div class="toolbarCategory" *ngIf="element.type == 'text_element' && element.content.editor">
+                    <div style="margin-left: auto" class="toolbarCategory" *ngIf="element.type == 'text_element' && element.content.editor">
                         <editor-toolbar></editor-toolbar>
                     </div>
 
                     <!-- displays specialized toolbar for table elements -->
 
-                    <div class="toolbarCategory" *ngIf="element.type == 'table_element' && element.clientState == 3 && element.selectedCells?.length > 0">
+                    <div style="margin-left: auto" class="toolbarCategory" *ngIf="element.type == 'table_element' && element.clientState == 3 && element.selectedCells?.length > 0">
                         <cell-edit-toolbar></cell-edit-toolbar>
                     </div>                                              
                 </div>
