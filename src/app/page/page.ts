@@ -125,3 +125,19 @@ export class Page  {
   pageNumber: number;  
   margin: number;
 }
+
+export function pagesReducer(state = {pages: null},action: any) {
+  switch (action.type) {
+    case "ADD_NORMALIZED_DATA":
+      return state && 
+        action.data.entities.pages && 
+        Object.assign({},state,{pages: Object.assign({},state.pages,...action.data.entities.pages)})
+    default: return state;
+  }
+}
+
+export function pageReducer(state = {page: 0}, action: any) {
+  switch (action.type) {
+    default: return state;
+  }
+}

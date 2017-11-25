@@ -88,12 +88,33 @@ export class DeletePage implements Command {
 
 }
 
-export function templateReducer(state: {test: "HELLO WORLD"}, action: Action) {
+export function templateReducer(state = {template: null}, action: Action) {
 	switch (action.type) {
 		default: return state;
 	}
 }
 
+export class TemplatesAction implements Action {
+	constructor(
+		public type: string, 
+		public data: any, 
+		public error = null){
+	}
+}
+
+export function templatesReducer(state = {templates: null, isFetching: null, error: null},action: any) {
+	switch (action.type) {
+		case "ADD_NORMALIZED_DATA":
+			return state && 
+				action.data.entities.templates && 
+				Object.assign({},state,{templates: Object.assign({},state.templates,...action.data.entities.templates)})
+		case "REQUEST_TEMPLATES":
+			return Object.assign({},state,{'isFetching' : true})
+		case "TEMPLATES_ERR":
+			return Object.assign({},state,{'isFetching' : false, 'error': action.error})
+		default: return state;
+	}
+}
 
 // template model
 export class Template {

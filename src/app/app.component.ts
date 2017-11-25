@@ -15,6 +15,9 @@ import {AppComponentRef} from './app.ref'
 import { TemplateStore } from './template/template.store'
 import { User} from './user/user'
 import { AlbumStore } from './album/album.store'
+import { Store } from "@ngrx/store";
+import { AppState } from './app.state'
+
 @Component({
     selector: 'app-root',
     template: `
@@ -40,7 +43,7 @@ export class AppComponent implements OnInit {
     @param config - application config
     @param route - currently active route
     */
-    constructor(private albumStore: AlbumStore, private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, public guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
+    constructor(public store :Store<AppState>, private albumStore: AlbumStore, private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, public guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
     private ref: AppComponentRef){
         this.userStore.user.subscribe(user=>this.currentUser = user)
     }
@@ -90,7 +93,8 @@ export class AppComponent implements OnInit {
     /**triggered when component is created
     gets authenticated user from api and avalilable fonts
     */
-    ngOnInit(){       
+    ngOnInit(){
+        this.store.dispatch({ type: "REQUEST_CURRENT_USER" })
         this.userStore.auth().subscribe()
         this.userStore.user.first(user => (user && user.id > 0)).subscribe(user =>{
         })

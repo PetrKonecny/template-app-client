@@ -13,6 +13,8 @@ import {TemplateHelper} from '../template/template.helper'
 import {DisplayUserComponent} from '../user/display-user.component'
 import { UserService } from '../user/user.service';
 import { AppConfig }from '../app.config'
+import { Store } from "@ngrx/store";
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'template-index',
@@ -91,7 +93,7 @@ export class TemplateIndexComponent implements OnInit  {
     (ex, if user can't edit template edit button is not present)
     */
     constructor(
-        private userService: UserService, private templateService: TemplateService, private router: Router, public dialog: MdDialog, private userStore: UserStore , public config: AppConfig
+        public store: Store<AppState>, private userService: UserService, private templateService: TemplateService, private router: Router, public dialog: MdDialog, private userStore: UserStore , public config: AppConfig
 
     ){ }
 
@@ -122,6 +124,9 @@ export class TemplateIndexComponent implements OnInit  {
     Called after component is initiated
     */
     ngOnInit(){
+        this.store.select('user').first(userState => userState.user && userState.user > 0)
+        .subscribe(()=>this.store.dispatch({type: "REQUEST_TEMPLATES"}))
+
         this.userStore.user.first(user => (user && user.id > 0))
         .do((user)=>{this.currentUser = user})
         .flatMap(user => Observable.forkJoin(this.userService.getUserTemplates(user.id),this.templateService.getPublicTemplates()))

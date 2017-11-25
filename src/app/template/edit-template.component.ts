@@ -14,6 +14,8 @@ import { ElementStore } from '../element/element.store'
 import { TemplateService } from '../template/template.service'
 import { MdSnackBar } from '@angular/material';
 import { PageFactory }from '../page/page.factory'
+import { Store } from "@ngrx/store";
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'template-edit',
@@ -36,7 +38,6 @@ export class TemplateEditComponent implements OnInit  {
     //template to be displayed
     template : Template;
 
-
     /**
     @param route - injects route to get route params
     @param templateStore - injects store containing current template
@@ -52,7 +53,8 @@ export class TemplateEditComponent implements OnInit  {
         private undoRedoService: UndoRedoService,
         private templateService: TemplateService,
         private snackBar: MdSnackBar,
-        private factory: PageFactory
+        private factory: PageFactory,
+        private store: Store<AppState>
     ){ }
     
     //saves buffer commands if the mouse up event happens
@@ -75,7 +77,9 @@ export class TemplateEditComponent implements OnInit  {
             }
         })
 
+
        this.route.params
+        .do(params=>this.store.dispatch({type: "REQUEST_TEMPLATE", id: params['id']}))
        .flatMap((params)=>this.templateStore.getTemplate(params['id']))
        .first()
        .subscribe(

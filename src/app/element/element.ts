@@ -245,6 +245,22 @@ export class Element  {
     background_color: string
 }
 
+export function elementsReducer(state = {elements: null},action: any) {
+  switch (action.type) {
+    case "ADD_NORMALIZED_DATA":
+      return state && 
+        action.data.entities.elements && 
+        Object.assign({},state,{elements: Object.assign({},state.elements,...action.data.entities.elements)})
+    default: return state;
+  }
+}
+
+export function elementReducer(state = {element: 0}, action: any) {
+  switch (action.type) {
+    default: return state;
+  }
+}
+
 
 interface ElementDimensions {
     left

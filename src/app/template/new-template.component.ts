@@ -18,12 +18,14 @@ import { SaveTemplateInstanceModal} from '../template-instance/save-template-ins
 import { TemplateInstance} from '../template-instance/template-instance';
 import { Router} from '@angular/router'
 import { ElementStore } from '../element/element.store'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'create-new-template',
     template: `
         <!-- main app toolbar -->
-
+        <h1>{{(store.select('template') | async).test}}</h1>
         <md-toolbar color="primary" class="editor-main-toolbar mat-elevation-z2" style="z-index: 30; position: relative;">
             <button md-icon-button *ngIf="template && template.type!='no_instance_template'" [disabled]="disableSave" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
             <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" [disabled]="disableSave" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
@@ -114,6 +116,9 @@ export class NewTemplateComponent  {
     template: Template;
 
     @Input()
+    pages: Page;
+
+    @Input()
     templateInstance: TemplateInstance
  
     @Input()
@@ -142,9 +147,11 @@ export class NewTemplateComponent  {
         protected pageCommands: PageCommands,
         protected templateInstanceStore: TemplateInstanceStore,
         public elementStore: ElementStore,
-        protected router: Router
+        protected router: Router,
+        public store: Store<AppState>
     ){ 
         this.pageStore.page.subscribe(page => this.page = page)
+
     }
   
     //calls store to save the template     
