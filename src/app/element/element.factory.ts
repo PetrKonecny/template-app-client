@@ -17,6 +17,7 @@ export class ElementFactory{
 	positionY: number = 0
 	width: number = 100
 	height: number = 100
+	id: number = Math.random()
 
 	setPositionX(x: number){
 		this.positionX = x
@@ -47,14 +48,16 @@ export class TextElementFactory extends ElementFactory{
 		element.height = this.height
 		element.positionX = this.positionX
 		element.positionY = this.positionY
+		element.id = this.id
 
 	    let content = new TextContent()
         content.text = "<p></p>"
+        content.id = Math.random()
         element.content = content
 		
 		return element
 	}
-
+	
 }
 
 export class ImageElementFactory extends ElementFactory{

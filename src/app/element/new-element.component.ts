@@ -1,4 +1,4 @@
-import { Component, Input, HostListener } from '@angular/core';
+import { Component, Input, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { Element, ElementCommands} from './element';
 import {UndoRedoService} from '../undo-redo.service'
 import { ElementStore } from '../element/element.store'
@@ -19,7 +19,8 @@ import { ElementStore } from '../element/element.store'
         `,
     styles: [`
         .selected{border: 2px dashed blue}
-    `]
+    `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 //Root element for displaying elements in template editor depending on their type and provides basic functionality

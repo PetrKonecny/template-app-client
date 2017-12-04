@@ -1,14 +1,14 @@
 import { Component, OnInit} from '@angular/core';
 import {TemplateListComponent} from './template-list.component';
 import { TemplateService } from './template.service';
-import { Template} from './template';
+import { Template, TemplatesState} from './template';
 import { Observable }     from 'rxjs/Observable';
 import { Router } from '@angular/router'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {CreateTemplateModal} from './create-template.modal'
 import {Page} from '../page/page'
 import {UserStore} from '../user/user.store'
-import {User} from '../user/user'
+import {User, selectCurrentUser} from '../user/user'
 import {TemplateHelper} from '../template/template.helper'
 import {DisplayUserComponent} from '../user/display-user.component'
 import { UserService } from '../user/user.service';
@@ -35,7 +35,7 @@ import { AppState } from '../app.state'
                 <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
         </div>
         <div class ="index-content">
-            <ngx-datatable *ngIf="currentUser && templates?.length"
+            <ngx-datatable
                  class="material"
                 [columnMode]="'force'"
                 [headerHeight]="50"
@@ -43,14 +43,14 @@ import { AppState } from '../app.state'
                 [rowHeight]="'auto'"
                 [selected]="selected"
                 [selectionType]="'single'"
-                [rows]="templates"
+                [rows]="allTemplates"
             >
             <ngx-datatable-column prop="name" name="název">
             </ngx-datatable-column>
             <ngx-datatable-column prop="tagged" name="tagy">
                 <ng-template  let-value="value" ngx-datatable-cell-template>
                 <md-chip-list>
-                <md-chip *ngFor="let tag of value">{{tag.tag_name}}</md-chip>
+                <md-chip *ngFor="let tagId of value">{{allTags[tagId].tag_name}}</md-chip>
                 </md-chip-list>
                 </ng-template>
             </ngx-datatable-column>
@@ -61,7 +61,7 @@ import { AppState } from '../app.state'
             </ngx-datatable-column>
             <ngx-datatable-column prop="user" name="uživatel">
                 <ng-template  let-value="value" ngx-datatable-cell-template>
-                <a [routerLink]="['/users', value.id]">{{value.name? value.name : value.id}}</a>
+                <a [routerLink]="['/users', value]">{{allUsers[value].name ? allUsers[value].name : value}}</a>
                 </ng-template>
             </ngx-datatable-column>
             </ngx-datatable>
@@ -76,7 +76,11 @@ export class TemplateIndexComponent implements OnInit  {
     //error message from http calls
     error: string
     //array of users templates
-    templates : Template[]
+    allTemplates : any
+    allTags: any
+    allUsers: any
+
+    tmp: any
     //array of templates everyone can see 
     publicTemplates : Template[]
     loading = true
@@ -85,6 +89,7 @@ export class TemplateIndexComponent implements OnInit  {
 
     selected: Template[] = [] 
 
+    subs = []
     /**
     @param 'templateService' - injects template service to make http calls to API
     @param 'router'- injects router to enable navigation from class
@@ -94,8 +99,8 @@ export class TemplateIndexComponent implements OnInit  {
     */
     constructor(
         public store: Store<AppState>, private userService: UserService, private templateService: TemplateService, private router: Router, public dialog: MdDialog, private userStore: UserStore , public config: AppConfig
-
-    ){ }
+    ){ 
+    }
 
     showEditButton(){
         return this.selected.length && TemplateHelper.canEditTemplate(this.currentUser, this.selected[0])
@@ -124,29 +129,16 @@ export class TemplateIndexComponent implements OnInit  {
     Called after component is initiated
     */
     ngOnInit(){
+        this.subs.push(this.store.select('templates').subscribe(data=>this.allTemplates = data.templates && (<any>Object).values(data.templates)))
+        this.subs.push(this.store.select('tags').subscribe(data=>this.allTags = data.tags))
+        this.subs.push(this.store.select('users').subscribe(data=>this.allUsers = data.users))
+        this.subs.push(this.store.select(selectCurrentUser).subscribe(data=>this.currentUser = data))
         this.store.select('user').first(userState => userState.user && userState.user > 0)
-        .subscribe(()=>this.store.dispatch({type: "REQUEST_TEMPLATES"}))
+        .subscribe(()=>this.store.dispatch({type: "REQUEST_TEMPLATES"})) 
+    }
 
-        this.userStore.user.first(user => (user && user.id > 0))
-        .do((user)=>{this.currentUser = user})
-        .flatMap(user => Observable.forkJoin(this.userService.getUserTemplates(user.id),this.templateService.getPublicTemplates()))
-        .subscribe(res => {
-            this.templates = res[0]
-                /*
-                                this.templates = []
-                for(let i = 0; i<20; i++){
-                    this.templates = this.templates.concat(res[0])
-                }*/
-                this.publicTemplates = res[1]   
-                this.publicTemplates = this.publicTemplates.filter((template)=> {return !this.templates.some(template2 => template.id === template2.id)})
-                this.loading = false
-                this.templates = this.templates.concat(this.publicTemplates)
-            }
-            ,error=>{
-                this.error = error
-                this.loading = false
-            }
-        )
+    ngOnDestroy(){
+        this.subs.forEach(sub => sub.complete())
     }
 
     /**
@@ -172,8 +164,8 @@ export class TemplateIndexComponent implements OnInit  {
     @param 'template' - template to remove
     */
     deleteFromList(template: Template){
-        var index = this.templates.indexOf(template);
-        this.templates.splice(index,1);
+        var index = this.allTemplates.indexOf(template);
+        this.allTemplates.splice(index,1);
     }
     
 

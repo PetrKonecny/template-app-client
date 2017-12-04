@@ -1,4 +1,4 @@
-import { Component,ContentChild, ElementRef, AfterContentInit, HostListener, Input} from '@angular/core';
+import { Component,ContentChild, ElementRef, AfterContentInit, HostListener, Input, ChangeDetectionStrategy} from '@angular/core';
 import {NewPageReference} from '../page/new-page.ref'
 import { Element, ElementCommands} from './element';
 import {AppComponentRef} from '../app.ref'
@@ -26,7 +26,8 @@ import {AppComponentRef} from '../app.ref'
         `,
     styles: [`
         div{position: absolute;}
-    `]
+    `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 //displays resize controlls over the element, when one of the handles is moved resizes the element acordingly

@@ -25,13 +25,13 @@ import { NewTableElementReference } from './new-table-element.ref'
                         [style.border-width.px]="cell.border_width" 
                         [style.vertical-align]="element.rows[y].cells[x].vertical_align" 
                         [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
-                    >{{content.cells[x].text}}</td> 
+                    >{{content?.cells[x].text}}</td> 
                 </template>
 
                 <!-- template for row when editing table structure -->
 
                 <template [ngIf]="element.clientState == 2">
-                    <td *ngFor = "let cell of element.rows[y].cells; let x = index" 
+                    <td *ngFor = "let cell of element?.rows[y].cells; let x = index" 
                         [attr.colspan]=cell.colspan 
                         [attr.rowspan]=cell.rowspan 
                         (mousedown)="onMousedownEdit(x, cell)" 
@@ -47,7 +47,7 @@ import { NewTableElementReference } from './new-table-element.ref'
                         [style.font-size.px]="element.rows[y].cells[x].font_size" 
                         [style.vertical-align]="element.rows[y].cells[x].vertical_align" 
                         [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
-                    ><div style ="position: relative; height: 100%;">{{content.cells[x].text}}
+                    ><div style ="position: relative; height: 100%;">{{content?.cells[x].text}}
 
                 <a draggable2 *ngIf="cell.selected" (move)="left($event)" style="left: 0; top: 50%;"></a>
                 <a draggable2 *ngIf="cell.selected" (move)="right($event)" style="top: 50%; left: 100%;"></a>
@@ -76,7 +76,7 @@ import { NewTableElementReference } from './new-table-element.ref'
                         [style.font-size.px]="element.rows[y].cells[x].font_size" 
                         [style.vertical-align]="element.rows[y].cells[x].vertical_align" 
                         [style.font-family]="'font' + element.rows[y].cells[x].font?.id"
-                    >{{content.cells[x].text}}</td> 
+                    >{{content?.cells[x].text}}</td> 
                 </template>
 
                 <!-- template for row when filling out the table -->
@@ -92,7 +92,7 @@ import { NewTableElementReference } from './new-table-element.ref'
                         [style.border-color]="cell.border_color ? cell.border_color : defaultBorderColor " 
                         [style.border-width.px]="cell.border_width">
                         <textarea  *ngIf="element.clientState == 1" 
-                            [(ngModel)]="content.cells[x].text"  
+                            [(ngModel)]="content?.cells[x].text"  
                             [style.color]="cell.text_color" 
                             [style.text-align]="element.rows[y].cells[x].text_align"  
                             [style.font-size.px]="element.rows[y].cells[x].font_size" 

@@ -5,6 +5,9 @@ import { NewPageReference } from '../page/new-page.ref'
 import { NewTableElementReference} from './new-table-element.ref'
 import { ElementCommands} from './element'
 import { ElementStore } from '../element/element.store'
+import { Content } from '../content/content'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'create-new-table-element',
@@ -67,20 +70,20 @@ import { ElementStore } from '../element/element.store'
 
         <!-- table displayed when moving the table -->
 
-        <table class="table-element-move" *ngIf="element.clientState == 0" [class.selected]="selected" draggable2 (move)="move($event)" (click)="onElementClicked()" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
-            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i" [style.height.px]="row.height" [content]="element.content.rows[i]" class="locked"></tr>
+        <table *ngIf="element.clientState == 0" class="table-element-move" [class.selected]="selected" draggable2 (move)="move($event)" (click)="onElementClicked()" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i" [style.height.px]="row.height" [content]="contents[element.content].rows[i]" class="locked"></tr>
         </table>
 
         <!-- table displayed when filling out the table -->
 
         <table *ngIf="element.clientState == 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
-            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height - 4"></tr>
+            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="contents[element.content].rows[i]" [style.height.px]="row.height - 4"></tr>
         </table>
 
         <!-- table displayed when editing table structure or changing parameters of cells -->
 
         <table *ngIf="element.clientState > 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
-            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="element.content.rows[i]" [style.height.px]="row.height"></tr>
+            <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="contents[element.content].rows[i]" [style.height.px]="row.height"></tr>
         </table>
         `,
     styles:[`
@@ -116,7 +119,10 @@ export class NewTableElementComponent implements OnInit{
     element : TableElement
     //true if element selected false otherwise
     selected: boolean
-    
+
+    contents: Content[]
+
+    sub 
     //output of draggable directive that moves the element
     move(dimensions: ElementDimensions){
         let d = this.newPage.move(this.element,dimensions)
@@ -127,13 +133,12 @@ export class NewTableElementComponent implements OnInit{
     
     //runs on every change detection to set element width and height 
     ngDoCheck(){
-        this.element.height = this.getTableHeight()
-        this.element.width = this.getTableWidth()
     }
 
     //sets on initiation default element cient state
     ngOnInit(){
         this.element.clientState = 0
+        this.sub = this.store.select('contents').subscribe(data=>this.contents = data.contents)
     }
     
     //gets total table height
@@ -163,6 +168,7 @@ export class NewTableElementComponent implements OnInit{
         private tableElementCommands: TableElementCommands,  
         private elementCommands: ElementCommands,
         private elementStore: ElementStore,
+        public store: Store<AppState>
     ){
         this.newTableElement.component = this
         this.elementStore.element.subscribe(element =>this.selected = this.element === element)

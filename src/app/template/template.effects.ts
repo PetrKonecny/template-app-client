@@ -30,7 +30,10 @@ export class TemplateEffects{
 
     @Effect() fetchTemplate: Observable<Action> = this.actions.ofType("REQUEST_TEMPLATE")
     .flatMap((action: any)=>this.templateService.getTemplate(action.id)
-        .map(data => ({ type: "ADD_NORMALIZED_DATA", data: normalizeTemplate(data)}))
+        .map(data => {
+            var normalized = normalizeTemplate(data)
+            return { type: "ADD_NORMALIZED_DATA", data: normalized, selected: normalized.result}
+        })
         .catch(error => of({type: "TEMPLATE_ERR", error: error}))
     )
 }

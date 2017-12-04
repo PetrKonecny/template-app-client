@@ -7,9 +7,11 @@ export class Tag {
 export function tagsReducer(state = {tags: null},action: any) {
 	switch (action.type) {
 		case "ADD_NORMALIZED_DATA":
-			return state && 
-				action.data.entities.tags && 
-				Object.assign({},state,{tags: Object.assign({},state.tags,...action.data.entities.tags)})
+			if(action.data.entities.tags){
+				return Object.assign({},state,{tags: Object.assign({},state.tags,...action.data.entities.tags)})
+			}else{
+				return state
+			}
 		default: return state;
 	}
 }

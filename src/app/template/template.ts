@@ -88,12 +88,6 @@ export class DeletePage implements Command {
 
 }
 
-export function templateReducer(state = {template: null}, action: Action) {
-	switch (action.type) {
-		default: return state;
-	}
-}
-
 export class TemplatesAction implements Action {
 	constructor(
 		public type: string, 
@@ -102,12 +96,23 @@ export class TemplatesAction implements Action {
 	}
 }
 
-export function templatesReducer(state = {templates: null, isFetching: null, error: null},action: any) {
+export interface TemplatesState {
+	selected: number,
+	templates: any,
+	isFetching: Action,
+	error: any
+}
+
+export function templatesReducer(state: TemplatesState = {selected: 0, templates: null, isFetching: null, error: null},action: any) {
 	switch (action.type) {
 		case "ADD_NORMALIZED_DATA":
-			return state && 
-				action.data.entities.templates && 
-				Object.assign({},state,{templates: Object.assign({},state.templates,...action.data.entities.templates)})
+			if(action.data.entities.templates){ 
+				return Object.assign({},state,{selected: action.selected, templates: Object.assign({},state.templates,...action.data.entities.templates)})
+			}else{
+				return state
+			}
+		case "SELECT TEMPLATE":
+			return Object.assign({},state,{selected: action.id})
 		case "REQUEST_TEMPLATES":
 			return Object.assign({},state,{'isFetching' : true})
 		case "TEMPLATES_ERR":
@@ -115,6 +120,8 @@ export function templatesReducer(state = {templates: null, isFetching: null, err
 		default: return state;
 	}
 }
+
+export const selectTemplates = (state: TemplatesState) => state.templates;
 
 // template model
 export class Template {

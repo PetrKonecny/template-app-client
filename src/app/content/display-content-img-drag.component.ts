@@ -29,7 +29,6 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     @Input()
     //content to be dragged
     content: ImageContent;
-    element: ImageContent = this.content;
     
     @ViewChild('frame')
     //reference to template element #frame

@@ -1,9 +1,11 @@
-import { Component, Input, ViewChild, ElementRef, DoCheck, KeyValueDiffer, KeyValueDiffers, EventEmitter, Output} from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, DoCheck, KeyValueDiffer, KeyValueDiffers, EventEmitter, Output, ChangeDetectionStrategy} from '@angular/core';
 import { Content } from './content';
 import { TextContent, TextContentCommands } from './text-content'
 import { AppConfig } from '../app.config'
 import { ImageContent } from '../content/image-content'
-import {Image} from '../image/image'
+import {Image, getImageById} from '../image/image'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'display-content',
@@ -15,7 +17,7 @@ import {Image} from '../image/image'
         >
         </simple-tiny>
         <div *ngIf="content.type === 'image_content'" #frame [style.margin-left.px]="content.left" [style.margin-top.px]="content.top" class="content image" [style.width.px]="content.width" [style.height.px]="content.height" >
-            <image *ngIf="content?.image" (loaded)="onLoad($event)" (loadingError)="onError($event)" [image]="content.image"></image>
+            <image *ngIf="(image | async).id" (loaded)="onLoad($event)" (loadingError)="onError($event)" [image]="image | async"></image>
         </div>
     `,
     styles:[`
@@ -42,6 +44,7 @@ import {Image} from '../image/image'
             color: inherit;
         }
     `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 //displays text or image content 
@@ -60,6 +63,8 @@ export class DisplayContentComponent {
 
     //loading indicator
     loading = true
+
+    image
     
     //triggered when key in the editor is pressed
     keyupHandlerFunction(text: string){
@@ -83,8 +88,15 @@ export class DisplayContentComponent {
     */
     constructor(
         private config: AppConfig,
-        private commands: TextContentCommands
+        private commands: TextContentCommands,
+        public store: Store<AppState>
     ){}
+
+    ngOnInit(){
+        if(this.content.type === 'image_content'){
+            this.image = this.store.select(getImageById((<ImageContent>this.content).image))
+        }
+    }
     
     styleToNum(style){
         return Number(style.substring(0, style.length - 2));

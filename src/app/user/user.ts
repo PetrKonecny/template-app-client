@@ -1,5 +1,5 @@
-import { Action } from '@ngrx/store'
-
+import { Action, createSelector } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 export class User {
     id: number
@@ -27,14 +27,22 @@ export function userReducer(state = {user: 0, isFetching: null, error: null}, ac
 	}
 }
 
-
 export function usersReducer(state = {users: null}, action: any){
 	switch (action.type) {
 		case "RESPONSE_CURRENT_USER_SUCC":
 		case "ADD_NORMALIZED_DATA":
-			return state && 
-				action.data.entities.users && 
-				Object.assign({},state,{users: Object.assign({},state.users,...action.data.entities.users)})
+			if(action.data.entities.users){ 
+				return Object.assign({},state,{users: Object.assign({},state.users,...action.data.entities.users)})
+			}else{
+				return state
+			}
 		default: return state;
 	} 
 }
+
+export const selectLoggedInUser = (state: AppState)=>state.user.user
+export const selectUsers = (state: AppState)=>state.users.users
+
+export const selectCurrentUser = createSelector(selectLoggedInUser, selectUsers, (user,users)=>{
+	return users && users[user] 
+})

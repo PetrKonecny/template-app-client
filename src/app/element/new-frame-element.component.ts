@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { FrameElement } from './frame-element'
 import { ImageContent, ImageContentCommands } from '../content/image-content';
 import { ElementDimensions} from '../draggable.directive'
@@ -7,6 +7,9 @@ import { ElementCommands} from './element';
 import { ElementStore } from '../element/element.store'
 import {Page} from '../page/page'
 import {Image} from '../image/image'
+import { Content } from '../content/content'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'create-new-frame-element',
@@ -29,14 +32,14 @@ import {Image} from '../image/image'
                 <md-icon *ngIf="error">error</md-icon>
             </div>
             <div [style.opacity]="element.opacity ? element.opacity/100 : 1" >
-                <display-content [hidden]="loading||error"  *ngIf="element.content" (loaded)="onLoad($event)"  (loadingError)="onError($event)" [content] = "element.content"></display-content>
+                <display-content [hidden]="loading||error"  *ngIf="element.content" (loaded)="onLoad($event)"  (loadingError)="onError($event)" [content] = "contents[element.content]"></display-content>
             </div>       
         </div>
         
         <div #frame *ngIf="!draggable && element?.content?.image" [class.selected]="selected" class= "inner frame-static" [style.background-color] = "element.background_color" [style.width.px]="element.width" [style.height.px]="element.height" [style.top.px]="element.positionY" [style.left.px]="element.positionX" >
             <image-handle>
                 <div [style.opacity]="element.opacity ? element.opacity/100 : 1" >
-                    <display-content-img-drag  #handleContent [content] = "element.content"></display-content-img-drag>
+                    <display-content-img-drag  #handleContent [content] = "contents[element.content]"></display-content-img-drag>
                 </div>
             </image-handle>           
         </div>
@@ -51,13 +54,16 @@ import {Image} from '../image/image'
             position: absolute;
             margin-right: 10px;
         }    
-    `]
+    `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class NewFrameElementComponent implements OnInit{
     
     @Input()
     element : FrameElement
+
+    contents: Content[]
     
     draggable: boolean = true;
     selected: boolean
@@ -65,18 +71,26 @@ export class NewFrameElementComponent implements OnInit{
     loading: boolean = false;
     error: boolean = false;
 
+    sub
+
     constructor(
         public elementRef: ElementRef, 
         private newPage: NewPageReference,
         private contentCommands: ImageContentCommands,
         private elementCommands: ElementCommands,
         private elementStore: ElementStore,
+        public store: Store<AppState>
     ){
         this.elementStore.element.subscribe(element =>this.selected = this.element === element)
+        this.sub = this.store.select('contents').subscribe(data=>this.contents = data.contents)
+    }
+
+    ngOnDestroy(){
+        this.sub.complete()
     }
 
     ngOnInit(){
-        if(this.element && this.element.content && (<ImageContent>this.element.content).image){
+        if(this.element && this.element.content  && (<ImageContent>this.contents[this.element.content]).image){
             this.loading = true
         }
     }
@@ -87,7 +101,7 @@ export class NewFrameElementComponent implements OnInit{
     }
 
     onLoad(image: Image){         
-        let content = <ImageContent> this.element.content
+        let content = <ImageContent> this.contents[this.element.content]
         this.loading = false
         if(content.width && content.height){
             return
@@ -120,7 +134,7 @@ export class NewFrameElementComponent implements OnInit{
             this.onError()
             return 
         }
-        let content = <ImageContent>this.element.content
+        let content = <ImageContent>this.contents[this.element.content]
         content.top = 0
         content.left = 0
         content.width = 0 
@@ -137,8 +151,17 @@ export class NewFrameElementComponent implements OnInit{
     move(dimensions: ElementDimensions){
         let d = this.newPage.move(this.element,dimensions)
         if(d){
-            this.elementCommands.startMovingElement(this.element,d)
-        }    
+            //let x = this.wrapper.nativeElement.style.left.slice(0,-2) 
+            //console.log(+x+d.left+'px',this.wrapper.nativeElement.style.left)
+            //this.wrapper.nativeElement.style.left = +x + d.left + 'px'
+            var obj = {entities: { elements:{}}}
+            var element = {...this.element}
+            element.positionX += d.left
+            element.positionY += d.top
+            obj.entities.elements[this.element.id] = element 
+            this.store.dispatch({type: "ADD_NORMALIZED_DATA", data: obj})
+            //this.commands.startMovingElement(this.element,d)
+        }   
     }
     
     outOfBounds(dimensions: ElementDimensions){
@@ -149,7 +172,7 @@ export class NewFrameElementComponent implements OnInit{
     }
     
     onDeleteButtonClick(){
-        (<ImageContent>this.element.content).image = null;
+        (<ImageContent>this.contents[this.element.content]).image = null;
         this.draggable = true
         this.hideHandles = false
     }

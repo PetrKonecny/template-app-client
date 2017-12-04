@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener} from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectionStrategy, Input} from '@angular/core';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { Template, TemplateCommands} from './template';
 import {ActivatedRoute} from '@angular/router';
@@ -24,9 +24,10 @@ import { AppState } from '../app.state'
           <md-spinner *ngIf="!template && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
-        <create-new-template *ngIf="template" [template] = template></create-new-template>
+        <create-new-template *ngIf="template" [template] = "template" ></create-new-template>
     `,
     providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands, ElementStore, PageStore]
+    ,
 })
 
 
@@ -36,6 +37,7 @@ export class TemplateEditComponent implements OnInit  {
     //error thrown when loading the template
     error: string;
     //template to be displayed
+    @Input()
     template : Template;
 
     /**
@@ -55,7 +57,8 @@ export class TemplateEditComponent implements OnInit  {
         private snackBar: MdSnackBar,
         private factory: PageFactory,
         private store: Store<AppState>
-    ){ }
+    ){ 
+    }
     
     //saves buffer commands if the mouse up event happens
     @HostListener('document:mouseup', ['$event'])
@@ -65,6 +68,7 @@ export class TemplateEditComponent implements OnInit  {
     
     //loads template from the store with the right id
     ngOnInit(){
+        /*
         this.templateStore.cleanStore()
 
         this.templateStore.template
@@ -75,21 +79,14 @@ export class TemplateEditComponent implements OnInit  {
                  this.pageStore.selectPage(this.template.pages[0])
                  this.factory.setHeight(this.template.pages[0].height).setWidth(this.template.pages[0].width)
             }
-        })
+        })*/
 
+        this.store.select('templates').first(data => data.selected > 0).subscribe(data => {
+            this.template = data.templates[data.selected]
+        })
 
        this.route.params
         .do(params=>this.store.dispatch({type: "REQUEST_TEMPLATE", id: params['id']}))
-       .flatMap((params)=>this.templateStore.getTemplate(params['id']))
-       .first()
-       .subscribe(
-          res => {
-             
-          },
-          error => {
-            this.error = error
-            this.snackBar.open("Chyba při načítání šablony",null,{duration: 1500})
-          }
-       )
+        .subscribe()
    }
 }

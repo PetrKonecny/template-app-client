@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, QueryList, AfterViewInit, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, OnChanges, Input, ViewChildren, QueryList, AfterViewInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import { MdDialog } from '@angular/material'
 import { Template, TemplateCommands} from './template';
 import { Page} from '../page/page';
@@ -25,7 +25,6 @@ import { AppState } from '../app.state'
     selector: 'create-new-template',
     template: `
         <!-- main app toolbar -->
-        <h1>{{(store.select('template') | async).test}}</h1>
         <md-toolbar color="primary" class="editor-main-toolbar mat-elevation-z2" style="z-index: 30; position: relative;">
             <button md-icon-button *ngIf="template && template.type!='no_instance_template'" [disabled]="disableSave" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
             <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" [disabled]="disableSave" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
@@ -61,13 +60,13 @@ import { AppState } from '../app.state'
             <!-- pages of the template -->
 
             <div class="pages">
-            <span *ngFor="let page of template.pages" >
-                <div class = "buttons" [style.width.mm] = "pageService.getPageWidth(page)">
-                    <button md-icon-button mdTooltip="smazat stranu" (click)="onClickDelete(page)" [disabled]="template.pages.length < 2"><md-icon>delete</md-icon></button>
-                    <button md-icon-button  mdTooltip="nová strana nad" (click)="onClickAddAbove(page)"><md-icon>keyboard_arrow_up</md-icon></button>
-                    <button md-icon-button mdTooltip="nová strana pod" (click)="onClickAddBelow(page)"><md-icon>keyboard_arrow_down</md-icon></button>
+            <span *ngFor="let pageId of template.pages" >
+                <div class = "buttons" [style.width.mm] = "pageService.getPageWidth(pages[pageId])">
+                    <button md-icon-button mdTooltip="smazat stranu" (click)="onClickDelete(pages[pageId])" [disabled]="template.pages.length < 2"><md-icon>delete</md-icon></button>
+                    <button md-icon-button  mdTooltip="nová strana nad" (click)="onClickAddAbove(pages[pageId])"><md-icon>keyboard_arrow_up</md-icon></button>
+                    <button md-icon-button mdTooltip="nová strana pod" (click)="onClickAddBelow(pages[pageId])"><md-icon>keyboard_arrow_down</md-icon></button>
                 </div> 
-                <create-new-page [page]="page"></create-new-page>
+                <create-new-page [page]="pages[pageId]"></create-new-page>
             </span>
             </div>
         </md-sidenav-container>
@@ -105,18 +104,17 @@ import { AppState } from '../app.state'
             color: white;
             opacity: 0.38;
         }
-    `]
+    `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 //component representing the editor
-export class NewTemplateComponent  {
-
-    @Input()
+export class NewTemplateComponent implements OnChanges {
     //template that should be edited
+    @Input()
     template: Template;
 
-    @Input()
-    pages: Page;
+    pages: Page[];
 
     @Input()
     templateInstance: TemplateInstance
@@ -126,7 +124,7 @@ export class NewTemplateComponent  {
 
     page: Page;
     sidenavState: number = 0;
-    
+    sub
     /**
     @param templateStore - injects store containing current template
     @param dialog - injects service to create dialog
@@ -150,8 +148,20 @@ export class NewTemplateComponent  {
         protected router: Router,
         public store: Store<AppState>
     ){ 
-        this.pageStore.page.subscribe(page => this.page = page)
+        //this.pageStore.page.subscribe(page => this.page = page)
 
+    }
+
+    ngOnInit() {
+        this.sub = this.store.select('pages').subscribe(data =>{console.log(data);this.pages = data.pages})
+    }
+
+    ngOnChanges(changes){
+        console.log(changes)
+    }
+
+    ngOnDestroy() {
+        this.sub.complete()
     }
   
     //calls store to save the template     

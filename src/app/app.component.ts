@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, HostListener  }       from '@angular/core';
+import { Component, OnInit, AfterViewChecked, HostListener, ChangeDetectionStrategy  }       from '@angular/core';
 import { TemplateInstanceService } from './template-instance/template-instance.service';
 import { TemplateService } from './template/template.service';
 import { TemplateInstanceStore } from './template-instance/template-instance.store';
@@ -23,9 +23,11 @@ import { AppState } from './app.state'
     template: `
     <div class="app-root" style="height: 100%;">
         <router-outlet></router-outlet>
+        }
     </div>
     `,
-    providers: [AppComponentRef]
+    providers: [AppComponentRef],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 //root application module that displays navigation toolbar that is present on every page 
@@ -33,7 +35,6 @@ export class AppComponent implements OnInit {
 
     //whether route contains 'admin' 
     adminRoute = false;
-    currentUser: User;
 
     /**
     @param userStore - store containing user currently logged in
@@ -45,7 +46,6 @@ export class AppComponent implements OnInit {
     */
     constructor(public store :Store<AppState>, private albumStore: AlbumStore, private userStore: UserStore, private userService: UserService, private router: Router, private fontStore: FontStore, public guard: UserGuard, private config: AppConfig, private route: ActivatedRoute,
     private ref: AppComponentRef){
-        this.userStore.user.subscribe(user=>this.currentUser = user)
     }
 
     /**triggered on mouse move in whole application

@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, OnInit, ElementRef, ViewChild, AfterViewInit, AfterViewChecked} from '@angular/core';
+import { Component, Input, HostListener, OnInit, ElementRef, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectionStrategy} from '@angular/core';
 import { Page, PageCommands} from './page';
 import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
@@ -8,12 +8,15 @@ import {PageStore} from '../page/page.store'
 import {ImageElementFactory, TextElementFactory, FrameElementFactory, TableElementFactory} from '../element/element.factory'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {CreateTableModal} from '../element/create-table-element.modal' 
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
+import { normalizeElementAndAddIntoPage } from '../normalizers'
 
 @Component({
     selector: 'create-new-page',
     template: `            
           <div class ="page mat-elevation-z1" #pageRef [style.width.mm]="getPageWidth()" [style.height.mm]="getPageHeight()" [class.selected]="selected" (drop)="onDrop($event)" (dragover)="onDragOver()"  (click)="onPageClicked()">             
-            <create-new-element *ngFor="let element of page.elements" [element] = "element" ></create-new-element>
+            <create-new-element *ngFor="let elementId of page.elements" [element] = "elements[elementId]" ></create-new-element>
             <display-guide *ngFor="let guide of guides" [guide] = "guide" ></display-guide>
             <display-ruler *ngFor="let guide of page.rulers" [guide] = "guide" ></display-ruler>
           </div>        
@@ -31,7 +34,8 @@ import {CreateTableModal} from '../element/create-table-element.modal'
             margin-top: 5px;
         }       
     `],
-    providers: [NewPageReference]
+    providers: [NewPageReference],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 //displays page in the template editor
@@ -44,12 +48,16 @@ export class NewPageComponent implements AfterViewInit {
     //displazed page
     page: Page  
 
+    elements: Element[]
+
     @ViewChild('pageRef')
     //reference to the div representing the page
     pageElementRef: ElementRef
  
      //whether the page is selected or not
     selected: boolean = false
+
+    sub
      
     @HostListener('mouseup', ['$event'])
     //resets the guides on mouse up
@@ -62,14 +70,19 @@ export class NewPageComponent implements AfterViewInit {
     @param pageStore - store containing selected page
     @param commands - commands used for adding elements
     */
-    constructor(private newPageRef: NewPageReference, private pageStore: PageStore, private commands: PageCommands, public dialog: MdDialog) {
+    constructor(private newPageRef: NewPageReference, private pageStore: PageStore, private commands: PageCommands, public dialog: MdDialog, public store: Store<AppState>) {
         this.newPageRef.component = this
         this.guides = new Array
     }
 
     ngOnInit(){
+        this.sub = this.store.select('elements').subscribe(data => this.elements = data.elements)
         this.pageStore.page.subscribe(page => {this.selected = this.page === page})
         this.pageStore.echo()
+    }
+
+    ngOnDestroy(){
+        this.sub.complete()
     }
 
     //prevents default behaviour on drag over
@@ -137,7 +150,9 @@ export class NewPageComponent implements AfterViewInit {
         let x = event.clientX - this.pageElementRef.nativeElement.getBoundingClientRect().left
         let y = event.clientY - this.pageElementRef.nativeElement.getBoundingClientRect().top
         factory.setPositionX(x).setPositionY(y)
-        this.commands.addElement(this.page,factory.build())
+        let page = Object.assign({},this.page)
+        let element = factory.build()
+        this.store.dispatch({type: 'ADD_NORMALIZED_DATA', data: normalizeElementAndAddIntoPage(page,element)})
         event.preventDefault()
     }
 
@@ -165,7 +180,6 @@ export class NewPageComponent implements AfterViewInit {
             this.page.rulers.push(ruler3)
             this.page.rulers.push(ruler2)
             this.page.rulers.push(ruler)
-            console.log(this.page)
         });        
     }
     

@@ -6,15 +6,17 @@ import { AppConfig } from '../app.config'
 import { Element, ElementCommands} from './element';
 import { ElementStore } from '../element/element.store'
 import { ImageService } from '../image/image.service'
-import {Image} from '../image/image'
+import {Image, getImageById} from '../image/image'
 import {TemplateHelper} from '../template/template.helper'
 import {Page} from '../page/page'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'create-new-image-element',
     template: `
         <div draggable2 [style.opacity]="element.opacity ? element.opacity/100 : 1" [class.animated]="animated" [class.selected]="selected" (move) ="move($event)" [style.top.px]="element.positionY" [style.left.px]="element.positionX" [style.width.px]="element.width ? element.width : 100 " [style.height.px]="element.height ? element.height : 100">
-            <image (loaded)="onLoad($event)" *ngIf="element?.image" [image]="element.image"></image>          
+            <image (loaded)="onLoad($event)" *ngIf="(image | async).id" [image]="image | async"></image>          
         </div>
     `,
     styles: [
@@ -33,13 +35,19 @@ export class NewImageElementComponent {
     selected: boolean
     animated: boolean = false
 
+    image
+
     /**
     @param newPage - injects reference to new page for moving the element
     @param elementStore - injects reference to the store containing selected element
     @param commands - injects element commands to provide operations on the element
     **/ 
-    constructor(private newPage: NewPageReference, private elementStore: ElementStore, private commands: ElementCommands){
+    constructor(public store: Store<AppState>, private newPage: NewPageReference, private elementStore: ElementStore, private commands: ElementCommands){
         this.elementStore.element.subscribe(element =>this.selected = this.element === element)
+    }
+
+    ngOnInit(){
+        this.image = this.store.select(getImageById(this.element.image))
     }
 
     
@@ -84,7 +92,16 @@ export class NewImageElementComponent {
     move(dimensions: ElementDimensions){
        let d = this.newPage.move(this.element,dimensions)
         if(d){
-            this.commands.startMovingElement(this.element,d)
+            //let x = this.wrapper.nativeElement.style.left.slice(0,-2) 
+            //console.log(+x+d.left+'px',this.wrapper.nativeElement.style.left)
+            //this.wrapper.nativeElement.style.left = +x + d.left + 'px'
+            var obj = {entities: { elements:{}}}
+            var element = {...this.element}
+            element.positionX += d.left
+            element.positionY += d.top
+            obj.entities.elements[this.element.id] = element 
+            this.store.dispatch({type: "ADD_NORMALIZED_DATA", data: obj})
+            //this.commands.startMovingElement(this.element,d)
         }
     }
       

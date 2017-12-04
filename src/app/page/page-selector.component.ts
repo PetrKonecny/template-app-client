@@ -16,6 +16,9 @@ import {CreateTableModal} from '../element/create-table-element.modal'
 import {PageCommands} from './page'
 import {TextElementFactory, FrameElementFactory, TableElementFactory} from '../element/element.factory'
 import {PageStore} from '../page/page.store'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
+import { normalizeElementAndAddIntoPage } from '../normalizers'
 
 @Component({
     selector: 'page-select',
@@ -26,7 +29,7 @@ import {PageStore} from '../page/page.store'
                         <md-icon style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="onCloseClicked.emit(true)" mdTooltip="schovat boční panel">chevron_left</md-icon>  
                     </md-toolbar>
                     <div style="padding-left: 6px; padding-right: 6px;">
-                    <md-grid-list *ngIf="page" cols="2    ">                    
+                    <md-grid-list *ngIf="page" cols="2">                    
                         <md-grid-tile ><button class="element-tile" (click)="createNewTextElement()" draggable="true" (dragstart)="onTextDragStart($event)"><md-icon>format_color_text</md-icon><h5>text</h5></button></md-grid-tile>
                         <md-grid-tile ><button class="element-tile" (click)="createNewFrameElement()" draggable="true" (dragstart)="onFrameDragStart($event)"><md-icon>wallpaper</md-icon><h5>rámeček</h5></button></md-grid-tile>
                         <md-grid-tile ><button class="element-tile" (click)="createNewTableElement()" draggable="true" (dragstart)="onTableDragStart($event)"><md-icon>border_all</md-icon><h5>tabulka</h5></button></md-grid-tile>
@@ -52,6 +55,7 @@ export class PageSelectorComponent {
     */
     constructor(private pageStore: PageStore,
                 public dialog: MdDialog, 
+                public store: Store<AppState>,
                 private commands: PageCommands,){
         this.pageStore.page.subscribe(page => this.page = page)   
     }
@@ -63,14 +67,18 @@ export class PageSelectorComponent {
     //calls command to create new text element
     createNewTextElement(){
         let factory = new TextElementFactory
-        this.commands.addElement(this.page, factory.build())
+        let page = {...this.page}
+        let element = factory.build()
+        this.store.dispatch({type: 'ADD_NORMALIZED_DATA', data: normalizeElementAndAddIntoPage(page,element)})
+        //this.commands.addElement(this.page, factory.build())
     }
     
     //calls command to create new frame element
     createNewFrameElement(){
         let factory = new FrameElementFactory
-        this.commands.addElement(this.page, factory.build())
-    }
+        let page = Object.assign({},this.page)
+        let element = factory.build()
+        this.store.dispatch({type: 'ADD_NORMALIZED_DATA', data: normalizeElementAndAddIntoPage(page,element)})}
            
     //calls command to create new table element
     createNewTableElement(){
@@ -83,7 +91,10 @@ export class PageSelectorComponent {
                 factory.setRowCount(val.rows)
                 factory.setColumnWidth(val.columnWidth)
                 factory.setRowHeight(val.rowHeight)
-                this.commands.addElement(this.page, factory.build())}
+                let page = Object.assign({},this.page)
+                let element = factory.build()
+                this.store.dispatch({type: 'ADD_NORMALIZED_DATA', data: normalizeElementAndAddIntoPage(page,element)})
+            }
         })
     }
 

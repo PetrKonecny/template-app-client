@@ -8,18 +8,14 @@ export class Content  {
     type: string;
 }
 
-export function contentsReducer(state = {contents: null},action: any) {
+export function contentsReducer(state = {contents: null, selected: 0},action: any) {
   switch (action.type) {
     case "ADD_NORMALIZED_DATA":
-      return state && 
-        action.data.entities.contents && 
-        Object.assign({},state,{contents: Object.assign({},state.contents,...action.data.entities.contents)})
-    default: return state;
-  }
-}
-
-export function contentReducer(state = {content: 0}, action: any) {
-  switch (action.type) {
+        if(action.data.entities.contents) { 
+          return Object.assign({},state,{contents: Object.assign({},state.contents,...action.data.entities.contents)})
+        }else{
+          return state
+        }
     default: return state;
   }
 }

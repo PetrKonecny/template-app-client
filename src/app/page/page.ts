@@ -129,9 +129,11 @@ export class Page  {
 export function pagesReducer(state = {pages: null},action: any) {
   switch (action.type) {
     case "ADD_NORMALIZED_DATA":
-      return state && 
-        action.data.entities.pages && 
-        Object.assign({},state,{pages: Object.assign({},state.pages,...action.data.entities.pages)})
+      if(action.data.entities.pages){ 
+        return Object.assign({},state,{pages: Object.assign({},state.pages,...action.data.entities.pages)})
+      }else{
+        return state
+      }
     default: return state;
   }
 }
