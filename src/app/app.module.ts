@@ -49,14 +49,13 @@ import { UserService} from './user/user.service'
 import { UserStore} from './user/user.store'
 import { UserLoginComponent} from './user/user-login.component'
 import { PageService} from './page/page.service'
-import { MyMdMenu } from './element/my-md-menu'
 import { Ng2DropdownModule } from 'ng2-material-dropdown'
 import { FontService} from './font/font.service'
 import { FontStore} from './font/font.store'
 import { CellEditToolbar} from './element/cell-edit-toolbar.component'
 import { AppConfig} from './app.config'
 import { APP_INITIALIZER } from '@angular/core'
-import { TagInputModule } from 'ng2-tag-input'
+import { TagInputModule } from 'ngx-chips'
 import { SaveTemplateModal } from './template/save-template.modal'
 import { TemplateInstanceStore } from './template-instance/template-instance.store'
 import { TemplateInstanceService } from './template-instance/template-instance.service'
@@ -137,7 +136,7 @@ const routes: Routes = [
         EditorToolbarComponent, FontListComponent, DisplayFontComponent, NewTableElementComponent, NewElementComponent, DisplayGuideComponent, DisplayRulerComponent,
         NewTableRowComponent, DisplayPageComponent, NewPageComponent, ElementToolbarComponent, PageSelectorComponent, TemplateListComponent,
         TemplateInstanceListComponent, TemplateCreateComponent, TemplateIndexComponent, TemplateEditComponent, TemplateInstanceCreateComponent, TemplateInstanceIndexComponent, TemplateInstanceEditComponent,
-        FontIndexComponent, UserLoginComponent, MyMdMenu, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
+        FontIndexComponent, UserLoginComponent, CellEditToolbar, SaveTemplateModal, DisplayImageElementComponent, DisplayTextElementComponent, DisplayFrameElementComponent,
         UserListComponent,UserTemplatesComponent, UserIndexComponent, UserTemplateInstancesComponent, TemplateSearchComponent, ElementHandleComponent, ImageHandleComponent,
         TemplateEditForm, CreateTableModal, CreateTemplateModal, ImageComponent, UploadComponent, ColorPickerComponent, PositionForm,
         SaveTemplateInstanceModal, AlbumIndexComponent, AlbumGridComponent, DisplayAlbumComponent,

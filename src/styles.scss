@@ -262,10 +262,6 @@ md-dialog-actions div{
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
-.hue {
-    width: 142px !important;
-}
-
 .color-picker{
     border: none !important;
 }
@@ -469,4 +465,25 @@ inframe-image-upload {
             transition: transform 0.5s;
         }
     }
+}
+
+.box{
+    input{
+      border: none !important;
+      border-bottom: 2px solid $textLight !important;
+    }
+
+    input:focus{
+      border: none !important;
+      background: none !important;
+      outline: none;
+      border-bottom: 2px solid $dark !important;
+    }
+}
+
+.preset-color{
+    height: 26px !important;
+    width: 26px !important;
+    border-color: $textLight !important;
+    border-radius: 50% !important;
 }

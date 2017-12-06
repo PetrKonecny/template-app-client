@@ -18,7 +18,6 @@ import { ElementStore } from '../element/element.store'
     selector: 'element-toolbar',
     template: ` 
                 <!-- displays whole toolbar -->
-
                 <div class="toolbar" style="display: flex;" *ngIf="element"> 
                    
                     <button md-icon-button (click)="deleteElement()" md-tooltip="smazat prvek"><md-icon>delete</md-icon></button>
@@ -54,18 +53,8 @@ import { ElementStore } from '../element/element.store'
                         </md-menu> 
 
                         <!-- displays controls to change color of the background --> 
-
-                        <button md-icon-button mdTooltip="Barva pozadí" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="element.background_color">fiber_manual_record</md-icon></button>
-                        <md-menu #backgroundColorMenu>
-                            <div (click)="$event.stopPropagation()">
-                                <div md-menu-item [colorPicker]="element.background_color ? element.background_color : lastColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeBackgroundColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
-                                </div>
-                            </div>
-                            <div (click)="$event.stopPropagation()" md-menu-item style="overflow: hidden;">
-                                Zobrazit/skrýt pozadí <md-checkbox #bgCheckbox [checked]="element.background_color" (change)="toggleElementBackground(bgCheckbox.checked)" style="position: relative; z-index: 1000; padding-left: 16px"></md-checkbox>
-                            </div>
-                        </md-menu>
-
+                        
+                        <color-picker [presetColors]="getPresetColors()" [tooltip]="'Barva pozadí'" [showToggle]="true" [color]="element.background_color" (onChange)="changeBackgroundColor($event)"></color-picker>
                     </div>
 
                     <!-- displays specialized toolbar for text elements -->
@@ -103,6 +92,12 @@ export class ElementToolbarComponent  {
     element: Element
     //template that the editor is working with
     template: Template
+
+    colorMenuOpen: boolean = false
+
+    colorToggle(){
+        this.colorMenuOpen = !this.colorMenuOpen
+    }
     
     //true if selected element is first in the template
     first: boolean
@@ -124,7 +119,11 @@ export class ElementToolbarComponent  {
         this.templateStore.template.subscribe(template => this.template = template)
     }
 
-
+    getPresetColors(){
+        var arrays = this.template.pages.map(page => page.elements.filter(element=>element !== this.element).map(element=>element.background_color))
+        var array = [].concat([],arrays)[0]
+        return array.filter((v, i, a) => v && a.indexOf(v) === i); 
+    }
     //shorthand to get background color
     private getBgColor(){
         let color = this.element.background_color
@@ -152,9 +151,7 @@ export class ElementToolbarComponent  {
     ***/
     changeBackgroundColor(color: string){
         this.lastColor = color
-        if(this.element.background_color){
             this.commands.changeBackgroundColor(this.element, this.lastColor)
-        }
     }
     /** toggles display of elements background 
     **/

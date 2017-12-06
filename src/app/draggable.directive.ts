@@ -28,7 +28,6 @@ export class Draggable2 implements OnInit {
     @HostListener('mousedown', ['$event'])
     onMousedown(event) {
         this.mousedown.emit(event)
-        return this.propagate
     }
 
     constructor(public element: ElementRef, private ref: AppComponentRef) {
