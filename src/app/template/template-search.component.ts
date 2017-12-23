@@ -9,6 +9,7 @@ import {UserStore} from '../user/user.store'
 @Component({
     selector: 'template-index',
     template: `
+        <main-toolbar></main-toolbar>
         <md-toolbar>
             <form (ngSubmit)="onSearchKeyUp(search.value)">
                 <md-input-container><input #search mdInput value={{query}} type="search"></md-input-container>

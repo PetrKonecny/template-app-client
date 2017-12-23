@@ -2,6 +2,8 @@
 $dark: #320b86;
 $textLight: #f5f5f5;
 $accent: #ffd740; 
+$primary: #673ab7;
+
 app-root{
     position: absolute;
     top: 0;
@@ -33,15 +35,13 @@ app-root{
 
 image-index, template-index, template-instance-index, album-index, display-album{
     height: 100%;
-    max-height: calc(100% - 64px);
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
 .index-content{
-    height: 100%;
-    max-height: calc(100% - 64px);
+    height: calc(100% - 64px);
     background: #f5f5f5;
 }
 
@@ -101,6 +101,7 @@ album-index-sidenav{
 .main-toolbar{
     z-index: 20;
     position: relative;
+    display: flex;
 }
 
 album-index-sidenav md-grid-list{
@@ -235,6 +236,10 @@ md-dialog-actions div{
     height: 100%;
     display: none;
     transition: 0.5s ease;
+    md-toolbar{
+        background: $dark;
+        color: $textLight;
+    }
 }
 
 .sidenav div::-webkit-scrollbar {
@@ -368,6 +373,11 @@ h1,h2,h3 {
     background: $accent;
 }
 
+.card{
+    @extend .warn;
+    background: $textLight;
+}
+
 .index-progress{
     position: absolute !important;
     left: 0;
@@ -486,4 +496,46 @@ inframe-image-upload {
     width: 26px !important;
     border-color: $textLight !important;
     border-radius: 50% !important;
+}
+
+@keyframes slideToolbarFromTop {
+    0% {
+        margin-top: -64px;
+    }
+    100% {
+        margin-top: 0px;
+    }
+}
+
+.bg-primary{
+     background: $primary;
+ }
+
+ .secondary-editor-toolbar{ 
+     animation: 0.25s ease-out 0s 1 slideToolbarFromTop;
+ }
+
+ .sidenav-container{
+     background: $dark;
+ }
+ 
+ .sidenav-strip{
+     flex: 1;
+     width: 15%;
+     background: $primary;
+  }   
+
+.mat-menu-content{padding-top: 0 !important; padding-bottom: 0 !important;}
+
+.mat-menu-panel{overflow: hidden !important}
+
+.main-nav-menu{
+    background: $primary;
+    .mat-menu-item{
+        color: $textLight;
+    }
+}
+
+.secondaryToolbarPushed {
+    padding-left: 24px;
 }

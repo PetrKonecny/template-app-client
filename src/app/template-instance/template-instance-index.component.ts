@@ -16,6 +16,7 @@ import { UserService } from '../user/user.service';
 @Component({
     selector: 'template-instance-index',
     template: `
+        <main-toolbar></main-toolbar>
         <md-toolbar>
                 <button md-button *ngIf="showEditButton()" [routerLink] ="getLinkToEdit()">OTEVŘÍT DOKUMENT</button>
                 <button md-button *ngIf="showDeleteButton()" (click)="onDeleteClicked(selected[0])">SMAZAT DOKUMENT</button>

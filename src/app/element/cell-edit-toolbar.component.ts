@@ -7,29 +7,14 @@ import { ElementStore } from '../element/element.store'
     selector: 'cell-edit-toolbar',
     template: `  
                 <!-- Controlls for changing background of selected cells -->
-
-                <button md-icon-button mdTooltip="Barva pozadí vybraných buněk" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="getCellBgColor()">fiber_manual_record</md-icon></button>
-                <md-menu #backgroundColorMenu>
-                <div (click)="$event.stopPropagation()">
-                    <div md-menu-item [colorPicker]="getCellBgColor() ? getCellBgColor() : lastCellBgColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="'hex'" (colorPickerChange)="changeSelectedCellsBackgroundColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
-                    </div>
-                    <div md-menu-item style="overflow: hidden;">
-                        Zobrazit/skrýt pozadí <md-checkbox #bgCheckbox [checked]="getCellBgColor()" (change)="toggleCellBackground(bgCheckbox.checked)" style="position: relative; z-index: 1000;"></md-checkbox>
-                    </div>
-                </div>
-                </md-menu>
-
+                <color-picker [tooltip]="'Barva pozadí vybraných buněk'" [showToggle]="true" [color]="getCellBgColor()" (onChange)="changeSelectedCellsBackgroundColor($event)"></color-picker>
+                
                 <!-- Controlls for changing font of selected cells-->
 
                 <font-toolbar (onFontSelected)="changeSelectedCellsFont($event)"  (onFontSizeSelected)="changeSelectedCellsFontSize($event)"></font-toolbar>
-                <button md-icon-button mdTooltip="Barva textu" [mdMenuTriggerFor]="textColorMenu"><md-icon  [style.color]="getCellTextColor()">fiber_manual_record</md-icon></button>
-                <md-menu #textColorMenu>
-                <div (click)="$event.stopPropagation()">
-                    <div md-menu-item [colorPicker]="getCellTextColor()" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="'hex'" (colorPickerChange)="changeSelectedCellsTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
-                    </div>    
-                </div>               
-                </md-menu>
-
+                
+                <color-picker [tooltip]="'Barva textu'" [color]="getCellTextColor()" (onChange)="changeSelectedCellsTextColor($event)"></color-picker>
+                
                 <!-- Controlls for changing text formating of selected cells-->
 
                 <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="formát textu vybraných buněk">A</button>
@@ -57,14 +42,8 @@ import { ElementStore } from '../element/element.store'
                 </md-menu>
 
                 <!-- Controlls for changing color of selected cells-->
-
-                <button md-icon-button mdTooltip="Barva rámečku" [mdMenuTriggerFor]="borderColorMenu"><md-icon  [style.color]="getCellBColor()">fiber_manual_record</md-icon></button>
-                <md-menu #borderColorMenu>
-                <div (click)="$event.stopPropagation()">
-                    <div md-menu-item [colorPicker]="getCellBColor()" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="'hex'" (colorPickerChange)="changeSelectedCellsBorderColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
-                    </div>                   
-                </div>
-                </md-menu>
+                
+                <color-picker [tooltip]="'Barva rámečku'" [color]="getCellBColor()" (onChange)="changeSelectedCellsBorderColor($event)"></color-picker>
              `,
 })
 
@@ -181,10 +160,7 @@ export class CellEditToolbar {
     @param 'color' - css color to be set
     */    
     changeSelectedCellsBackgroundColor(color: string){
-        this.lastCellBgColor = color
-        if(this.getCellBgColor() &&  this.getCellBgColor() !== this.lastCellBgColor){
-            this.commands.changeSCellsBackgroundColor(this.element, this.lastCellBgColor)
-        }
+            this.commands.changeSCellsBackgroundColor(this.element, color)
     }
     
     /*calls command to change selected cells text color

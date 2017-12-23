@@ -54,6 +54,7 @@ export class TemplateCreateComponent implements AfterViewInit, OnInit  {
             if(!this.template.pages || this.template.pages.length < 1){
                     this.template.pages = []
                     this.template.pages.push(this.factory.build())
+                    this.pageStore.selectPage(this.template.pages[0])
             }
         })
 

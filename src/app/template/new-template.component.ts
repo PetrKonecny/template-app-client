@@ -17,46 +17,55 @@ import domtoimage from 'dom-to-image'
 import { SaveTemplateInstanceModal} from '../template-instance/save-template-instance.modal'
 import { TemplateInstance} from '../template-instance/template-instance';
 import { Router} from '@angular/router'
+import { ElementStore } from '../element/element.store'
+import { AppConfig }from '../app.config'
 
 @Component({
     selector: 'create-new-template',
     template: `
-        <md-sidenav-container style="height: calc(100% - 64px);">
+        <!-- main app toolbar -->
+        <md-toolbar color="primary" class="editor-main-toolbar mat-elevation-z2" style="z-index: 30; position: relative;">
+            <main-nav-button></main-nav-button>
+            <button md-icon-button *ngIf="template && template.type!='no_instance_template'" [disabled]="disableSave" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
+            <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" [disabled]="disableSave" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
+            <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
+            <button md-icon-button [disabled]="true || !undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
+            <button md-icon-button [mdMenuTriggerFor]="templateMore"><md-icon>more_vert</md-icon></button> 
+            
+            <md-menu #templateMore="mdMenu">
+                <a md-menu-item [disabled]="!template.id" href={{getPdfLink()}} target="_blank">Vytvořit PDF</a>
+            </md-menu>
 
+            <h2 style="margin-left: auto">{{(template.type == 'no_instance_template' ? 'dokument' : 'šablona') + (template.name ? ' : ' + template.name : ' : nepojmenovaný dokument')}}</h2>
+        </md-toolbar>    
+        <md-sidenav-container>
             <!-- side menu -->
 
-            <md-sidenav opened="true" class="mat-elevation-z6 bg-dark" mode ="side" #sidenav style="width: 20%; display:flex; overflow: visible;">
-                    <div style="display:flex; flex-direction:row; width: 100%;">
-                        <div style="background: #673ab7; flex:1; width: 15%;">
-                            <div class="side-switch" [class.switch-active]="sidenavState == 1" (click)="clickImages()"><md-icon>image</md-icon></div>
-                            <div class="side-switch" [class.switch-active]="sidenavState == 0" (click)="clickElements()"><md-icon>web</md-icon></div>
-                        </div>
-                        <div style="flex: 5; width: 85%;">
-                            <div class="sidenav" [class.sidenav-active]="sidenavState == 1" >
-                            <album-index-sidenav  [hidden]="sidenavState != 1" (onCloseClicked)="sidenav.close()"></album-index-sidenav>
-                            </div>
-                            <div class="sidenav" [class.sidenav-active]="sidenavState == 0" >
-                            <page-select  [hidden]="sidenavState != 0" (onCloseClicked)="sidenav.close()"></page-select>
-                            </div>
-                            
-                        </div>
+            <md-sidenav opened="true" class="sidenav-container mat-elevation-z6" mode ="side" #sidenav style="width: 20%; display:flex; overflow: visible;">                    
+                <div style="display:flex; flex-direction:row; width: 100%;">
+                    <div class="sidenav-strip">
+                        <div class="side-switch" [class.switch-active]="sidenavState == 1" (click)="clickImages()"><md-icon>image</md-icon></div>
+                        <div class="side-switch" [class.switch-active]="sidenavState == 0" (click)="clickElements()"><md-icon>web</md-icon></div>
                     </div>
+                    <div style="flex: 5; width: 85%; position: relative;">
+                        <div class="sidenav" [class.sidenav-active]="sidenavState == 1" >
+                        <album-index-sidenav  [hidden]="sidenavState != 1" (onCloseClicked)="sidenav.close()"></album-index-sidenav>
+                        </div>
+                        <div class="sidenav" [class.sidenav-active]="sidenavState == 0" >
+                        <page-select  [hidden]="sidenavState != 0" (onCloseClicked)="sidenav.close()"></page-select>
+                        </div>       
+                    </div>
+                </div>
             </md-sidenav>
 
-            <!-- main app toolbar -->
-
-            <md-toolbar class="mat-elevation-z2" style="z-index: 30; position: relative;">
-                <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
-                <button md-icon-button *ngIf="template && template.type!='no_instance_template'" [disabled]="disableSave" (click)="saveTemplate()" md-tooltip="uložit šablonu"><md-icon>save</md-icon></button>
-                <button md-icon-button *ngIf="template && template.type == 'no_instance_template'" [disabled]="disableSave" (click)="saveDocument()" md-tooltip="uložit dokument"><md-icon>save</md-icon></button>
-                <button md-icon-button [disabled]="!undoService.getUndos().length" (click)="undo()" md-tooltip="vrátit akci zpět"><md-icon>undo</md-icon></button>
-                <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
-                <element-toolbar style="width: 100%;"></element-toolbar>
+            <!-- secondary toolbar -->
+            <md-toolbar *ngIf="elementStore.element | async" class="secondary-editor-toolbar mat-elevation-z1">
+                <element-toolbar [class.secondaryToolbarPushed]="!sidenav.opened" style="width: 100%;"></element-toolbar>
             </md-toolbar>       
 
             <!-- pages of the template -->
 
-            <div class="pages">
+            <div class="pages" [class.pushDown]="elementStore.element | async">
             <span *ngFor="let page of template.pages" >
                 <div class = "buttons" [style.width.mm] = "pageService.getPageWidth(page)">
                     <button md-icon-button mdTooltip="smazat stranu" (click)="onClickDelete(page)" [disabled]="template.pages.length < 2"><md-icon>delete</md-icon></button>
@@ -67,20 +76,27 @@ import { Router} from '@angular/router'
             </span>
             </div>
         </md-sidenav-container>
+
+        <div style="position: absolute; left: 12px; top: 82px;">
+            <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
+        </div>
     `,
-    styles: [`.leftPanel {
-            position: relative;
-            float: left;
-            margin-top: 10px;
-            width: 300px;
-        }
+    styles: [`
         .pages{
             position: relative;
             overflow-y: auto;
-            height: calc(100% - 64px);
             box-sizing: border-box;
             padding: 16px;
-        }       
+        }
+
+        md-sidenav-container{
+            height: calc(100% - 64px);
+        }
+
+        .pushDown{
+             height: calc(100% - 64px);
+        }   
+
         .buttons{
             margin-left: auto;
             margin-right: auto;
@@ -92,6 +108,11 @@ import { Router} from '@angular/router'
         md-tab-group{
             height: 100%;
         }
+
+       .mat-icon-button[disabled]{
+           color: white;
+           opacity: 0.38;
+       }
     `],
 })
 
@@ -103,7 +124,7 @@ export class NewTemplateComponent  {
     template: Template;
 
     @Input()
-    templateInstance: TemplateInstance
+    templateInstance: TemplateInstance;
  
     @Input()
     disableSave: boolean = false;
@@ -130,7 +151,9 @@ export class NewTemplateComponent  {
         protected pageStore: PageStore,
         protected pageCommands: PageCommands,
         protected templateInstanceStore: TemplateInstanceStore,
-        protected router: Router
+        protected router: Router,
+        public elementStore: ElementStore,
+        public config: AppConfig
     ){ 
         this.pageStore.page.subscribe(page => this.page = page)
     }
@@ -153,6 +176,10 @@ export class NewTemplateComponent  {
             }
         )
         dialogRef.componentInstance.template = this.template
+    }
+
+    getPdfLink(){
+        return this.config.getConfig('api-url')+'/template/'+this.template.id+'/pdf' 
     }
 
     saveDocument() {

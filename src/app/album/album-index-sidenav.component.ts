@@ -17,7 +17,7 @@ import { AlbumStore } from '../album/album.store'
     selector: 'album-index-sidenav',
     template: `
         <div class="shutter">
-          <md-spinner *ngIf="loading && !error"></md-spinner>
+          <md-spinner color="#f5f5f5" *ngIf="loading && !error"></md-spinner>
           <md-icon class="shutter" style="font-size: 96px; opacity: 0.1;" *ngIf="error">error</md-icon>
         </div>
         <md-toolbar class="sidenav-toolbar bg-dark text-light">

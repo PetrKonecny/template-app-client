@@ -14,12 +14,7 @@ import { Element} from './element/element';
                     </div>
                 </div>
             </md-menu>            
-             `,
-    providers: [],
-    encapsulation: ViewEncapsulation.None,
-    styles: [`.mat-menu-content{padding-top: 0 !important, padding-bottom: 0 !important}
-              .mat-menu-panel{overflow: hidden !important}
-    `],
+             `
 })
 
 export class ColorPickerComponent {

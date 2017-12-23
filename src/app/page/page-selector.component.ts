@@ -20,20 +20,20 @@ import {PageStore} from '../page/page.store'
 @Component({
     selector: 'page-select',
     template: `
-                    <md-toolbar class="sidenav-toolbar bg-dark text-light">
-                        <h4>Prvky</h4>
-                        <span style="flex: 1 1 auto"></span>
-                        <md-icon style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="onCloseClicked.emit(true)" mdTooltip="schovat boční panel">chevron_left</md-icon>  
-                    </md-toolbar>
-                    <div style="padding-left: 6px; padding-right: 6px;">
-                    <md-grid-list *ngIf="page" cols="2    ">                    
+                <md-toolbar class="sidenav-toolbar">
+                    <h4>Prvky</h4>
+                    <span style="flex: 1 1 auto"></span>
+                    <md-icon style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="onCloseClicked.emit(true)" mdTooltip="schovat boční panel">chevron_left</md-icon>  
+                </md-toolbar>
+                <div style="padding-left: 6px; padding-right: 6px;">
+                    <md-grid-list *ngIf="page" cols="2">                    
                         <md-grid-tile ><button class="element-tile" (click)="createNewTextElement()" draggable="true" (dragstart)="onTextDragStart($event)"><md-icon>format_color_text</md-icon><h5>text</h5></button></md-grid-tile>
                         <md-grid-tile ><button class="element-tile" (click)="createNewFrameElement()" draggable="true" (dragstart)="onFrameDragStart($event)"><md-icon>wallpaper</md-icon><h5>rámeček</h5></button></md-grid-tile>
                         <md-grid-tile ><button class="element-tile" (click)="createNewTableElement()" draggable="true" (dragstart)="onTableDragStart($event)"><md-icon>border_all</md-icon><h5>tabulka</h5></button></md-grid-tile>
                     </md-grid-list>
-                <div style="width: 100%; height: 100%; display: flex; align-items: center; text-align: center;" *ngIf="!page">
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; text-align: center;" *ngIf="!page">
                     <h3 *ngIf="!page" class="nothing-found">Vyberte kliknutím stránku šablony</h3>
-                </div>
+                    </div>
                 </div>
              `,
     providers: [],

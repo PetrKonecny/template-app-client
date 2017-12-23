@@ -79,7 +79,6 @@ export class TemplateInstanceHelper {
                 if (content.type == 'table_content'){
                     TableContent.fillEmptyCells(<TableContent>content)
                 }
-                console.log(content)
                 return content;
             }        
         }

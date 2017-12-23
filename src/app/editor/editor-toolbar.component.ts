@@ -10,13 +10,7 @@ import {TextContent} from '../content/text-content'
     selector: 'editor-toolbar',
     template: ` <span *ngIf="editor">
                     <font-toolbar (onFontSelected)="changeEditorFont($event)" (onFontSizeSelected)="changeEditorFontSize($event)" [fontLabel]="editor.editorCurFont.substring(0,5)" [fontSizeLabel]="editor.editorCurFontSize"></font-toolbar>
-                    <button md-icon-button md-tooltip="barva písma" [mdMenuTriggerFor]="backgroundColorMenu"><md-icon  [style.color]="editor.editorCurColor">fiber_manual_record</md-icon></button>
-                    <md-menu #backgroundColorMenu>
-                        <div (click)="$event.stopPropagation()">
-                            <div md-menu-item [colorPicker]="editor.editorCurColor" style="width: 230px; height: 290px; padding: 0 !important;" [cpOutputFormat]="hex" (colorPickerChange)="changeEditorTextColor($event)" [cpToggle]="true" [cpDialogDisplay]="'inline'" [cpAlphaChannel]="'disabled'">
-                            </div>
-                        </div>       
-                    </md-menu>
+                    <color-picker [tooltip]="'Barva textu'" [color]="editor.editorCurColor" (onChange)="changeEditorTextColor($event)"></color-picker>
                     <button md-icon-button [mdMenuTriggerFor]="textMenu"  mdTooltip="formát textu">F</button>
                     <md-menu (click)="$event.stopPropagation()" #textMenu="mdMenu">
                         <button md-icon-button (click)="changeEditorTextAlign('JustifyLeft')" mdTooltip="zarovnat doleva"><md-icon>format_align_left</md-icon></button>

@@ -17,6 +17,7 @@ import { AppConfig }from '../app.config'
 @Component({
     selector: 'template-index',
     template: `
+        <main-toolbar></main-toolbar>
         <md-toolbar>
             <form class="search-field" (ngSubmit)="onSearchKeyUp(search.value)">
                 <md-input-container><input  #search mdInput type="search"></md-input-container>

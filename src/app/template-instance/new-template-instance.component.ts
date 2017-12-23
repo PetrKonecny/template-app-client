@@ -6,6 +6,7 @@ import { Router} from '@angular/router'
 import { TextContent} from '../content/text-content'
 import { Element } from '../element/element'
 import { TemplateHelper} from '../template/template.helper'
+import { TemplateInstanceHelper } from '../template-instance/template-instance.helper'
 import { TemplateStore } from '../template/template.store'
 import { ElementStore } from '../element/element.store'
 import { PageStore } from '../page/page.store'
@@ -14,50 +15,79 @@ import { MdDialog } from '@angular/material'
 import { SaveTemplateInstanceModal} from '../template-instance/save-template-instance.modal'
 import { NewTemplateComponent } from '../template/new-template.component'
 import { UndoRedoService } from '../undo-redo.service'
+import { AppConfig }from '../app.config'
 
 @Component({
     selector: 'create-new-template-instance',
     template:
        `
-        <md-sidenav-container style="height: 100%; max-height: calc(100% - 64px); overflow: hidden;">
-            <md-toolbar class="mat-elevation-z2">
-                <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
-                <button md-icon-button (click)="saveTemplateInstance()"><md-icon>save</md-icon></button>
-                <button md-icon-button (click)="undo()"><md-icon>undo</md-icon></button>
-                <button md-icon-button><md-icon>redo</md-icon></button>
-                <button md-icon-button [mdMenuTriggerFor]="templateInstanceMore"><md-icon>more_vert</md-icon></button>
-                <md-menu #templateInstanceMore="mdMenu">
-                    <button md-button (click)="openAsTemplate()">Zkopírovat a upravit šablonu</button>
-                </md-menu>  
-                <editor-toolbar *ngIf="element && element.type == 'text_element' && content && content.editor"></editor-toolbar>
+        <md-toolbar color="primary" class="editor-main-toolbar mat-elevation-z2" style="z-index: 30; position: relative;">
+            <main-nav-button></main-nav-button>
+            <button md-icon-button (click)="saveTemplateInstance()"><md-icon>save</md-icon></button>
+            <button md-icon-button (click)="undo()"><md-icon>undo</md-icon></button>
+            <button md-icon-button><md-icon>redo</md-icon></button>
+            <button md-icon-button [mdMenuTriggerFor]="templateInstanceMore"><md-icon>more_vert</md-icon></button> 
+            
+            <md-menu #templateInstanceMore="mdMenu">
+                <button md-menu-item (click)="openAsTemplate()">Zkopírovat a upravit šablonu</button>
+                <a md-menu-item [disabled]="!templateInstance.id" href={{getPdfLink()}} target="_blank">Vytvořit PDF</a>
+            </md-menu>
+
+            <h2 style="margin-left: auto">{{'dokument' + (templateInstance.name ? ' : ' + templateInstance.name : ' : nepojmenovaný dokument')}}</h2> 
+        </md-toolbar>
+
+        <md-sidenav-container>
+
+            <md-toolbar *ngIf="element && element.type == 'text_element' && content && content.editor" class="secondary-editor-toolbar mat-elevation-z1">
+                <editor-toolbar [class.secondaryToolbarPushed]="!sidenav.opened" style="width: 100%;"></editor-toolbar>
             </md-toolbar>
+
             <md-sidenav #sidenav opened="true" class="sidenav mat-elevation-z6 bg-dark" mode ="side" style="width: 20%; display:flex; overflow: visible;">
                 <album-index-sidenav (onCloseClicked)="sidenav.close()"></album-index-sidenav>
-            </md-sidenav>       
-            <div class="pages" *ngIf="template">
+            </md-sidenav>   
+
+            <div class="pages" *ngIf="template" [class.pushDown]="elementStore.element | async">
                 <display-page *ngFor="let page of template.pages" [page]="page"></display-page>
             </div>
         </md-sidenav-container>
+
+        <div style="position: absolute; left: 12px; top: 82px;">
+            <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
+        </div>
     `,
     providers: [ElementStore, PageStore],
-     styles: [`.leftPanel {
-            position: relative;
-            float: left;
-            margin-top: 10px;
-            width: 300px;
-        }
+     styles: [`
         .pages{
             position: relative;
             overflow-y: auto;
-            padding: 16px;
             box-sizing: border-box;
+            padding: 16px;
+        }
+
+        md-sidenav-container{
             height: calc(100% - 64px);
-        }       
+        }
+
+        .pushDown{
+             height: calc(100% - 64px);
+        }   
+
         .buttons{
             margin-left: auto;
             margin-right: auto;
             position: relative;
+            display: flex;
+            flex-direction: row-reverse;
         }
+
+        md-tab-group{
+            height: 100%;
+        }
+
+       .mat-icon-button[disabled]{
+           color: white;
+           opacity: 0.38;
+       }
     `]
 })
 
@@ -88,7 +118,8 @@ export class NewTemplateInstanceComponent {
          private router: Router,        
          private templateStore: TemplateStore,        
          public dialog: MdDialog,        
-         private snackBar: MdSnackBar        
+         private snackBar: MdSnackBar,
+         public config: AppConfig        
      ){         
                  
          this.elementStore.element.subscribe(element=> {        
@@ -119,7 +150,11 @@ export class NewTemplateInstanceComponent {
          dialogRef.componentInstance.setTemplateInstance(this.templateInstance)        
      }
 
-     undo(){
+     getPdfLink(){
+         return TemplateInstanceHelper.getLinkToPdf(this.templateInstance,this.config);
+     }
+
+    undo(){
         this.undoService.undo()
     }
 

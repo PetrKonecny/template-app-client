@@ -17,23 +17,24 @@ import { AlbumHelper } from '../album/album.helper'
 @Component({
     selector: 'display-album',
     template: `
-        <md-toolbar>
-            <h1 class="album-chip">{{album?.name}}</h1>
-            <div style="padding-right: 16px;" >
-            <button *ngIf="selected.length && helper.canDeleteAlbum(currentUser,album)" md-button (click)="onDeleteClicked()">SMAZAT VÝBĚR</button>
-            <button *ngIf="selected.length&& helper.canEditAlbum(currentUser,album)" md-button (click)="openAlbumsModal()">PŘESUNOUT VÝBĚR</button>
-            </div>
-        </md-toolbar>
-        <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
-        <div class="shutter" *ngIf="error">
-                <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
-        </div>
+        <main-toolbar></main-toolbar>
         <div class ="index-content">
+            <md-toolbar>
+                <h1 class="album-chip">{{album?.name}}</h1>
+                <div style="padding-right: 16px;" >
+                <button *ngIf="selected.length && helper.canDeleteAlbum(currentUser,album)" md-button (click)="onDeleteClicked()">SMAZAT VÝBĚR</button>
+                <button *ngIf="selected.length&& helper.canEditAlbum(currentUser,album)" md-button (click)="openAlbumsModal()">PŘESUNOUT VÝBĚR</button>
+                </div>
+            </md-toolbar>
+            <md-progress-bar mode="indeterminate" *ngIf="loading && !error"></md-progress-bar>
+            <div class="shutter" *ngIf="error">
+                    <md-icon style="font-size: 96px; opacity: 0.1;">error</md-icon>
+            </div>
+            <div style="height: calc(100% - 64px);" class="mat-elevation-z4 image-list">
+            <image-list *ngIf="album && album.images" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>
+            </div>
+        </div>
         <button *ngIf="currentUser && album && currentUser.id == album.user_id" md-fab class="index-button" (click)="openUploadModal()"><md-icon>add</md-icon></button>
-        <div class="mat-elevation-z4 image-list">
-        <image-list *ngIf="album && album.images" (onImageClicked)="onSelected($event)" [images] = "album.images"></image-list>
-        </div>
-        </div>
     `,
     styles:[`
         

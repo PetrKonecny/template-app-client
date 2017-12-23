@@ -29,7 +29,7 @@ export class DisplayTextElementComponent {
         if(color){
             return color
         }else{
-            return Element.defaultBackgroundColor
+            return 'none'
         }
     }
  
