@@ -2,120 +2,11 @@ import {Element} from '../element/element';
 import {Guide} from '../guide/guide'
 import {Injectable} from '@angular/core';
 import {UndoRedoService, Command} from '../undo-redo.service'
-
-@Injectable()
-export class PageCommands{
-
-    constructor(private service: UndoRedoService){}
-
-    /** adds element into the page
-    @param page - page to add element to
-    @param element - element to be added
-    */
-    addElement(page: Page, element: Element){
-    	this.service.execute(new AddElement(page,element))
-    }
-
-    /** removes element from the page
-    @param page - page to remove element
-    @param element - element to be removed
-    */
-    RemoveElement(page: Page, element: Element){
-    	this.service.execute(new RemoveElement(page,element))
-    }
-
-
-    /** brings element forward in the page
-    @param page - page conaining the element
-    @param element -element to be brought forward
-    */
-    bringElementForward(page: Page, element: Element){
-      this.service.execute(new BringElementForward(page,element))
-    }
-
-    /** pushes element back in the page
-    @param page - page conaining the element
-    @param element -element to be pushed back
-    */
-    pushElementBack(page: Page, element: Element){
-      this.service.execute(new PushElementBack(page,element))
-    }
-
-}
-
-//executing this command adds element
-export class AddElement implements Command{
-
-	constructor(private page: Page, private element: Element){}
-
-	execute(){
-		this.page.elements.push(this.element)
-	}
-
-	unExecute(){
-		this.page.elements.splice(this.page.elements.indexOf(this.element),1)
-	}	
-}
-
-//executing this command removes the element
-export class RemoveElement implements Command{
-
-	constructor(private page: Page, private element: Element){}
-
-  oldIndex
-	execute(){
-    this.oldIndex = this.page.elements.indexOf(this.element)
-		this.page.elements.splice(this.oldIndex,1)
-	}
-
-	unExecute(){
-    this.page.elements.splice(this.oldIndex,0,this.element)
-	}
-
-}
-
-//executing this command brings the element forward on the page
-export class BringElementForward implements Command{
-
-  constructor(private page: Page, private element: Element){}
-
-  oldIndex
-  execute(){
-    this.oldIndex = this.page.elements.indexOf(this.element)
-    if(this.oldIndex == this.page.elements.length - 1){
-      throw new Error("element is already at last position")
-    }
-    this.page.elements.splice(this.oldIndex, 0, this.page.elements.splice(this.oldIndex + 1, 1)[0]);
-  }
-
-  unExecute(){
-    this.page.elements.splice(this.oldIndex+1, 0, this.page.elements.splice(this.oldIndex, 1)[0]);
-  }
-}
-
-//executing this command pushes element back in the page
-export class PushElementBack implements Command{
-
-  constructor(private page: Page, private element: Element){}
-
-  oldIndex
-  execute(){
-    if(this.oldIndex == 0){
-        throw new Error("element is already at first position")
-    }
-    this.oldIndex = this.page.elements.indexOf(this.element)
-    this.page.elements.splice(this.oldIndex, 0, this.page.elements.splice(this.oldIndex + -1, 1)[0]);
-  }
-
-  unExecute(){
-    this.page.elements.splice(this.oldIndex-1, 0, this.page.elements.splice(this.oldIndex, 1)[0]);
-  }
-}
-
+import {addNewIntoObjAfterX, NormalizerAddAction, swapFromObjOnXandY, removeFromObject} from '../normalizers'
 //page model
 export class Page  {
   id: number;
-  elements: Element[];
+  elements: any[];
   rulers: Guide[];
   static defaultWidth = 210
   static defaultHeight = 297
@@ -126,7 +17,49 @@ export class Page  {
   margin: number;
 }
 
-export function pagesReducer(state = {pages: null},action: any) {
+export interface PagesState {
+  selected: number
+  pages: any
+}
+
+export class BringElementForward extends NormalizerAddAction{
+
+  constructor(public elementId, public page){
+    super()
+    var index = page.elements.indexOf(elementId)
+    if(index < page.elements.length - 1){
+      this.data = swapFromObjOnXandY(page,'pages','elements',index,index+1)
+    }
+  }
+}
+
+export class PushElementBack extends NormalizerAddAction{
+
+  constructor(public elementId, public page){
+    super()
+    var index = page.elements.indexOf(elementId)
+    if(index > 0){
+      this.data = swapFromObjOnXandY(page,'pages','elements',index,index-1)
+    }
+  }
+}
+
+export class DeleteElement extends NormalizerAddAction{
+  constructor(public elementId, public page){
+    super()
+    this.data = removeFromObject(page,'pages','elements',elementId)
+  }
+}
+
+export class AddElement extends NormalizerAddAction{
+  constructor(public element, public page){
+    super()
+    this.data = addNewIntoObjAfterX(page,'pages',element,'elements',page.elements.length-1)
+  }
+
+}
+
+export function pagesReducer(state: PagesState = {selected: 0, pages: null},action: any) {
   switch (action.type) {
     case "ADD_NORMALIZED_DATA":
       if(action.data.entities.pages){ 
@@ -134,12 +67,6 @@ export function pagesReducer(state = {pages: null},action: any) {
       }else{
         return state
       }
-    default: return state;
-  }
-}
-
-export function pageReducer(state = {page: 0}, action: any) {
-  switch (action.type) {
     default: return state;
   }
 }

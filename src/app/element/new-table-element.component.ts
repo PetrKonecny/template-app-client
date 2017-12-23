@@ -3,11 +3,10 @@ import { TableElement, TableElementCommands } from './table-element'
 import { ElementDimensions} from '../draggable.directive'
 import { NewPageReference } from '../page/new-page.ref'
 import { NewTableElementReference} from './new-table-element.ref'
-import { ElementCommands} from './element'
-import { ElementStore } from '../element/element.store'
 import { Content } from '../content/content'
 import { Store } from '@ngrx/store'
 import { AppState } from '../app.state'
+import { NewElementComponent } from '../element/new-element.component'
 
 @Component({
     selector: 'create-new-table-element',
@@ -112,33 +111,19 @@ import { AppState } from '../app.state'
 })
 
        
-export class NewTableElementComponent implements OnInit{
+export class NewTableElementComponent extends NewElementComponent{
     
     @Input()
     //element to be displayed
     element : TableElement
     //true if element selected false otherwise
-    selected: boolean
 
-    contents: Content[]
-
-    sub 
     //output of draggable directive that moves the element
-    move(dimensions: ElementDimensions){
-        let d = this.newPage.move(this.element,dimensions)
-        if(d){
-            this.elementCommands.startMovingElement(this.element,d)
-        }   
-     }
     
-    //runs on every change detection to set element width and height 
-    ngDoCheck(){
-    }
-
     //sets on initiation default element cient state
     ngOnInit(){
+        super.ngOnInit();
         this.element.clientState = 0
-        this.sub = this.store.select('contents').subscribe(data=>this.contents = data.contents)
     }
     
     //gets total table height
@@ -163,20 +148,15 @@ export class NewTableElementComponent implements OnInit{
     @param - element store - injects element store that holds selected elements
     **/
     constructor (
-        private newPage: NewPageReference, 
-        private newTableElement: NewTableElementReference, 
-        private tableElementCommands: TableElementCommands,  
-        private elementCommands: ElementCommands,
-        private elementStore: ElementStore,
+        public newPage: NewPageReference, 
+        public newTableElement: NewTableElementReference, 
+        public tableElementCommands: TableElementCommands,  
         public store: Store<AppState>
     ){
-        this.newTableElement.component = this
-        this.elementStore.element.subscribe(element =>this.selected = this.element === element)
+        super(store,newPage);
+        this.newTableElement.component = this;
     }
     
-    onElementClicked(){
-    }
-
     //calls command to add row above the selected cell
     addRowAbove(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){

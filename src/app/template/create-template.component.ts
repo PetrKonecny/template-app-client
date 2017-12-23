@@ -1,12 +1,9 @@
 import { Component, OnInit, AfterViewInit, HostListener} from '@angular/core';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
-import { Template, TemplateCommands} from './template';
+import { Template } from './template';
 import { UndoRedoService } from '../undo-redo.service'
 import { TableElementCommands } from '../element/table-element'
 import { TextContentCommands } from '../content/text-content'
-import { ImageContentCommands } from '../content/image-content'
-import { ElementCommands } from '../element/element'
-import { PageCommands } from '../page/page'
 import {ActivatedRoute} from '@angular/router';
 import {PageFactory} from '../page/page.factory'
 import { TemplateStore } from '../template/template.store'
@@ -19,7 +16,7 @@ import { ElementStore } from '../element/element.store'
     template: `
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands, ElementStore, PageStore]
+    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ElementStore, PageStore]
 })
 
 //index page for creating new template containing the editor component
@@ -28,7 +25,11 @@ export class TemplateCreateComponent implements AfterViewInit, OnInit  {
     template : Template;
 
     constructor(
-        private templateStore: TemplateStore, private pageStore: PageStore, private undoRedoService: UndoRedoService, private route: ActivatedRoute, private factory: PageFactory
+        private templateStore: TemplateStore, 
+        private pageStore: PageStore, 
+        private undoRedoService: UndoRedoService, 
+        private route: ActivatedRoute, 
+        private factory: PageFactory
     ){ }
 
     //saves buffer commands if the mouse up event happens

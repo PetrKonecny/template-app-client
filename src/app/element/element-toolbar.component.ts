@@ -1,18 +1,20 @@
-import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, Input} from '@angular/core';
 import { ImageService } from '../image/image.service';
-import { Element, ElementCommands } from './element';
+import { Element, ChangeBackgroundColor, ChangeOpacity, SetElementDimensions } from './element';
 import { TextElement } from './text-element';
 import {FontService} from '../font/font.service';
 import {ClientState, TableElement, Cell} from './table-element'
 import {Font} from '../font/font'
 import {TextContent} from '../content/text-content'
-import {PageCommands} from '../page/page'
 import {TemplateInstanceStore} from '../template-instance/template-instance.store'
-import { TemplateHelper} from '../template/template.helper'
+import { PageHelper} from '../page/page.helper'
 import { ElementHelper } from '../element/element.helper'
 import { TemplateStore } from '../template/template.store'
 import { Template } from '../template/template'
 import { ElementStore } from '../element/element.store'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
+import { DeleteElement, BringElementForward, PushElementBack } from '../page/page'
 
 @Component({
     selector: 'element-toolbar',
@@ -91,15 +93,16 @@ import { ElementStore } from '../element/element.store'
         }
 
 
-    `]
+    `],
 })
 
 /**Displays main element toolbar with controlls same for every component
 toolbar provides generic controlls such as resizing and repositioning for every selected element
 **/
-export class ElementToolbarComponent  {
+export class ElementToolbarComponent implements OnInit  {
     
     //element that is selected    
+    @Input()
     element: Element
     //template that the editor is working with
     template: Template
@@ -113,15 +116,24 @@ export class ElementToolbarComponent  {
     //last color set in editor as the background, defaults to default color
     lastColor = Element.defaultBackgroundColor
 
+    subs = []
+
+    pages
     /***
-    @param 'elementStore' - injects store containing selected element provided by editor component
     @param 'commands' - injects commands to manipulate element state
-    @param 'pageCommands' - injects commands to manipulate page state
-    @param 'templateStore' - injects store containing template currently loaded into the editor
     ***/
-    constructor(private elementStore: ElementStore,  private commands: ElementCommands, private pageCommands: PageCommands, private templateStore: TemplateStore){
-        this.elementStore.element.subscribe(element=> this.element = element)
-        this.templateStore.template.subscribe(template => this.template = template)
+    constructor(  
+                public store: Store<AppState>){
+    }
+
+    ngOnInit(){
+        this.subs.push(this.store.select('templates').subscribe(data => this.template = data.templates[data.selected]))
+        this.subs.push(this.store.select('pages').subscribe(data => this.pages = data.pages))
+        this.subs.push(this.store.select('elements').subscribe(data => this.element = data.elements[data.selected]))
+    }
+
+    ngOnDestroy(){
+        this.subs.forEach(sub => sub.complete())
     }
 
 
@@ -142,27 +154,25 @@ export class ElementToolbarComponent  {
 
     //calls command to delete the element and deselects 
     deleteElement(){
-        let page = TemplateHelper.getPageFromTemplateForElement(this.element, this.template)
-        this.pageCommands.RemoveElement(page,this.element)
-        this.elementStore.changeElement(null)
+        let page = PageHelper.getPageContainingElement(this.pages,this.element)
+        this.store.dispatch(new DeleteElement(this.element.id,page))
     }
-
     /***changes background color of the element
     @param 'color' - css value to be set as color
     ***/
     changeBackgroundColor(color: string){
         this.lastColor = color
         if(this.element.background_color){
-            this.commands.changeBackgroundColor(this.element, this.lastColor)
+            this.store.dispatch(new ChangeBackgroundColor(this.element, this.lastColor))
         }
     }
     /** toggles display of elements background 
     **/
     toggleElementBackground(){
         if(this.element.background_color){
-            this.commands.changeBackgroundColor(this.element, null)
+            this.store.dispatch(new ChangeBackgroundColor(this.element, null))
         }else{
-            this.commands.changeBackgroundColor(this.element, this.lastColor)
+            this.store.dispatch(new ChangeBackgroundColor(this.element, this.lastColor))
         }
     }
 
@@ -170,18 +180,20 @@ export class ElementToolbarComponent  {
     @param 'event' - event fired if slider is moved
     **/
     onSliderChange(event){
-        this.commands.startChangingOpacity(this.element,event.value)
+        this.store.dispatch(new ChangeOpacity(this.element,event.value));
     }
 
     //brings element forward in the displayed page
     onBringForward(){
-        this.pageCommands.bringElementForward(TemplateHelper.getPageFromTemplateForElement(this.element, this.template),this.element)
+        let page = this.pages.find(page => page.elements.find(id => this.element.id === id))
+        this.store.dispatch(new BringElementForward(this.element.id,page))
         this.checkArrangement()
     }
 
     //pushes element back in displayed page
     onPushBack(){
-        this.pageCommands.pushElementBack(TemplateHelper.getPageFromTemplateForElement(this.element, this.template),this.element)
+        let page = this.pages.find(page => page.elements.find(id => this.element.id === id))
+        this.store.dispatch(new PushElementBack(this.element.id,page))
         this.checkArrangement()
     }
 
@@ -189,14 +201,14 @@ export class ElementToolbarComponent  {
     @param 'dimensions' - dimensions to be set
     **/
     onPositionMenuConfirmed(dimensions){
-        this.commands.setElementDimensions(this.element, dimensions)
+        this.store.dispatch(new SetElementDimensions(this.element, dimensions))
     }
 
     /**checks if the element is last in the pages and therefore cannot be pushed further back
     @return - true if element is last false otherwise
     **/
     isElementLast(){
-        let page = TemplateHelper.getPageFromTemplateForElement(this.element, this.template)
+        let page = PageHelper.getPageContainingElement(this.pages,this.element)
         return page.elements.indexOf(this.element) == page.elements.length - 1
     }
 
@@ -204,7 +216,7 @@ export class ElementToolbarComponent  {
     @return - true if element is first false otherwise
     **/
     isElementFirst(){
-        let page = TemplateHelper.getPageFromTemplateForElement(this.element, this.template)
+        let page = PageHelper.getPageContainingElement(this.pages,this.element)
         return page.elements.indexOf(this.element) == 0
     }
 

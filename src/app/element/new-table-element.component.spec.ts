@@ -7,7 +7,7 @@ import { NewTableElementComponent } from './new-table-element.component';
 import { DisplayContentComponent } from '../content/display-content.component' 
 import { NewPageReference } from '../page/new-page.ref'
 import { ElementStore } from '../element/element.store'
-import { Element, ElementCommands} from './element';
+import { Element } from './element';
 import { Observable } from "rxjs/Observable";
 import { NewTableElementReference } from './new-table-element.ref'
 import {MaterialModule} from '@angular/material'
@@ -45,7 +45,6 @@ describe('new table component', () => {
       declarations: [ NewTableElementComponent, MockComponent({ selector: 'tr' ,  inputs: ['myTr','y','content']})],
       providers: [ {provide: NewPageReference, useValue: pageReferenceStub}, 
       {provide: ElementStore, useValue: elementStoreStub}, 
-      {provide : ElementCommands, useValue:elementCommandsStub},
       {provide : TableElementCommands, useValue:elementCommandsStub},
       {provide: NewTableElementReference, useValue: tableElementReferenceStub}
     ], 

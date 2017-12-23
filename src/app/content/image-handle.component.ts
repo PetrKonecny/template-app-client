@@ -1,5 +1,5 @@
 import { Component,ContentChild, AfterContentInit, HostListener} from '@angular/core';
-import { ImageContent, ImageContentCommands } from './image-content'
+import { ImageContent } from './image-content'
 import {AppComponentRef} from '../app.ref'
 
 @Component({
@@ -40,7 +40,7 @@ export class ImageHandleComponent implements AfterContentInit {
     @param commands - commands used to move image in the content
     @param ref - referene to app root to get shift from
     */
-    constructor(private commands: ImageContentCommands, private ref: AppComponentRef){
+    constructor(private ref: AppComponentRef){
         this.ref.shiftPRess.subscribe(press => this.shift = press)
     }
 
@@ -48,7 +48,7 @@ export class ImageHandleComponent implements AfterContentInit {
     ngAfterContentInit(){
         this.content = this.handleContent.content
     }
-
+    /*
     //triggered from top left handle
     leftTop(dimensions){
         if(this.shift){
@@ -109,5 +109,5 @@ export class ImageHandleComponent implements AfterContentInit {
    left(dimensions){
        this.commands.startResizingImage(this.content,{width:-1*dimensions.left, left: dimensions.left})
    }
-     
+   */ 
 }

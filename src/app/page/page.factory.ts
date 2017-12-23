@@ -29,6 +29,7 @@ export class PageFactory{
 		page.width = this.width
 		page.height = this.height
 		page.margin = this.margin
+		page.id = Math.random()
 		page.elements = []
 		page.rulers = []
 		return page

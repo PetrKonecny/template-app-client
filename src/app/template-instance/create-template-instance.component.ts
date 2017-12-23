@@ -4,13 +4,10 @@ import { TemplateService } from '../template/template.service';
 import { TemplateInstance} from './template-instance';
 import { ActivatedRoute} from '@angular/router'
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
-import { Template, TemplateCommands} from '../template/template';
+import { Template } from '../template/template';
 import { UndoRedoService } from '../undo-redo.service'
 import { TableElementCommands } from '../element/table-element'
 import { TextContentCommands } from '../content/text-content'
-import { ImageContentCommands } from '../content/image-content'
-import { ElementCommands } from '../element/element'
-import { PageCommands } from '../page/page'
 import { TemplateStore } from '../template/template.store'
 import { TemplateInstanceHelper} from './template-instance.helper'
 import { MdSnackBar } from '@angular/material';
@@ -26,7 +23,7 @@ import { PageStore } from '../page/page.store'
         </div>
         <create-new-template-instance *ngIf="template && templateInstance" [template] = "template" [templateInstance] = "templateInstance"></create-new-template-instance>
     `,
-    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands, ElementStore, PageStore]
+    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ElementStore, PageStore]
 })
 //displays index page for creating new document
 export class TemplateInstanceCreateComponent implements OnInit  {

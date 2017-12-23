@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, ViewChildren, QueryList, AfterViewInit, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import { MdDialog } from '@angular/material'
-import { Template, TemplateCommands} from './template';
+import { Template } from './template';
 import { Page} from '../page/page';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { SaveTemplateModal } from './save-template.modal'
@@ -10,7 +10,6 @@ import { PageFactory } from '../page/page.factory'
 import { TemplateStore } from '../template/template.store'
 import {MdSnackBar} from '@angular/material';
 import {CreateTableModal} from '../element/create-table-element.modal' 
-import {PageCommands} from '../page/page'
 import {TextElementFactory, FrameElementFactory, TableElementFactory} from '../element/element.factory'
 import {PageStore} from '../page/page.store'
 import domtoimage from 'dom-to-image'
@@ -20,6 +19,7 @@ import { Router} from '@angular/router'
 import { ElementStore } from '../element/element.store'
 import { Store } from '@ngrx/store'
 import { AppState } from '../app.state'
+import { AddPageAbove, AddPageBelow, DeletePage } from '../template/template'
 
 @Component({
     selector: 'create-new-template',
@@ -32,7 +32,7 @@ import { AppState } from '../app.state'
             <button md-icon-button [disabled]="!undoService.getRedos().length" (click)="redo()" md-tooltip="zopakovat akci"><md-icon>redo</md-icon></button>
             <h2 style="margin-left: auto">{{(template.type == 'no_instance_template' ? 'dokument' : 'šablona') + (template.name ? ' : ' + template.name : ' : nepojmenovaný dokument')}}</h2>
         </md-toolbar>    
-        <md-sidenav-container [class.pushDown]="elementStore.element | async">
+        <md-sidenav-container class="pushDown">
 
             <!-- side menu -->
 
@@ -53,7 +53,7 @@ import { AppState } from '../app.state'
                         </div>
                     </div>
             </md-sidenav>
-            <md-toolbar *ngIf="elementStore.element | async" class="secondary-editor-toolbar mat-elevation-z1">
+            <md-toolbar class="secondary-editor-toolbar mat-elevation-z1">
                 <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
                 <element-toolbar style="width: 100%;"></element-toolbar>
             </md-toolbar>
@@ -62,9 +62,9 @@ import { AppState } from '../app.state'
             <div class="pages">
             <span *ngFor="let pageId of template.pages" >
                 <div class = "buttons" [style.width.mm] = "pageService.getPageWidth(pages[pageId])">
-                    <button md-icon-button mdTooltip="smazat stranu" (click)="onClickDelete(pages[pageId])" [disabled]="template.pages.length < 2"><md-icon>delete</md-icon></button>
-                    <button md-icon-button  mdTooltip="nová strana nad" (click)="onClickAddAbove(pages[pageId])"><md-icon>keyboard_arrow_up</md-icon></button>
-                    <button md-icon-button mdTooltip="nová strana pod" (click)="onClickAddBelow(pages[pageId])"><md-icon>keyboard_arrow_down</md-icon></button>
+                    <button md-icon-button mdTooltip="smazat stranu" (click)="onClickDelete(pageId)" [disabled]="template.pages.length < 2"><md-icon>delete</md-icon></button>
+                    <button md-icon-button  mdTooltip="nová strana nad" (click)="onClickAddAbove(pageId)"><md-icon>keyboard_arrow_up</md-icon></button>
+                    <button md-icon-button mdTooltip="nová strana pod" (click)="onClickAddBelow(pageId)"><md-icon>keyboard_arrow_down</md-icon></button>
                 </div> 
                 <create-new-page [page]="pages[pageId]"></create-new-page>
             </span>
@@ -109,7 +109,7 @@ import { AppState } from '../app.state'
 })
 
 //component representing the editor
-export class NewTemplateComponent implements OnChanges {
+export class NewTemplateComponent {
     //template that should be edited
     @Input()
     template: Template;
@@ -139,10 +139,8 @@ export class NewTemplateComponent implements OnChanges {
         public undoService: UndoRedoService,
         protected pageFactory: PageFactory,
         protected pageService: PageService,
-        protected templateCommands: TemplateCommands,
         protected snackBar: MdSnackBar,
         protected pageStore: PageStore,
-        protected pageCommands: PageCommands,
         protected templateInstanceStore: TemplateInstanceStore,
         public elementStore: ElementStore,
         protected router: Router,
@@ -153,11 +151,7 @@ export class NewTemplateComponent implements OnChanges {
     }
 
     ngOnInit() {
-        this.sub = this.store.select('pages').subscribe(data =>{console.log(data);this.pages = data.pages})
-    }
-
-    ngOnChanges(changes){
-        console.log(changes)
+        this.sub = this.store.select('pages').subscribe(data =>this.pages = data.pages)
     }
 
     ngOnDestroy() {
@@ -207,18 +201,18 @@ export class NewTemplateComponent implements OnChanges {
     }
 
     //calls command to instert page above
-    onClickAddAbove(page: Page){
-        this.templateCommands.addPageAbove(this.template,page,this.pageFactory.build())
+    onClickAddAbove(pageId: number){
+        this.store.dispatch(new AddPageAbove(this.pageFactory.build(),pageId,this.template))
     }
 
     //calls command to insert page below
-    onClickAddBelow(page: Page){
-        this.templateCommands.addPageBelow(this.template,page,this.pageFactory.build())
+    onClickAddBelow(pageId: number){
+        this.store.dispatch(new AddPageBelow(this.pageFactory.build(),pageId,this.template))
     }
 
     //calls command to delete the page
-    onClickDelete(page: Page){
-        this.templateCommands.deletePage(this.template,page)
+    onClickDelete(pageId: number){
+        this.store.dispatch(new DeletePage(pageId, this.template))
     }
    
     //calls undo in undo service
@@ -229,32 +223,6 @@ export class NewTemplateComponent implements OnChanges {
     //calls redo in redo service
     redo(){
         this.undoService.redo()
-    }
-
-    createNewTextElement(){
-        let factory = new TextElementFactory
-        this.pageCommands.addElement(this.page, factory.build())
-    }
-    
-    //calls command to create new frame element
-    createNewFrameElement(){
-        let factory = new FrameElementFactory
-        this.pageCommands.addElement(this.page, factory.build())
-    }
-           
-    //calls command to create new table element
-    createNewTableElement(){
-        let dialogRef = this.dialog.open(CreateTableModal, {height: 'auto',
-          width: '30%',})
-        dialogRef.afterClosed().subscribe(val =>{
-            if(val && val.rows && val.columns && val.rowHeight && val.columnWidth){
-                let factory = new TableElementFactory
-                factory.setColumnCount(val.columns)
-                factory.setRowCount(val.rows)
-                factory.setColumnWidth(val.columnWidth)
-                factory.setRowHeight(val.rowHeight)
-                this.pageCommands.addElement(this.page, factory.build())}
-        })
     }
 
     clickImages(){

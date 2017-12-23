@@ -1,8 +1,11 @@
 import { Component, ElementRef, Input, KeyValueDiffers, KeyValueDiffer} from '@angular/core';
 import { FrameElement } from './frame-element'
-import { ImageContent, ImageContentCommands } from '../content/image-content';
-import { ElementStore } from '../element/element.store'
+import { ImageContent, SetImage } from '../content/image-content';
 import { AppConfig } from '../app.config'
+import { Store } from "@ngrx/store";
+import { AppState } from '../app.state'
+import { NewElementComponent } from '../element/new-element.component'
+import { NewPageReference } from '../page/new-page.ref'
 
 @Component({
     selector: 'display-frame-element',
@@ -55,12 +58,11 @@ import { AppConfig } from '../app.config'
     `]
 })
 
-export class DisplayFrameElementComponent {
+export class DisplayFrameElementComponent extends NewElementComponent {
     
     @Input()
     element : FrameElement
     
-    selected: boolean
     loading
     error
 
@@ -68,9 +70,9 @@ export class DisplayFrameElementComponent {
 
 
     constructor(
-        private elementStore: ElementStore, private contentCommands: ImageContentCommands, public config: AppConfig
+        public config: AppConfig, public store: Store<AppState>, public pageRef: NewPageReference 
     ){
-        this.elementStore.element.subscribe(element =>this.selected = this.element == element)
+        super(store,pageRef)
     }
 
     onDragOver(){
@@ -106,7 +108,7 @@ export class DisplayFrameElementComponent {
         content.left = 0
         content.width = 0 
         content.height = 0 
-        this.contentCommands.SetImage(<ImageContent>content,image)      
+        this.store.dispatch(new SetImage(content,image))      
     }
 
     onLoad(image){

@@ -1,13 +1,7 @@
-import { Component, ElementRef, Input, ViewChild, AfterViewInit, DoCheck, KeyValueDiffers, KeyValueDiffer, HostListener, ChangeDetectionStrategy} from '@angular/core';
-import { Element, ElementCommands} from './element';
+import { Component, Input, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import { Element } from './element';
 import { TextElement} from './text-element'
-import { Font} from '../font/font'
-import { NewPageReference } from '../page/new-page.ref'
-import { ElementStore } from '../element/element.store'
-import { ElementDimensions} from '../draggable.directive'
-import { Content } from '../content/content'
-import { Store } from '@ngrx/store'
-import { AppState } from '../app.state'
+import { NewElementComponent } from '../element/new-element.component'
 
 @Component({
     selector: 'create-new-text-element',
@@ -30,58 +24,12 @@ import { AppState } from '../app.state'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NewTextElementComponent  {
+export class NewTextElementComponent extends NewElementComponent  {
     
     @Input()
     element : TextElement  
-
-    contents: Content[]
-
-    @ViewChild('wrapper')
-    wrapper: any
     
     defaultTextColor = TextElement.defaultTextColor
-    defaultBackgroundColor = Element.defaultBackgroundColor
-    selected: boolean
-
-    sub
-
-    /**
-    @param elementStore - injects reference to the selected element
-    @param newPage - injects reference to the current page
-    @param coomands - injects commands to malipulate the eleemnt
-    */
-    constructor(
-        private elementStore: ElementStore,
-        private newPage: NewPageReference,
-        private commands: ElementCommands,
-        public store: Store<AppState>
-    ){
-        this.elementStore.element.subscribe(element =>this.selected = this.element === element)
-    }
-
-    ngOnInit(){
-        this.sub = this.store.select('contents').subscribe(data=>this.contents = data.contents)
-    }
-
-    ngOnDestroy(){
-        this.sub.complete()
-    }
     
-    //called as an utput of draggable directive
-    move(dimensions: ElementDimensions){
-        let d = this.newPage.move(this.element,dimensions)
-        if(d){
-            //let x = this.wrapper.nativeElement.style.left.slice(0,-2) 
-            //console.log(+x+d.left+'px',this.wrapper.nativeElement.style.left)
-            //this.wrapper.nativeElement.style.left = +x + d.left + 'px'
-            var obj = {entities: { elements:{}}}
-            var element = {...this.element}
-            element.positionX += d.left
-            element.positionY += d.top
-            obj.entities.elements[this.element.id] = element 
-            this.store.dispatch({type: "ADD_NORMALIZED_DATA", data: obj})
-            //this.commands.startMovingElement(this.element,d)
-        }
-    }
+    defaultBackgroundColor = Element.defaultBackgroundColor
 }

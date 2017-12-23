@@ -1,13 +1,10 @@
 import { Component, OnInit, HostListener, ChangeDetectionStrategy, Input} from '@angular/core';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
-import { Template, TemplateCommands} from './template';
+import { Template } from './template';
 import {ActivatedRoute} from '@angular/router';
 import { UndoRedoService } from '../undo-redo.service'
 import { TableElementCommands } from '../element/table-element'
 import { TextContentCommands } from '../content/text-content'
-import { ImageContentCommands } from '../content/image-content'
-import { ElementCommands } from '../element/element'
-import { PageCommands } from '../page/page'
 import { TemplateStore } from '../template/template.store'
 import { PageStore } from '../page/page.store'
 import { ElementStore } from '../element/element.store'
@@ -26,7 +23,7 @@ import { AppState } from '../app.state'
         </div>
         <create-new-template *ngIf="template" [template] = "template" ></create-new-template>
     `,
-    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ImageContentCommands, ElementCommands, PageCommands, TemplateCommands, ElementStore, PageStore]
+    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ElementStore, PageStore]
     ,
 })
 
@@ -60,11 +57,6 @@ export class TemplateEditComponent implements OnInit  {
     ){ 
     }
     
-    //saves buffer commands if the mouse up event happens
-    @HostListener('document:mouseup', ['$event'])
-    onMouseup(event) {
-       this.undoRedoService.saveBuffer()
-    }
     
     //loads template from the store with the right id
     ngOnInit(){

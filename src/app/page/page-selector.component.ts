@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter} from '@angular/core';
 import { Image} from '../image/image';
 import { Element } from '../element/element';
-import {Page} from './page'
+import {Page, AddElement} from './page'
 import {TextContent} from '../content/text-content'
 import {ImageContent} from '../content/image-content'
 import {TableContent} from '../content/table-content'
@@ -13,7 +13,6 @@ import {Guide} from '../guide/guide'
 import {FrameElement} from '../element/frame-element'
 import {MdDialog, MdDialogRef} from '@angular/material'
 import {CreateTableModal} from '../element/create-table-element.modal' 
-import {PageCommands} from './page'
 import {TextElementFactory, FrameElementFactory, TableElementFactory} from '../element/element.factory'
 import {PageStore} from '../page/page.store'
 import { Store } from '@ngrx/store'
@@ -55,8 +54,7 @@ export class PageSelectorComponent {
     */
     constructor(private pageStore: PageStore,
                 public dialog: MdDialog, 
-                public store: Store<AppState>,
-                private commands: PageCommands,){
+                public store: Store<AppState>){
         this.pageStore.page.subscribe(page => this.page = page)   
     }
 
@@ -67,18 +65,17 @@ export class PageSelectorComponent {
     //calls command to create new text element
     createNewTextElement(){
         let factory = new TextElementFactory
-        let page = {...this.page}
         let element = factory.build()
-        this.store.dispatch({type: 'ADD_NORMALIZED_DATA', data: normalizeElementAndAddIntoPage(page,element)})
+        this.store.dispatch(new AddElement(element,this.page))
         //this.commands.addElement(this.page, factory.build())
     }
     
     //calls command to create new frame element
     createNewFrameElement(){
         let factory = new FrameElementFactory
-        let page = Object.assign({},this.page)
         let element = factory.build()
-        this.store.dispatch({type: 'ADD_NORMALIZED_DATA', data: normalizeElementAndAddIntoPage(page,element)})}
+        this.store.dispatch(new AddElement(element,this.page))
+    }
            
     //calls command to create new table element
     createNewTableElement(){
@@ -91,9 +88,8 @@ export class PageSelectorComponent {
                 factory.setRowCount(val.rows)
                 factory.setColumnWidth(val.columnWidth)
                 factory.setRowHeight(val.rowHeight)
-                let page = Object.assign({},this.page)
                 let element = factory.build()
-                this.store.dispatch({type: 'ADD_NORMALIZED_DATA', data: normalizeElementAndAddIntoPage(page,element)})
+               this.store.dispatch(new AddElement(element,this.page))
             }
         })
     }

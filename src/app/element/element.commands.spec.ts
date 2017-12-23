@@ -1,7 +1,7 @@
-import {Element,ChangeElementDimensions, ChangeElementOpacity, SetElementDimensions, ChangeBackgroundColor} from './element'
+import {Element} from './element'
 
 describe('element commands tests',()=>{
-
+  /*
 	let element
 	beforeEach(() => { 
     	element = new Element()
@@ -63,4 +63,5 @@ describe('element commands tests',()=>{
   		command.unExecute()
   		expect(element.background_color).toBe("red")
   	})
+    */
 })

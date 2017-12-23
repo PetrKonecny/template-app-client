@@ -1,232 +1,11 @@
 import {Content} from '../content/content';
 import {Injectable} from '@angular/core';
 import {UndoRedoService, Command, BufferCommand} from '../undo-redo.service'
+import {NormalizerAddAction, changeMoreParamsOnObjNotNull, changeOneParamOnObj} from '../normalizers'
+import { Action, createSelector } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 export enum Border { left, right, bottom, top };
-
-
-@Injectable()
-//groups all element commands and injects undo redo service for convinience
-export class ElementCommands{
-
-    constructor(private service: UndoRedoService){}
-
-    /**starts moving element, saveBuffer() on UndoRedoService 
-    should be called after move is finished
-    @param element - element that should be moved
-    @param dimensions - dimensions it should be moved by
-    **/
-    startMovingElement(element: Element, dimensions){
-        this.service.addToBufferAndExecute(new ChangeElementDimensions(element,dimensions))
-    }
-
-    /**starts resizing element, saveBuffer() on UndoRedoService
-    should be called after resize is finished
-    @param element - element that should be moved
-    @param dimensions - dimensions it should be resized by
-    **/
-    startResizingElement(element: Element, dimensions){
-        this.service.addToBufferAndExecute(new ChangeElementDimensions(element,dimensions))
-    }
-
-    /**starts changing element opacity, saveBuffer() on UndoRedoService
-    should be called after change is finished
-    @param element - element that should be changed
-    @param value - value that should be set as opacity
-    **/
-    startChangingOpacity(element: Element, value){
-        this.service.addToBufferAndExecute(new ChangeElementOpacity(element,value))
-    }
-
-    /**sets element dimensions 
-    @param element - element to be changed
-    @param dimensions - dimensions that sohuld be set on element 
-    **/
-    setElementDimensions(element: Element, dimensions){
-        this.service.execute(new SetElementDimensions(element,dimensions))
-    }
-
-    //convinience method to save buffer
-    finishMovingElement(){
-        this.service.saveBuffer()
-    }
-
-    //convinience method to save buffer
-    finishResizingElement(){
-        this.service.saveBuffer()
-    }
-
-    //convinience method to save buffer
-    finishChangingOpacity(){
-        this.service.saveBuffer()
-    }
-
-    /**changes background color of the element
-    @param element - element to be changed
-    @param value - css value to be changed 
-    **/
-    changeBackgroundColor(element: Element, value: string){
-        this.service.addToBufferAndExecute(new ChangeBackgroundColor(element,value))
-    }
-
-    /**turns off or on element background display
-    @param element - element to be changed
-    @param value - boolean walue whether it should be on or off 
-    **/
-    toggleElementBackground(element: Element, value: boolean){
-        if(value){
-           this.changeBackgroundColor(element,Element.defaultBackgroundColor)
-        }else{
-           this.changeBackgroundColor(element,null)
-        }
-    }
-}
-
-/*
-sets element dimensions to value given 
-*/
-export class SetElementDimensions implements Command{
-
-    constructor(private element: Element, private dimensions){}
-
-    oldDimensions
-
-    private setDimensions(dimensions){
-        if(dimensions.left != null){
-            this.element.positionX = dimensions.left
-        }
-        if(dimensions.top != null){
-            this.element.positionY = dimensions.top
-        }
-        if(dimensions.width != null){
-            this.element.width = dimensions.width
-        }
-        if(dimensions.height != null){
-            this.element.height = dimensions.height
-        } 
-    }
-
-    execute(){
-        this.oldDimensions = {left: this.element.positionX,top: this.element.positionY, width: this.element.width, height: this.element.height}
-        this.setDimensions(this.dimensions)
-    }
-
-    unExecute(){
-        this.setDimensions(this.oldDimensions)
-    }
-}
-
-/*
-adds or substracts the given values from element dimensions
-*/
-export class ChangeElementDimensions implements BufferCommand{
-
-    constructor(private element: Element, private dimensions){}
-
-    oldDimensions
-
-    private setDimensions(dimensions){
-        if(dimensions.left != null){
-            this.element.positionX = dimensions.left
-        }
-        if(dimensions.top != null){
-            this.element.positionY = dimensions.top
-        }
-        if(dimensions.width != null){
-            this.element.width = dimensions.width
-        }
-        if(dimensions.height != null){
-            this.element.height = dimensions.height
-        } 
-    }
-
-    private addDimensions(dimensions){
-        if(dimensions.left != null){
-            this.element.positionX += dimensions.left
-        }
-        if(dimensions.top != null){
-            this.element.positionY +=  dimensions.top
-        }
-        if(dimensions.width != null){
-            this.element.width += dimensions.width
-        }
-        if(dimensions.height != null){
-            this.element.height += dimensions.height
-        } 
-    }
-
-    execute(){
-        this.oldDimensions = {left: this.element.positionX,top: this.element.positionY, width: this.element.width, height: this.element.height}
-        this.addDimensions(this.dimensions)
-    }
-
-    unExecute(){
-        this.setDimensions(this.oldDimensions)
-    }
-
-    getStoredState(){
-        return this.oldDimensions
-    }
-
-    setStoredState(dimensions){
-        this.oldDimensions = {left : dimensions.left, top: dimensions.top, width: dimensions.width, height: dimensions.height}
-    }
-}
-
-/*
-changes element opacity to the given value
-*/
-export class ChangeElementOpacity implements BufferCommand{
- 
- constructor(private element: Element, private value){}
-
-    oldValue
-    execute(){
-        this.oldValue = this.element.opacity ? this.element.opacity : 100
-        this.element.opacity = this.value
-    }
-
-    unExecute(){
-        this.element.opacity = this.oldValue
-    }
-
-    getStoredState(){
-        return this.oldValue
-    }
-
-    setStoredState(value){
-        this.oldValue = value
-    }
-
-}
-
-/*
-changes element background color to the given value
-*/
-export class ChangeBackgroundColor implements BufferCommand{
-
-    constructor(private element: Element, private value){}
-
-    oldValue
-
-    execute(){
-        this.oldValue = this.element.background_color
-        this.element.background_color = this.value
-    }
-
-    unExecute(){
-        this.element.background_color = this.oldValue
-    }
-
-    getStoredState(){
-        return this.oldValue
-    }
-
-    setStoredState(value){
-        this.oldValue = value
-    }
-
-}
 
 //element model
 export class Element  {
@@ -240,9 +19,65 @@ export class Element  {
     opacity: number;
     content: any;
     draggable: boolean = true;
-    static defaultBackgroundColor: string = "#ccc"
-    static notRecordedParams: Array<string> = ['draggable','changing','redoing', 'clientState']
-    background_color: string
+    static defaultBackgroundColor: string = "#ccc";
+    static notRecordedParams: Array<string> = ['draggable','changing','redoing', 'clientState'];
+    background_color: string;
+}
+
+export class SelectElement {
+  type = "SELECT_ELEMENT";
+  constructor(public selected){
+    
+  }
+}
+
+class ChangeElementDimensions extends NormalizerAddAction {
+    constructor(element,dimensions){
+        super();
+        this.data = changeMoreParamsOnObjNotNull(element,'elements', ['positionX','positionY','width','height'],
+        [element.positionX + dimensions.left,
+         element.positionY + dimensions.top,
+         element.width + dimensions.width,
+         element.height + dimensions.height]);
+    }
+}
+
+export class SetElementDimensions extends NormalizerAddAction {
+    subtype = "SET_ELEMENT_DIMENSIONS"
+    constructor(element,dimensions){
+        super();
+        this.data = changeMoreParamsOnObjNotNull(element,'elements', ['positionX','positionY','width','height'],
+        [dimensions.left,
+         dimensions.top,
+         dimensions.width,
+         dimensions.height]);
+    }
+}
+
+export class ResizeElement extends ChangeElementDimensions{
+    subtype = "RESIZE_ELEMENT";
+}
+
+export class MoveElement extends ChangeElementDimensions {
+    subtype = "MOVE_ELEMENT";
+}
+
+export class ChangeBackgroundColor extends NormalizerAddAction {
+    subtype = "CHANGE_BACKGROUND_COLOR";
+    constructor(element, color){
+        super();
+        this.data = changeOneParamOnObj(element,'elements','background_color',color);
+    }
+}
+
+export class ChangeOpacity extends NormalizerAddAction {
+    subtype = "CHANGE_OPACITY";
+    constructor(element, opacity: number){
+        super();
+        if(opacity <= 100 && opacity > 0){
+            this.data  = changeOneParamOnObj(element,'elements','opacity',opacity);
+        }
+    }
 }
 
 export function elementsReducer(state = {selected: 0, elements: null},action: any) {
@@ -253,9 +88,18 @@ export function elementsReducer(state = {selected: 0, elements: null},action: an
         }else{
             return state
         }
+    case "SELECT_ELEMENT":
+        return {...state, selected: action.selected}
     default: return state;
   }
 }
+
+
+export const getElements = (state: AppState) => state.elements.elements
+
+export const getElementById = (id) => createSelector(getElements,(elements)=>{
+    return elements && elements[id]
+})
 
 interface ElementDimensions {
     left

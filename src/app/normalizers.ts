@@ -1,4 +1,4 @@
-import { normalize, schema } from 'normalizr';
+import { normalize, schema} from 'normalizr';
 
 const user = new schema.Entity('users')
 const tag = new schema.Entity('tags')
@@ -19,6 +19,12 @@ const template = new schema.Entity('templates',{
 	user: user 
 })
 
+export class NormalizerAddAction {
+	type = "ADD_NORMALIZED_DATA"
+	subtype
+	data
+	error
+}
 
 export const normalizeTemplates = data=>normalize(data,{templates: [template]})
 
@@ -42,6 +48,66 @@ export const normalizePageAndAddIntoTemplateOnX = (template,page,x)=>{
 	obj.entities.templates = {}
 	obj.entities.templates[template.id] = template
 	return obj
+}
+
+export const addNewIntoObjAfterX = (obj,name,obj2,name2,x) => {
+	var objCopy = {...obj}
+	var result = {entities: {}}
+	objCopy[name2].splice(x,0,obj2.id)
+	result.entities[name] = {}
+	result.entities[name2] = {}
+	result.entities[name2][obj2.id] = obj2 
+	result.entities[name][objCopy.id] = objCopy
+	return result
+}
+
+export const swapFromObjOnXandY = (obj,name, name2, x,y) => {
+	var objCopy = {...obj}
+	var result = {entities: {}}
+	var temp = objCopy[name2][x]
+	objCopy[name2][x] = objCopy[name2][y]
+	objCopy[name2][y] = objCopy[name2][x]
+	result.entities[name] = {}
+	result.entities[name][obj.id] = objCopy
+	return result
+}
+
+export const removeFromObject = (obj, name, name2, id) =>{
+	var objCopy = {...obj}
+	var result = {entities: {}}
+	objCopy[name2].splice(objCopy[name2].indexOf(id),1)
+	result.entities[name] = {}
+	result.entities[name][objCopy.id] = objCopy
+	return result
+}
+
+export const changeOneParamOnObj = (obj,name,param,value) => {
+	var objCopy = {...obj}
+	objCopy[param] = value
+	var result = {entities: {}}
+	result.entities[name] = {} 
+	result.entities[name][objCopy.id] = objCopy
+	return result
+}
+
+export const changeMoreParamsOnObj = (obj,name,params,values) => {
+	var objCopy = {...obj}
+	params.forEach((param, index) => objCopy[param] = values[index])
+	var result = {entities: {}}
+	result.entities[name] = {} 
+	result.entities[name][objCopy.id] = objCopy
+	return result
+}
+
+export const changeMoreParamsOnObjNotNull = (obj,name,params,values) => {
+	var objCopy = {...obj}
+	params.forEach((param, index) => {
+		if(values[index]){objCopy[param] = values[index]}
+	})
+	var result = {entities: {}}
+	result.entities[name] = {} 
+	result.entities[name][objCopy.id] = objCopy
+	return result
 }
 
 export const normalizeUser = data=>normalize(data,user)

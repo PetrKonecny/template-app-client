@@ -7,7 +7,7 @@ import { NewImageElementComponent } from './new-image-element.component';
 import { DisplayContentComponent } from '../content/display-content.component' 
 import { NewPageReference } from '../page/new-page.ref'
 import { ElementStore } from '../element/element.store'
-import { Element, ElementCommands} from './element';
+import { Element } from './element';
 import { Observable } from "rxjs/Observable";
 
 
@@ -40,7 +40,7 @@ describe('new image component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ NewImageElementComponent, MockComponent({ selector: 'image' ,  inputs: ['image']})],
-      providers: [ {provide: NewPageReference, useValue: pageReferenceStub}, {provide: ElementStore, useValue: elementStoreStub}, {provide : ElementCommands, useValue:elementCommandsStub} ] // declare the test component
+      providers: [ {provide: NewPageReference, useValue: pageReferenceStub}, {provide: ElementStore, useValue: elementStoreStub} ] // declare the test component
     });
 
     fixture = TestBed.createComponent(NewImageElementComponent);

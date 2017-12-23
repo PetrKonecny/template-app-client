@@ -4,7 +4,7 @@ import { By }              from '@angular/platform-browser';
 import { DebugElement }    from '@angular/core';
 import { PageFactory } from './page.factory';
 import { NewPageComponent } from './new-page.component';
-import { Page, PageCommands} from './page';
+import { Page } from './page';
 import { Observable } from "rxjs/Observable";
 import {NewPageReference} from './new-page.ref'
 import {PageStore} from '../page/page.store'
@@ -43,7 +43,7 @@ describe('new page component', () => {
                       MockComponent({ selector: 'display-ruler' ,  inputs: ['guide']}) ],
       providers: [ {provide: NewPageReference, useValue: pageReferenceStub}, 
                    {provide: PageStore, useValue: pageStoreStub}, 
-                   {provide : PageCommands, useValue: pageCommandsStub} ] // declare the test component
+                 ] // declare the test component
     }).overrideComponent(NewPageComponent, {
       set: {
         providers: [

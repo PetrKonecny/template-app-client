@@ -1,8 +1,7 @@
-import {ImageContent,SetImage, ChangeImageContentDimensions} from './image-content'
 import {Image} from '../image/image'
 
 describe('element commands tests',()=>{
-
+  /*
 	let content
 	beforeEach(() => { 
     	content =  new ImageContent()
@@ -46,5 +45,5 @@ describe('element commands tests',()=>{
     command.unExecute()
     expect([content.left,content.top,content.width,content.height]).toEqual([100,100,100,100])
   })
-
+  */
 })

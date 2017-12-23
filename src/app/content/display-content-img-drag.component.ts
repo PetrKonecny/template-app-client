@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, ViewChild, HostListener, EventEmitter, ElementRef, DoCheck, KeyValueDiffers} from '@angular/core';
-import { ImageContent, ImageContentCommands } from './image-content'
+import { ImageContent, MoveImage } from './image-content'
 import { AppConfig } from '../app.config'
+import { Store } from "@ngrx/store";
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'display-content-img-drag',
@@ -39,7 +41,7 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     image: ElementRef;
        
     move(dimensions){
-        this.commands.startMovingImage(this.content,dimensions)
+        this.store.dispatch(new MoveImage(this.content,dimensions))
     }
     
     //this runs on every change in the application 
@@ -62,7 +64,7 @@ export class DisplayContentImgDragComponent implements  DoCheck {
     @param config - config to get API url from
     @param commands - commands to manipulate the image
     */
-    constructor(public config: AppConfig, private commands: ImageContentCommands) {
+    constructor(public config: AppConfig, public store: Store<AppState>) {
        
     }
 }

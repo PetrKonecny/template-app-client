@@ -1,7 +1,9 @@
 import { Component,ContentChild, ElementRef, AfterContentInit, HostListener, Input, ChangeDetectionStrategy} from '@angular/core';
 import {NewPageReference} from '../page/new-page.ref'
-import { Element, ElementCommands} from './element';
+import { Element, ResizeElement} from './element';
 import {AppComponentRef} from '../app.ref'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'element-handle',
@@ -11,7 +13,7 @@ import {AppComponentRef} from '../app.ref'
                 [style.height.px]="element?.height"
                 [style.margin-top.px]="element?.positionY"
                 [style.margin-left.px]="element?.positionX">
-                <span *ngIf="handleContent?.selected && !handleContent?.hideHandles">
+                <span *ngIf="visible">
                 <a class="element-handle" draggable2 (move)="leftTop($event)" style="left: 0; top: 0;"></a>
                 <a class="element-handle" draggable2 (move)="rightTop($event)" style="top: 0; left: 100%;"></a>
                 <a class="element-handle" draggable2 (move)="leftBottom($event)" style="left: 0; top:100%;"></a>
@@ -38,6 +40,9 @@ export class ElementHandleComponent implements AfterContentInit {
     @Input()
     //element to be resized
     element: any
+
+    @Input()
+    visible: boolean
     //stores if the shift key is pressed or not
     shift = false
 
@@ -46,7 +51,7 @@ export class ElementHandleComponent implements AfterContentInit {
     @param 'commands' - injects commands used to resize element
     @parap 'ref' - injects reference to aplication root providing shift press event
     */
-    constructor (private newPage: NewPageReference, private commands: ElementCommands, private ref: AppComponentRef){
+    constructor (private newPage: NewPageReference, private ref: AppComponentRef, private store: Store<AppState>){
         this.ref.shiftPRess.subscribe(press => this.shift = press)
     }
     
@@ -62,9 +67,9 @@ export class ElementHandleComponent implements AfterContentInit {
         if(d){
             if(this.shift){
                 let ratio = this.element.width / this.element.height
-                this.commands.startResizingElement(this.element,{left: d.top*ratio,top: d.top, width: d.height*ratio, height: d.height})
+                this.store.dispatch(new ResizeElement(this.element,{left: d.top*ratio,top: d.top, width: d.height*ratio, height: d.height}))
             }else{     
-                this.commands.startResizingElement(this.element,d)
+                this.store.dispatch(new ResizeElement(this.element,d))
             }
         }
     }
@@ -75,7 +80,7 @@ export class ElementHandleComponent implements AfterContentInit {
             {y:this.element.positionY+this.element.height}
         ]})
         if(d){
-            this.commands.startResizingElement(this.handleContent.element,{height:d.height, top: d.top})
+            this.store.dispatch(new ResizeElement(this.element,{height:d.height, top: d.top}))
         }
     }
 
@@ -88,9 +93,9 @@ export class ElementHandleComponent implements AfterContentInit {
         if(d){
             if(this.shift){
                 let ratio = this.element.width / this.element.height
-                this.commands.startResizingElement(this.element,{top: d.top, width: d.height*ratio, height: d.height})
+                this.store.dispatch(new ResizeElement(this.element,{top: d.top, width: d.height*ratio, height: d.height}))
             }else{     
-                this.commands.startResizingElement(this.element,d)
+                this.store.dispatch(new ResizeElement(this.element,d))
             }        
         }        
     }
@@ -101,7 +106,7 @@ export class ElementHandleComponent implements AfterContentInit {
             {x:this.element.positionX},
         ]})
         if(d){
-            this.commands.startResizingElement(this.handleContent.element,{width:d.width})
+            this.store.dispatch(new ResizeElement(this.element,{width:d.width}))
         }
     }
 
@@ -114,9 +119,9 @@ export class ElementHandleComponent implements AfterContentInit {
         if(d){
             if(this.shift){
                 let ratio = this.element.width / this.element.height
-                this.commands.startResizingElement(this.element,{width: d.height*ratio, height: d.height})
+                this.store.dispatch(new ResizeElement(this.element,{width: d.height*ratio, height: d.height}))
             }else{     
-                this.commands.startResizingElement(this.element,d)
+                this.store.dispatch(new ResizeElement(this.element,d))
             }
         }
    }
@@ -127,7 +132,7 @@ export class ElementHandleComponent implements AfterContentInit {
             {y:this.element.positionY}
         ]})
         if(d){
-            this.commands.startResizingElement(this.handleContent.element,{height:d.height})
+            this.store.dispatch(new ResizeElement(this.element,{height:d.height}))
         }
    }
 
@@ -140,9 +145,9 @@ export class ElementHandleComponent implements AfterContentInit {
         if(d){
             if(this.shift){
                 let ratio = this.element.height / this.element.width
-                this.commands.startResizingElement(this.element,{left: d.left, width: d.width, height: d.width * ratio})
+                this.store.dispatch(new ResizeElement(this.element,{left: d.left, width: d.width, height: d.width * ratio}))
             }else{     
-                this.commands.startResizingElement(this.element,d)
+                this.store.dispatch(new ResizeElement(this.element,d))
             }
         } 
    }
@@ -153,7 +158,7 @@ export class ElementHandleComponent implements AfterContentInit {
             {x:this.element.positionX + this.element.width},
         ]})
         if(d){
-            this.commands.startResizingElement(this.handleContent.element,{width:d.width, left: d.left})
+            this.store.dispatch(new ResizeElement(this.element,{width:d.width, left: d.left}))
         } 
    } 
 }

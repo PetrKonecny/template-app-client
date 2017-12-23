@@ -1,5 +1,5 @@
 import { Component, Input, HostListener, OnInit, ElementRef, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectionStrategy} from '@angular/core';
-import { Page, PageCommands} from './page';
+import { Page } from './page';
 import { PageService} from './page.service'
 import { Guide } from '../guide/guide'
 import {NewPageReference} from './new-page.ref'
@@ -11,12 +11,13 @@ import {CreateTableModal} from '../element/create-table-element.modal'
 import { Store } from '@ngrx/store'
 import { AppState } from '../app.state'
 import { normalizeElementAndAddIntoPage } from '../normalizers'
+import { getElementById } from '../element/element'
 
 @Component({
     selector: 'create-new-page',
     template: `            
           <div class ="page mat-elevation-z1" #pageRef [style.width.mm]="getPageWidth()" [style.height.mm]="getPageHeight()" [class.selected]="selected" (drop)="onDrop($event)" (dragover)="onDragOver()"  (click)="onPageClicked()">             
-            <create-new-element *ngFor="let elementId of page.elements" [element] = "elements[elementId]" ></create-new-element>
+            <create-new-element *ngFor="let elementId of page.elements" [element] = "getElement(elementId) | async" ></create-new-element>
             <display-guide *ngFor="let guide of guides" [guide] = "guide" ></display-guide>
             <display-ruler *ngFor="let guide of page.rulers" [guide] = "guide" ></display-ruler>
           </div>        
@@ -48,7 +49,8 @@ export class NewPageComponent implements AfterViewInit {
     //displazed page
     page: Page  
 
-    elements: Element[]
+    @Input()
+    elements: any
 
     @ViewChild('pageRef')
     //reference to the div representing the page
@@ -56,8 +58,6 @@ export class NewPageComponent implements AfterViewInit {
  
      //whether the page is selected or not
     selected: boolean = false
-
-    sub
      
     @HostListener('mouseup', ['$event'])
     //resets the guides on mouse up
@@ -70,19 +70,19 @@ export class NewPageComponent implements AfterViewInit {
     @param pageStore - store containing selected page
     @param commands - commands used for adding elements
     */
-    constructor(private newPageRef: NewPageReference, private pageStore: PageStore, private commands: PageCommands, public dialog: MdDialog, public store: Store<AppState>) {
+    constructor(private newPageRef: NewPageReference, private pageStore: PageStore, public dialog: MdDialog, public store: Store<AppState>) {
         this.newPageRef.component = this
         this.guides = new Array
     }
 
     ngOnInit(){
-        this.sub = this.store.select('elements').subscribe(data => this.elements = data.elements)
+        //this.sub = this.store.select('elements').subscribe(data => this.elements = data.elements)
         this.pageStore.page.subscribe(page => {this.selected = this.page === page})
         this.pageStore.echo()
     }
 
-    ngOnDestroy(){
-        this.sub.complete()
+    getElement(id){
+        return this.store.select(getElementById(id))
     }
 
     //prevents default behaviour on drag over

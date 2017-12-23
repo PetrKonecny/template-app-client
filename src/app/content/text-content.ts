@@ -3,6 +3,7 @@ import {Content} from './content';
 import {Editor} from '../editor/editor'
 import {UndoRedoService, Command, BufferCommand} from '../undo-redo.service'
 import {Injectable} from '@angular/core';
+import {changeOneParamOnObj} from '../normalizers'
 
 @Injectable()
 export class TextContentCommands{
@@ -16,6 +17,7 @@ export class TextContentCommands{
 	changeText(content: TextContent, text: string){
 		this.service.addToBufferAndExecute(new ChangeText(content,text))
 	}
+
 
 }
 
@@ -52,6 +54,10 @@ export class ChangeText implements BufferCommand{
 	}
 
 
+}
+
+export function changeText(content,text){
+	return changeOneParamOnObj(content,'contents','text',text)
 }
 
 //model for text content

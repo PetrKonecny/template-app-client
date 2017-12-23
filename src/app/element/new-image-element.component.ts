@@ -3,7 +3,7 @@ import { ImageElement } from './image-element'
 import { NewPageReference } from '../page/new-page.ref'
 import { ElementDimensions } from '../draggable.directive'
 import { AppConfig } from '../app.config'
-import { Element, ElementCommands} from './element';
+import { Element } from './element';
 import { ElementStore } from '../element/element.store'
 import { ImageService } from '../image/image.service'
 import {Image, getImageById} from '../image/image'
@@ -11,6 +11,8 @@ import {TemplateHelper} from '../template/template.helper'
 import {Page} from '../page/page'
 import { Store } from '@ngrx/store'
 import { AppState } from '../app.state'
+import { changeMoreParamsOnObj } from '../normalizers'
+import { NewElementComponent } from '../element/new-element.component'
 
 @Component({
     selector: 'create-new-image-element',
@@ -26,25 +28,15 @@ import { AppState } from '../app.state'
 })
 
 //displays image elements in template editor and resizes them on load to fit the page       
-export class NewImageElementComponent {
+export class NewImageElementComponent extends NewElementComponent {
     
     @Input()
     //element to be displayed
     element : ImageElement
-    //true if element is selected false otherwise
-    selected: boolean
+    
     animated: boolean = false
 
     image
-
-    /**
-    @param newPage - injects reference to new page for moving the element
-    @param elementStore - injects reference to the store containing selected element
-    @param commands - injects element commands to provide operations on the element
-    **/ 
-    constructor(public store: Store<AppState>, private newPage: NewPageReference, private elementStore: ElementStore, private commands: ElementCommands){
-        this.elementStore.element.subscribe(element =>this.selected = this.element === element)
-    }
 
     ngOnInit(){
         this.image = this.store.select(getImageById(this.element.image))
@@ -80,29 +72,5 @@ export class NewImageElementComponent {
         this.element.height = height
         //delay value should be same as css transition duration
         setInterval(()=>{this.animated = false},200)
-    }
-    
-
-    //called if element is clicked, changes element in the store
-    onElementClicked(){
-        this.elementStore.changeElement(this.element);
-    } 
-    
-    //called as an output of draggable directive
-    move(dimensions: ElementDimensions){
-       let d = this.newPage.move(this.element,dimensions)
-        if(d){
-            //let x = this.wrapper.nativeElement.style.left.slice(0,-2) 
-            //console.log(+x+d.left+'px',this.wrapper.nativeElement.style.left)
-            //this.wrapper.nativeElement.style.left = +x + d.left + 'px'
-            var obj = {entities: { elements:{}}}
-            var element = {...this.element}
-            element.positionX += d.left
-            element.positionY += d.top
-            obj.entities.elements[this.element.id] = element 
-            this.store.dispatch({type: "ADD_NORMALIZED_DATA", data: obj})
-            //this.commands.startMovingElement(this.element,d)
-        }
-    }
-      
+    }     
 }

@@ -113,7 +113,7 @@ import { templatesReducer } from './template/template'
 import { TemplateEffects } from './template/template.effects'
 import { EffectsModule } from '@ngrx/effects'
 import { userReducer, usersReducer } from './user/user'
-import { pageReducer, pagesReducer } from './page/page'
+import { pagesReducer } from './page/page'
 import { elementsReducer } from './element/element'
 import { contentsReducer } from './content/content'
 import { imagesReducer } from './image/image'
@@ -131,7 +131,7 @@ export function logger(reducer: ActionReducer<any>): any {
   return storeLogger()(reducer);
 }
 
-export const metaReducers = environment.production ? [] : [];
+export const metaReducers = environment.production ? [] : [logger];
 
 const routes: Routes = [
     { path: 'users', component: UserIndexComponent},
@@ -191,7 +191,7 @@ const routes: Routes = [
         NgxDatatableModule,
         ColorPickerModule,
         BrowserAnimationsModule,
-        StoreModule.forRoot({images: imagesReducer, user: userReducer, users: usersReducer, templates: templatesReducer, tags: tagsReducer, page: pageReducer, pages: pagesReducer, elements: elementsReducer, contents: contentsReducer}, {metaReducers}),
+        StoreModule.forRoot({images: imagesReducer, user: userReducer, users: usersReducer, templates: templatesReducer, tags: tagsReducer, pages: pagesReducer, elements: elementsReducer, contents: contentsReducer}, {metaReducers}),
         EffectsModule.forRoot([TemplateEffects, UserEffects])
     ],
     // providers
