@@ -91,12 +91,30 @@ export const changeOneParamOnObj = (obj,name,param,value) => {
 }
 
 export const changeMoreParamsOnObj = (obj,name,params,values) => {
-	var objCopy = {...obj}
-	params.forEach((param, index) => objCopy[param] = values[index])
+	var objCopy = {...obj};
+	params.forEach((param, index) => objCopy[param] = values[index]);
 	var result = {entities: {}}
 	result.entities[name] = {} 
 	result.entities[name][objCopy.id] = objCopy
 	return result
+}
+
+export const addObj = (obj,name) => {
+	var result = {entities: {}};
+	result.entities[name] = {};
+	result.entities[name][obj.id] = obj;
+	return result;
+}
+
+export function addMoreObj(...args: any[]){
+	var result = {entities: {}};
+	for (var i=0; i < args.length; i++) {
+		var name = args[i][1];
+		var obj = args[i][0];
+        result.entities[name] = {};
+		result.entities[name][obj.id] = obj;
+    }
+    return result;
 }
 
 export const changeMoreParamsOnObjNotNull = (obj,name,params,values) => {

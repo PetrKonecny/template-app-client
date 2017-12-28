@@ -33,7 +33,7 @@ export class NewPageReference {
         if(this.ctrlPressed){
             return this.service.moveWithoutGuides(dimensions)
         }else{
-            return this.service.move(element,dimensions,this.component.page, this.component.guides)    
+            return this.service.move(element,dimensions, this.component.elements, this.component.guides)    
         }
     }   
     
@@ -43,7 +43,7 @@ export class NewPageReference {
 	@param options - additional options
     */
     resize(element: Element,dimensions, options?){
-       return this.service.resize(element,dimensions,this.component.page,this.component.guides,options)
+       return this.service.resize(element,dimensions,this.component.elements, this.component.guides,options)
     }
    
     

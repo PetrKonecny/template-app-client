@@ -3,6 +3,9 @@ import {Guide} from '../guide/guide'
 import {Injectable} from '@angular/core';
 import {UndoRedoService, Command} from '../undo-redo.service'
 import {addNewIntoObjAfterX, NormalizerAddAction, swapFromObjOnXandY, removeFromObject} from '../normalizers'
+import { Action, createSelector } from '@ngrx/store'
+import { AppState } from '../app.state'
+
 //page model
 export class Page  {
   id: number;
@@ -70,3 +73,9 @@ export function pagesReducer(state: PagesState = {selected: 0, pages: null},acti
     default: return state;
   }
 }
+
+export const getTemplatePages = (templateId) => createSelector((state: AppState) => state, state=>{
+    const template = state.templates.templates[templateId]
+    const pages = state.pages.pages
+    return template.pages.map(pageId=>pages[pageId]) 
+})

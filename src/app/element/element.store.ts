@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Element} from './element'
 import {Font} from '../font/font'
 import {TextElement} from './text-element'
-import {TableElement, ClientState, Cell, TableElementCommands} from './table-element'
+import {TableElement, ClientState, Cell } from './table-element'
 import {BehaviorSubject, Observable} from 'rxjs/Rx'
 import { TemplateStore } from '../template/template.store'
 import { TemplateHelper} from '../template/template.helper'

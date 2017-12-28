@@ -97,8 +97,20 @@ export function elementsReducer(state = {selected: 0, elements: null},action: an
 
 export const getElements = (state: AppState) => state.elements.elements
 
+export const getState = (state: AppState) => state.elements
+
 export const getElementById = (id) => createSelector(getElements,(elements)=>{
-    return elements && elements[id]
+    return elements && elements[id];
+})
+
+export const getSelectedElement = () => createSelector(getState,state=>{
+    return state.elements && state.elements[state.selected]; 
+})
+
+export const getPageElements = (pageId) => createSelector((state: AppState) => state, state=>{
+    var page = state.pages.pages[pageId]
+    var elements = state.elements.elements
+    return page.elements.map(elementId=>elements[elementId]) 
 })
 
 interface ElementDimensions {

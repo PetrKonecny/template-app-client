@@ -3,8 +3,6 @@ import { TemplateInstanceStore } from '../template-instance/template-instance.st
 import { Template } from './template';
 import { ActivatedRoute } from '@angular/router';
 import { UndoRedoService } from '../undo-redo.service'
-import { TableElementCommands } from '../element/table-element'
-import { TextContentCommands } from '../content/text-content'
 import { TemplateStore } from '../template/template.store'
 import { PageStore } from '../page/page.store'
 import { ElementStore } from '../element/element.store'
@@ -23,7 +21,7 @@ import { MessageDialog } from '../message.dialog'
         </div>
         <create-new-template *ngIf="template" [disableSave]="true" [template] = template></create-new-template>
     `,
-    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ElementStore, PageStore]
+    providers: [UndoRedoService, ElementStore, PageStore]
 })
 
 

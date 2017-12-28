@@ -2,9 +2,7 @@ import { Component, OnInit, AfterViewInit, HostListener} from '@angular/core';
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { Template } from './template';
 import { UndoRedoService } from '../undo-redo.service'
-import { TableElementCommands } from '../element/table-element'
-import { TextContentCommands } from '../content/text-content'
-import {ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {PageFactory} from '../page/page.factory'
 import { TemplateStore } from '../template/template.store'
 import { TemplateHelper} from '../template/template.helper'
@@ -16,7 +14,7 @@ import { ElementStore } from '../element/element.store'
     template: `
         <create-new-template *ngIf="template" [template] = template></create-new-template>
     `,
-    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ElementStore, PageStore]
+    providers: [UndoRedoService, ElementStore, PageStore]
 })
 
 //index page for creating new template containing the editor component

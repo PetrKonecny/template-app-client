@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, Input} from '@angular/core';
 import { ImageService } from '../image/image.service';
-import { Element, ChangeBackgroundColor, ChangeOpacity, SetElementDimensions } from './element';
+import { Element, ChangeBackgroundColor, ChangeOpacity, SetElementDimensions, getSelectedElement } from './element';
 import { TextElement } from './text-element';
 import {FontService} from '../font/font.service';
 import {ClientState, TableElement, Cell} from './table-element'
@@ -15,6 +15,7 @@ import { ElementStore } from '../element/element.store'
 import { Store } from '@ngrx/store'
 import { AppState } from '../app.state'
 import { DeleteElement, BringElementForward, PushElementBack } from '../page/page'
+import { getContentFromStore } from '../content/content'
 
 @Component({
     selector: 'element-toolbar',
@@ -72,14 +73,14 @@ import { DeleteElement, BringElementForward, PushElementBack } from '../page/pag
 
                     <!-- displays specialized toolbar for text elements -->
 
-                    <div style="margin-left: auto" class="toolbarCategory" *ngIf="element.type == 'text_element' && element.content.editor">
-                        <editor-toolbar></editor-toolbar>
+                    <div style="margin-left: auto" class="toolbarCategory" *ngIf="element.type === 'text_element' && (getContentFromStore(element.content,store) | async).editor as editor">
+                        <editor-toolbar [editor]="editor.subject.asObservable()"></editor-toolbar>
                     </div>
 
                     <!-- displays specialized toolbar for table elements -->
 
-                    <div style="margin-left: auto" class="toolbarCategory" *ngIf="element.type == 'table_element' && element.clientState == 3 && element.selectedCells?.length > 0">
-                        <cell-edit-toolbar></cell-edit-toolbar>
+                    <div style="margin-left: auto" class="toolbarCategory" *ngIf="element.type === 'table_element' && element.clientState === 3 && element.selectedCells?.length > 0">
+                        <cell-edit-toolbar [element]="element"></cell-edit-toolbar>
                     </div>                                              
                 </div>
              `,
@@ -94,6 +95,7 @@ import { DeleteElement, BringElementForward, PushElementBack } from '../page/pag
 
 
     `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 /**Displays main element toolbar with controlls same for every component
@@ -103,9 +105,7 @@ export class ElementToolbarComponent implements OnInit  {
     
     //element that is selected    
     @Input()
-    element: Element
-    //template that the editor is working with
-    template: Template
+    element
     
     //true if selected element is first in the template
     first: boolean
@@ -115,6 +115,7 @@ export class ElementToolbarComponent implements OnInit  {
 
     //last color set in editor as the background, defaults to default color
     lastColor = Element.defaultBackgroundColor
+    getContentFromStore = getContentFromStore
 
     subs = []
 
@@ -122,14 +123,14 @@ export class ElementToolbarComponent implements OnInit  {
     /***
     @param 'commands' - injects commands to manipulate element state
     ***/
-    constructor(  
-                public store: Store<AppState>){
+    constructor(public store: Store<AppState>){
+    }
+
+    getContent(){
     }
 
     ngOnInit(){
-        this.subs.push(this.store.select('templates').subscribe(data => this.template = data.templates[data.selected]))
         this.subs.push(this.store.select('pages').subscribe(data => this.pages = data.pages))
-        this.subs.push(this.store.select('elements').subscribe(data => this.element = data.elements[data.selected]))
     }
 
     ngOnDestroy(){

@@ -1,7 +1,9 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core';
-import { TableElement, Cell, TableElementCommands } from './table-element'
+import { TableElement, Cell, SetColumnWidth2, SetRowHeight2 } from './table-element'
 import { RowContent } from '../content/table-content'
 import { NewTableElementReference } from './new-table-element.ref'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 @Component({
     selector: '[myTr]',
@@ -92,7 +94,7 @@ import { NewTableElementReference } from './new-table-element.ref'
                         [style.border-color]="cell.border_color ? cell.border_color : defaultBorderColor " 
                         [style.border-width.px]="cell.border_width">
                         <textarea  *ngIf="element.clientState == 1" 
-                            [(ngModel)]="content?.cells[x].text"  
+                            [value]="content?.cells[x].text"  
                             [style.color]="cell.text_color" 
                             [style.text-align]="element.rows[y].cells[x].text_align"  
                             [style.font-size.px]="element.rows[y].cells[x].font_size" 
@@ -140,7 +142,7 @@ import { NewTableElementReference } from './new-table-element.ref'
 })
 
 //displays table row in template editor        
-export class NewTableRowComponent implements OnInit{
+export class NewTableRowComponent {
     
     @Input('myTr')
     //element that contains row that should be displayed
@@ -167,7 +169,7 @@ export class NewTableRowComponent implements OnInit{
     /***
     @param tableElement - reference to the table element used for selectiong
     */
-    constructor(private tableElement: NewTableElementReference, private commands: TableElementCommands){}
+    constructor(public store: Store<AppState>, private tableElement: NewTableElementReference){}
     
     @HostListener('document:mouseup', ['$event'])
     onDocMouseup(event) {    
@@ -263,7 +265,7 @@ export class NewTableRowComponent implements OnInit{
     @param dimensions - dimensions used to resize the column
     **/
     left(dimensions){
-        this.commands.changeColumnWidth(this.element,dimensions,this.x)
+        this.store.dispatch(new SetColumnWidth2(this.element,dimensions,this.x));
     }
 
     /**
@@ -271,7 +273,7 @@ export class NewTableRowComponent implements OnInit{
     @param dimensions - dimensions used to resize the column
     **/
     right(dimensions){
-        this.commands.changeColumnWidth(this.element,dimensions,this.x)
+        this.store.dispatch(new SetColumnWidth2(this.element,dimensions,this.x));
     }
 
     /**
@@ -279,7 +281,7 @@ export class NewTableRowComponent implements OnInit{
     @param dimensions - dimensions used to resize the row
     **/
     top(dimensions){
-        this.commands.changeRowHeight(this.element,dimensions,this.y)
+        this.store.dispatch(new SetRowHeight2(this.element,dimensions,this.y));
     }
 
     /**
@@ -287,9 +289,7 @@ export class NewTableRowComponent implements OnInit{
     @param dimensions - dimensions used to resize the row
     **/
     bottom(dimensions){
-        this.commands.changeRowHeight(this.element,dimensions,this.y)
+        this.store.dispatch(new SetRowHeight2(this.element,dimensions,this.y));
     }
 
-    ngOnInit(){    
-    }
 }

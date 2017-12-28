@@ -20,6 +20,8 @@ import { ElementStore } from '../element/element.store'
 import { Store } from '@ngrx/store'
 import { AppState } from '../app.state'
 import { AddPageAbove, AddPageBelow, DeletePage } from '../template/template'
+import { getSelectedElement, getPageElements } from '../element/element'
+
 
 @Component({
     selector: 'create-new-template',
@@ -53,10 +55,12 @@ import { AddPageAbove, AddPageBelow, DeletePage } from '../template/template'
                         </div>
                     </div>
             </md-sidenav>
+
             <md-toolbar class="secondary-editor-toolbar mat-elevation-z1">
                 <md-icon *ngIf="!sidenav.opened"  style="transform: scale(1.8,1.8); opacity:0.3; cursor: pointer;" (click)="sidenav.open()" mdTooltip="ukázat boční panel">chevron_right</md-icon>
-                <element-toolbar style="width: 100%;"></element-toolbar>
+                <element-toolbar [element]="selectedElement | async" style="width: 100%;"></element-toolbar>
             </md-toolbar>
+            
             <!-- pages of the template -->
 
             <div class="pages">
@@ -124,6 +128,10 @@ export class NewTemplateComponent {
 
     page: Page;
     sidenavState: number = 0;
+
+    selectedElement;
+    getPageElements = getPageElements;
+
     sub
     /**
     @param templateStore - injects store containing current template
@@ -146,12 +154,11 @@ export class NewTemplateComponent {
         protected router: Router,
         public store: Store<AppState>
     ){ 
-        //this.pageStore.page.subscribe(page => this.page = page)
-
     }
 
     ngOnInit() {
         this.sub = this.store.select('pages').subscribe(data =>this.pages = data.pages)
+        this.selectedElement = this.store.select(getSelectedElement())
     }
 
     ngOnDestroy() {
@@ -217,12 +224,10 @@ export class NewTemplateComponent {
    
     //calls undo in undo service
     undo(){
-        this.undoService.undo()
     }
 
     //calls redo in redo service
     redo(){
-        this.undoService.redo()
     }
 
     clickImages(){

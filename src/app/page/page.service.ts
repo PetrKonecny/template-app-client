@@ -25,15 +25,15 @@ export class PageService {
     @param element that is skipped
     @param page for which to take elements
     */
-    private initGuides(element: Element, page: Page){
-        if(page.elements){
-            page.elements.filter(elmnt => elmnt != element).forEach(elmnt => { 
+    private initGuides(element: Element, elements: Element[]){
+        if(elements){
+            elements.filter(elmnt => elmnt != element).forEach(elmnt => { 
                 this.verticals.push({positionX: elmnt.width + elmnt.positionX, guide: null, active: false, buffer:{value:0}, priority : 0})
                 this.verticals.push({positionX: elmnt.positionX, guide: null , active: false, buffer:{value:0}, priority : 0})
                 this.horizontals.push({positionY: elmnt.height + elmnt.positionY, guide: null, active: false, buffer:{value:0}, priority : 0 })
                 this.horizontals.push({positionY: elmnt.positionY, guide: null , active: false, buffer:{value:0}, priority : 0})              
             })
-        }
+        }/*
         if(page.rulers){
             page.rulers.forEach(ruler => {
                 if (ruler.positionX !== undefined){
@@ -42,7 +42,7 @@ export class PageService {
                     this.horizontals.push({ positionY: ruler.positionY, guide: null, active: false, buffer:{value:0}, priority : 0})
                 }
             })
-        }     
+        }  */   
     }
 
     //Ckears service state
@@ -59,16 +59,16 @@ export class PageService {
    @param guides array of guide objects to which the guides that are displayed will be added
    @return transformation of the element
    */
-    move(element: Element, dimensions: any, page: Page, guides: Guide[]){
-        if(!element || !dimensions || !page || !guides){
+    move(element: Element, dimensions: any, elements: Element[], guides: Guide[]){
+        if(!element || !dimensions || !elements || !guides){
             throw new TypeError("params must be defined")
         }
 
-        if (this.element != element || this.resizing){
+        if (!this.element || this.element.id !== element.id || this.resizing){
             this.element = element
             this.init()
-            if(page.elements || page.rulers){
-                this.initGuides(element, page)
+            if(elements){
+                this.initGuides(element, elements)
             }
             this.resizing = false
             this.moving = true
@@ -96,7 +96,6 @@ export class PageService {
         let resultVector = dimensions[paramVector]
         let finalBreak 
         for (var guideBreak of breaks){
-
             if(guideBreak.priority > 0){
                 guideBreak.priority--
             }
@@ -155,16 +154,16 @@ export class PageService {
         filterThesePositions: array{x: number, y: number}  positions of guides that are skipped in 
         calculations
     */
-    resize(element: Element,dimensions, page: Page, guides: Guide[], options?: any){
-        if(!element || !dimensions || !page || !guides){
+    resize(element: Element,dimensions, elements: Element[], guides: Guide[], options?: any){
+        if(!element || !dimensions || !elements || !guides){
             throw new TypeError("params must be defined")
         }
 
-        if (this.element != element || this.moving){
+        if (!this.element || this.element.id !== element.id || this.moving){
             this.element = element
             this.init()
-            if(page.elements || page.rulers){
-                this.initGuides(element, page)
+            if(elements){
+                this.initGuides(element, elements)
             }
             this.moving = false
             this.resizing = true                 

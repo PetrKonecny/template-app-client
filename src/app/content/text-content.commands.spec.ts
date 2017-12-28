@@ -7,7 +7,7 @@ describe('element commands tests',()=>{
 	beforeEach(() => {
     content = new TextContent 
   })
-
+  /*
   it('should change text',()=>{
     let command = new ChangeText(content,"hello")
     command.execute()
@@ -20,5 +20,5 @@ describe('element commands tests',()=>{
     command.unExecute()
     expect(content.text).toBeFalsy()
   })
-
+  */
 })

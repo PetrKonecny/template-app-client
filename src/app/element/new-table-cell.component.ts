@@ -7,7 +7,7 @@ import { CellContent } from '../content/table-content'
                 <td *ngIf="element.clientState == 2" resizable (resize)="resize($event)" [style.text-align]="element.rows[y].cells[x].text_align" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size">{{content.text}}</td>
                 <td *ngIf="element.clientState == 0" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [style.font-size.px]="element.rows[y].cells[x].font_size">{{content.text}}</td>
                 <td *ngIf="element.clientState == 3" [style.text-align]="element.rows[y].cells[x].text_align"  [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold" [class.selected]="element.rows[y].cells[x].selected" [style.font-size.px]="element.rows[y].cells[x].font_size">{{content.text}}</td>
-                <td><textarea  *ngIf="element.clientState == 1" [(ngModel)]="content.text" [style.text-align]="element.rows[y].cells[x].text_align"  [style.font-size.px]="element.rows[y].cells[x].font_size" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold"></textarea></td>
+                <td><textarea  *ngIf="element.clientState == 1" [value]="content.text" [style.text-align]="element.rows[y].cells[x].text_align"  [style.font-size.px]="element.rows[y].cells[x].font_size" [class.italic]="element.rows[y].cells[x].italic" [class.bold]="element.rows[y].cells[x].bold"></textarea></td>
     `
 ,
     styles: [`

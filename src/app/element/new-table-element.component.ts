@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, HostListener} from '@angular/core'
-import { TableElement, TableElementCommands } from './table-element'
+import { TableElement, MergeCells, DeleteRow2, DeleteColumn2, AddColumnLeft2, AddRowBelow2, AddColumnRight2, AddRowAbove2} from './table-element'
 import { ElementDimensions} from '../draggable.directive'
 import { NewPageReference } from '../page/new-page.ref'
 import { NewTableElementReference} from './new-table-element.ref'
@@ -69,19 +69,19 @@ import { NewElementComponent } from '../element/new-element.component'
 
         <!-- table displayed when moving the table -->
 
-        <table *ngIf="element.clientState == 0" class="table-element-move" [class.selected]="selected" draggable2 (move)="move($event)" (click)="onElementClicked()" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
+        <table *ngIf="element.clientState == 0" class="table-element-move" [class.selected]="selected" draggable2 (move)="move($event)" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i" [style.height.px]="row.height" [content]="contents[element.content].rows[i]" class="locked"></tr>
         </table>
 
         <!-- table displayed when filling out the table -->
 
-        <table *ngIf="element.clientState == 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
+        <table *ngIf="element.clientState == 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="contents[element.content].rows[i]" [style.height.px]="row.height - 4"></tr>
         </table>
 
         <!-- table displayed when editing table structure or changing parameters of cells -->
 
-        <table *ngIf="element.clientState > 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" (click)="onElementClicked()"  [style.top.px] = "element.positionY">
+        <table *ngIf="element.clientState > 1" [class.selected]="selected" class= "inner" [style.left.px] = "element.positionX" [style.top.px] = "element.positionY">
             <tr *ngFor="let row of element.rows; let i = index" [myTr]="element" [y]="i"  [content]="contents[element.content].rows[i]" [style.height.px]="row.height"></tr>
         </table>
         `,
@@ -150,7 +150,6 @@ export class NewTableElementComponent extends NewElementComponent{
     constructor (
         public newPage: NewPageReference, 
         public newTableElement: NewTableElementReference, 
-        public tableElementCommands: TableElementCommands,  
         public store: Store<AppState>
     ){
         super(store,newPage);
@@ -160,35 +159,36 @@ export class NewTableElementComponent extends NewElementComponent{
     //calls command to add row above the selected cell
     addRowAbove(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.tableElementCommands.addRowAbove(this.element, this.element.selectedCells[0])
+            this.store.dispatch(new AddRowAbove2(this.element, this.contents[this.element.content],this.element.selectedCells[0]));
         }
     }
 
     //calls command to add row below the selected cell
     addRowBelow(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.tableElementCommands.addRowBelow(this.element, this.element.selectedCells[0])
+            this.store.dispatch(new AddRowBelow2(this.element, this.contents[this.element.content],this.element.selectedCells[0]));
         }
     }
 
     //calls command to add column to the right the selected cell
     addColumnRight(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.tableElementCommands.addColumnRight(this.element, this.element.selectedCells[0])
+            this.store.dispatch(new AddColumnRight2(this.element, this.contents[this.element.content],this.element.selectedCells[0]));
         }
     }
 
     //calls command to add column to the left of the selected ell 
     addColumnLeft(){
+        debugger
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.tableElementCommands.addColumnLeft(this.element, this.element.selectedCells[0])
+            this.store.dispatch(new AddColumnLeft2(this.element, this.contents[this.element.content],this.element.selectedCells[0]));
         }
     }
 
     //calls command to delete column that contains the selected cells
     deleteColumn(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.tableElementCommands.deleteColumn(this.element, this.element.selectedCells[0])
+            this.store.dispatch(new DeleteColumn2 (this.element, this.contents[this.element.content],this.element.selectedCells[0]));
         }       
     }
 
@@ -196,14 +196,14 @@ export class NewTableElementComponent extends NewElementComponent{
     //calls command to delete row that contains the selected cell 
     deleteRow(){
         if(this.element.selectedCells.length && this.element.selectedCells.length == 1){
-            this.tableElementCommands.deleteRow(this.element, this.element.selectedCells[0])
+            this.store.dispatch(new DeleteRow2(this.element, this.contents[this.element.content],this.element.selectedCells[0]));
         }
     }
 
     //merges selected cells
     mergeCells(){
         if(this.element.selectedCells.length && this.element.selectedCells.length > 1){
-            this.tableElementCommands.mergeSCells(this.element)
+            this.store.dispatch(new MergeCells(this.element));
         }
     }
 

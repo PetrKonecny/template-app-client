@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, ElementRef, DoCheck, KeyValueDiffer, KeyValueDiffers, EventEmitter, Output, ChangeDetectionStrategy} from '@angular/core';
 import { Content } from './content';
-import { TextContent, changeText } from './text-content'
+import { TextContent, ChangeText } from './text-content'
 import { AppConfig } from '../app.config'
 import { ImageContent } from '../content/image-content'
 import {Image, getImageById} from '../image/image'
@@ -68,7 +68,7 @@ export class DisplayContentComponent {
     
     //triggered when key in the editor is pressed
     keyupHandlerFunction(text: string){
-        this.store.dispatch({subtype: "CHANGE_TEXT", type: "ADD_NORMALIZED_DATA", data: changeText(this.content,text)})
+        this.store.dispatch(new ChangeText(this.content,text))
     }
 
     //trigered when image is laoded

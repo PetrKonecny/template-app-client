@@ -11,7 +11,7 @@ import {CreateTableModal} from '../element/create-table-element.modal'
 import { Store } from '@ngrx/store'
 import { AppState } from '../app.state'
 import { normalizeElementAndAddIntoPage } from '../normalizers'
-import { getElementById } from '../element/element'
+import { getElementById, getPageElements } from '../element/element'
 
 @Component({
     selector: 'create-new-page',
@@ -49,8 +49,9 @@ export class NewPageComponent implements AfterViewInit {
     //displazed page
     page: Page  
 
-    @Input()
     elements: any
+
+    sub
 
     @ViewChild('pageRef')
     //reference to the div representing the page
@@ -76,9 +77,13 @@ export class NewPageComponent implements AfterViewInit {
     }
 
     ngOnInit(){
-        //this.sub = this.store.select('elements').subscribe(data => this.elements = data.elements)
+        this.sub = this.store.select(getPageElements(this.page.id)).subscribe(elements => this.elements = elements)
         this.pageStore.page.subscribe(page => {this.selected = this.page === page})
         this.pageStore.echo()
+    }
+
+    ngOnDestroy(){
+        this.sub.complete();
     }
 
     getElement(id){

@@ -5,8 +5,6 @@ import { Observable } from 'rxjs/Rx'
 import { TemplateInstanceStore } from '../template-instance/template-instance.store';
 import { Template } from '../template/template';
 import { UndoRedoService } from '../undo-redo.service'
-import { TableElementCommands } from '../element/table-element'
-import { TextContentCommands } from '../content/text-content'
 import { TemplateInstanceHelper} from './template-instance.helper'
 import { TemplateStore } from '../template/template.store'
 import { TemplateService } from '../template/template.service'
@@ -24,7 +22,7 @@ import { PageStore } from '../page/page.store'
         </div>
         <create-new-template-instance *ngIf="template && templateInstance" [templateInstance] = "templateInstance" [template] = "template"></create-new-template-instance>
     `,
-    providers: [UndoRedoService, TableElementCommands, TextContentCommands, ElementStore, PageStore]
+    providers: [UndoRedoService, ElementStore, PageStore]
 })
 
 //displays index page for editing the document

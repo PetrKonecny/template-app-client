@@ -1,4 +1,6 @@
 import {TemplateInstance} from '../template-instance/template-instance';
+import { AppState } from '../app.state'
+import { Action, createSelector } from '@ngrx/store'
 
 //content model
 export class Content  {
@@ -19,3 +21,11 @@ export function contentsReducer(state = {contents: null, selected: 0},action: an
     default: return state;
   }
 }
+
+export const getContents = (state: AppState) => state.contents.contents
+
+export const getContentById = (id) => createSelector(getContents,(contents)=>{
+    return contents && contents[id];
+})
+
+export const getContentFromStore = (id,store) => store.select(getContentById(id)) 

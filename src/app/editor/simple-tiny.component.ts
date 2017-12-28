@@ -51,7 +51,7 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit  {
     ngOnInit(){
         this.content.editor = new Editor()
     }
-  
+
     //sets up the editor with no menubar, no status bar, no toolbar
     //in inline mode
     ngAfterViewInit() {
@@ -70,10 +70,10 @@ export class SimpleTinyComponent implements AfterViewInit, OnDestroy, OnInit  {
                     this.onEditorKeyup.emit(content);
                 });
                 editor.on('NodeChange', (e) => {
-                    this.content.editor.editorCurColor = null
-                    this.content.editor.editorCurColor = this.rgb2hex(tinymce.DOM.getStyle(e.element, 'color', true))
-                    this.content.editor.editorCurFont = tinymce.DOM.getStyle(e.element,'font-family',true)
-                    this.content.editor.editorCurFontSize = tinymce.DOM.getStyle(e.element,'font-size',true)
+                    this.content.editor.editorCurColor = this.rgb2hex(tinymce.DOM.getStyle(e.element, 'color', true));
+                    this.content.editor.editorCurFont = tinymce.DOM.getStyle(e.element,'font-family',true);
+                    this.content.editor.editorCurFontSize = tinymce.DOM.getStyle(e.element,'font-size',true);
+                    this.content.editor.subject.next(this.content.editor);
                 });
                 editor.on('init', (e) => {
                     if (this.content.text){

@@ -1,17 +1,14 @@
+import {BehaviorSubject} from 'rxjs'
 //model for editor stored in text content
 export class Editor {
-    editor: any
+    editor;
     id: string
-    editorCurColor: string
-    editorCurFontSize: number
-    editorCurFont: string
-    
+    editorCurColor 
+    editorCurFontSize 
+    editorCurFont 
+    subject = new BehaviorSubject(this);
+
     constructor(){
         this.id = Math.random().toString(36).substring(7);
     }
-
-    static setText(editor: Editor, text: string){
-    	editor.editor.setContent(text)
-    }
-    
 }

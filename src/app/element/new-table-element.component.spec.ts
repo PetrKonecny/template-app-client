@@ -11,8 +11,8 @@ import { Element } from './element';
 import { Observable } from "rxjs/Observable";
 import { NewTableElementReference } from './new-table-element.ref'
 import {MaterialModule} from '@angular/material'
-import { TableElement, TableElementCommands } from './table-element'
-
+import { TableElement } from './table-element'
+/*
 export function MockComponent(options: Component): Component {
   let metadata: Component = {
     selector: options.selector,
@@ -71,3 +71,4 @@ describe('new table component', () => {
     expect(de.nativeElement.style.top).toEqual('100px');
   });
 });
+*/

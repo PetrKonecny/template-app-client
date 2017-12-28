@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
-import {TableElement, TableElementCommands, Cell} from './table-element'
+import { Component, Input } from '@angular/core';
+import {TableElement, Cell, ChangeSCellsBold2, ChangeSCellsFont2, ChangeSCellsItalic2, ChangeSCellsParam2} from './table-element'
 import {Font} from '../font/font'
 import { ElementStore } from '../element/element.store'
+import { Store } from '@ngrx/store'
+import { AppState } from '../app.state'
 
 @Component({
     selector: 'cell-edit-toolbar',
@@ -75,6 +77,7 @@ is in the appropriate editing state
 export class CellEditToolbar {
     
     //element that the toolbar controlls
+    @Input()
     element: TableElement
     //last colors that were set in controll elements defaults to default colors
     lastCellBgColor = Cell.defaultBackgroundColor
@@ -85,8 +88,7 @@ export class CellEditToolbar {
     @param 'elementStore' - injects store that is provided by editor root and contains selected element
     @param 'commands' - injects commands used to change element states
     */
-    constructor(private elementStore: ElementStore, private commands: TableElementCommands){
-        this.elementStore.element.subscribe(element=> this.element = <TableElement>element)
+    constructor(public store: Store<AppState>){
     }
 
     //shorthand to get selected cells background color
@@ -128,41 +130,41 @@ export class CellEditToolbar {
     @param 'font' - font to be changed
     */
     changeSelectedCellsFont(font: Font){
-        this.commands.ChangeSCellsFont(this.element,font)
+        this.store.dispatch(new ChangeSCellsFont2(this.element,font));
     }
     
     /*calls command to change selected cells font size
     @param 'size' - number to change font to (in px)
     */
    changeSelectedCellsFontSize(size: number){
-        this.commands.changeSCellsFontSize(this.element,size)
+        this.store.dispatch(new ChangeSCellsParam2(this.element, 'font_size', size));
     }
     
     /*calls command to toggle selected cells bold text appearance
     */
     changeSelectedCellsBold(){
-        this.commands.changeSCellsBold(this.element)
+        this.store.dispatch(new ChangeSCellsBold2(this.element));
         
     }
     
     /*calls command to toggle selected cells italic text appearance
     */
     changeSelectedCellsItalic(){
-        this.commands.changeSCellsItalic(this.element)
+        this.store.dispatch(new ChangeSCellsItalic2(this.element));
     }
     
     /*calls command to set selected cells text alignement
     @param 'align' - css string value to set
     */
     changeSelectedCellsTextAlign(align: string){
-        this.commands.changeSCellsTextAlign(this.element,align)
+        this.store.dispatch(new ChangeSCellsParam2(this.element, 'text_align', align));
     }
     
     /*calls command to set selected cells text vertical alignement
     @param 'align' - css string value to set
     */
     changeSelectedCellsTextAlignVert(align: string){
-        this.commands.changeSCellsTextAlignVert(this.element,align)
+        this.store.dispatch(new ChangeSCellsParam2(this.element, 'vertical_align', align));
     }
 
     
@@ -171,9 +173,9 @@ export class CellEditToolbar {
     */    
     toggleCellBackground(value: boolean){
         if(this.getCellBgColor()){
-            this.commands.changeSCellsBackgroundColor(this.element, null)
+            //this.commands.changeSCellsBackgroundColor(this.element, null)
         }else{
-            this.commands.changeSCellsBackgroundColor(this.element, this.lastCellBgColor)
+            //this.commands.changeSCellsBackgroundColor(this.element, this.lastCellBgColor)
         }
     }
 
@@ -183,7 +185,7 @@ export class CellEditToolbar {
     changeSelectedCellsBackgroundColor(color: string){
         this.lastCellBgColor = color
         if(this.getCellBgColor() &&  this.getCellBgColor() !== this.lastCellBgColor){
-            this.commands.changeSCellsBackgroundColor(this.element, this.lastCellBgColor)
+            //this.commands.changeSCellsBackgroundColor(this.element, this.lastCellBgColor)
         }
     }
     
@@ -191,38 +193,30 @@ export class CellEditToolbar {
     @param 'color' - css color to be set
     */ 
     changeSelectedCellsTextColor(color: string){
-        this.lastCellTextColor = color
-        this.commands.changeSCellsTextColor(this.element,color)
+        this.store.dispatch(new ChangeSCellsParam2(this.element, 'text_color', color));
     }
     
     /*calls command to change selected cells border style
     @param 'style' - css style value to be set
     */ 
     changeSelectedCellsBorderStyle(style: string){
-        this.commands.changeSCellsBorderStyle(this.element,style)
+        this.store.dispatch(new ChangeSCellsParam2(this.element, 'border_style', style));
     }
     
     /*calls command to change selected cells border color
     @param 'color' - css color to be set
     */ 
     changeSelectedCellsBorderColor(color: string){
-        this.lastCellBColor = color
-        this.commands.changeSCellsBorderColor(this.element,color)
+        this.store.dispatch(new ChangeSCellsParam2(this.element, 'border_color', color));
     }
     
     /*calls command to change selected cells border width
     @param 'width' - width to be set
     */ 
     changeSelectedCellsBorderWidth(width: number){
-        this.commands.changeSCellsBorderW(this.element,width)
+        this.store.dispatch(new ChangeSCellsParam2(this.element, 'border_width', width));
     }
-    
-    /*calls command to merge selected cells into one
-    */ 
-    mergeCells(){
-        this.commands.mergeSCells(this.element)
-    }
-    
+   
     //empty method used to trigger change detection
     onKey(){
         
